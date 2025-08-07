@@ -1,7 +1,7 @@
 import { useAsyncEffect, useCss } from '@common/hooks';
 import { addJsFileAsync, Css, flexColumn, global } from '@common/helpers';
-import { Button, Div } from '@common/components';
-import { useRef, useState } from 'preact/hooks';
+import { Button, Div, Field } from '@common/components';
+import { useRef, useState, useEffect } from 'preact/hooks';
 import { MdFitScreen, MdZoomIn, MdZoomOut, MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
 
 const css: Css = {
@@ -11,6 +11,35 @@ const css: Css = {
     flex: 1,
     height: '100%',
     position: 'relative',
+  },
+  '&TopControls': {
+    position: 'absolute',
+    top: '20px',
+    left: '20px',
+    right: '20px',
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    zIndex: 10,
+    pointerEvents: 'none',
+  },
+  '&TimeSlotSelector': {
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    padding: '10px',
+    borderRadius: '8px',
+    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+    minWidth: '200px',
+    pointerEvents: 'auto',
+  },
+  '&LanguageFlags': {
+    display: 'flex',
+    gap: '0.5rem',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    padding: '10px',
+    borderRadius: '8px',
+    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+    pointerEvents: 'auto',
   },
   '&Container': {
     flex: 1,
@@ -39,11 +68,6 @@ const css: Css = {
     color: '#333',
     padding: '0 10px',
     whiteSpace: 'nowrap',
-  },
-  '&LanguageFlags': {
-    display: 'flex',
-    gap: '0.5rem',
-    alignItems: 'center',
   },
   '&LanguageButton': {
     fontSize: '20px',
@@ -110,8 +134,50 @@ export const PDFViewer = ({ languageEntries }: { languageEntries: LanguageEntry[
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [currentLanguage, setCurrentLanguage] = useState(languageEntries[0]?.language || 'default');
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState<string>('auto');
   
-  const currentEntry = languageEntries.find(entry => entry.language === currentLanguage) || languageEntries[0];
+  // Group entries by time slot for current language
+  const currentLanguageEntries = languageEntries.filter(entry => entry.language === currentLanguage);
+  
+  // Create time slots with auto-selection
+  const timeSlots = currentLanguageEntries.reduce((slots, entry) => {
+    const key = entry.startTime && entry.endTime 
+      ? `${entry.startTime}-${entry.endTime}`
+      : 'default';
+    if (!slots[key]) {
+      slots[key] = entry;
+    }
+    return slots;
+  }, {} as Record<string, LanguageEntry>);
+  
+  // Add 'auto' option
+  const timeSlotOptions = {
+    'auto': 'Automatique',
+    ...Object.keys(timeSlots).reduce((opts, key) => {
+      const entry = timeSlots[key];
+      opts[key] = key === 'default' 
+        ? entry.title 
+        : `${entry.startTime} - ${entry.endTime}`;
+      return opts;
+    }, {} as Record<string, string>)
+  };
+  
+  // Auto-select based on current time
+  const getCurrentTimeSlot = (): string => {
+    const now = new Date();
+    const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+    
+    for (const [key, entry] of Object.entries(timeSlots)) {
+      if (entry.startTime && entry.endTime && 
+          currentTime >= entry.startTime && currentTime <= entry.endTime) {
+        return key;
+      }
+    }
+    return Object.keys(timeSlots)[0] || 'default';
+  };
+  
+  const activeTimeSlot = selectedTimeSlot === 'auto' ? getCurrentTimeSlot() : selectedTimeSlot;
+  const currentEntry = timeSlots[activeTimeSlot] || Object.values(timeSlots)[0];
   const url = currentEntry?.url || '';
 
   const renderPage = async (scale: number, pageNum: number = currentPage) => {
@@ -185,7 +251,26 @@ export const PDFViewer = ({ languageEntries }: { languageEntries: LanguageEntry[
     setCurrentLanguage(language);
     setCurrentPage(1);
     setPdfDoc(null);
+    setSelectedTimeSlot('auto'); // Reset to auto when changing language
   };
+
+  const handleTimeSlotChange = (timeSlot: string) => {
+    setSelectedTimeSlot(timeSlot);
+    setCurrentPage(1);
+    setPdfDoc(null);
+  };
+
+  // Auto-refresh time slot selection every minute if in auto mode
+  useEffect(() => {
+    if (selectedTimeSlot !== 'auto') return;
+    
+    const interval = setInterval(() => {
+      // This will trigger a re-render and update the activeTimeSlot
+      setCurrentPage(prev => prev); // Force re-render without changing state
+    }, 60000); // Check every minute
+    
+    return () => clearInterval(interval);
+  }, [selectedTimeSlot, timeSlots]);
 
   useAsyncEffect(async () => {
     const containerEl = containerRef.current;
@@ -238,21 +323,32 @@ export const PDFViewer = ({ languageEntries }: { languageEntries: LanguageEntry[
     await page.render(renderContext).promise;
 
     console.debug('PDFViewer initial render complete');
-  }, [url, currentLanguage]);
+  }, [url, currentLanguage, selectedTimeSlot]);
 
   console.debug('PDFViewer', { url });
 
   return (
     <Div cls={`${c}`}>
-      <div className={`${c}Container`} ref={containerRef} />
-      <Div cls={`${c}Toolbar`}>
+      <Div cls={`${c}TopControls`}>
+        {Object.keys(timeSlotOptions).length > 1 && (
+          <Div cls={`${c}TimeSlotSelector`}>
+            <Field
+              type="select"
+              label="Plage horaire"
+              value={selectedTimeSlot}
+              values={timeSlotOptions}
+              onChange={(value: string) => handleTimeSlotChange(value)}
+            />
+          </Div>
+        )}
+        
         {languageEntries.length > 1 && (
           <Div cls={`${c}LanguageFlags`}>
             {languageEntries.map(entry => (
               <Button
                 key={entry.language}
                 cls={`${c}LanguageButton ${entry.language === currentLanguage ? 'active' : ''}`}
-                color={currentPage <= 1 ? "secondary" : "primary"} 
+                color={entry.language === currentLanguage ? "primary" : "secondary"} 
                 onClick={() => handleLanguageChange(entry.language)}
               >
                 {getLanguageFlag(entry.language)}
@@ -260,6 +356,10 @@ export const PDFViewer = ({ languageEntries }: { languageEntries: LanguageEntry[
             ))}
           </Div>
         )}
+      </Div>
+      
+      <div className={`${c}Container`} ref={containerRef} />
+      <Div cls={`${c}Toolbar`}>
         <Button 
           icon={<MdNavigateBefore />} 
           color={currentPage <= 1 ? "secondary" : "primary"} 
