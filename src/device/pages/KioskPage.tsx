@@ -1,10 +1,12 @@
 import { toNbr, flexColumn, Css, flexCenter, clsx } from "@common/helpers";
 import { Button, Div, Iframe } from "@common/components";
-import { useCss, usePromise } from "@common/hooks";
+import { useCss, usePromise, useMsg } from "@common/hooks";
 import { m4k, PlaylistItem  } from "@common/m4k";
 import { useEffect, useRef, useState } from "preact/hooks";
 import { useConfigProp } from "../hooks/useConfigProp";
 import { openPasswordDialog } from "../components/PasswordView";
+import { device$ } from "../services/device";
+import { ContentViewer } from "../../contents/ContentViewer";
 
 const css: Css = {
     '&Container': {
@@ -224,6 +226,7 @@ const KioskItem = ({ item, itemFit, itemAnim, hasVideoMuted, itemDurationMs, pos
 
 export const KioskPage = () => {
     const c = useCss('Kiosk', css);
+    const device = useMsg(device$);
 
     const [open, setOpen] = useState(false);
     const [count, setCount] = useState(0);
@@ -248,7 +251,16 @@ export const KioskPage = () => {
 
     const gotoNext = () => setCount(count => count + 1)
 
-    console.debug('KioskPage', { prev, curr, next })
+    console.debug('KioskPage', { prev, curr, next, device })
+
+    // Si un contenu est associé au device, l'afficher via ContentViewer
+    if (device?.content) {
+        return (
+            <Div cls={`${c}Container`}>
+                <ContentViewer contentKey={device?.content} />
+            </Div>
+        );
+    }
 
     // if (url) {
     //     return (
