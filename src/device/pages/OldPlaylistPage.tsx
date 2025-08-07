@@ -1,4 +1,4 @@
-import { m4k } from '../m4k'
+import { m4k } from '@common/m4k'
 import { setCss } from '@common/helpers/html'
 import { stringify } from '@common/helpers/json'
 import {usePromise} from '@common/hooks/usePromise'

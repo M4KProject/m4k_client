@@ -1,7 +1,7 @@
 import { m4k } from '@common/m4k';
 import { stringify } from "@common/helpers";
 import { Button, Field, Form, Page, PageBody, PageHeader } from "@common/components";
-import { useState } from 'react';
+import { useState } from 'preact/hooks';
 
 // setCss('m4kDebugPage', {
 //     '&': {

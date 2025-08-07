@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'preact/hooks';
 import { m4k } from '@common/m4k';
 import { toErr } from '@common/helpers';
 import { Cell, CellHeader, Page, PageBody, PageHeader, Row, Table, TableBody, TableHead } from '@common/components';

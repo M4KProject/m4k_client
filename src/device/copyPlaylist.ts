@@ -1,7 +1,7 @@
 import { newProgressDialog } from "./components/ProgressView"
 import { m4k } from "@common/m4k"
 import { sleep } from "@common/helpers"
-import { M4kFileInfo } from "./common/m4k/m4kInterface"
+import { M4kFileInfo } from "@common/m4k/m4kInterface"
 
 const PLAYLIST_DIR = 'playlist'
 
