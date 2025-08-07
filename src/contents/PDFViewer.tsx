@@ -2,7 +2,7 @@ import { useAsyncEffect, useCss } from '@common/hooks';
 import { addJsFileAsync, Css, flexColumn, global } from '@common/helpers';
 import { Button, Div } from '@common/components';
 import { useRef, useState } from 'preact/hooks';
-import { MdSquare, MdZoomIn, MdZoomOut } from 'react-icons/md';
+import { MdFitScreen, MdZoomIn, MdZoomOut, MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
 
 const css: Css = {
   '&': {
@@ -25,11 +25,19 @@ const css: Css = {
     transform: 'translateX(-50%)',
     display: 'flex',
     gap: '1rem',
+    alignItems: 'center',
     zIndex: 10,
     backgroundColor: 'rgba(255, 255, 255, 0.9)',
     padding: '10px',
     borderRadius: '8px',
     boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+  },
+  '&PageInfo': {
+    fontSize: '14px',
+    fontWeight: 'bold',
+    color: '#333',
+    padding: '0 10px',
+    whiteSpace: 'nowrap',
   },
 };
 
@@ -39,13 +47,15 @@ export const PDFViewer = ({ url }: { url: string }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [scale, setScale] = useState(1.0);
   const [pdfDoc, setPdfDoc] = useState<any>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
 
-  const renderPage = async (scale: number) => {
-    console.debug('PDFViewer renderPage', url, scale);
+  const renderPage = async (scale: number, pageNum: number = currentPage) => {
+    console.debug('PDFViewer renderPage', url, scale, pageNum);
 
-    if (!pdfDoc || !canvasRef.current) return;
+    if (!pdfDoc || !canvasRef.current || pageNum < 1 || pageNum > totalPages) return;
 
-    const page = await pdfDoc.getPage(1);
+    const page = await pdfDoc.getPage(pageNum);
     const viewport = page.getViewport({ scale });
 
     const canvas = canvasRef.current;
@@ -80,15 +90,31 @@ export const PDFViewer = ({ url }: { url: string }) => {
     console.debug('PDFViewer handleFitWidth', url);
     if (!pdfDoc || !containerRef.current) return;
 
-    const page = pdfDoc.getPage(1);
+    const page = pdfDoc.getPage(currentPage);
     page.then((p: any) => {
       const viewport = p.getViewport({ scale: 1 });
       const containerWidth = containerRef.current!.offsetWidth;
       const fitScale = containerWidth / viewport.width;
 
       setScale(fitScale);
-      renderPage(fitScale);
+      renderPage(fitScale, currentPage);
     });
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      const newPage = currentPage - 1;
+      setCurrentPage(newPage);
+      renderPage(scale, newPage);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      const newPage = currentPage + 1;
+      setCurrentPage(newPage);
+      renderPage(scale, newPage);
+    }
   };
 
   useAsyncEffect(async () => {
@@ -120,8 +146,10 @@ export const PDFViewer = ({ url }: { url: string }) => {
 
     console.debug('PDFViewer useAsyncEffect canvas', canvas);
 
-    // Set pdfDoc and render after canvas is attached
+    // Set pdfDoc and page info
     setPdfDoc(pdf);
+    setTotalPages(pdf.numPages);
+    setCurrentPage(1);
     
     // Render the first page immediately
     const page = await pdf.getPage(1);
@@ -148,9 +176,22 @@ export const PDFViewer = ({ url }: { url: string }) => {
     <Div cls={`${c}`}>
       <div className={`${c}Container`} ref={containerRef} />
       <Div cls={`${c}Tools`}>
-        <Button icon={<MdZoomIn />} color="primary" onClick={handleZoomIn} />
+        <Button 
+          icon={<MdNavigateBefore />} 
+          color={currentPage <= 1 ? "neutral" : "primary"} 
+          onClick={currentPage <= 1 ? undefined : handlePreviousPage}
+        />
+        <Div cls={`${c}PageInfo`}>
+          {currentPage} / {totalPages}
+        </Div>
+        <Button 
+          icon={<MdNavigateNext />} 
+          color={currentPage >= totalPages ? "neutral" : "primary"} 
+          onClick={currentPage >= totalPages ? undefined : handleNextPage}
+        />
         <Button icon={<MdZoomOut />} color="primary" onClick={handleZoomOut} />
-        <Button icon={<MdSquare />} color="primary" onClick={handleFitWidth} />
+        <Button icon={<MdZoomIn />} color="primary" onClick={handleZoomIn} />
+        <Button icon={<MdFitScreen />} color="primary" onClick={handleFitWidth} />
       </Div>
     </Div>
   );
