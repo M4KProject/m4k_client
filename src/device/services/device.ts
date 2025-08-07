@@ -12,31 +12,34 @@ const uniqueKey = () => uuid().split('-').join('');
 const getErrorStatus = (error: any) => toNbr(error?.data?.status, null)
 
 export const deviceLogin = async (): Promise<UserModel> => {
-    if (!authEmail$.v) authEmail$.set(uniqueKey() + '@m4k.fr');
-    if (!authPassword$.v) authPassword$.set(uniqueKey());
+    let email = authEmail$.v;
+    let password = authPassword$.v;
+    console.debug('deviceLogin', email, password);
+
+    if (!email) authEmail$.set(email = uniqueKey() + '@m4k.fr');
+    if (!password) authPassword$.set(password = uniqueKey());
 
     try {
-        const response = await login(authEmail$.v, authPassword$.v);
+        const response = await login(email, password);
         console.debug('deviceLogin response', response);
         return response;
     }
     catch (error) {
-        console.warn('deviceLogin error', error);
         if (getErrorStatus(error) === 400) {
+            console.warn('deviceLogin error 400', error);
             try {
-                const email = authEmail$.v;
-                const password = authPassword$.v;
                 await signUp(email, password);
             }
             catch (error) {
                 console.warn('deviceLogin create error', error);
                 if (getErrorStatus(error) === 400) {
-                    authEmail$.set('');
-                    authPassword$.set('');
+                    authEmail$.set(email = '');
+                    authPassword$.set(password = '');
                 }
             }
             return await deviceLogin();
         }
+        console.warn('deviceLogin error2', { ...error }, error);
         throw error;
     }
 }
