@@ -39,9 +39,56 @@ const css: Css = {
     padding: '0 10px',
     whiteSpace: 'nowrap',
   },
+  '&LanguageFlags': {
+    display: 'flex',
+    gap: '0.5rem',
+    alignItems: 'center',
+  },
+  '&LanguageButton': {
+    fontSize: '20px',
+    padding: '5px 8px',
+    backgroundColor: 'transparent',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    opacity: 0.6,
+    transition: 'opacity 0.2s, backgroundColor 0.2s',
+    '&:hover': {
+      opacity: 1,
+      backgroundColor: 'rgba(0, 0, 0, 0.1)',
+    },
+    '&.active': {
+      opacity: 1,
+      backgroundColor: 'rgba(0, 123, 255, 0.1)',
+      border: '1px solid rgba(0, 123, 255, 0.3)',
+    },
+  },
 };
 
-export const PDFViewer = ({ url }: { url: string }) => {
+interface LanguageEntry {
+  language: string;
+  url: string;
+  title: string;
+  startTime?: string;
+  endTime?: string;
+  duration?: number;
+}
+
+const getLanguageFlag = (language: string): string => {
+  const flagMap: Record<string, string> = {
+    'fr': '🇫🇷',
+    'en': '🇬🇧',
+    'es': '🇪🇸',
+    'de': '🇩🇪',
+    'it': '🇮🇹',
+    'pt': '🇵🇹',
+    'nl': '🇳🇱',
+    'default': '🏳️'
+  };
+  return flagMap[language.toLowerCase()] || '🏳️';
+};
+
+export const PDFViewer = ({ languageEntries }: { languageEntries: LanguageEntry[] }) => {
   const c = useCss('PDFViewer', css);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -49,6 +96,10 @@ export const PDFViewer = ({ url }: { url: string }) => {
   const [pdfDoc, setPdfDoc] = useState<any>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+  const [currentLanguage, setCurrentLanguage] = useState(languageEntries[0]?.language || 'default');
+  
+  const currentEntry = languageEntries.find(entry => entry.language === currentLanguage) || languageEntries[0];
+  const url = currentEntry?.url || '';
 
   const renderPage = async (scale: number, pageNum: number = currentPage) => {
     console.debug('PDFViewer renderPage', url, scale, pageNum);
@@ -117,6 +168,12 @@ export const PDFViewer = ({ url }: { url: string }) => {
     }
   };
 
+  const handleLanguageChange = (language: string) => {
+    setCurrentLanguage(language);
+    setCurrentPage(1);
+    setPdfDoc(null);
+  };
+
   useAsyncEffect(async () => {
     const containerEl = containerRef.current;
     if (!containerEl || typeof containerEl.appendChild !== 'function') {
@@ -168,7 +225,7 @@ export const PDFViewer = ({ url }: { url: string }) => {
     await page.render(renderContext).promise;
 
     console.debug('PDFViewer initial render complete');
-  }, [url]);
+  }, [url, currentLanguage]);
 
   console.debug('PDFViewer', { url });
 
@@ -176,9 +233,23 @@ export const PDFViewer = ({ url }: { url: string }) => {
     <Div cls={`${c}`}>
       <div className={`${c}Container`} ref={containerRef} />
       <Div cls={`${c}Tools`}>
+        {languageEntries.length > 1 && (
+          <Div cls={`${c}LanguageFlags`}>
+            {languageEntries.map(entry => (
+              <button
+                key={entry.language}
+                className={`${c}LanguageButton ${entry.language === currentLanguage ? 'active' : ''}`}
+                onClick={() => handleLanguageChange(entry.language)}
+                title={`${entry.title} (${entry.language})`}
+              >
+                {getLanguageFlag(entry.language)}
+              </button>
+            ))}
+          </Div>
+        )}
         <Button 
           icon={<MdNavigateBefore />} 
-          color={currentPage <= 1 ? "neutral" : "primary"} 
+          color={currentPage <= 1 ? "secondary" : "primary"} 
           onClick={currentPage <= 1 ? undefined : handlePreviousPage}
         />
         <Div cls={`${c}PageInfo`}>
@@ -186,7 +257,7 @@ export const PDFViewer = ({ url }: { url: string }) => {
         </Div>
         <Button 
           icon={<MdNavigateNext />} 
-          color={currentPage >= totalPages ? "neutral" : "primary"} 
+          color={currentPage >= totalPages ? "secondary" : "primary"} 
           onClick={currentPage >= totalPages ? undefined : handleNextPage}
         />
         <Button icon={<MdZoomOut />} color="primary" onClick={handleZoomOut} />
