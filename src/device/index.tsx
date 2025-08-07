@@ -1,20 +1,31 @@
-import { createRoot } from 'react-dom/client'
-import { addResponsiveListener, El, setTheme } from '@common/helpers'
-import { App } from './components/App'
-import { m4k } from '@common/m4k';
+import { render } from 'preact';
+import { addFont } from '@common/helpers';
+import { setTheme } from '@common/helpers';
+import { addEl, addResponsiveListener } from '@common/helpers';
+import { setDefaultOptions } from 'date-fns';
+import { fr } from 'date-fns/locale';
+import { InitDevice } from './device/InitDevice';
 import copyPlaylist from './copyPlaylist';
 import { deviceInit } from './services/device';
+import { m4k } from '@common/m4k';
 
-const init = async () => {
+console.debug('loaded');
+
+let _rootEl: HTMLElement|null = null;
+
+export const mount = () => {
+  console.debug('mount device');
+
+  setDefaultOptions({ locale: fr });
   addResponsiveListener();
-  setTheme('#25a6d8');
+  addFont('Roboto');
+  setTheme('#28A8D9');
 
-  const rootEl = El('div', { id: 'm4kControl', parent: 'body' });
-  createRoot(rootEl).render(<App />);
+  _rootEl = addEl('div', { id: 'm4kDevice', parent: 'body' })
+  render(<InitDevice />, _rootEl);
 
   deviceInit();
 
-  // if (!m4k) return;
   m4k.subscribe(async e => {
     if (e.type !== 'storage' || e.action !== 'mounted') return;
 
@@ -23,6 +34,15 @@ const init = async () => {
 
     await copyPlaylist(`${e.path}/${copyDir}`);
   });
+
+  console.debug('device mounted');
 }
 
-init();
+export const unmount = () => {
+  console.debug('unmount device');
+
+  if (_rootEl) {
+    _rootEl.remove();
+    _rootEl = null;
+  }
+}

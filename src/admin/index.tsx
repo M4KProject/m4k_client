@@ -1,16 +1,22 @@
 import { render } from 'preact';
-import { App } from './admin/components/App';
-import { initAdminRouter } from './admin/controllers/Router';
+import { App } from './components/App';
+import { initAdminRouter } from './controllers/Router';
 import { addFont } from '@common/helpers';
 import { setTheme } from '@common/helpers';
 import { addEl, addResponsiveListener, setCss } from '@common/helpers';
 import { setDefaultOptions } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { authRefresh } from '@common/api';
+import { app } from '@/app';
+import * as controllers from './controllers';
+import * as messages from './messages';
 
 console.debug('loaded');
 
 let _rootEl: HTMLElement|null = null;
+
+Object.assign(app, controllers);
+Object.assign(app, messages);
 
 export const mount = () => {
   console.debug('admin mount');
