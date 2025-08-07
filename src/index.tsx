@@ -9,4 +9,15 @@ addResponsiveListener();
 
 router.add('/admin', () => import('./admin'));
 
+// Check if we're on root path and redirect to admin
+const checkRootRedirect = () => {
+  const path = window.location.pathname;
+  if (path === '/' || path === '') {
+    router.push('/admin/');
+  }
+};
+
+// Check on initial load
+checkRootRedirect();
+
 router.forceRefresh();
