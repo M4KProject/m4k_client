@@ -1,7 +1,8 @@
 import { useCss } from '@common/hooks';
 import { Css } from '@common/helpers';
 import { Div } from '@common/components';
-import { ContentProps } from './ContentViewer';
+import type { ContentProps } from './ContentViewer';
+import { HtmlContentModel } from '@common/api';
 
 const css: Css = {
   '&': {
@@ -14,14 +15,12 @@ const css: Css = {
   }
 };
 
-export const HtmlContent = ({ content, data }: ContentProps) => {
+export const HtmlContent = ({ content }: ContentProps<HtmlContentModel>) => {
   const c = useCss('HtmlContent', css);
   
-  const htmlContent = data.html || '<p>Aucun contenu HTML défini</p>';
+  const htmlContent = content.data.html || '<p>Aucun contenu HTML défini</p>';
   
   return (
-    <Div cls={`${c}`}>
-      <Div cls={`${c}Container`} dangerouslySetInnerHTML={{ __html: htmlContent }} />
-    </Div>
+    <Div cls={`${c}`} dangerouslySetInnerHTML={{ __html: htmlContent }} />
   );
 };

@@ -1,7 +1,7 @@
 import { useCss } from '@common/hooks';
 import { Css, flexColumn } from '@common/helpers';
 import { Div } from '@common/components';
-import { ContentProps } from './ContentViewer';
+import type { ContentProps } from './ContentViewer';
 import { PlaylistContentModel } from '@common/api';
 
 const css: Css = {
@@ -20,7 +20,7 @@ const css: Css = {
 export const PlaylistContent = ({ content }: ContentProps<PlaylistContentModel>) => {
   const c = useCss('PlaylistContent', css);
 
-  console.debug('PlaylistContent', content);
+  console.debug('PlaylistContent', content, content.data.items[0].media);
 
   // const item = content.data.items[0];
   

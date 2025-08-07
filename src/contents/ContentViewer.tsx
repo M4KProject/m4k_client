@@ -1,14 +1,11 @@
 import { useAsync, useCss } from '@common/hooks';
 import { Css, flexColumn } from '@common/helpers';
 import { Div } from '@common/components';
-import { contentColl, ContentModel } from '@common/api';
-import { useState, useEffect } from 'preact/hooks';
+import { contentColl, ContentModel, mediaColl, MediaModel } from '@common/api';
 import { FormContent } from './FormContent';
 import { TableContent } from './TableContent';
 import { HtmlContent } from './HtmlContent';
 import { PlaylistContent } from './PlaylistContent';
-import { EmptyContent } from './EmptyContent';
-import { HiboutikContent } from './HiboutikContent';
 import { JSX } from 'preact';
 
 const css: Css = {
@@ -18,27 +15,19 @@ const css: Css = {
     backgroundColor: '#f5f5f5',
     fontFamily: 'Roboto, sans-serif',
   },
-  '&Loading': {
-    ...flexColumn({ align: 'center', justify: 'center' }),
-    minHeight: '100vh',
-    fontSize: 1.5,
-    color: '#666',
-  }
 };
 
 // Content components mapping
 export const contentByType: Record<string, (props: ContentProps) => JSX.Element> = {
-  empty: EmptyContent,
   form: FormContent,
   table: TableContent,
   html: HtmlContent,
   playlist: PlaylistContent,
-  hiboutik: HiboutikContent,
 };
 
 export interface ContentProps<Model extends ContentModel = ContentModel> {
   content: Model;
-  data: Model['data'];
+  medias: MediaModel[];
 }
 
 interface ContentViewerProps {
@@ -48,7 +37,8 @@ interface ContentViewerProps {
 export const ContentViewer = ({ contentKey }: ContentViewerProps) => {
   const c = useCss('ContentViewer', css);
 
-  const [content, contentRefresh] = useAsync(null, () => contentColl.findKey(contentKey), "content", [contentKey]);
+  const [content] = useAsync(null, () => contentColl.findKey(contentKey), "content", [contentKey]);
+  const [medias] = useAsync(null, () => mediaColl.find({}), "medias", [contentKey]);
 
   if (!content) {
     return (
@@ -59,17 +49,20 @@ export const ContentViewer = ({ contentKey }: ContentViewerProps) => {
     );
   }
 
-  const type = content.type || "empty";
-  const data = content.data || {};
-  
-  const ContentComponent = contentByType[type] || contentByType.empty;
+  const ContentComponent = contentByType[content.type];
+
+  if (!content.data || !ContentComponent) {
+    return (
+      <Div cls={`${c} ${c}Error`}>
+        <h2>Contenu vide</h2>
+        <p>Le contenu "{contentKey}" de type "{content.type}" est vide.</p>
+      </Div>
+    );
+  }
 
   return (
     <Div cls={`${c}`}>
-      <ContentComponent 
-        content={content}
-        data={data}
-      />
+      <ContentComponent content={content} medias={medias} />
     </Div>
   );
 };

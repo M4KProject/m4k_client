@@ -1,7 +1,7 @@
 import { useCss } from '@common/hooks';
 import { Css, flexColumn } from '@common/helpers';
 import { Div } from '@common/components';
-import { ContentProps } from './ContentViewer';
+import type { ContentProps } from './ContentViewer';
 
 const css: Css = {
   '&': {
