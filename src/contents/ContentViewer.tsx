@@ -1,7 +1,7 @@
-import { useAsync, useCss } from '@common/hooks';
+import { useAsync, useCss, useMsg } from '@common/hooks';
 import { Css, flexColumn } from '@common/helpers';
 import { Div } from '@common/components';
-import { contentColl, ContentModel, mediaColl, MediaModel } from '@common/api';
+import { auth$, contentColl, ContentModel, mediaColl, MediaModel } from '@common/api';
 import { FormContent } from './FormContent';
 import { TableContent } from './TableContent';
 import { HtmlContent } from './HtmlContent';
@@ -37,12 +37,15 @@ interface ContentViewerProps {
 export const ContentViewer = ({ contentKey }: ContentViewerProps) => {
   const c = useCss('ContentViewer', css);
 
-  const [content] = useAsync(null, () => contentColl.findKey(contentKey), "content", [contentKey]);
-  const [medias] = useAsync(null, () => mediaColl.find({}), "medias", [contentKey]);
+  const auth = useMsg(auth$);
+  const authToken = auth.token;
+
+  const [content] = useAsync(null, () => contentColl.findKey(contentKey), "content", [authToken, contentKey]);
+  const [medias] = useAsync(null, () => mediaColl.find({}), "medias", [authToken, contentKey]);
 
   if (!content) {
     return (
-      <Div cls={`${c} ${c}Error`}>
+      <Div cls={`${c}Error`}>
         <h2>Contenu introuvable</h2>
         <p>Le contenu "{contentKey}" n'a pas été trouvé.</p>
       </Div>
@@ -53,7 +56,7 @@ export const ContentViewer = ({ contentKey }: ContentViewerProps) => {
 
   if (!content.data || !ContentComponent) {
     return (
-      <Div cls={`${c} ${c}Error`}>
+      <Div cls={`${c}Error`}>
         <h2>Contenu vide</h2>
         <p>Le contenu "{contentKey}" de type "{content.type}" est vide.</p>
       </Div>
@@ -61,8 +64,6 @@ export const ContentViewer = ({ contentKey }: ContentViewerProps) => {
   }
 
   return (
-    <Div cls={`${c}`}>
-      <ContentComponent content={content} medias={medias} />
-    </Div>
+    <ContentComponent content={content} medias={medias} />
   );
 };
