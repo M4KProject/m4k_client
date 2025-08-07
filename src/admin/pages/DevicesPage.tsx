@@ -1,10 +1,10 @@
 import { Css, formatDateTime, isSearched, stringify } from '@common/helpers';
 import { useAsync, useCss, useMsg } from '@common/hooks';
 import { search$ } from '../messages/search$';
-import { contentColl, deviceColl, DeviceModel, fun, getApiTime, groupColl, groupId$, ModelUpdate, toTime } from '@common/api';
+import { contentColl, deviceColl, DeviceModel, fun, getApiTime, groupColl, groupId$, memberColl, ModelUpdate, Role, toTime } from '@common/api';
 import { openDevice } from '../controllers/Router';
 import { Button, Field, Page, PageHeader, PageBody, Table, Cell, CellHeader, Row, TableBody, TableHead, tooltip, showDialog, Form } from '@common/components';
-import { MdSync, MdDeleteForever, MdSettingsRemote, MdAddToPhotos } from "react-icons/md";
+import { MdSync, MdDeleteForever, MdSettingsRemote, MdAddToPhotos, MdPersonAdd } from "react-icons/md";
 import { SearchField } from '../components/SearchField';
 import { isAdvanced$ } from '../messages';
 import { useState } from 'preact/hooks';
@@ -22,6 +22,10 @@ export const PairingForm = ({ onClose }: { onClose: () => void }) => {
         try {
             console.log('Tentative de pairage avec le code:', key);
             await fun('GET', `pair/${key}/${group}`);
+
+            const device = await deviceColl.findKey(key);
+            await memberColl.create({ user: device.user, group, role: Role.viewer });
+
             onClose();
         } catch (error) {
             console.error('Erreur lors du pairage:', error);
@@ -53,6 +57,7 @@ export const DevicesPage = () => {
     const [contents, contentsRefresh] = useAsync([], () => contentColl.find({ group: groupId }), 'contents', [groupId])
     
     const [devices, devicesRefresh] = useAsync([], () => deviceColl.find(groupId ? { group: groupId } : {}), 'devices', [groupId]);
+    
     const filteredDevices = search ? devices.filter(d => isSearched(d.name, search)) : devices;
 
     const onlineMin = getApiTime() - 30 * 1000;
@@ -79,6 +84,15 @@ export const DevicesPage = () => {
 
     const handleRemote = (device: DeviceModel) => {
         openDevice(device.key || device.id);
+    };
+
+    const handleAddAsMember = async (device: DeviceModel) => {
+        if (!device.user || !groupId) return;
+        await memberColl.create({
+            user: device.user,
+            group: groupId,
+            role: Role.viewer,
+        });
     };
 
     return (
@@ -157,6 +171,14 @@ export const DevicesPage = () => {
                                         {...tooltip("Mode remote")}
                                         onClick={() => handleRemote(d)}
                                     />
+                                    {d.user && (
+                                        <Button
+                                            icon={<MdPersonAdd />}
+                                            color="success"
+                                            {...tooltip("Ajouter comme membre")}
+                                            onClick={() => handleAddAsMember(d)}
+                                        />
+                                    )}
                                     {isAdvanced && (
                                         <Button
                                             icon={<MdDeleteForever />}
