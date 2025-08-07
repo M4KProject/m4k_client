@@ -31,7 +31,7 @@ export const AccountPage = () => {
             setPasswordError('');
             setPassword('');
         }
-        catch (error) {
+        catch (_error) {
             setPasswordError('Mot de passe incorrect');
         }
     }
@@ -43,13 +43,11 @@ export const AccountPage = () => {
             </PageHeader>
             <PageBody>
                 <Form title="Mon compte">
-                    <Field label="ID de l'utilisateur" value={auth.id} readonly />
-                    <Field label="Email de l'utilisateur" value={auth.email} readonly />
-                    <Field type="switch" label="Mode avancé" msg={isAdvanced$} value={isAdvanced} onValue={isAdvanced$.setter()} />
-                </Form>
-                <Form title="Changer de mot de passe">
-                    <Field label="Ancien mot de passe" type="password" value={oldPassword} onValue={setOldPassword} error={passwordError} />
-                    <Field label="Nouveau mot de passe" type="password" value={password} onValue={setPassword} />
+                    <Field label="ID de l'utilisateur" name="user_id" value={auth.id} readonly />
+                    <Field label="Email de l'utilisateur" name="username" value={auth.email} readonly props={{ autocomplete: "email" }} />
+                    <Field type="switch" label="Mode avancé" name="advanced" msg={isAdvanced$} value={isAdvanced} onValue={isAdvanced$.setter()} />
+                    <Field label="Ancien mot de passe" name="current-password" type="password" value={oldPassword} onValue={setOldPassword} error={passwordError} props={{ autocomplete: "current-password" }} />
+                    <Field label="Nouveau mot de passe" name="new-password" type="password" value={password} onValue={setPassword} props={{ autocomplete: "new-password" }} />
                 </Form>
             </PageBody>
             <PageActions>

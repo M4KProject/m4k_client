@@ -7,6 +7,6 @@ addResponsiveListener();
 // router.add('/cvc/:page', () => import('./cvc'));
 // router.add('/cvc/:page/:doc', () => import('./cvc'));
 
-router.add('', () => import('./admin'));
+router.add('/admin', () => import('./admin'));
 
 router.forceRefresh();

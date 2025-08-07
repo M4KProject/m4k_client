@@ -13,7 +13,7 @@ import { JSX } from 'preact';
 import { useMsg } from '@common/hooks';
 import { Loading } from '@common/components';
 import { PlaylistContent } from './Content/PlaylistContent';
-import { content$, contentKey$ } from '@/controllers';
+import { content$ } from '@/controllers';
 import { EmptyContent } from './Content/EmptyContent';
 import { HiboutikContent } from './Content/HiboutikContent';
 
@@ -54,7 +54,7 @@ export const ContentPage = () => {
     return (
         <Page cls={c}>
             <PageHeader title={`${label}: ${title}`}>
-                <Button title="Rafraîchir" icon={<MdSync />} color="primary" onClick={() => contentKey$.signal()} />
+                <Button title="Rafraîchir" icon={<MdSync />} color="primary" onClick={() => content$.signal()} />
                 <SearchField />
             </PageHeader>
             <PageBody>

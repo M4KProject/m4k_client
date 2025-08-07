@@ -1,8 +1,8 @@
 import { Css, flexCenter, flexColumn, flexRow } from '@common/helpers';
-import { useAsync, useCss, useMsg } from '@common/hooks';
-import { Page, PageHeader, PageBody, Div, Button, Field, Loading } from '@common/components';
-import { deviceColl, DeviceModel } from '@common/api';
-import { deviceKey$ } from '../controllers/Router';
+import { useCss, useMsg } from '@common/hooks';
+import { Page, PageHeader, PageBody, Div, Button, Field } from '@common/components';
+import { deviceColl } from '@common/api';
+import { device$ } from '../controllers/Router';
 import { useState } from 'preact/hooks';
 import { MdSync } from 'react-icons/md';
 
@@ -73,14 +73,12 @@ const css: Css = {
 
 export const DevicePage = () => {
     const c = useCss('DevicePage', css);
-    const deviceKey = useMsg(deviceKey$);
+    const device = useMsg(device$);
+    const deviceKey = device?.key;
     const [command, setCommand] = useState('');
     const [consoleOutput, setConsoleOutput] = useState('Console ready...\n');
-    
-    const [device, refreshDevice] = useAsync<DeviceModel|null>(null, async () => {
-        if (!deviceKey) return null;
-        return await deviceColl.findOne({ key: deviceKey }) || await deviceColl.get(deviceKey);
-    }, 'device', [deviceKey]);
+
+    const refreshDevice = async () => device$.set(await deviceColl.findKey(deviceKey));
 
     const executeAction = async (action: string) => {
         if (!device) return;

@@ -4,9 +4,10 @@ import { MdAddToPhotos, MdSync, MdDeleteForever } from "react-icons/md";
 import { Field, Button, Table, Cell, CellHeader, Row, TableBody, TableHead, Page, PageHeader, PageBody, tooltip, showError } from '@common/components';
 import { isSearched, Css } from '@common/helpers';
 import { SearchField } from '../components/SearchField';
-import { ModelUpdate, GroupModel, groupColl, auth$, groupId$ } from '@common/api';
+import { ModelUpdate, GroupModel, groupColl, auth$ } from '@common/api';
 import { group$ } from '@/controllers';
 import { isAdvanced$ } from '@/messages';
+import { useEffect } from 'preact/hooks';
 
 const css: Css = {
 };
@@ -15,7 +16,7 @@ export const GroupsPage = () => {
     const c = useCss('GroupsPage', css);
     const search = useMsg(search$);
     const auth = useMsg(auth$);
-    const groupId = useMsg(groupId$);
+    const group = useMsg(group$);
     const isAdvanced = useMsg(isAdvanced$);
     
     const [groups, groupsRefresh] = useAsync([], () => groupColl.find({}));
@@ -39,7 +40,12 @@ export const GroupsPage = () => {
         await groupsRefresh();
     };
 
-    console.debug('GroupsPage', { c, search, auth, groupId, isAdvanced, groups, filteredGroups });
+    useEffect(() => {
+        if (!group) group$.set(groups[0] || null);
+        else if (groups.length === 0) group$.set(null);
+    }, [group, groups])
+
+    console.debug('GroupsPage', { c, search, auth, group, isAdvanced, groups, filteredGroups });
 
     return (
         <Page cls={c}>
@@ -65,7 +71,7 @@ export const GroupsPage = () => {
                                     <Field
                                         name={"C"+i} 
                                         type="switch"
-                                        value={groupId === g.id}
+                                        value={group?.id === g.id}
                                         onValue={v => group$.set(v ? g : null)}
                                     />
                                 </Cell>

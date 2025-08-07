@@ -2,12 +2,13 @@ import { Css, isSearched, toNbr, toStr } from '@common/helpers';
 import { useAsync, useCss } from '@common/hooks';
 import { useMsg } from '@common/hooks';
 import { search$ } from '../messages/search$';
-import { getAuthId, getGroupId, groupColl, groupId$, memberColl, MemberModel, ModelUpdate, Role, userColl } from '@common/api';
+import { getAuthId, getGroupId, groupColl, memberColl, MemberModel, ModelUpdate, Role, userColl } from '@common/api';
 import { Div, Field, Button, Page, PageHeader, PageBody, tooltip, Table, Cell, CellHeader, Row, TableBody, TableHead, showDialog, Form } from '@common/components';
 import { MdAddToPhotos, MdSync, MdDeleteForever } from "react-icons/md";
 import { SearchField } from '../components/SearchField';
 import { useState } from 'preact/hooks';
 import { isAdvanced$ } from '@/messages';
+import { group$ } from '@/controllers';
 
 const css: Css = {
 };
@@ -49,13 +50,13 @@ export const MemberForm = ({ onClose }: { onClose: () => void }) => {
 export const MembersPage = () => {
     const c = useCss('MembersPage', css);
     const search = useMsg(search$);
-    const groupId = useMsg(groupId$);
+    const group = useMsg(group$);
     const isAdvanced = useMsg(isAdvanced$);
 
     const [users, usersRefresh] = useAsync([], () => userColl.find({}));
     const [groups, groupsRefresh] = useAsync([], () => groupColl.find({}));
     
-    const [members, membersRefresh] = useAsync([], () => memberColl.find(groupId ? { group: groupId } : {}), null, [groupId]);
+    const [members, membersRefresh] = useAsync([], () => memberColl.find(group ? { group: group.id } : {}), null, [group]);
     const filteredMembers = search ? members.filter(g => isSearched(g.desc, search)) : members;
 
     // const emails = useMsg(emails$);
