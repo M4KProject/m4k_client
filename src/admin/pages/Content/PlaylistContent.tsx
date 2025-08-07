@@ -1,4 +1,4 @@
-import { ContentModel, mediaColl } from "@common/api";
+import { ContentModel, mediaColl, PlaylistContentModel, PlaylistEntry } from "@common/api";
 import { addItem, Css, flexColumn, removeIndex, toArray, updateIndex } from "@common/helpers";
 import { useAsync, useCss } from "@common/hooks";
 import { Div, Table, TableHead, TableBody, Row, Cell, CellHeader, Field, Button, tooltip } from "@common/components";
@@ -11,16 +11,7 @@ const css: Css = {
     }
 };
 
-interface PlaylistEntry {
-    title: string;
-    duration?: number; // en minutes
-    startTime?: string; // format HH:MM
-    endTime?: string; // format HH:MM
-    language?: string;
-    media?: string;
-}
-
-export const PlaylistContent = ({ data, updateData } : ContentProps<ContentModel>) => {
+export const PlaylistContent = ({ data, updateData } : ContentProps<PlaylistContentModel>) => {
     const c = useCss('PlaylistContent', css);
     
     // Initialiser les données de la playlist si elles n'existent pas

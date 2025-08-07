@@ -36,9 +36,9 @@ export const contentByType: Record<string, (props: ContentProps) => JSX.Element>
   hiboutik: HiboutikContent,
 };
 
-export interface ContentProps {
-  content: ContentModel;
-  data: ContentModel['data'];
+export interface ContentProps<Model extends ContentModel = ContentModel> {
+  content: Model;
+  data: Model['data'];
 }
 
 interface ContentViewerProps {
