@@ -5,36 +5,36 @@ import { Div } from '@common/components';
 const css: Css = {
   '&': {
     ...flexColumn({ align: 'center', justify: 'center' }),
-    minHeight: '100vh',
+    hMin: '100vh',
     backgroundColor: '#f5f5f5',
     fontFamily: 'Roboto, sans-serif',
-    p: 1.25,  // padding: 20px
+    p: 1.25,
   },
   '&Container': {
     bg: 'white',
-    p: 2.5,  // padding: 40px
-    rounded: 6,  // border-radius: 12px
-    elevation: 4,  // box-shadow
+    p: 2.5,
+    rounded: 6,
+    elevation: 4,
     textAlign: 'center',
-    wMax: 25,  // max-width: 400px
+    wMax: 25,
     w: '100%',
   },
   '&SpinnerContainer': {
-    w: 5,  // width: 80px
-    h: 5,  // height: 80px
+    w: 5,
+    h: 5,
     bg: '#28A8D9',
-    rounded: 50,  // border-radius: 50% (large value for circle)
+    rounded: 50,
     m: '0 auto 20px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
   },
   '&Spinner': {
-    w: 2.5,  // width: 40px
-    h: 2.5,  // height: 40px
+    w: 2.5,
+    h: 2.5,
     border: '3px solid white',
     borderTop: '3px solid transparent',
-    rounded: 50,  // border-radius: 50%
+    rounded: 50,
     anim: {
       name: 'spin',
       duration: '1s',
@@ -48,26 +48,26 @@ const css: Css = {
   },
   '&Title': {
     color: '#333',
-    mb: 0.625,  // margin-bottom: 10px
-    fontSize: 1.5,  // font-size: 24px
+    mb: 0.625,
+    fontSize: 1.5,
     fontWeight: '300',
     m: '0 0 10px 0',
   },
   '&Subtitle': {
     color: '#666',
-    mb: 1.875,  // margin-bottom: 30px
-    fontSize: 1,  // font-size: 16px
+    mb: 1.875,
+    fontSize: 1,
     m: '0 0 30px 0',
   },
   '&CodeContainer': {
     bg: '#f8f9fa',
     border: '2px dashed #28A8D9',
-    rounded: 4,  // border-radius: 8px
-    p: 1.25,  // padding: 20px
-    mb: 1.25,  // margin-bottom: 20px
+    rounded: 4,
+    p: 1.25,
+    mb: 1.25,
   },
   '&Code': {
-    fontSize: 2.25,  // font-size: 36px
+    fontSize: 2.25,
     fontWeight: 'bold',
     color: '#28A8D9',
     letterSpacing: '8px',
@@ -75,7 +75,7 @@ const css: Css = {
   },
   '&Footer': {
     color: '#999',
-    fontSize: 0.875,  // font-size: 14px
+    fontSize: 0.875,
     m: '0',
   }
 };
@@ -85,8 +85,8 @@ const generatePairingCode = () => {
   return Math.floor(10000 + Math.random() * 90000).toString();
 };
 
-export const DevicePage = () => {
-  const c = useCss('DevicePage', css);
+export const InitDevice = () => {
+  const c = useCss('InitDevice', css);
   const pairingCode = generatePairingCode();
   
   return (

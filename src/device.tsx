@@ -4,7 +4,7 @@ import { setTheme } from '@common/helpers';
 import { addEl, addResponsiveListener } from '@common/helpers';
 import { setDefaultOptions } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { DevicePage } from './device/DevicePage';
+import { InitDevice } from './device/InitDevice';
 
 console.debug('loaded');
 
@@ -19,7 +19,7 @@ export const mount = () => {
   setTheme('#28A8D9');
 
   _rootEl = addEl('div', { id: 'm4kDevice', parent: 'body' })
-  render(<DevicePage />, _rootEl);
+  render(<InitDevice />, _rootEl);
 
   console.debug('device mounted');
 }
