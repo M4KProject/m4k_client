@@ -1,5 +1,5 @@
 import { Cell, CellHeader, Page, PageBody, PageHeader, Row, Table, TableBody, TableHead } from "@common/components";
-import { useConfigProp } from "@/hooks/useConfigProp";
+import { useConfigProp } from "../hooks/useConfigProp";
 
 export const PlaylistPage = () => {
   const [playlist] = useConfigProp("playlist");

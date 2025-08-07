@@ -1,20 +1,22 @@
 import { Css, flexCenter, flexRow } from '@common/helpers';
-import { useCss } from '@common/hooks';
+import { useCss, useMsg } from '@common/hooks';
+import { device$ } from '../services/device';
 import { Div, Side, SideButton, SideSep } from '@common/components';
-import { JSX, StrictMode } from 'react';
-import { page$, usePage } from '@/messages/page$';
-import { LoadingPage } from '@/pages/LoadingPage';
+import { JSX } from 'preact';
+import { page$, usePage } from '../messages/page$';
+import { LoadingPage } from '../pages/LoadingPage';
 import { MdOutlineScreenshotMonitor, MdSettings, MdBugReport, MdDeveloperBoard, MdEvent, MdPassword, MdFormatListBulleted, MdWeb, MdAccountCircle, MdBuild } from 'react-icons/md';
-import { PasswordPage } from '@/pages/PasswordPage';
-import { SitePage } from '@/pages/SitePage';
-import { ConfigPlaylistPage } from '@/pages/ConfigPlaylistPage';
-import { TestPage } from '@/pages/TestPage';
-import { DebugPage } from '@/pages/DebugPage';
+import { PasswordPage } from '../pages/PasswordPage';
+import { SitePage } from '../pages/SitePage';
+import { ConfigPlaylistPage } from '../pages/ConfigPlaylistPage';
+import { TestPage } from '../pages/TestPage';
+import { DebugPage } from '../pages/DebugPage';
 import { Corners } from './Corners';
-import { KioskPage } from '@/pages/KioskPage';
-import { ActionsPage } from '@/pages/ActionsPage';
-import { EventsPage } from '@/pages/EventsPage';
-import { PlaylistPage } from '@/pages/PlaylistPage';
+import { KioskPage } from '../pages/KioskPage';
+import { ActionsPage } from '../pages/ActionsPage';
+import { EventsPage } from '../pages/EventsPage';
+import { PlaylistPage } from '../pages/PlaylistPage';
+import { PairingPage } from '../pages/PairingPage';
 
 const css: Css = {
   '&': {
@@ -58,6 +60,13 @@ const AppRouter = () => {
 const AppContent = () => {
   const c = useCss('App', css);
   const page = usePage();
+  const device = useMsg(device$);
+  
+  // Si le device n'a pas de groupe, afficher la page de pairage
+  if (!device?.group) {
+    return <PairingPage />;
+  }
+  
   return (
     <Div cls={c}>
       {page !== 'kiosk' && (
@@ -88,8 +97,6 @@ const AppContent = () => {
 
 export const App = () => {
   return (
-    <StrictMode>
-      <AppContent />
-    </StrictMode>
+    <AppContent />
   )
 }

@@ -1,6 +1,6 @@
 import { useAsyncEffect } from "@common/hooks";
 import { m4k, M4kConfig } from "@common/m4k";
-import { useState } from "react";
+import { useState } from "preact/hooks";
 
 export const useConfigProp = <K extends keyof M4kConfig, V extends M4kConfig[K]>(prop: K): [V|undefined, (value: V) => Promise<void>] => {
   const [value, setValue] = useState<V|undefined>(undefined);

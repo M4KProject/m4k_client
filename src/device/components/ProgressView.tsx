@@ -1,8 +1,8 @@
 import { autoScrollEnd, Css, flexColumn, Msg } from "@common/helpers";
 import { Div, Progress } from "@common/components";
 import { useCss, useMsg } from "@common/hooks";
-import { dialog$ } from "@/messages/dialog$";
-import { useEffect, useRef } from "react";
+import { dialog$ } from "../messages/dialog$";
+import { useEffect, useRef } from "preact/hooks";
 
 const css: Css = {
     '&': {

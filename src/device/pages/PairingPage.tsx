@@ -1,6 +1,7 @@
-import { useCss } from '@common/hooks';
+import { useCss, useMsg } from '@common/hooks';
 import { Css, flexColumn } from '@common/helpers';
 import { Div } from '@common/components';
+import { device$ } from '../services/device';
 
 const css: Css = {
   '&': {
@@ -67,11 +68,12 @@ const css: Css = {
     mb: 1.25,
   },
   '&Code': {
-    fontSize: 2.25,
+    fontSize: 1.5,  // font-size: 24px (réduit pour s'adapter aux clés plus longues)
     fontWeight: 'bold',
     color: '#28A8D9',
-    letterSpacing: '8px',
+    letterSpacing: '2px', // Espacement réduit pour les clés plus longues
     fontFamily: 'monospace',
+    wordBreak: 'break-all', // Permet de couper les longues clés si nécessaire
   },
   '&Footer': {
     color: '#999',
@@ -80,14 +82,12 @@ const css: Css = {
   }
 };
 
-// Generate random 5-digit code
-const generatePairingCode = () => {
-  return Math.floor(10000 + Math.random() * 90000).toString();
-};
-
-export const InitDevice = () => {
-  const c = useCss('InitDevice', css);
-  const pairingCode = generatePairingCode();
+export const PairingPage = () => {
+  const c = useCss('PairingPage', css);
+  const device = useMsg(device$);
+  
+  // Utilise la clé du device comme code de pairage
+  const pairingCode = device?.key || device?.id || 'Chargement...';
   
   return (
     <Div cls={`${c}`}>
@@ -101,7 +101,7 @@ export const InitDevice = () => {
         </h1>
         
         <p className={`${c}Subtitle`}>
-          Saisissez ce code dans l'interface d'administration
+          Saisissez cette clé dans l'interface d'administration
         </p>
         
         <Div cls={`${c}CodeContainer`}>
@@ -111,7 +111,7 @@ export const InitDevice = () => {
         </Div>
         
         <p className={`${c}Footer`}>
-          Le code se renouvelle automatiquement toutes les 5 minutes
+          Cette clé est unique à cet appareil
         </p>
       </Div>
     </Div>

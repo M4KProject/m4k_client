@@ -1,11 +1,11 @@
 import { Css, Msg } from "@common/helpers";
-import { useEffect, useState } from "react";
+import { useEffect, useState } from "preact/hooks";
 import { m4k } from '@common/m4k';
 import { useTimerMs, usePromise, useMsg, useCss } from "@common/hooks";
-import { setPage } from "@/messages/page$";
+import { setPage } from "../messages/page$";
 import { Button, Div, Field, Form, showDialog } from "@common/components";
 import { MdLock } from "react-icons/md";
-import { device$ } from "@/services/device";
+import { device$ } from "../services/device";
 
 const css: Css = {
     '&Code': {

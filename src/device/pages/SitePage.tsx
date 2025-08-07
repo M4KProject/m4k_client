@@ -1,5 +1,5 @@
 import { Field, Form, Page, PageBody, PageHeader } from "@common/components";
-import { useConfigProp } from "@/hooks/useConfigProp";
+import { useConfigProp } from "../hooks/useConfigProp";
 
 export const SitePage = () => {
   const [url, setUrl] = useConfigProp("url");

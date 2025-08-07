@@ -7,7 +7,7 @@ import { addEl, addResponsiveListener, setCss } from '@common/helpers';
 import { setDefaultOptions } from 'date-fns';
 import { fr } from 'date-fns/locale';
 import { authRefresh } from '@common/api';
-import { app } from '@/app';
+import { app } from '../app';
 import * as controllers from './controllers';
 import * as messages from './messages';
 

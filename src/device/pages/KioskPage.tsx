@@ -3,8 +3,8 @@ import { Button, Div, Iframe } from "@common/components";
 import { useCss, usePromise } from "@common/hooks";
 import { m4k, PlaylistItem  } from "@common/m4k";
 import { useEffect, useRef, useState } from "react";
-import { useConfigProp } from "@/hooks/useConfigProp";
-import { openPasswordDialog } from "@/components/PasswordView";
+import { useConfigProp } from "../hooks/useConfigProp";
+import { openPasswordDialog } from "../components/PasswordView";
 
 const css: Css = {
     '&Container': {

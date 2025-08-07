@@ -1,4 +1,5 @@
 import {Msg} from "@common/helpers/Msg";
+import { JSX } from "preact";
 
 export interface DialogOptions {
     id?: string;

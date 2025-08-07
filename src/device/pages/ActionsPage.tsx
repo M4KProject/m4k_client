@@ -2,8 +2,8 @@ import { Css, flexRow } from "@common/helpers";
 import { m4k } from '@common/m4k';
 import { useCss, usePromise } from "@common/hooks";
 import { Button, Div } from "@common/components";
-import copyPlaylist from "@/copyPlaylist";
-import { newProgressDialog } from "@/components/ProgressView";
+import copyPlaylist from "../copyPlaylist";
+import { newProgressDialog } from "../components/ProgressView";
 
 const css: Css = {
     '&': {
