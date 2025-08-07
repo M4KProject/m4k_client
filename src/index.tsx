@@ -8,6 +8,7 @@ addResponsiveListener();
 // router.add('/cvc/:page/:doc', () => import('./cvc'));
 
 router.add('/admin', () => import('./admin'));
+router.add('/device', () => import('./device'));
 
 // Check if we're on root path and redirect to admin
 const checkRootRedirect = () => {

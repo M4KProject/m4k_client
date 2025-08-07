@@ -1,38 +1,31 @@
 import { render } from 'preact';
-import { App } from './components/App';
-import { initAdminRouter } from './controllers/Router';
 import { addFont } from '@common/helpers';
 import { setTheme } from '@common/helpers';
-import { addEl, addResponsiveListener, setCss } from '@common/helpers';
+import { addEl, addResponsiveListener } from '@common/helpers';
 import { setDefaultOptions } from 'date-fns';
 import { fr } from 'date-fns/locale';
-import { authRefresh } from '@common/api';
+import { DevicePage } from './device/DevicePage';
 
 console.debug('loaded');
 
 let _rootEl: HTMLElement|null = null;
 
 export const mount = () => {
-  console.debug('admin mount');
+  console.debug('mount device');
 
   setDefaultOptions({ locale: fr });
   addResponsiveListener();
   addFont('Roboto');
   setTheme('#28A8D9');
 
-  setCss('font', { 'html,body': { fontFamily: 'Roboto' } });
+  _rootEl = addEl('div', { id: 'm4kDevice', parent: 'body' })
+  render(<DevicePage />, _rootEl);
 
-  initAdminRouter();
-
-  _rootEl = addEl('div', { id: 'm4kAdmin', parent: 'body' })
-  render(<App />, _rootEl);
-
-  console.debug('admin mounted');
-  authRefresh();
+  console.debug('device mounted');
 }
 
 export const unmount = () => {
-  console.debug('admin unmount');
+  console.debug('unmount device');
 
   if (_rootEl) {
     _rootEl.remove();
