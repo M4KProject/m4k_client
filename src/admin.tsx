@@ -1,6 +1,6 @@
 import { render } from 'preact';
-import { App } from './components/App';
-import { initAdminRouter } from './controllers/Router';
+import { App } from './admin/components/App';
+import { initAdminRouter } from './admin/controllers/Router';
 import { addFont } from '@common/helpers';
 import { setTheme } from '@common/helpers';
 import { addEl, addResponsiveListener, setCss } from '@common/helpers';

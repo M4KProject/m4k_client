@@ -6,7 +6,7 @@ import { MdContentCopy, MdDeleteForever } from "react-icons/md";
 import { Div, Field, Table, Cell, CellHeader, Row, TableBody, TableHead, tooltip } from '@common/components';
 import { ContentProps } from './ContentProps';
 import { FieldsEdit } from './FieldsEdit';
-import { app } from '@/app';
+import { app } from '../../../app';
 
 const css: Css = {};
 

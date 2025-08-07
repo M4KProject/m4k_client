@@ -13,8 +13,8 @@ import { AuthPage } from '../pages/AuthPage';
 import { AccountPage } from '../pages/AccountPage';
 import { ContentPage } from '../pages/ContentPage';
 import { auth$ } from '@common/api';
-import { AdminPage, adminPage$ } from '@/controllers/Router';
-import { DevicePage } from '@/pages/DevicePage';
+import { AdminPage, adminPage$ } from '../controllers/Router';
+import { DevicePage } from '../pages/DevicePage';
 
 const css: Css = {
   '&': {

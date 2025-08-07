@@ -5,8 +5,8 @@ import { Field, Button, Table, Cell, CellHeader, Row, TableBody, TableHead, Page
 import { isSearched, Css } from '@common/helpers';
 import { SearchField } from '../components/SearchField';
 import { ModelUpdate, GroupModel, groupColl, auth$ } from '@common/api';
-import { group$ } from '@/controllers';
-import { isAdvanced$ } from '@/messages';
+import { group$ } from '../controllers';
+import { isAdvanced$ } from '../messages';
 import { useEffect } from 'preact/hooks';
 
 const css: Css = {

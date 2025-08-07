@@ -6,7 +6,7 @@ import { Button, Field, Page, PageHeader, PageBody, Table, Cell, CellHeader, Row
 import { MdAddToPhotos, MdSync, MdContentCopy, MdContentPaste, MdEdit, MdDeleteForever } from "react-icons/md";
 import { openContent } from '../controllers/Router';
 import { SearchField } from '../components/SearchField';
-import { isAdvanced$ } from '@/messages';
+import { isAdvanced$ } from '../messages';
 
 const css: Css = {
 };

@@ -1,8 +1,8 @@
 import * as api from '@common/api';
 import * as helpers from '@common/helpers';
 import { global } from '@common/helpers';
-import * as controllers from './controllers';
-import * as messages from './messages';
+import * as controllers from './admin/controllers';
+import * as messages from './admin/messages';
 
 export const app = global.app || (global.app = {});
 

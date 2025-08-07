@@ -6,7 +6,7 @@ import { openDevice } from '../controllers/Router';
 import { Button, Field, Page, PageHeader, PageBody, Table, Cell, CellHeader, Row, TableBody, TableHead, tooltip, showDialog, Form } from '@common/components';
 import { MdSync, MdDeleteForever, MdSettingsRemote, MdAddToPhotos } from "react-icons/md";
 import { SearchField } from '../components/SearchField';
-import { isAdvanced$ } from '@/messages';
+import { isAdvanced$ } from '../messages';
 import { useState } from 'preact/hooks';
 
 const css: Css = {

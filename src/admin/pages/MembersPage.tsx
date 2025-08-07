@@ -7,8 +7,8 @@ import { Div, Field, Button, Page, PageHeader, PageBody, tooltip, Table, Cell, C
 import { MdAddToPhotos, MdSync, MdDeleteForever } from "react-icons/md";
 import { SearchField } from '../components/SearchField';
 import { useState } from 'preact/hooks';
-import { isAdvanced$ } from '@/messages';
-import { group$ } from '@/controllers';
+import { isAdvanced$ } from '../messages';
+import { group$ } from '../controllers';
 
 const css: Css = {
 };

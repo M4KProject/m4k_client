@@ -13,7 +13,7 @@ import { JSX } from 'preact';
 import { useMsg } from '@common/hooks';
 import { Loading } from '@common/components';
 import { PlaylistContent } from './Content/PlaylistContent';
-import { content$ } from '@/controllers';
+import { content$ } from '../controllers';
 import { EmptyContent } from './Content/EmptyContent';
 import { HiboutikContent } from './Content/HiboutikContent';
 

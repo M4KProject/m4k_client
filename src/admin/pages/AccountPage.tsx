@@ -10,7 +10,7 @@ import { auth$, logout, userColl } from '@common/api';
 import { MdLogout, MdPassword } from "react-icons/md";
 import { useState } from 'preact/hooks';
 import { LoadingPage } from './LoadingPage';
-import { isAdvanced$ } from '@/messages';
+import { isAdvanced$ } from '../messages';
 
 const css: Css = {
 }

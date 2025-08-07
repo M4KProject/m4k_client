@@ -6,7 +6,7 @@ import { flexColumn } from '@common/helpers';
 import { Side, SideButton, SideSep } from '@common/components';
 import { Div } from '@common/components';
 import { MdHouse, MdPeople, MdDevices, MdSystemUpdate, MdPermMedia, MdAccountCircle } from "react-icons/md";
-import { isAdvanced$ } from '@/messages';
+import { isAdvanced$ } from '../messages';
 
 const css: Css = {
   '&': {
