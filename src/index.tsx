@@ -15,7 +15,8 @@ router.add('/:contentKey', () => import('./contents'));
 const checkRootRedirect = () => {
   const path = window.location.pathname;
   if (path === '/' || path === '') {
-    router.push('/admin/');
+    const isDevice = localStorage.getItem('isDevice');
+    router.push(isDevice ? '/device/' : '/admin/');
   }
 };
 

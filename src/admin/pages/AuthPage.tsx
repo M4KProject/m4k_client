@@ -1,6 +1,6 @@
 import { useCss } from '@common/hooks';
 import { Css, flexColumn, flexRow } from '@common/helpers';
-import { Div,  AuthForm } from '@common/components';
+import { Div,  AuthForm, Button } from '@common/components';
 import logoUrl from '../assets/logo.svg';
 import loginUrl from '../assets/login.png';
 
@@ -36,10 +36,22 @@ const css: Css = {
         height: '15em',
         width: '30em',
     },
+    '&DeviceButton': {
+        position: 'fixed',
+        bottom: 1,
+        left: 1,
+        opacity: 0.7,
+    },
 }
 
 export const AuthPage = () => {
     const c = useCss('AuthPage', css);
+    
+    const handleDeviceMode = () => {
+        localStorage.setItem('isDevice', 'true');
+        window.location.href = '/device/';
+    };
+    
     return (
         <Div cls={`${c}`}>
             <Div cls={`${c}Content`}>
@@ -48,6 +60,14 @@ export const AuthPage = () => {
                 <Div cls={`${c}Illu`} />
             </Div>
             <AuthForm />
+            <Button 
+                cls={`${c}DeviceButton`}
+                color="secondary"
+                onClick={handleDeviceMode}
+                title="Passer en mode device"
+            >
+                Mode Device
+            </Button>
         </Div>
     );
 }
