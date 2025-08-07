@@ -1,6 +1,38 @@
 #!/bin/bash
 
 # Build script for M4K client
+
+# Check if npx is available, install if not
+if ! command -v npx &> /dev/null; then
+    echo "npx not found. Installing npm and npx..."
+    
+    # Check if we can install Node.js/npm
+    if command -v apt-get &> /dev/null; then
+        # Debian/Ubuntu
+        curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
+        sudo apt-get install -y nodejs
+    elif command -v yum &> /dev/null; then
+        # CentOS/RHEL
+        curl -fsSL https://rpm.nodesource.com/setup_lts.x | sudo bash -
+        sudo yum install -y nodejs npm
+    else
+        echo "Cannot automatically install Node.js. Please install it manually."
+        exit 1
+    fi
+    
+    # Verify installation
+    if ! command -v npx &> /dev/null; then
+        echo "Failed to install npx. Please install Node.js manually."
+        exit 1
+    fi
+fi
+
+# Check if pnpm is available
+if ! command -v pnpm &> /dev/null; then
+    echo "pnpm not found. Installing pnpm..."
+    npm install -g pnpm
+fi
+
 echo "Running type check..."
 npx tsc --noEmit
 
