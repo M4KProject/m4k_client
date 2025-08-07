@@ -36,7 +36,7 @@ const css: Css = {
         height: '15em',
         width: '30em',
     },
-    '&DeviceButton': {
+    '& &DeviceButton': {
         position: 'fixed',
         bottom: 1,
         left: 1,
