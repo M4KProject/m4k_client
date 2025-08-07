@@ -1,8 +1,8 @@
 import { useAsyncEffect, useCss } from '@common/hooks';
 import { addJsFileAsync, Css, flexColumn, global } from '@common/helpers';
-import { Button, Div, Field } from '@common/components';
+import { Button, Div } from '@common/components';
 import { useRef, useState, useEffect } from 'preact/hooks';
-import { MdFitScreen, MdZoomIn, MdZoomOut, MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
+import { MdFitScreen, MdZoomIn, MdZoomOut, MdNavigateBefore, MdNavigateNext, MdAccessTime } from 'react-icons/md';
 
 const css: Css = {
   '&': {
@@ -24,12 +24,59 @@ const css: Css = {
     pointerEvents: 'none',
   },
   '&TimeSlotSelector': {
+    position: 'absolute',
+    top: '20px',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    pointerEvents: 'auto',
+    zIndex: 11,
+  },
+  '&TimeSlotButton': {
     backgroundColor: 'rgba(255, 255, 255, 0.95)',
-    padding: '10px',
+    padding: '8px 12px',
     borderRadius: '8px',
     boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+    border: 'none',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    fontSize: '14px',
+    fontWeight: '500',
+    color: '#333',
+  },
+  '&TimeSlotDropdown': {
+    position: 'absolute',
+    top: '100%',
+    left: '50%',
+    transform: 'translateX(-50%)',
+    marginTop: '5px',
+    backgroundColor: 'white',
+    border: '1px solid #ddd',
+    borderRadius: '8px',
+    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
     minWidth: '200px',
-    pointerEvents: 'auto',
+    overflow: 'hidden',
+  },
+  '&TimeSlotOption': {
+    padding: '12px 16px',
+    cursor: 'pointer',
+    borderBottom: '1px solid #f0f0f0',
+    fontSize: '14px',
+    color: '#333',
+    '&:hover': {
+      backgroundColor: '#f5f5f5',
+    },
+    '&:last-child': {
+      borderBottom: 'none',
+    },
+    '&.active': {
+      backgroundColor: '#e3f2fd',
+      color: '#1976d2',
+    },
   },
   '&LanguageFlags': {
     display: 'flex',
@@ -133,8 +180,10 @@ export const PDFViewer = ({ languageEntries }: { languageEntries: LanguageEntry[
   const [pdfDoc, setPdfDoc] = useState<any>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
+  const [allPagesRendered, setAllPagesRendered] = useState(false);
   const [currentLanguage, setCurrentLanguage] = useState(languageEntries[0]?.language || 'default');
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<string>('auto');
+  const [isTimeSlotDropdownOpen, setIsTimeSlotDropdownOpen] = useState(false);
   
   // Group entries by time slot for current language
   const currentLanguageEntries = languageEntries.filter(entry => entry.language === currentLanguage);
@@ -162,6 +211,9 @@ export const PDFViewer = ({ languageEntries }: { languageEntries: LanguageEntry[
     }, {} as Record<string, string>)
   };
   
+  // Convert to Field items format
+  const timeSlotItems = Object.entries(timeSlotOptions).map(([key, label]) => [key, label] as [string, string]);
+  
   // Auto-select based on current time
   const getCurrentTimeSlot = (): string => {
     const now = new Date();
@@ -180,62 +232,90 @@ export const PDFViewer = ({ languageEntries }: { languageEntries: LanguageEntry[
   const currentEntry = timeSlots[activeTimeSlot] || Object.values(timeSlots)[0];
   const url = currentEntry?.url || '';
 
-  const renderPage = async (scale: number, pageNum: number = currentPage) => {
-    console.debug('PDFViewer renderPage', url, scale, pageNum);
+  const renderAllPages = async (scale: number) => {
+    console.debug('PDFViewer renderAllPages', url, scale);
 
-    if (!pdfDoc || !canvasRef.current || pageNum < 1 || pageNum > totalPages) return;
+    if (!pdfDoc || !containerRef.current) return;
 
-    const page = await pdfDoc.getPage(pageNum);
-    const viewport = page.getViewport({ scale });
+    const containerEl = containerRef.current;
+    containerEl.innerHTML = '';
 
-    const canvas = canvasRef.current;
-    const context = canvas.getContext('2d');
-    if (!context) return;
+    for (let pageNum = 1; pageNum <= totalPages; pageNum++) {
+      const page = await pdfDoc.getPage(pageNum);
+      const viewport = page.getViewport({ scale });
 
-    canvas.height = viewport.height;
-    canvas.width = viewport.width;
+      const canvas = document.createElement('canvas');
+      canvas.style.display = 'block';
+      canvas.style.margin = '10px auto';
+      canvas.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.2)';
+      canvas.height = viewport.height;
+      canvas.width = viewport.width;
 
-    const renderContext = {
-      canvasContext: context,
-      viewport: viewport
-    };
-    await page.render(renderContext).promise;
+      const context = canvas.getContext('2d');
+      if (!context) continue;
+
+      const renderContext = {
+        canvasContext: context,
+        viewport: viewport
+      };
+      
+      await page.render(renderContext).promise;
+      containerEl.appendChild(canvas);
+    }
+    
+    setAllPagesRendered(true);
   };
 
   const handleZoomIn = () => {
     const newScale = scale + 0.2;
     console.debug('PDFViewer handleZoomIn', url, newScale);
     setScale(newScale);
-    renderPage(newScale);
+    if (allPagesRendered) {
+      renderAllPages(newScale);
+    }
   };
 
   const handleZoomOut = () => {
     const newScale = Math.max(0.2, scale - 0.2);
     console.debug('PDFViewer handleZoomOut', url, newScale);
     setScale(newScale);
-    renderPage(newScale);
+    if (allPagesRendered) {
+      renderAllPages(newScale);
+    }
   };
 
   const handleFitWidth = () => {
     console.debug('PDFViewer handleFitWidth', url);
     if (!pdfDoc || !containerRef.current) return;
 
-    const page = pdfDoc.getPage(currentPage);
+    const page = pdfDoc.getPage(1);
     page.then((p: any) => {
       const viewport = p.getViewport({ scale: 1 });
       const containerWidth = containerRef.current!.offsetWidth;
       const fitScale = containerWidth / viewport.width;
 
       setScale(fitScale);
-      renderPage(fitScale, currentPage);
+      if (allPagesRendered) {
+        renderAllPages(fitScale);
+      }
     });
+  };
+
+  const scrollToPage = (pageNum: number) => {
+    if (!containerRef.current || !allPagesRendered) return;
+    
+    const canvases = containerRef.current.querySelectorAll('canvas');
+    const targetCanvas = canvases[pageNum - 1];
+    if (targetCanvas) {
+      targetCanvas.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   };
 
   const handlePreviousPage = () => {
     if (currentPage > 1) {
       const newPage = currentPage - 1;
       setCurrentPage(newPage);
-      renderPage(scale, newPage);
+      scrollToPage(newPage);
     }
   };
 
@@ -243,7 +323,7 @@ export const PDFViewer = ({ languageEntries }: { languageEntries: LanguageEntry[
     if (currentPage < totalPages) {
       const newPage = currentPage + 1;
       setCurrentPage(newPage);
-      renderPage(scale, newPage);
+      scrollToPage(newPage);
     }
   };
 
@@ -251,6 +331,7 @@ export const PDFViewer = ({ languageEntries }: { languageEntries: LanguageEntry[
     setCurrentLanguage(language);
     setCurrentPage(1);
     setPdfDoc(null);
+    setAllPagesRendered(false);
     setSelectedTimeSlot('auto'); // Reset to auto when changing language
   };
 
@@ -258,6 +339,16 @@ export const PDFViewer = ({ languageEntries }: { languageEntries: LanguageEntry[
     setSelectedTimeSlot(timeSlot);
     setCurrentPage(1);
     setPdfDoc(null);
+    setAllPagesRendered(false);
+    setIsTimeSlotDropdownOpen(false);
+  };
+
+  const toggleTimeSlotDropdown = () => {
+    setIsTimeSlotDropdownOpen(!isTimeSlotDropdownOpen);
+  };
+
+  const getCurrentTimeSlotLabel = (): string => {
+    return timeSlotOptions[selectedTimeSlot] || 'Automatique';
   };
 
   // Auto-refresh time slot selection every minute if in auto mode
@@ -271,6 +362,49 @@ export const PDFViewer = ({ languageEntries }: { languageEntries: LanguageEntry[
     
     return () => clearInterval(interval);
   }, [selectedTimeSlot, timeSlots]);
+
+  // Track which page is currently visible
+  useEffect(() => {
+    if (!allPagesRendered || !containerRef.current) return;
+
+    const observerCallback = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          const canvas = entry.target as HTMLCanvasElement;
+          const canvases = Array.from(containerRef.current!.querySelectorAll('canvas'));
+          const pageIndex = canvases.indexOf(canvas);
+          if (pageIndex !== -1) {
+            setCurrentPage(pageIndex + 1);
+          }
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, {
+      root: containerRef.current,
+      threshold: 0.5,
+    });
+
+    const canvases = containerRef.current.querySelectorAll('canvas');
+    canvases.forEach((canvas) => observer.observe(canvas));
+
+    return () => observer.disconnect();
+  }, [allPagesRendered]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    if (!isTimeSlotDropdownOpen) return;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (!target.closest(`[data-dropdown="timeslot"]`)) {
+        setIsTimeSlotDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [isTimeSlotDropdownOpen]);
 
   useAsyncEffect(async () => {
     const containerEl = containerRef.current;
@@ -292,35 +426,39 @@ export const PDFViewer = ({ languageEntries }: { languageEntries: LanguageEntry[
     const pdf = await pdfjsLib.getDocument(url).promise;
     console.debug('PDFViewer useAsyncEffect pdf', pdf);
 
-    const canvas = document.createElement('canvas');
-    canvas.style.display = 'block';
-    canvas.style.margin = '0 auto';
-    canvasRef.current = canvas;
-    containerEl.innerHTML = '';
-    containerEl.appendChild(canvas);
-
-    console.debug('PDFViewer useAsyncEffect canvas', canvas);
-
-    // Set pdfDoc and page info
+    // Set pdfDoc and page info first
     setPdfDoc(pdf);
     setTotalPages(pdf.numPages);
     setCurrentPage(1);
+    setAllPagesRendered(false);
     
-    // Render the first page immediately
-    const page = await pdf.getPage(1);
-    const viewport = page.getViewport({ scale });
+    // Render all pages directly with pdf reference
+    containerEl.innerHTML = '';
+
+    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+      const page = await pdf.getPage(pageNum);
+      const viewport = page.getViewport({ scale });
+
+      const canvas = document.createElement('canvas');
+      canvas.style.display = 'block';
+      canvas.style.margin = '10px auto';
+      canvas.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.2)';
+      canvas.height = viewport.height;
+      canvas.width = viewport.width;
+
+      const context = canvas.getContext('2d');
+      if (!context) continue;
+
+      const renderContext = {
+        canvasContext: context,
+        viewport: viewport
+      };
+      
+      await page.render(renderContext).promise;
+      containerEl.appendChild(canvas);
+    }
     
-    const context = canvas.getContext('2d');
-    if (!context) return;
-
-    canvas.height = viewport.height;
-    canvas.width = viewport.width;
-
-    const renderContext = {
-      canvasContext: context,
-      viewport: viewport
-    };
-    await page.render(renderContext).promise;
+    setAllPagesRendered(true);
 
     console.debug('PDFViewer initial render complete');
   }, [url, currentLanguage, selectedTimeSlot]);
@@ -330,17 +468,7 @@ export const PDFViewer = ({ languageEntries }: { languageEntries: LanguageEntry[
   return (
     <Div cls={`${c}`}>
       <Div cls={`${c}TopControls`}>
-        {Object.keys(timeSlotOptions).length > 1 && (
-          <Div cls={`${c}TimeSlotSelector`}>
-            <Field
-              type="select"
-              label="Plage horaire"
-              value={selectedTimeSlot}
-              values={timeSlotOptions}
-              onChange={(value: string) => handleTimeSlotChange(value)}
-            />
-          </Div>
-        )}
+        <div></div> {/* Left spacer */}
         
         {languageEntries.length > 1 && (
           <Div cls={`${c}LanguageFlags`}>
@@ -357,6 +485,32 @@ export const PDFViewer = ({ languageEntries }: { languageEntries: LanguageEntry[
           </Div>
         )}
       </Div>
+      
+      {Object.keys(timeSlotOptions).length > 1 && (
+        <Div cls={`${c}TimeSlotSelector`} data-dropdown="timeslot">
+          <button 
+            className={`${c}TimeSlotButton`}
+            onClick={toggleTimeSlotDropdown}
+          >
+            <MdAccessTime size={16} />
+            <span>Plage horaire : {getCurrentTimeSlotLabel()}</span>
+          </button>
+          
+          {isTimeSlotDropdownOpen && (
+            <Div cls={`${c}TimeSlotDropdown`}>
+              {Object.entries(timeSlotOptions).map(([key, label]) => (
+                <div
+                  key={key}
+                  className={`${c}TimeSlotOption ${key === selectedTimeSlot ? 'active' : ''}`}
+                  onClick={() => handleTimeSlotChange(key)}
+                >
+                  {label}
+                </div>
+              ))}
+            </Div>
+          )}
+        </Div>
+      )}
       
       <div className={`${c}Container`} ref={containerRef} />
       <Div cls={`${c}Toolbar`}>
