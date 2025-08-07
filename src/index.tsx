@@ -9,6 +9,7 @@ addResponsiveListener();
 
 router.add('/admin', () => import('./admin'));
 router.add('/device', () => import('./device'));
+router.add('/:contentKey', () => import('./contents'));
 
 // Check if we're on root path and redirect to admin
 const checkRootRedirect = () => {

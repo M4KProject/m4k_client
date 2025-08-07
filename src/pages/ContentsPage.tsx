@@ -1,4 +1,4 @@
-import { Css, isSearched, clipboardCopy, clipboardPaste, toErr } from '@common/helpers';
+import { Css, isSearched, clipboardCopy, clipboardPaste, toErr, toBool } from '@common/helpers';
 import { useAsync, useCss, useMsg } from '@common/hooks';
 import { search$ } from '../messages/search$';
 import { auth$, ContentModel, contentColl, groupId$, groupColl, ModelUpdate, needGroupId } from '@common/api';
@@ -80,8 +80,9 @@ export const ContentsPage = () => {
                 <Table>
                     <TableHead>
                         <Row>
-                            {isAdvanced && <CellHeader>Clé</CellHeader>}
                             {isAdvanced && <CellHeader>Groupe</CellHeader>}
+                            {isAdvanced && <CellHeader>Clé</CellHeader>}
+                            {isAdvanced && <CellHeader>Publique</CellHeader>}
                             <CellHeader>Type</CellHeader>
                             <CellHeader>Titre</CellHeader>
                             {/* <CellHeader>Aperçu</CellHeader> */}
@@ -93,17 +94,22 @@ export const ContentsPage = () => {
                             <Row key={c.id}>
                                 {isAdvanced && (
                                     <Cell>
-                                        <Field {...tooltip(c.id)} value={c.key} onValue={key => handleUpdate(c, { key })} />
-                                    </Cell>
-                                )}
-                                {isAdvanced && (
-                                    <Cell>
                                         <Field
                                             type="select"
                                             items={groups.map(g => [g.id, g.name])}
                                             value={c.group}
                                             onValue={group => handleUpdate(c, { group })}
                                         />
+                                    </Cell>
+                                )}
+                                {isAdvanced && (
+                                    <Cell>
+                                        <Field {...tooltip(c.id)} value={c.key} onValue={key => handleUpdate(c, { key })} />
+                                    </Cell>
+                                )}
+                                {isAdvanced && (
+                                    <Cell>
+                                        <Field type="switch" value={c.public} onValue={v => handleUpdate(c, { public: toBool(v) })} />
                                     </Cell>
                                 )}
                                 <Cell>

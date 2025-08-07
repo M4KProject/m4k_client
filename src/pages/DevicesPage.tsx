@@ -52,7 +52,7 @@ export const DevicesPage = () => {
             <PageHeader title="Les écrans">
                 {/* <Button color="primary" onClick={handleAdd}>
                     <MdAddToPhotos />
-                    Ajouter un écran
+                    Ajouter
                 </Button> */}
                 <Button icon={<MdSync />} color="primary" onClick={devicesRefresh}>
                     Rafraîchir
