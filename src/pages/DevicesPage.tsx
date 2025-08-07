@@ -1,14 +1,45 @@
 import { Css, formatDateTime, isSearched, stringify } from '@common/helpers';
 import { useAsync, useCss, useMsg } from '@common/hooks';
 import { search$ } from '../messages/search$';
-import { contentColl, deviceColl, DeviceModel, getApiTime, groupColl, groupId$, ModelUpdate, toTime } from '@common/api';
+import { contentColl, deviceColl, DeviceModel, fun, getApiTime, groupColl, groupId$, ModelUpdate, toTime } from '@common/api';
 import { openDevice } from '../controllers/Router';
-import { Button, Field, Page, PageHeader, PageBody, Table, Cell, CellHeader, Row, TableBody, TableHead, tooltip } from '@common/components';
-import { MdSync, MdDeleteForever, MdSettingsRemote } from "react-icons/md";
+import { Button, Field, Page, PageHeader, PageBody, Table, Cell, CellHeader, Row, TableBody, TableHead, tooltip, showDialog, Form } from '@common/components';
+import { MdSync, MdDeleteForever, MdSettingsRemote, MdAddToPhotos } from "react-icons/md";
 import { SearchField } from '../components/SearchField';
 import { isAdvanced$ } from '@/messages';
+import { useState } from 'preact/hooks';
 
 const css: Css = {
+};
+
+export const PairingForm = ({ onClose }: { onClose: () => void }) => {
+    const [key, setKey] = useState('');
+    const group = useMsg(groupId$);
+
+    const handlePairing = async () => {
+        if (!key) return;
+        
+        try {
+            console.log('Tentative de pairage avec le code:', key);
+            await fun('GET', `pair/${key}/${group}`);
+            onClose();
+        } catch (error) {
+            console.error('Erreur lors du pairage:', error);
+            alert('Erreur lors du pairage. Vérifiez le code et réessayez.');
+            onClose();
+        }
+    };
+
+    return (
+        <Form>
+            <Field
+                label="Code de pairage"
+                value={key}
+                onValue={setKey}
+            />
+            <Button title="Pairer l'écran" color="primary" onClick={handlePairing} />
+        </Form>
+    );
 };
 
 export const DevicesPage = () => {
@@ -26,13 +57,16 @@ export const DevicesPage = () => {
 
     const onlineMin = getApiTime() - 30 * 1000;
     
-    // const handleAdd = async () => {
-    //     const groupId = groupId$.v;
-    //     if (!groupId) return;
-    //     const deviceId = prompt("ID de l'écrans à ajouter :");
-    //     if (!deviceId) return;
-    //     await deviceRepo.update(deviceId, { group_id: groupId });
-    // };
+    const handleAdd = async () => {
+        showDialog("Pairer un nouvel écran", (open$) => {
+            return (
+                <PairingForm onClose={() => {
+                    open$.set(false);
+                    devicesRefresh();
+                }} />
+            );
+        });
+    };
 
     const handleUpdate = async (device: DeviceModel, changes: ModelUpdate<DeviceModel>) => {
         await deviceColl.update(device.id, changes);
@@ -50,10 +84,11 @@ export const DevicesPage = () => {
     return (
         <Page cls={c}>
             <PageHeader title="Les écrans">
-                {/* <Button color="primary" onClick={handleAdd}>
-                    <MdAddToPhotos />
-                    Ajouter
-                </Button> */}
+                {isAdvanced && (
+                    <Button icon={<MdAddToPhotos />} color="primary" onClick={handleAdd}>
+                        Ajouter
+                    </Button>
+                )}
                 <Button icon={<MdSync />} color="primary" onClick={devicesRefresh}>
                     Rafraîchir
                 </Button>
