@@ -6,7 +6,8 @@ import { MdFitScreen, MdZoomIn, MdZoomOut, MdNavigateBefore, MdNavigateNext } fr
 
 const css: Css = {
   '&': {
-    ...flexColumn({ align: 'stretch', justify: 'stretch' }),
+    ...flexColumn({ align: 'stretch' }),
+    justifyItems: 'stretch',
     flex: 1,
     height: '100%',
     position: 'relative',
@@ -18,7 +19,7 @@ const css: Css = {
     position: 'relative',
     minHeight: 0,
   },
-  '&Tools': {
+  '&Toolbar': {
     position: 'absolute',
     bottom: '20px',
     left: '50%',
@@ -53,15 +54,27 @@ const css: Css = {
     cursor: 'pointer',
     opacity: 0.6,
     transition: 'opacity 0.2s, backgroundColor 0.2s',
-    '&:hover': {
-      opacity: 1,
-      backgroundColor: 'rgba(0, 0, 0, 0.1)',
-    },
-    '&.active': {
-      opacity: 1,
-      backgroundColor: 'rgba(0, 123, 255, 0.1)',
-      border: '1px solid rgba(0, 123, 255, 0.3)',
-    },
+  },
+  '&LanguageButton:hover': {
+    opacity: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.1)',
+  },
+  '&LanguageButton.active': {
+    opacity: 1,
+    backgroundColor: 'rgba(0, 123, 255, 0.1)',
+    border: '1px solid rgba(0, 123, 255, 0.3)',
+  },
+  '& .Button-primary': {
+    bg: '#7a624a',
+  },
+  '& .Button-primary .ButtonIcon': {
+    fg: '#7a624a',
+  },
+  '& .Button-secondary': {
+    bg: '#5a5a5a',
+  },
+  '& .Button-secondary .ButtonIcon': {
+    fg: '#5a5a5a',
   },
 };
 
@@ -232,18 +245,18 @@ export const PDFViewer = ({ languageEntries }: { languageEntries: LanguageEntry[
   return (
     <Div cls={`${c}`}>
       <div className={`${c}Container`} ref={containerRef} />
-      <Div cls={`${c}Tools`}>
+      <Div cls={`${c}Toolbar`}>
         {languageEntries.length > 1 && (
           <Div cls={`${c}LanguageFlags`}>
             {languageEntries.map(entry => (
-              <button
+              <Button
                 key={entry.language}
-                className={`${c}LanguageButton ${entry.language === currentLanguage ? 'active' : ''}`}
+                cls={`${c}LanguageButton ${entry.language === currentLanguage ? 'active' : ''}`}
+                color={currentPage <= 1 ? "secondary" : "primary"} 
                 onClick={() => handleLanguageChange(entry.language)}
-                title={`${entry.title} (${entry.language})`}
               >
                 {getLanguageFlag(entry.language)}
-              </button>
+              </Button>
             ))}
           </Div>
         )}
