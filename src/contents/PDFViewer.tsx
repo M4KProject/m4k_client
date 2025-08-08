@@ -49,7 +49,7 @@ export const PDFViewer = ({ url }: { url: string }) => {
 
       const canvas = document.createElement('canvas');
       canvas.style.display = 'block';
-      canvas.style.margin = '10px auto';
+      canvas.style.margin = '0 auto';
       canvas.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.2)';
       canvas.height = viewport.height;
       canvas.width = viewport.width;
@@ -206,7 +206,7 @@ export const PDFViewer = ({ url }: { url: string }) => {
 
       const canvas = document.createElement('canvas');
       canvas.style.display = 'block';
-      canvas.style.margin = '10px auto';
+      canvas.style.margin = '0 auto';
       canvas.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.2)';
       canvas.height = viewport.height;
       canvas.width = viewport.width;
