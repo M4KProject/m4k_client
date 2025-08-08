@@ -12,7 +12,7 @@ const css: Css = {
         h: 4,
         m: -2,
         bg: 'black',
-        opacity: 0.1,
+        opacity: 0,
         transform: 'rotate(45deg)'
     },
 }
