@@ -65,9 +65,7 @@ export const AuthPage = () => {
                 color="secondary"
                 onClick={handleDeviceMode}
                 title="Passer en mode device"
-            >
-                Mode Device
-            </Button>
+            />
         </Div>
     );
 }
