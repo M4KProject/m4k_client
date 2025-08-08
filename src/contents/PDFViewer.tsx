@@ -190,9 +190,19 @@ export const PDFViewer = ({ url }: { url: string }) => {
     // Render all pages directly with pdf reference
     containerEl.innerHTML = '';
 
+    // Calculate fit width scale based on first page
+    const firstPage = await pdf.getPage(1);
+    const firstViewport = firstPage.getViewport({ scale: 1 });
+    const containerWidth = containerEl.offsetWidth;
+    const fitScale = containerWidth / firstViewport.width;
+    
+    // Use the calculated fit scale instead of the default scale
+    const actualScale = fitScale;
+    setScale(actualScale);
+
     for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
       const page = await pdf.getPage(pageNum);
-      const viewport = page.getViewport({ scale });
+      const viewport = page.getViewport({ scale: actualScale });
 
       const canvas = document.createElement('canvas');
       canvas.style.display = 'block';
