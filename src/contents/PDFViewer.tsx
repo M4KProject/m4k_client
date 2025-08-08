@@ -2,28 +2,19 @@ import { useAsyncEffect, useCss } from '@common/hooks';
 import { addJsFileAsync, Css, flexColumn, global } from '@common/helpers';
 import { Div } from '@common/components';
 import { useRef, useState, useEffect } from 'preact/hooks';
-import { TimeSlotSelector } from './TimeSlotSelector';
-import { LanguageFlags } from './LanguageFlags';
-import { Toolbar } from './Toolbar';
+import { PDFToolbar } from './PDFToolbar';
 
 const css: Css = {
   '&': {
     ...flexColumn({ align: 'stretch' }),
     justifyItems: 'stretch',
-    flex: 1,
+    width: '100%',
     height: '100%',
-    position: 'relative',
-  },
-  '&TopControls': {
     position: 'absolute',
-    top: '20px',
-    left: '20px',
-    right: '20px',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-    zIndex: 10,
-    pointerEvents: 'none',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
   '&Container': {
     flex: 1,
@@ -31,20 +22,11 @@ const css: Css = {
     textAlign: 'center',
     position: 'relative',
     minHeight: 0,
+    paddingBottom: '80px', // Space for toolbar
   },
 };
 
-interface LanguageEntry {
-  language: string;
-  url: string;
-  title: string;
-  startTime?: string;
-  endTime?: string;
-  duration?: number;
-}
-
-
-export const PDFViewer = ({ languageEntries }: { languageEntries: LanguageEntry[] }) => {
+export const PDFViewer = ({ url }: { url: string }) => {
   const c = useCss('PDFViewer', css);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [scale, setScale] = useState(1.0);
@@ -52,39 +34,6 @@ export const PDFViewer = ({ languageEntries }: { languageEntries: LanguageEntry[
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [allPagesRendered, setAllPagesRendered] = useState(false);
-  const [currentLanguage, setCurrentLanguage] = useState(languageEntries[0]?.language || 'default');
-  const [selectedTimeSlot, setSelectedTimeSlot] = useState<string>('auto');
-  
-  // Group entries by time slot for current language
-  const currentLanguageEntries = languageEntries.filter(entry => entry.language === currentLanguage);
-  
-  // Create time slots - each entry gets its own slot
-  const timeSlots: Record<string, LanguageEntry> = {};
-  
-  currentLanguageEntries.forEach((entry, index) => {
-    const key = entry.startTime && entry.endTime 
-      ? `${entry.startTime}-${entry.endTime}`
-      : `entry-${index}`;
-    timeSlots[key] = entry;
-  });
-  
-  // Auto-select based on current time
-  const getCurrentTimeSlot = (): string => {
-    const now = new Date();
-    const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
-    
-    for (const [key, entry] of Object.entries(timeSlots)) {
-      if (entry.startTime && entry.endTime && 
-          currentTime >= entry.startTime && currentTime <= entry.endTime) {
-        return key;
-      }
-    }
-    return Object.keys(timeSlots)[0] || 'default';
-  };
-  
-  const activeTimeSlot = selectedTimeSlot === 'auto' ? getCurrentTimeSlot() : selectedTimeSlot;
-  const currentEntry = timeSlots[activeTimeSlot] || Object.values(timeSlots)[0];
-  const url = currentEntry?.url || '';
 
   const renderAllPages = async (scale: number) => {
     console.debug('PDFViewer renderAllPages', url, scale);
@@ -181,20 +130,6 @@ export const PDFViewer = ({ languageEntries }: { languageEntries: LanguageEntry[
     }
   };
 
-  const handleLanguageChange = (language: string) => {
-    setCurrentLanguage(language);
-    setCurrentPage(1);
-    setPdfDoc(null);
-    setAllPagesRendered(false);
-    setSelectedTimeSlot('auto'); // Reset to auto when changing language
-  };
-
-  const handleTimeSlotChange = (timeSlot: string) => {
-    setSelectedTimeSlot(timeSlot);
-    setCurrentPage(1);
-    setPdfDoc(null);
-    setAllPagesRendered(false);
-  };
 
 
   // Track which page is currently visible
@@ -281,30 +216,15 @@ export const PDFViewer = ({ languageEntries }: { languageEntries: LanguageEntry[
     setAllPagesRendered(true);
 
     console.debug('PDFViewer initial render complete');
-  }, [url, currentLanguage, selectedTimeSlot]);
+  }, [url]);
 
   console.debug('PDFViewer', { url });
 
   return (
     <Div cls={`${c}`}>
-      <Div cls={`${c}TopControls`}>
-        <TimeSlotSelector
-          languageEntries={currentLanguageEntries}
-          selectedTimeSlot={selectedTimeSlot}
-          activeTimeSlot={activeTimeSlot}
-          onTimeSlotChange={handleTimeSlotChange}
-        />
-        
-        <LanguageFlags
-          languageEntries={languageEntries}
-          currentLanguage={currentLanguage}
-          onLanguageChange={handleLanguageChange}
-        />
-      </Div>
-      
       <div className={`${c}Container`} ref={containerRef} />
       
-      <Toolbar
+      <PDFToolbar
         currentPage={currentPage}
         totalPages={totalPages}
         onPreviousPage={handlePreviousPage}

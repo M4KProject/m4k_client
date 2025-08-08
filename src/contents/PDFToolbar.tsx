@@ -39,7 +39,7 @@ const css: Css = {
   },
 };
 
-interface ToolbarProps {
+interface PDFToolbarProps {
   currentPage: number;
   totalPages: number;
   onPreviousPage: () => void;
@@ -49,7 +49,7 @@ interface ToolbarProps {
   onFitWidth: () => void;
 }
 
-export const Toolbar = ({
+export const PDFToolbar = ({
   currentPage,
   totalPages,
   onPreviousPage,
@@ -57,8 +57,8 @@ export const Toolbar = ({
   onZoomIn,
   onZoomOut,
   onFitWidth
-}: ToolbarProps) => {
-  const c = useCss('Toolbar', css);
+}: PDFToolbarProps) => {
+  const c = useCss('PDFToolbar', css);
   
   return (
     <Div cls={`${c}`}>
