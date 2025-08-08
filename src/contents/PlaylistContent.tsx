@@ -27,16 +27,27 @@ const css: Css = {
   },
   '&LanguageSelect .Button': {
     fontSize: '3rem',
-    bg: '#7a624a',
   },
   '&PDFContainer': {
     flex: 1,
     position: 'relative',
     height: '100vh',
   },
+  '& .Button-secondary': {
+    bg: '#7a624a',
+  },
+  '& .Button-primary': {
+    bg: '#7a624a',
+  },
   '& .SelectDropdown': {
     bg: '#ffffff80',
-  }
+  },
+  '& .Button-secondary:hover &Icon': {
+    bg: '#7a624a',
+  },
+  '& .Button-primary:hover &Icon': {
+    bg: '#7a624a',
+  },
 };
 
 // Observables globaux pour la sélection des time slots et langues
