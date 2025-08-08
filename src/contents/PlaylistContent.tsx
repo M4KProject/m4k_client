@@ -1,7 +1,7 @@
 import { useCss, useMsg } from '@common/hooks';
-import { Css, flexColumn, dateToSeconds, Msg } from '@common/helpers';
+import { Css, flexColumn, dateToSeconds, Msg, uniq } from '@common/helpers';
 import { Div } from '@common/components';
-import { useState } from 'preact/hooks';
+import { useMemo, useState } from 'preact/hooks';
 import type { ContentProps } from './ContentViewer';
 import { mediaColl, PlaylistContentModel } from '@common/api';
 import { PDFViewer } from './PDFViewer';
@@ -33,94 +33,51 @@ const css: Css = {
   },
 };
 
-// Observable pour la sélection des time slots
-const selectedTimeSlot$ = new Msg<string>('auto');
-
+// Observables globaux pour la sélection des time slots et langues
 export const PlaylistContent = ({ content, medias }: ContentProps<PlaylistContentModel>) => {
   const c = useCss('PlaylistContent', css);
   console.debug('PlaylistContent', content, content.data.items);
 
-  const [currentLanguage, setCurrentLanguage] = useState<string>('');
-  const selectedTimeSlot = useMsg(selectedTimeSlot$);
+  const selectedTime$ = useMemo(() => new Msg(0), []);
+  const language$ = useMemo(() => new Msg(''), []);
 
-  // Create all language entries (all items, not just first per language)
-  const languageEntries = content.data.items.map((item) => {
-    const mediaId = item.media;
-    const media = medias.find(m => m.id === mediaId);
-    const mediaUrl = mediaColl.getUrl(mediaId, media.file);
-    
-    return {
-      language: item.language || 'default',
-      url: mediaUrl,
-      title: item.title,
-      startTime: item.startTime,
-      endTime: item.endTime,
-      duration: item.duration
-    };
-  });
+  console.debug('PlaylistContent msg', { selectedTime$, language$ })
 
-  // Set initial language if not set
-  if (!currentLanguage && languageEntries.length > 0) {
-    setCurrentLanguage(languageEntries[0].language);
-  }
+  const selectedTime = useMsg(selectedTime$);
+  const language = useMsg(language$);
 
-  // Get current language entries for time slot selection
-  const currentLanguageEntries = languageEntries.filter(entry => entry.language === currentLanguage);
+  const time = selectedTime || dateToSeconds();
 
-  // Create time slots for auto-selection
-  const timeSlots: Record<string, typeof languageEntries[0]> = {};
-  currentLanguageEntries.forEach((entry, index) => {
-    const key = entry.startTime !== undefined && entry.endTime !== undefined 
-      ? `${entry.startTime}-${entry.endTime}`
-      : `entry-${index}`;
-    timeSlots[key] = entry;
-  });
+  console.debug('PlaylistContent values', { selectedTime, language, time })
 
-  // Auto-select based on current time
-  const getCurrentTimeSlot = (): string => {
-    const currentTimeSeconds = dateToSeconds(new Date());
-    
-    for (const [key, entry] of Object.entries(timeSlots)) {
-      if (entry.startTime !== undefined && entry.endTime !== undefined && 
-          currentTimeSeconds >= entry.startTime && currentTimeSeconds <= entry.endTime) {
-        return key;
-      }
-    }
-    return Object.keys(timeSlots)[0] || 'default';
-  };
+  const items = content.data.items;
+  const timeItems = items.filter(i => i.startTime <= time && time <= i.endTime);
+  const languageItems = timeItems.filter(i => i.language === language);
+  const currentItem = languageItems[0] || timeItems[0] || items[0];
 
-  const activeTimeSlot = selectedTimeSlot === 'auto' ? getCurrentTimeSlot() : selectedTimeSlot;
-  const currentEntry = timeSlots[activeTimeSlot] || Object.values(timeSlots)[0];
+  console.debug('PlaylistContent filter', { items, timeItems, languageItems, currentItem });
 
-  const handleLanguageChange = (language: string) => {
-    setCurrentLanguage(language);
-    selectedTimeSlot$.set('auto'); // Reset to auto when changing language
-  };
+  const mediaId = currentItem.media;
+  const media = medias.find(m => m.id === mediaId);
+  const mediaUrl = media && mediaColl.getUrl(mediaId, media.file);
 
-  const handleTimeSlotChange = (timeSlot: string) => {
-    selectedTimeSlot$.set(timeSlot);
-  };
+  console.debug('PlaylistContent media', { mediaId, media, mediaUrl });
+
+  const times = uniq(items.map(item => item.startTime));
+  const languages = uniq(items.map(item => item.language));
+
+  console.debug('PlaylistContent media', { mediaId, media, mediaUrl });
 
   return (
     <Div cls={`${c}`}>
       <Div cls={`${c}TopControls`}>
-        <TimeSlotSelector
-          languageEntries={currentLanguageEntries}
-          selectedTimeSlot={selectedTimeSlot}
-          activeTimeSlot={activeTimeSlot}
-          onTimeSlotChange={handleTimeSlotChange}
-        />
-        
-        <LanguageFlags
-          languageEntries={languageEntries}
-          currentLanguage={currentLanguage}
-          onLanguageChange={handleLanguageChange}
-        />
+        <TimeSlotSelector times={times} selectedTime$={selectedTime$} />
+        <LanguageFlags languages={languages} language$={language$} />
       </Div>
       
-      {currentEntry && (
+      {mediaUrl && (
         <Div cls={`${c}PDFContainer`}>
-          <PDFViewer url={currentEntry.url} />
+          <PDFViewer url={mediaUrl} />
         </Div>
       )}
     </Div>

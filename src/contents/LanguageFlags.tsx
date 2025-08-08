@@ -1,5 +1,5 @@
-import { useCss } from '@common/hooks';
-import { Css } from '@common/helpers';
+import { useCss, useMsg } from '@common/hooks';
+import { Css, Msg } from '@common/helpers';
 import { Button, Div } from '@common/components';
 
 const css: Css = {
@@ -34,19 +34,9 @@ const css: Css = {
   },
 };
 
-interface LanguageEntry {
-  language: string;
-  url: string;
-  title: string;
-  startTime?: number; // Seconds since midnight
-  endTime?: number; // Seconds since midnight
-  duration?: number;
-}
-
 interface LanguageFlagsProps {
-  languageEntries: LanguageEntry[];
-  currentLanguage: string;
-  onLanguageChange: (language: string) => void;
+  languages: string[];
+  language$: Msg<string>;
 }
 
 const getLanguageFlag = (language: string): string => {
@@ -63,28 +53,23 @@ const getLanguageFlag = (language: string): string => {
   return flagMap[language.toLowerCase()] || '🏳️';
 };
 
-export const LanguageFlags = ({ 
-  languageEntries, 
-  currentLanguage, 
-  onLanguageChange 
-}: LanguageFlagsProps) => {
+export const LanguageFlags = ({ languages, language$ }: LanguageFlagsProps) => {
   const c = useCss('LanguageFlags', css);
   
-  if (languageEntries.length <= 1) {
+  const currentLanguage = useMsg(language$);
+  
+  if (languages.length <= 1) {
     return null;
   }
   
-  // Get unique languages
-  const uniqueLanguages = [...new Set(languageEntries.map(entry => entry.language))];
-  
   return (
     <Div cls={`${c}`}>
-      {uniqueLanguages.map(language => (
+      {languages.map(language => (
         <Button
           key={language}
           cls={`${c}Button ${language === currentLanguage ? 'active' : ''}`}
           color={language === currentLanguage ? "primary" : "secondary"} 
-          onClick={() => onLanguageChange(language)}
+          onClick={() => language$.set(language)}
         >
           {getLanguageFlag(language)}
         </Button>
