@@ -24,15 +24,12 @@ const css: Css = {
     pointerEvents: 'none',
   },
   '&TimeSlotSelector': {
-    position: 'absolute',
-    top: '20px',
-    left: '50%',
-    transform: 'translateX(-50%)',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+    padding: '10px',
+    borderRadius: '8px',
+    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
     pointerEvents: 'auto',
-    zIndex: 11,
+    position: 'relative',
   },
   '&TimeSlotButton': {
     backgroundColor: 'rgba(255, 255, 255, 0.95)',
@@ -51,15 +48,16 @@ const css: Css = {
   '&TimeSlotDropdown': {
     position: 'absolute',
     top: '100%',
-    left: '50%',
-    transform: 'translateX(-50%)',
+    left: '0',
     marginTop: '5px',
     backgroundColor: 'white',
     border: '1px solid #ddd',
     borderRadius: '8px',
     boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-    minWidth: '200px',
+    minWidth: '250px',
+    maxWidth: '350px',
     overflow: 'hidden',
+    zIndex: 20,
   },
   '&TimeSlotOption': {
     padding: '12px 16px',
@@ -67,16 +65,20 @@ const css: Css = {
     borderBottom: '1px solid #f0f0f0',
     fontSize: '14px',
     color: '#333',
-    '&:hover': {
-      backgroundColor: '#f5f5f5',
-    },
-    '&:last-child': {
-      borderBottom: 'none',
-    },
-    '&.active': {
-      backgroundColor: '#e3f2fd',
-      color: '#1976d2',
-    },
+  },
+  '&TimeSlotOption:hover': {
+    backgroundColor: '#f5f5f5',
+  },
+  '&TimeSlotOption:last-child': {
+    borderBottom: 'none',
+  },
+  '&TimeSlotOption.active': {
+    backgroundColor: '#e3f2fd',
+    color: '#1976d2',
+    fontWeight: 'bold',
+  },
+  '&TimeSlotOption.current': {
+    fontWeight: 'bold',
   },
   '&LanguageFlags': {
     display: 'flex',
@@ -175,7 +177,6 @@ const getLanguageFlag = (language: string): string => {
 export const PDFViewer = ({ languageEntries }: { languageEntries: LanguageEntry[] }) => {
   const c = useCss('PDFViewer', css);
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
   const [scale, setScale] = useState(1.0);
   const [pdfDoc, setPdfDoc] = useState<any>(null);
   const [currentPage, setCurrentPage] = useState(1);
@@ -184,35 +185,36 @@ export const PDFViewer = ({ languageEntries }: { languageEntries: LanguageEntry[
   const [currentLanguage, setCurrentLanguage] = useState(languageEntries[0]?.language || 'default');
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<string>('auto');
   const [isTimeSlotDropdownOpen, setIsTimeSlotDropdownOpen] = useState(false);
+  // Get current time
+  const getCurrentTime = () => {
+    const now = new Date();
+    return `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+  };
+  
+  const [currentTime, setCurrentTime] = useState(() => getCurrentTime());
   
   // Group entries by time slot for current language
   const currentLanguageEntries = languageEntries.filter(entry => entry.language === currentLanguage);
   
-  // Create time slots with auto-selection
-  const timeSlots = currentLanguageEntries.reduce((slots, entry) => {
+  // Create time slots - each entry gets its own slot
+  const timeSlots: Record<string, LanguageEntry> = {};
+  
+  currentLanguageEntries.forEach((entry, index) => {
     const key = entry.startTime && entry.endTime 
       ? `${entry.startTime}-${entry.endTime}`
-      : 'default';
-    if (!slots[key]) {
-      slots[key] = entry;
-    }
-    return slots;
-  }, {} as Record<string, LanguageEntry>);
+      : `entry-${index}`;
+    timeSlots[key] = entry;
+  });
   
-  // Add 'auto' option
+  // Add 'auto' option with current time
   const timeSlotOptions = {
-    'auto': 'Automatique',
+    'auto': `Automatique (${currentTime})`,
     ...Object.keys(timeSlots).reduce((opts, key) => {
       const entry = timeSlots[key];
-      opts[key] = key === 'default' 
-        ? entry.title 
-        : `${entry.startTime} - ${entry.endTime}`;
+      opts[key] = entry.title;
       return opts;
     }, {} as Record<string, string>)
   };
-  
-  // Convert to Field items format
-  const timeSlotItems = Object.entries(timeSlotOptions).map(([key, label]) => [key, label] as [string, string]);
   
   // Auto-select based on current time
   const getCurrentTimeSlot = (): string => {
@@ -348,20 +350,20 @@ export const PDFViewer = ({ languageEntries }: { languageEntries: LanguageEntry[
   };
 
   const getCurrentTimeSlotLabel = (): string => {
+    if (selectedTimeSlot === 'auto') {
+      return `Automatique (${currentTime})`;
+    }
     return timeSlotOptions[selectedTimeSlot] || 'Automatique';
   };
 
   // Auto-refresh time slot selection every minute if in auto mode
   useEffect(() => {
-    if (selectedTimeSlot !== 'auto') return;
-    
     const interval = setInterval(() => {
-      // This will trigger a re-render and update the activeTimeSlot
-      setCurrentPage(prev => prev); // Force re-render without changing state
-    }, 60000); // Check every minute
+      setCurrentTime(getCurrentTime());
+    }, 60000); // Update every minute
     
     return () => clearInterval(interval);
-  }, [selectedTimeSlot, timeSlots]);
+  }, []);
 
   // Track which page is currently visible
   useEffect(() => {
@@ -468,7 +470,42 @@ export const PDFViewer = ({ languageEntries }: { languageEntries: LanguageEntry[
   return (
     <Div cls={`${c}`}>
       <Div cls={`${c}TopControls`}>
-        <div></div> {/* Left spacer */}
+        {Object.keys(timeSlotOptions).length > 1 && (
+          <Div cls={`${c}TimeSlotSelector`} data-dropdown="timeslot">
+            <button 
+              className={`${c}TimeSlotButton`}
+              onClick={toggleTimeSlotDropdown}
+            >
+              <MdAccessTime size={16} />
+              <span>Plage horaire : {getCurrentTimeSlotLabel()}</span>
+            </button>
+            
+            {isTimeSlotDropdownOpen && (
+              <Div cls={`${c}TimeSlotDropdown`}>
+                {Object.entries(timeSlotOptions).map(([key, label]) => {
+                  const isActive = key === selectedTimeSlot;
+                  const isCurrent = key === activeTimeSlot && selectedTimeSlot === 'auto';
+                  const className = `${c}TimeSlotOption ${isActive ? 'active' : ''} ${isCurrent ? 'current' : ''}`;
+                  
+                  return (
+                    <div
+                      key={key}
+                      className={className}
+                      onClick={() => handleTimeSlotChange(key)}
+                    >
+                      {label}
+                      {key !== 'auto' && timeSlots[key]?.startTime && timeSlots[key]?.endTime && (
+                        <div style={{ fontSize: '12px', opacity: 0.7, marginTop: '2px' }}>
+                          {timeSlots[key].startTime} - {timeSlots[key].endTime}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </Div>
+            )}
+          </Div>
+        )}
         
         {languageEntries.length > 1 && (
           <Div cls={`${c}LanguageFlags`}>
@@ -485,32 +522,6 @@ export const PDFViewer = ({ languageEntries }: { languageEntries: LanguageEntry[
           </Div>
         )}
       </Div>
-      
-      {Object.keys(timeSlotOptions).length > 1 && (
-        <Div cls={`${c}TimeSlotSelector`} data-dropdown="timeslot">
-          <button 
-            className={`${c}TimeSlotButton`}
-            onClick={toggleTimeSlotDropdown}
-          >
-            <MdAccessTime size={16} />
-            <span>Plage horaire : {getCurrentTimeSlotLabel()}</span>
-          </button>
-          
-          {isTimeSlotDropdownOpen && (
-            <Div cls={`${c}TimeSlotDropdown`}>
-              {Object.entries(timeSlotOptions).map(([key, label]) => (
-                <div
-                  key={key}
-                  className={`${c}TimeSlotOption ${key === selectedTimeSlot ? 'active' : ''}`}
-                  onClick={() => handleTimeSlotChange(key)}
-                >
-                  {label}
-                </div>
-              ))}
-            </Div>
-          )}
-        </Div>
-      )}
       
       <div className={`${c}Container`} ref={containerRef} />
       <Div cls={`${c}Toolbar`}>
