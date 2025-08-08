@@ -5,7 +5,6 @@ import { useEffect, useMemo } from 'preact/hooks';
 import type { ContentProps } from './ContentViewer';
 import { mediaColl, PlaylistContentModel, PlaylistEntry } from '@common/api';
 import { PDFViewer } from './PDFViewer';
-import { LanguageFlags } from './LanguageFlags';
 
 const css: Css = {
   '&': {
@@ -21,6 +20,12 @@ const css: Css = {
     zIndex: 10,
   },
   '&LanguageSelect': {
+    position: 'absolute',
+    t: 1,
+    r: 1,
+    zIndex: 10,
+  },
+  '&LanguageSelect .Button': {
     position: 'absolute',
     t: 1,
     r: 1,

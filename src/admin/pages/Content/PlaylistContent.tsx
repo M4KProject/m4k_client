@@ -1,7 +1,7 @@
-import { ContentModel, mediaColl, PlaylistContentModel, PlaylistEntry } from "@common/api";
+import { mediaColl, PlaylistContentModel, PlaylistEntry } from "@common/api";
 import { addItem, Css, flexColumn, removeIndex, toArray, updateIndex, secondsToTimeString, parseToSeconds } from "@common/helpers";
 import { useAsync, useCss } from "@common/hooks";
-import { Div, Table, TableHead, TableBody, Row, Cell, CellHeader, Field, Button, tooltip } from "@common/components";
+import { Div, Table, TableHead, TableBody, Row, Cell, CellHeader, Field, Button, tooltip, Flag } from "@common/components";
 import { ContentProps } from "./ContentProps";
 import { MdAddToPhotos, MdDeleteForever } from "react-icons/md";
 
@@ -77,9 +77,14 @@ export const PlaylistContent = ({ data, updateData } : ContentProps<PlaylistCont
                             </Cell>
                             <Cell>
                                 <Field
-                                    type="select"
+                                    type="picker"
                                     value={entry.language || ""}
-                                    items={[["fr", "Français"], ["en", "Anglais"]]}
+                                    items={[
+                                        ["fr", <Flag iso="fr" />],
+                                        ["en", <Flag iso="en" />],
+                                        ["de", <Flag iso="de" />],
+                                        ["es", <Flag iso="es" />],
+                                    ]}
                                     onValue={language => handleUpdate(index, { language })}
                                 />
                             </Cell>

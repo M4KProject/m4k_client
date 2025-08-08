@@ -38,7 +38,7 @@ export const ContentViewer = ({ contentKey }: ContentViewerProps) => {
   const c = useCss('ContentViewer', css);
 
   const auth = useMsg(auth$);
-  const authToken = auth.token;
+  const authToken = auth?.token || '';
 
   const [content] = useAsync(null, () => contentColl.findKey(contentKey), "content", [authToken, contentKey]);
   const [medias] = useAsync(null, () => mediaColl.find({}), "medias", [authToken, contentKey]);
