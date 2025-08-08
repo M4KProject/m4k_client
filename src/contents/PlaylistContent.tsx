@@ -42,11 +42,15 @@ const css: Css = {
   '& .SelectDropdown': {
     bg: '#ffffff80',
   },
-  '& .Button-secondary:hover &Icon': {
-    bg: '#7a624a',
+  '& .Button-secondary:hover .ButtonIcon': {
+    bg: '#ffffffaa',
   },
-  '& .Button-primary:hover &Icon': {
-    bg: '#7a624a',
+  '& .Button-primary:hover .ButtonIcon': {
+    bg: '#ffffffaa',
+  },
+  '& .SelectOption-selected': {
+    fg: '#7a624a',
+    bg: '#efefef',
   },
 };
 
