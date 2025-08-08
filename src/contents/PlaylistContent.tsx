@@ -3,9 +3,9 @@ import { Css, flexColumn, dateToSeconds, Msg, uniq } from '@common/helpers';
 import { Div } from '@common/components';
 import { useMemo, useState } from 'preact/hooks';
 import type { ContentProps } from './ContentViewer';
-import { mediaColl, PlaylistContentModel } from '@common/api';
+import { mediaColl, PlaylistContentModel, PlaylistEntry } from '@common/api';
 import { PDFViewer } from './PDFViewer';
-import { TimeSlotSelector } from './TimeSlotSelector';
+import { PlaylistMenu } from './PlaylistMenu';
 import { LanguageFlags } from './LanguageFlags';
 
 const css: Css = {
@@ -38,24 +38,23 @@ export const PlaylistContent = ({ content, medias }: ContentProps<PlaylistConten
   const c = useCss('PlaylistContent', css);
   console.debug('PlaylistContent', content, content.data.items);
 
-  const selectedTime$ = useMemo(() => new Msg(0), []);
+  const selected$ = useMemo(() => new Msg<PlaylistEntry|null>(null), []);
   const language$ = useMemo(() => new Msg(''), []);
 
-  console.debug('PlaylistContent msg', { selectedTime$, language$ })
+  console.debug('PlaylistContent msg', { selected$, language$ })
 
-  const selectedTime = useMsg(selectedTime$);
+  const selected = useMsg(selected$);
   const language = useMsg(language$);
+  const time = dateToSeconds();
 
-  const time = selectedTime || dateToSeconds();
-
-  console.debug('PlaylistContent values', { selectedTime, language, time })
+  console.debug('PlaylistContent values', { selected, language, time })
 
   const items = content.data.items;
-  const timeItems = items.filter(i => i.startTime <= time && time <= i.endTime);
-  const languageItems = timeItems.filter(i => i.language === language);
-  const currentItem = languageItems[0] || timeItems[0] || items[0];
+  const filteredItems = items.filter(i => i.language === (language || 'fr'));
+  const timeItems = filteredItems.filter(i => i.startTime <= time && i.endTime >= time);
+  const currentItem = selected || timeItems[0] || filteredItems[0] || items[0];
 
-  console.debug('PlaylistContent filter', { items, timeItems, languageItems, currentItem });
+  console.debug('PlaylistContent filter', { items, filteredItems, currentItem });
 
   const mediaId = currentItem.media;
   const media = medias.find(m => m.id === mediaId);
@@ -63,7 +62,6 @@ export const PlaylistContent = ({ content, medias }: ContentProps<PlaylistConten
 
   console.debug('PlaylistContent media', { mediaId, media, mediaUrl });
 
-  const times = uniq(items.map(item => item.startTime));
   const languages = uniq(items.map(item => item.language));
 
   console.debug('PlaylistContent media', { mediaId, media, mediaUrl });
@@ -71,7 +69,7 @@ export const PlaylistContent = ({ content, medias }: ContentProps<PlaylistConten
   return (
     <Div cls={`${c}`}>
       <Div cls={`${c}TopControls`}>
-        <TimeSlotSelector times={times} selectedTime$={selectedTime$} />
+        <PlaylistMenu items={filteredItems.map(item => [item, item.title])} msg={selected$} />
         <LanguageFlags languages={languages} language$={language$} />
       </Div>
       
