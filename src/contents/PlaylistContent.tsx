@@ -1,6 +1,6 @@
 import { useCss, useMsg } from '@common/hooks';
 import { Css, flexColumn, dateToSeconds, Msg, uniq } from '@common/helpers';
-import { Div, Field } from '@common/components';
+import { Div, Field, Flag } from '@common/components';
 import { useEffect, useMemo } from 'preact/hooks';
 import type { ContentProps } from './ContentViewer';
 import { mediaColl, PlaylistContentModel, PlaylistEntry } from '@common/api';
@@ -92,7 +92,7 @@ export const PlaylistContent = ({ content, medias }: ContentProps<PlaylistConten
         <Field type="select" items={filteredItems.map(item => [item, item.title])} msg={selected$} />
       </Div>
       <Div cls={`${c}LanguageSelect`}>
-        <LanguageFlags languages={languages} language$={language$} />
+        <Field type="picker" items={languages.map(iso => [iso, <Flag iso={iso} />])} msg={language$} />
       </Div>
 
       {mediaUrl && (
