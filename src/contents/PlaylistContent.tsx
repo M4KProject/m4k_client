@@ -26,10 +26,7 @@ const css: Css = {
     zIndex: 10,
   },
   '&LanguageSelect .Button': {
-    position: 'absolute',
-    t: 1,
-    r: 1,
-    zIndex: 10,
+    fontSize: '3rem',
   },
   '&PDFContainer': {
     flex: 1,

@@ -77,7 +77,7 @@ export const PlaylistContent = ({ data, updateData } : ContentProps<PlaylistCont
                             </Cell>
                             <Cell>
                                 <Field
-                                    type="picker"
+                                    type="select"
                                     value={entry.language || ""}
                                     items={[
                                         ["fr", <Flag iso="fr" />],
