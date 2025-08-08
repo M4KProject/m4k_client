@@ -1,5 +1,5 @@
 import { useCss } from '@common/hooks';
-import { Css, flexColumn } from '@common/helpers';
+import { Css, flexColumn, dateToSeconds } from '@common/helpers';
 import { Div } from '@common/components';
 import { useState } from 'preact/hooks';
 import type { ContentProps } from './ContentViewer';
@@ -67,7 +67,7 @@ export const PlaylistContent = ({ content, medias }: ContentProps<PlaylistConten
   // Create time slots for auto-selection
   const timeSlots: Record<string, typeof languageEntries[0]> = {};
   currentLanguageEntries.forEach((entry, index) => {
-    const key = entry.startTime && entry.endTime 
+    const key = entry.startTime !== undefined && entry.endTime !== undefined 
       ? `${entry.startTime}-${entry.endTime}`
       : `entry-${index}`;
     timeSlots[key] = entry;
@@ -75,12 +75,11 @@ export const PlaylistContent = ({ content, medias }: ContentProps<PlaylistConten
 
   // Auto-select based on current time
   const getCurrentTimeSlot = (): string => {
-    const now = new Date();
-    const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+    const currentTimeSeconds = dateToSeconds(new Date());
     
     for (const [key, entry] of Object.entries(timeSlots)) {
-      if (entry.startTime && entry.endTime && 
-          currentTime >= entry.startTime && currentTime <= entry.endTime) {
+      if (entry.startTime !== undefined && entry.endTime !== undefined && 
+          currentTimeSeconds >= entry.startTime && currentTimeSeconds <= entry.endTime) {
         return key;
       }
     }

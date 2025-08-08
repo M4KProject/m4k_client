@@ -1,5 +1,5 @@
 import { useCss } from '@common/hooks';
-import { Css } from '@common/helpers';
+import { Css, dateToSeconds, secondsToTimeString } from '@common/helpers';
 import { Div } from '@common/components';
 import { useState, useEffect } from 'preact/hooks';
 import { MdAccessTime } from 'react-icons/md';
@@ -68,8 +68,8 @@ interface TimeSlotEntry {
   language: string;
   url: string;
   title: string;
-  startTime?: string;
-  endTime?: string;
+  startTime?: number; // Seconds since midnight
+  endTime?: number; // Seconds since midnight
   duration?: number;
 }
 
@@ -89,19 +89,22 @@ export const TimeSlotSelector = ({
   const c = useCss('TimeSlotSelector', css);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   
-  // Get current time
-  const getCurrentTime = () => {
-    const now = new Date();
-    return `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+  // Get current time in seconds
+  const getCurrentTimeSeconds = () => {
+    return dateToSeconds(new Date());
   };
   
-  const [currentTime, setCurrentTime] = useState(() => getCurrentTime());
+  const getCurrentTimeString = () => {
+    return secondsToTimeString(getCurrentTimeSeconds());
+  };
+  
+  const [currentTime, setCurrentTime] = useState(() => getCurrentTimeString());
   
   // Create time slots - each entry gets its own slot
   const timeSlots: Record<string, TimeSlotEntry> = {};
   
   languageEntries.forEach((entry, index) => {
-    const key = entry.startTime && entry.endTime 
+    const key = entry.startTime !== undefined && entry.endTime !== undefined 
       ? `${entry.startTime}-${entry.endTime}`
       : `entry-${index}`;
     timeSlots[key] = entry;
@@ -136,7 +139,7 @@ export const TimeSlotSelector = ({
   // Auto-refresh current time every minute
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentTime(getCurrentTime());
+      setCurrentTime(getCurrentTimeString());
     }, 60000); // Update every minute
     
     return () => clearInterval(interval);
@@ -185,9 +188,9 @@ export const TimeSlotSelector = ({
                 onClick={() => handleTimeSlotChange(key)}
               >
                 {label}
-                {key !== 'auto' && timeSlots[key]?.startTime && timeSlots[key]?.endTime && (
+                {key !== 'auto' && timeSlots[key]?.startTime !== undefined && timeSlots[key]?.endTime !== undefined && (
                   <div style={{ fontSize: '12px', opacity: 0.7, marginTop: '2px' }}>
-                    {timeSlots[key].startTime} - {timeSlots[key].endTime}
+                    {secondsToTimeString(timeSlots[key].startTime!)} - {secondsToTimeString(timeSlots[key].endTime!)}
                   </div>
                 )}
               </div>

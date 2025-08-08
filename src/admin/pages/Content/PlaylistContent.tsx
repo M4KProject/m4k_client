@@ -1,5 +1,5 @@
 import { ContentModel, mediaColl, PlaylistContentModel, PlaylistEntry } from "@common/api";
-import { addItem, Css, flexColumn, removeIndex, toArray, updateIndex } from "@common/helpers";
+import { addItem, Css, flexColumn, removeIndex, toArray, updateIndex, secondsToTimeString, parseToSeconds } from "@common/helpers";
 import { useAsync, useCss } from "@common/hooks";
 import { Div, Table, TableHead, TableBody, Row, Cell, CellHeader, Field, Button, tooltip } from "@common/components";
 import { ContentProps } from "./ContentProps";
@@ -64,15 +64,15 @@ export const PlaylistContent = ({ data, updateData } : ContentProps<PlaylistCont
                             <Cell>
                                 <Field
                                     type="time"
-                                    value={entry.startTime || ""}
-                                    onValue={startTime => handleUpdate(index, { startTime: startTime || undefined })}
+                                    value={entry.startTime !== undefined ? secondsToTimeString(entry.startTime) : ""}
+                                    onValue={startTime => handleUpdate(index, { startTime: startTime ? parseToSeconds(startTime) || undefined : undefined })}
                                 />
                             </Cell>
                             <Cell>
                                 <Field
                                     type="time"
-                                    value={entry.endTime || ""}
-                                    onValue={endTime => handleUpdate(index, { endTime: endTime || undefined })}
+                                    value={entry.endTime !== undefined ? secondsToTimeString(entry.endTime) : ""}
+                                    onValue={endTime => handleUpdate(index, { endTime: endTime ? parseToSeconds(endTime) || undefined : undefined })}
                                 />
                             </Cell>
                             <Cell>

@@ -38,8 +38,8 @@ interface LanguageEntry {
   language: string;
   url: string;
   title: string;
-  startTime?: string;
-  endTime?: string;
+  startTime?: number; // Seconds since midnight
+  endTime?: number; // Seconds since midnight
   duration?: number;
 }
 
