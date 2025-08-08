@@ -63,7 +63,7 @@ export const LanguageFlags = ({ languages, language$ }: LanguageFlagsProps) => {
   }
   
   return (
-    <Div cls={`${c}`}>
+    <Div cls={c}>
       {languages.map(language => (
         <Button
           key={language}
