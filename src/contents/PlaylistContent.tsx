@@ -27,12 +27,16 @@ const css: Css = {
   },
   '&LanguageSelect .Button': {
     fontSize: '3rem',
+    bg: '#7a624a',
   },
   '&PDFContainer': {
     flex: 1,
     position: 'relative',
     height: '100vh',
   },
+  '& .SelectDropdown': {
+    bg: '#ffffff80',
+  }
 };
 
 // Observables globaux pour la sélection des time slots et langues
