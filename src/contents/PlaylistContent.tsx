@@ -1,5 +1,5 @@
-import { useCss } from '@common/hooks';
-import { Css, flexColumn, dateToSeconds } from '@common/helpers';
+import { useCss, useMsg } from '@common/hooks';
+import { Css, flexColumn, dateToSeconds, Msg } from '@common/helpers';
 import { Div } from '@common/components';
 import { useState } from 'preact/hooks';
 import type { ContentProps } from './ContentViewer';
@@ -33,12 +33,15 @@ const css: Css = {
   },
 };
 
+// Observable pour la sélection des time slots
+const selectedTimeSlot$ = new Msg<string>('auto');
+
 export const PlaylistContent = ({ content, medias }: ContentProps<PlaylistContentModel>) => {
   const c = useCss('PlaylistContent', css);
   console.debug('PlaylistContent', content, content.data.items);
 
   const [currentLanguage, setCurrentLanguage] = useState<string>('');
-  const [selectedTimeSlot, setSelectedTimeSlot] = useState<string>('auto');
+  const selectedTimeSlot = useMsg(selectedTimeSlot$);
 
   // Create all language entries (all items, not just first per language)
   const languageEntries = content.data.items.map((item) => {
@@ -91,11 +94,11 @@ export const PlaylistContent = ({ content, medias }: ContentProps<PlaylistConten
 
   const handleLanguageChange = (language: string) => {
     setCurrentLanguage(language);
-    setSelectedTimeSlot('auto'); // Reset to auto when changing language
+    selectedTimeSlot$.set('auto'); // Reset to auto when changing language
   };
 
   const handleTimeSlotChange = (timeSlot: string) => {
-    setSelectedTimeSlot(timeSlot);
+    selectedTimeSlot$.set(timeSlot);
   };
 
   return (
