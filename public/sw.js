@@ -238,8 +238,30 @@ self.addEventListener('fetch', (event) => {
                     return response;
                   })
                   .catch(error => {
-                    console.error('Service Worker: HTML fetch failed:', url, error);
-                    return cachedResponse; // Fallback sur le cache
+                    console.error('Service Worker: HTML fetch failed (offline?):', url, error);
+                    
+                    // Si on a un cache, on le retourne
+                    if (cachedResponse) {
+                      return cachedResponse;
+                    }
+                    
+                    // Pour SPA, essaie de servir index.html depuis le cache
+                    return cache.match('/index.html').then(indexResponse => {
+                      if (indexResponse) {
+                        console.log('Service Worker: Serving cached index.html for SPA route offline');
+                        return indexResponse;
+                      }
+                      
+                      // Si pas d'index.html en cache, retourne une page d'erreur
+                      return new Response(
+                        '<!DOCTYPE html><html><head><title>Hors ligne</title></head><body><h1>Application non disponible hors ligne</h1><p><button onclick="window.location.reload()">Réessayer</button></p></body></html>',
+                        { 
+                          status: 200,
+                          statusText: 'OK',
+                          headers: { 'Content-Type': 'text/html' }
+                        }
+                      );
+                    });
                   });
                 
                 // Retourne immédiatement le cache si disponible, sinon attend le fetch
@@ -278,8 +300,34 @@ self.addEventListener('fetch', (event) => {
                     return response;
                   })
                   .catch(error => {
-                    console.error('Service Worker: Static fetch failed:', url, error);
-                    throw error;
+                    console.error('Service Worker: Static fetch failed (offline?):', url, error);
+                    
+                    // Pour les routes de navigation (SPA), essaie de servir index.html depuis le cache
+                    if (request.destination === 'document') {
+                      console.log('Service Worker: Navigation failed offline, trying to serve index.html from cache');
+                      return cache.match('/index.html').then(indexResponse => {
+                        if (indexResponse) {
+                          console.log('Service Worker: Serving cached index.html for SPA route');
+                          return indexResponse;
+                        }
+                        
+                        // Si pas d'index.html en cache, retourne une page d'erreur
+                        return new Response(
+                          '<!DOCTYPE html><html><head><title>Hors ligne</title></head><body><h1>Application non disponible hors ligne</h1><p><button onclick="window.location.reload()">Réessayer</button></p></body></html>',
+                          { 
+                            status: 200,
+                            statusText: 'OK',
+                            headers: { 'Content-Type': 'text/html' }
+                          }
+                        );
+                      });
+                    } else {
+                      // Pour les autres ressources, retourne une erreur 503
+                      return new Response('Service temporairement indisponible', {
+                        status: 503,
+                        statusText: 'Service Unavailable'
+                      });
+                    }
                   });
               });
           })
@@ -315,7 +363,7 @@ self.addEventListener('fetch', (event) => {
                   return response;
                 })
                 .catch(error => {
-                  console.error('Service Worker: Media fetch failed:', url, error);
+                  console.error('Service Worker: Media fetch failed (offline?):', url, error);
                   
                   // Retourne le cache expiré si disponible
                   if (cachedResponse) {
@@ -323,14 +371,67 @@ self.addEventListener('fetch', (event) => {
                     return cachedResponse;
                   }
                   
-                  throw error;
+                  // Pour les médias, retourne une réponse d'erreur appropriée
+                  return new Response('Média indisponible hors ligne', {
+                    status: 503,
+                    statusText: 'Service Unavailable'
+                  });
                 });
             });
         })
     );
+  } else {
+    // Pour les autres requêtes (API, routes virtuelles, etc.)
+    event.respondWith(
+      fetch(request).catch(error => {
+        console.error('Service Worker: Non-cached request failed (offline?):', url, error);
+        
+        // Pour les routes de navigation (SPA), sert index.html depuis le cache
+        if (request.destination === 'document') {
+          console.log('Service Worker: SPA route offline, serving index.html from cache');
+          return caches.open(STATIC_CACHE_NAME).then(cache => {
+            return cache.match('/index.html').then(indexResponse => {
+              if (indexResponse) {
+                console.log('Service Worker: Serving cached index.html for SPA route');
+                return indexResponse;
+              }
+              
+              // Si pas d'index.html en cache, retourne une page d'erreur
+              return new Response(
+                '<!DOCTYPE html><html><head><title>Hors ligne</title></head><body><h1>Application non disponible hors ligne</h1><p><button onclick="window.location.reload()">Réessayer</button></p></body></html>',
+                { 
+                  status: 200,
+                  statusText: 'OK',
+                  headers: { 'Content-Type': 'text/html' }
+                }
+              );
+            });
+          });
+        }
+        
+        // Pour les requêtes API, retourne une erreur JSON
+        if (request.headers.get('accept')?.includes('application/json')) {
+          return new Response(
+            JSON.stringify({ 
+              error: 'Service temporairement indisponible', 
+              offline: true 
+            }), 
+            {
+              status: 503,
+              statusText: 'Service Unavailable',
+              headers: { 'Content-Type': 'application/json' }
+            }
+          );
+        }
+        
+        // Pour les autres, retourne une erreur générique
+        return new Response('Service temporairement indisponible', {
+          status: 503,
+          statusText: 'Service Unavailable'
+        });
+      })
+    );
   }
-  
-  // Pour les autres requêtes, laisser passer sans cache
 });
 
 // Message handler pour les commandes depuis l'application
