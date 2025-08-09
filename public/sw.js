@@ -49,10 +49,15 @@ function getCacheType(url) {
     // CDN externes - Cache tous les fichiers avec extensions valides
     const currentDomain = self.location.hostname;
     if (hostname !== currentDomain && hostname !== 'localhost') {
+      // fonts.m4k.fr : cache tout peu importe l'extension
+      if (hostname === 'fonts.m4k.fr') {
+        return 'static';
+      }
+      
+      // Autres CDN : cache selon l'extension
       const filename = pathname.split('/').pop() || '';
       const extension = filename.split('.').pop()?.toLowerCase() || '';
       
-      // Cache tous les assets des CDNs externes basés sur l'extension
       if (ASSET_EXTENSIONS.includes(extension)) {
         return 'static';
       }
@@ -295,8 +300,8 @@ self.addEventListener('fetch', (event) => {
           })
       );
     } else {
-      // Stratégie Cache First pour les autres assets statiques
-      console.log('Service Worker: Intercepting static asset request:', url);
+      // Stratégie Cache First pour tous les autres assets statiques (CDN, locaux)
+      console.log('Service Worker: Intercepting static asset request (Cache First):', url);
       
       event.respondWith(
         caches.open(STATIC_CACHE_NAME)
@@ -304,17 +309,17 @@ self.addEventListener('fetch', (event) => {
             return cache.match(request)
               .then(cachedResponse => {
                 if (cachedResponse) {
-                  console.log('Service Worker: Serving static from cache:', url);
+                  console.log('Service Worker: Serving static from cache (Cache First):', url);
                   return cachedResponse;
                 }
                 
                 // Télécharge et met en cache
-                console.log('Service Worker: Fetching and caching static:', url);
+                console.log('Service Worker: Fetching and caching static (Cache First):', url);
                 return fetch(request)
                   .then(response => {
                     if (response.ok) {
                       cache.put(request, response.clone());
-                      console.log('Service Worker: Static cached successfully:', url);
+                      console.log('Service Worker: Static cached successfully (Cache First):', url);
                     }
                     return response;
                   })
@@ -341,10 +346,12 @@ self.addEventListener('fetch', (event) => {
                         );
                       });
                     } else {
-                      // Pour les autres ressources, retourne une erreur 503
-                      return new Response('Service temporairement indisponible', {
+                      // Pour les autres ressources, retourne une erreur 503 appropriée
+                      console.log('Service Worker: Returning 503 for failed static resource:', url);
+                      return new Response('Ressource temporairement indisponible', {
                         status: 503,
-                        statusText: 'Service Unavailable'
+                        statusText: 'Service Unavailable',
+                        headers: { 'Content-Type': 'text/plain' }
                       });
                     }
                   });
