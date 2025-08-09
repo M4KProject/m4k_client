@@ -42,6 +42,19 @@ function getCacheType(url) {
   try {
     const urlObj = new URL(url);
     const pathname = urlObj.pathname;
+    const hostname = urlObj.hostname;
+    
+    // CDN externes - Cache tous les fichiers avec extensions valides
+    const currentDomain = self.location.hostname;
+    if (hostname !== currentDomain && hostname !== 'localhost') {
+      const filename = pathname.split('/').pop() || '';
+      const extension = filename.split('.').pop()?.toLowerCase() || '';
+      
+      // Cache tous les assets des CDNs externes basés sur l'extension
+      if (ASSET_EXTENSIONS.includes(extension)) {
+        return 'static';
+      }
+    }
     
     // Assets statiques
     if (pathname.startsWith('/assets/') || pathname === '/' || pathname === '/index.html') {
