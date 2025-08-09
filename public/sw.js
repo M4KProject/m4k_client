@@ -1,0 +1,447 @@
+// Service Worker pour le cache complet (médias + assets)
+const CACHE_VERSION = 'v1';
+const STATIC_CACHE_NAME = `m4k-static-${CACHE_VERSION}`;
+const MEDIA_CACHE_NAME = `m4k-media-${CACHE_VERSION}`;
+const MEDIA_CACHE_DURATION = 60 * 60 * 1000; // 1 heure en millisecondes
+
+// Fichiers statiques à pré-cacher
+const STATIC_ASSETS = [
+  '/',
+  '/index.html',
+  // Les assets seront ajoutés dynamiquement
+];
+
+// Types de fichiers médias à mettre en cache (API)
+const MEDIA_EXTENSIONS = [
+  // Images
+  'jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp', 'ico',
+  // Vidéos
+  'mp4', 'webm', 'ogg', 'avi', 'mov', 'wmv', 'flv', 'm4v',
+  // Documents
+  'pdf',
+  // Audio
+  'mp3', 'wav', 'ogg', 'm4a', 'aac'
+];
+
+// Types de fichiers assets à mettre en cache (statiques)
+const ASSET_EXTENSIONS = [
+  // Scripts et styles
+  'js', 'css', 'mjs', 'ts',
+  // Images statiques
+  'jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp', 'ico',
+  // Polices
+  'woff', 'woff2', 'ttf', 'eot',
+  // Autres assets
+  'json', 'xml'
+];
+
+/**
+ * Détermine le type de cache pour une URL
+ */
+function getCacheType(url) {
+  try {
+    const urlObj = new URL(url);
+    const pathname = urlObj.pathname;
+    
+    // Assets statiques
+    if (pathname.startsWith('/assets/') || pathname === '/' || pathname === '/index.html') {
+      const filename = pathname.split('/').pop() || '';
+      const extension = filename.split('.').pop()?.toLowerCase() || '';
+      
+      if (!filename || ASSET_EXTENSIONS.includes(extension) || pathname === '/' || pathname === '/index.html') {
+        return 'static';
+      }
+    }
+    
+    // Médias de l'API
+    if (pathname.includes('/files/')) {
+      const filename = pathname.split('/').pop() || '';
+      const extension = filename.split('.').pop()?.toLowerCase() || '';
+      
+      if (MEDIA_EXTENSIONS.includes(extension)) {
+        return 'media';
+      }
+    }
+    
+    return null;
+  } catch (e) {
+    return null;
+  }
+}
+
+/**
+ * Vérifie si une URL d'asset statique doit être mise en cache
+ */
+function shouldCacheStatic(url) {
+  return getCacheType(url) === 'static';
+}
+
+/**
+ * Vérifie si une URL de média doit être mise en cache
+ */
+function shouldCacheMedia(url) {
+  return getCacheType(url) === 'media';
+}
+
+/**
+ * Vérifie si un élément du cache est encore valide
+ */
+function isCacheValid(cachedResponse) {
+  if (!cachedResponse) return false;
+  
+  const cachedDate = cachedResponse.headers.get('sw-cached-date');
+  if (!cachedDate) return false;
+  
+  const cacheTime = parseInt(cachedDate);
+  const now = Date.now();
+  
+  return (now - cacheTime) < MEDIA_CACHE_DURATION;
+}
+
+/**
+ * Ajoute les métadonnées de cache à la réponse
+ */
+function addCacheMetadata(response) {
+  const headers = new Headers(response.headers);
+  headers.set('sw-cached-date', Date.now().toString());
+  headers.set('sw-cached', 'true');
+  
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers: headers
+  });
+}
+
+// Installation du service worker
+self.addEventListener('install', (event) => {
+  console.log('Service Worker: Installing...');
+  
+  event.waitUntil(
+    Promise.all([
+      // Ouvre les caches
+      caches.open(STATIC_CACHE_NAME),
+      caches.open(MEDIA_CACHE_NAME),
+      // Pré-cache les assets statiques critiques
+      caches.open(STATIC_CACHE_NAME).then(cache => {
+        console.log('Service Worker: Pre-caching static assets...');
+        return cache.addAll(STATIC_ASSETS).catch(error => {
+          console.warn('Service Worker: Pre-cache failed for some assets', error);
+          // Continue même si certains assets échouent
+        });
+      })
+    ]).then(() => {
+      console.log('Service Worker: Installation complete');
+      // Force l'activation immédiate
+      return self.skipWaiting();
+    })
+  );
+});
+
+// Activation du service worker
+self.addEventListener('activate', (event) => {
+  console.log('Service Worker: Activating...');
+  
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames
+          .filter(cacheName => 
+            !cacheName.startsWith('m4k-static-') && 
+            !cacheName.startsWith('m4k-media-') ||
+            (cacheName !== STATIC_CACHE_NAME && cacheName !== MEDIA_CACHE_NAME)
+          )
+          .map(cacheName => {
+            console.log('Service Worker: Deleting old cache', cacheName);
+            return caches.delete(cacheName);
+          })
+      );
+    }).then(() => {
+      console.log('Service Worker: Activated');
+      // Prend le contrôle immédiatement
+      return self.clients.claim();
+    })
+  );
+});
+
+// Interception des requêtes
+self.addEventListener('fetch', (event) => {
+  const request = event.request;
+  const url = request.url;
+  
+  // Ne traite que les requêtes GET
+  if (request.method !== 'GET') {
+    return;
+  }
+  
+  const cacheType = getCacheType(url);
+  
+  if (cacheType === 'static') {
+    const urlObj = new URL(url);
+    const isIndexHtml = urlObj.pathname === '/' || urlObj.pathname === '/index.html';
+    
+    if (isIndexHtml) {
+      // Stratégie Stale While Revalidate pour index.html
+      console.log('Service Worker: Intercepting HTML request with SWR:', url);
+      
+      event.respondWith(
+        caches.open(STATIC_CACHE_NAME)
+          .then(cache => {
+            return cache.match(request)
+              .then(cachedResponse => {
+                // Fetch nouvelle version en arrière-plan
+                const fetchPromise = fetch(request)
+                  .then(response => {
+                    if (response.ok) {
+                      // Compare le contenu pour détecter les changements
+                      if (cachedResponse) {
+                        Promise.all([
+                          cachedResponse.clone().text(),
+                          response.clone().text()
+                        ]).then(([cachedContent, newContent]) => {
+                          if (cachedContent !== newContent) {
+                            console.log('Service Worker: HTML content changed, updating cache and notifying clients');
+                            cache.put(request, response.clone());
+                            // Notifie les clients qu'une mise à jour est disponible
+                            self.clients.matchAll().then(clients => {
+                              clients.forEach(client => {
+                                client.postMessage({
+                                  type: 'HTML_UPDATE_AVAILABLE',
+                                  url: url
+                                });
+                              });
+                            });
+                          }
+                        }).catch(error => {
+                          console.warn('Service Worker: Error comparing HTML content:', error);
+                          cache.put(request, response.clone());
+                        });
+                      } else {
+                        // Première mise en cache
+                        cache.put(request, response.clone());
+                        console.log('Service Worker: HTML cached for first time:', url);
+                      }
+                    }
+                    return response;
+                  })
+                  .catch(error => {
+                    console.error('Service Worker: HTML fetch failed:', url, error);
+                    return cachedResponse; // Fallback sur le cache
+                  });
+                
+                // Retourne immédiatement le cache si disponible, sinon attend le fetch
+                if (cachedResponse) {
+                  console.log('Service Worker: Serving HTML from cache (SWR):', url);
+                  return cachedResponse;
+                } else {
+                  console.log('Service Worker: No cache available, waiting for fetch:', url);
+                  return fetchPromise;
+                }
+              });
+          })
+      );
+    } else {
+      // Stratégie Cache First pour les autres assets statiques
+      console.log('Service Worker: Intercepting static asset request:', url);
+      
+      event.respondWith(
+        caches.open(STATIC_CACHE_NAME)
+          .then(cache => {
+            return cache.match(request)
+              .then(cachedResponse => {
+                if (cachedResponse) {
+                  console.log('Service Worker: Serving static from cache:', url);
+                  return cachedResponse;
+                }
+                
+                // Télécharge et met en cache
+                console.log('Service Worker: Fetching and caching static:', url);
+                return fetch(request)
+                  .then(response => {
+                    if (response.ok) {
+                      cache.put(request, response.clone());
+                      console.log('Service Worker: Static cached successfully:', url);
+                    }
+                    return response;
+                  })
+                  .catch(error => {
+                    console.error('Service Worker: Static fetch failed:', url, error);
+                    throw error;
+                  });
+              });
+          })
+      );
+    }
+    
+  } else if (cacheType === 'media') {
+    // Stratégie Stale While Revalidate pour les médias
+    console.log('Service Worker: Intercepting media request:', url);
+    
+    event.respondWith(
+      caches.open(MEDIA_CACHE_NAME)
+        .then(cache => {
+          return cache.match(request)
+            .then(cachedResponse => {
+              // Vérifie si le cache est encore valide
+              if (isCacheValid(cachedResponse)) {
+                console.log('Service Worker: Serving media from cache:', url);
+                return cachedResponse;
+              }
+              
+              // Télécharge et met en cache
+              console.log('Service Worker: Fetching and caching media:', url);
+              return fetch(request)
+                .then(response => {
+                  if (response.ok) {
+                    // Clone la réponse pour la mettre en cache
+                    const responseToCache = addCacheMetadata(response.clone());
+                    cache.put(request, responseToCache);
+                    
+                    console.log('Service Worker: Media cached successfully:', url);
+                  }
+                  return response;
+                })
+                .catch(error => {
+                  console.error('Service Worker: Media fetch failed:', url, error);
+                  
+                  // Retourne le cache expiré si disponible
+                  if (cachedResponse) {
+                    console.log('Service Worker: Serving expired media cache as fallback:', url);
+                    return cachedResponse;
+                  }
+                  
+                  throw error;
+                });
+            });
+        })
+    );
+  }
+  
+  // Pour les autres requêtes, laisser passer sans cache
+});
+
+// Message handler pour les commandes depuis l'application
+self.addEventListener('message', (event) => {
+  const { type, payload } = event.data || {};
+  
+  switch (type) {
+    case 'CLEAR_CACHE':
+      clearCache(payload?.pattern, payload?.cacheType).then(() => {
+        event.ports[0]?.postMessage({ success: true });
+      }).catch(error => {
+        event.ports[0]?.postMessage({ success: false, error: error.message });
+      });
+      break;
+      
+    case 'GET_CACHE_INFO':
+      getCacheInfo().then(info => {
+        event.ports[0]?.postMessage({ success: true, data: info });
+      });
+      break;
+      
+    default:
+      console.log('Service Worker: Unknown message type:', type);
+  }
+});
+
+/**
+ * Nettoie le cache avec un pattern optionnel
+ */
+async function clearCache(pattern, cacheType) {
+  const cacheNames = [];
+  
+  if (!cacheType || cacheType === 'static') {
+    cacheNames.push(STATIC_CACHE_NAME);
+  }
+  if (!cacheType || cacheType === 'media') {
+    cacheNames.push(MEDIA_CACHE_NAME);
+  }
+  
+  let totalDeleted = 0;
+  
+  for (const cacheName of cacheNames) {
+    const cache = await caches.open(cacheName);
+    const requests = await cache.keys();
+    
+    const toDelete = requests.filter(request => {
+      if (!pattern) return true;
+      return request.url.includes(pattern);
+    });
+    
+    await Promise.all(
+      toDelete.map(request => cache.delete(request))
+    );
+    
+    totalDeleted += toDelete.length;
+    console.log(`Service Worker: Cleared ${toDelete.length} entries from ${cacheName}`);
+  }
+  
+  console.log(`Service Worker: Total cleared ${totalDeleted} cache entries`);
+}
+
+/**
+ * Récupère les informations sur le cache
+ */
+async function getCacheInfo() {
+  const info = {
+    totalEntries: 0,
+    cacheSize: 0,
+    static: { entries: 0, size: 0, items: [] },
+    media: { entries: 0, size: 0, items: [] }
+  };
+  
+  // Cache statique
+  try {
+    const staticCache = await caches.open(STATIC_CACHE_NAME);
+    const staticRequests = await staticCache.keys();
+    
+    info.static.entries = staticRequests.length;
+    
+    for (const request of staticRequests) {
+      const response = await staticCache.match(request);
+      if (response) {
+        const size = parseInt(response.headers.get('content-length') || '0');
+        info.static.size += size;
+        info.static.items.push({
+          url: request.url,
+          cachedDate: null, // Assets statiques n'ont pas d'expiration
+          size: size,
+          valid: true
+        });
+      }
+    }
+  } catch (e) {
+    console.warn('Error reading static cache:', e);
+  }
+  
+  // Cache média
+  try {
+    const mediaCache = await caches.open(MEDIA_CACHE_NAME);
+    const mediaRequests = await mediaCache.keys();
+    
+    info.media.entries = mediaRequests.length;
+    
+    for (const request of mediaRequests) {
+      const response = await mediaCache.match(request);
+      if (response) {
+        const cachedDate = response.headers.get('sw-cached-date');
+        const size = parseInt(response.headers.get('content-length') || '0');
+        
+        info.media.size += size;
+        info.media.items.push({
+          url: request.url,
+          cachedDate: cachedDate ? new Date(parseInt(cachedDate)).toISOString() : null,
+          size: size,
+          valid: isCacheValid(response)
+        });
+      }
+    }
+  } catch (e) {
+    console.warn('Error reading media cache:', e);
+  }
+  
+  info.totalEntries = info.static.entries + info.media.entries;
+  info.cacheSize = info.static.size + info.media.size;
+  
+  return info;
+}

@@ -1,7 +1,11 @@
 import { addResponsiveListener, router } from '@common/helpers';
+import { initServiceWorker } from './serviceWorker';
 import './app';
 
 addResponsiveListener();
+
+// Initialise le service worker pour le cache des médias
+initServiceWorker();
 
 // router.add('/cvc', () => import('./cvc'));
 // router.add('/cvc/:page', () => import('./cvc'));
