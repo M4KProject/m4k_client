@@ -4,6 +4,7 @@ import { useCss, usePromise } from "@common/hooks";
 import { Button, Div } from "@common/components";
 import copyPlaylist from "../copyPlaylist";
 import { newProgressDialog } from "../components/ProgressView";
+import { clearAllCache } from "../../serviceWorker";
 
 const css: Css = {
     '&': {
@@ -102,6 +103,24 @@ const testPrint = async () => {
     console.debug("testPrint", result)
 }
 
+const clearCacheAndReload = async () => {
+    const prog = newProgressDialog("Nettoyage du cache")
+    
+    prog(0.2, 'info', 'Suppression du cache Service Worker...')
+    
+    try {
+        await clearAllCache()
+        prog(0.8, 'info', 'Cache supprimé, rechargement de la page...')
+        
+        setTimeout(() => {
+            window.location.reload()
+        }, 1000)
+    } catch (error) {
+        prog(1, 'error', `Erreur: ${error}`)
+        console.error('Failed to clear SW cache:', error)
+    }
+}
+
 export const ActionsPage = () => {
     const c = useCss('Actions', css);
 
@@ -118,6 +137,9 @@ export const ActionsPage = () => {
             <Div cls={`${c}Buttons`}>
                 <Button color="primary" onClick={() => installApk('M4Kiosk.apk')}>
                     Installer la derniére version du Kiosk
+                </Button>
+                <Button color="secondary" onClick={clearCacheAndReload}>
+                    Vider le cache et recharger
                 </Button>
                 <Button onClick={async () => {
                     const copyDir = await m4k.get('copyDir') || 'playlist'
