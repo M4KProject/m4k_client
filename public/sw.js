@@ -11,6 +11,8 @@ const STATIC_ASSETS = [
   // Les assets seront ajoutés dynamiquement
 ];
 
+console.log('Service Worker: Loading with static assets to precache:', STATIC_ASSETS);
+
 // Types de fichiers médias à mettre en cache (API)
 const MEDIA_EXTENSIONS = [
   // Images
@@ -137,10 +139,23 @@ self.addEventListener('install', (event) => {
       caches.open(MEDIA_CACHE_NAME),
       // Pré-cache les assets statiques critiques
       caches.open(STATIC_CACHE_NAME).then(cache => {
-        console.log('Service Worker: Pre-caching static assets...');
-        return cache.addAll(STATIC_ASSETS).catch(error => {
-          console.warn('Service Worker: Pre-cache failed for some assets', error);
-          // Continue même si certains assets échouent
+        console.log('Service Worker: Pre-caching static assets...', STATIC_ASSETS);
+        return cache.addAll(STATIC_ASSETS).then(() => {
+          console.log('Service Worker: Pre-cache completed successfully');
+          // Vérifie que index.html est bien en cache
+          return cache.match('/index.html').then(response => {
+            console.log('Service Worker: index.html cached?', !!response);
+          });
+        }).catch(error => {
+          console.error('Service Worker: Pre-cache failed', error);
+          // Essaie de cacher au moins index.html individuellement
+          return Promise.all(STATIC_ASSETS.map(url => {
+            return cache.add(url).then(() => {
+              console.log('Service Worker: Successfully cached', url);
+            }).catch(err => {
+              console.warn('Service Worker: Failed to cache', url, err);
+            });
+          }));
         });
       })
     ]).then(() => {
@@ -182,12 +197,16 @@ self.addEventListener('fetch', (event) => {
   const request = event.request;
   const url = request.url;
   
+  console.log('Service Worker: Intercepting request:', request.method, url, 'destination:', request.destination);
+  
   // Ne traite que les requêtes GET
   if (request.method !== 'GET') {
+    console.log('Service Worker: Ignoring non-GET request:', request.method);
     return;
   }
   
   const cacheType = getCacheType(url);
+  console.log('Service Worker: Cache type determined:', cacheType, 'for', url);
   
   if (cacheType === 'static') {
     const urlObj = new URL(url);
@@ -380,25 +399,36 @@ self.addEventListener('fetch', (event) => {
             });
         })
     );
-  } else {
-    // Pour les autres requêtes (API, routes virtuelles, etc.)
+  }
+  
+  // Gestion spéciale pour les routes SPA (navigation)
+  if (request.destination === 'document') {
+    console.log('Service Worker: Document request detected, handling as SPA route:', url);
+    
     event.respondWith(
       fetch(request).catch(error => {
-        console.error('Service Worker: Non-cached request failed (offline?):', url, error);
+        console.error('Service Worker: SPA route fetch failed (offline?):', url, error);
         
-        // Pour les routes de navigation (SPA), sert index.html depuis le cache
-        if (request.destination === 'document') {
-          console.log('Service Worker: SPA route offline, serving index.html from cache');
-          return caches.open(STATIC_CACHE_NAME).then(cache => {
-            return cache.match('/index.html').then(indexResponse => {
-              if (indexResponse) {
-                console.log('Service Worker: Serving cached index.html for SPA route');
-                return indexResponse;
+        // Pour les routes SPA, sert toujours index.html depuis le cache
+        console.log('Service Worker: SPA route offline, serving index.html from cache');
+        return caches.open(STATIC_CACHE_NAME).then(cache => {
+          return cache.match('/index.html').then(indexResponse => {
+            if (indexResponse) {
+              console.log('Service Worker: Serving cached index.html for SPA route:', url);
+              return indexResponse;
+            }
+            
+            // Essaie aussi de chercher avec une requête vers la racine
+            return cache.match('/').then(rootResponse => {
+              if (rootResponse) {
+                console.log('Service Worker: Serving cached root for SPA route:', url);
+                return rootResponse;
               }
               
               // Si pas d'index.html en cache, retourne une page d'erreur
+              console.log('Service Worker: No cached HTML found, serving offline page');
               return new Response(
-                '<!DOCTYPE html><html><head><title>Hors ligne</title></head><body><h1>Application non disponible hors ligne</h1><p><button onclick="window.location.reload()">Réessayer</button></p></body></html>',
+                '<!DOCTYPE html><html><head><title>Hors ligne</title></head><body><h1>Application non disponible hors ligne</h1><p>Impossible de charger la page <code>' + url + '</code></p><p><button onclick="window.location.reload()">Réessayer</button></p></body></html>',
                 { 
                   status: 200,
                   statusText: 'OK',
@@ -407,7 +437,14 @@ self.addEventListener('fetch', (event) => {
               );
             });
           });
-        }
+        });
+      })
+    );
+  } else if (!cacheType) {
+    // Pour les autres requêtes non-cachées (API, etc.)
+    event.respondWith(
+      fetch(request).catch(error => {
+        console.error('Service Worker: Non-cached request failed (offline?):', url, error);
         
         // Pour les requêtes API, retourne une erreur JSON
         if (request.headers.get('accept')?.includes('application/json')) {
