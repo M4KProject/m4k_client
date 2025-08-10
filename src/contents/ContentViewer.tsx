@@ -43,6 +43,8 @@ export const ContentViewer = ({ contentKey }: ContentViewerProps) => {
   const [content] = useAsync(null, () => contentColl.findKey(contentKey), "content", [authToken, contentKey]);
   const [medias] = useAsync([], () => mediaColl.find({}), "medias", [authToken, contentKey]);
 
+  console.debug('ContentViewer', { auth, content, medias });
+
   if (!content) {
     return (
       <Div cls={`${c}Error`}>
