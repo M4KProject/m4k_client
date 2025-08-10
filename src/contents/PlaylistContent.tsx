@@ -105,14 +105,17 @@ export const PlaylistContent = ({ content, medias }: ContentProps<PlaylistConten
 
   const languages = uniq(items.map(item => item.language));
 
-  console.debug('PlaylistContent media', { mediaId, media, mediaUrl });
+  // Détermine si les boutons doivent être visibles
+  const hasMedia = !!mediaUrl;
+
+  console.debug('PlaylistContent visibility', { hasMedia });
 
   return (
     <Div cls={`${c}`}>
-      <Div cls={`${c}ItemSelect`} >
+      <Div cls={`${c}ItemSelect ${hasMedia ? '' : 'autoHide'}`}>
         <Field type="select" items={filteredItems.map(item => [item, item.title])} msg={selected$} />
       </Div>
-      <Div cls={`${c}LanguageSelect`}>
+      <Div cls={`${c}LanguageSelect ${hasMedia ? '' : 'autoHide'}`}>
         <Field type="picker" items={languages.map(iso => [iso, <Flag iso={iso} />])} msg={language$} />
       </Div>
 

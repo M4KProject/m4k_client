@@ -1,5 +1,5 @@
 import { render } from 'preact';
-import { addFont } from '@common/helpers';
+import { addAutoHideListener, addFont } from '@common/helpers';
 import { setTheme } from '@common/helpers';
 import { addEl, addResponsiveListener } from '@common/helpers';
 import { setDefaultOptions } from 'date-fns';
@@ -18,6 +18,7 @@ export const mount = () => {
 
   setDefaultOptions({ locale: fr });
   addResponsiveListener();
+  addAutoHideListener();
   addFont('Roboto');
   setTheme('#28A8D9');
 
