@@ -95,13 +95,13 @@ export const PlaylistContent = ({ content, medias }: ContentProps<PlaylistConten
   // const timeItems = filteredItems.filter(i => i.startTime <= time && i.endTime >= time);
   // const currentItem = selected || filteredItems[0] || items[0];
 
-  console.debug('PlaylistContent filter', { items, filteredItems, selected });
+  console.debug('PlaylistContent filter', { items, filteredItems, selected, medias });
 
   const mediaId = selected?.media;
   const media = mediaId ? toArray(medias).find(m => m.id === mediaId) : null;
   const mediaUrl = media ? mediaColl.getUrl(mediaId, media.file) : null;
 
-  console.debug('PlaylistContent media', { mediaId, media, mediaUrl });
+  console.debug('PlaylistContent media', { mediaId, medias, media, mediaUrl });
 
   const languages = uniq(items.map(item => item.language));
 
