@@ -41,7 +41,7 @@ export const ContentViewer = ({ contentKey }: ContentViewerProps) => {
   const authToken = auth?.token || '';
 
   const [content] = useAsync(null, () => contentColl.findKey(contentKey), "content", [authToken, contentKey]);
-  const [medias] = useAsync(null, () => mediaColl.find({}), "medias", [authToken, contentKey]);
+  const [medias] = useAsync([], () => mediaColl.find({}), "medias", [authToken, contentKey]);
 
   if (!content) {
     return (
