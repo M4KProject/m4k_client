@@ -65,15 +65,25 @@ class ServiceWorkerManager {
 
       // Écoute les messages du service worker (notamment les mises à jour HTML)
       navigator.serviceWorker.addEventListener('message', (event) => {
+        console.log('ServiceWorkerManager: Received message from SW:', event.data);
         const { type, url } = event.data || {};
         
         if (type === 'HTML_UPDATE_AVAILABLE') {
           console.log('ServiceWorkerManager: HTML update available for:', url);
           this.notifyHtmlUpdate(url);
+        } else {
+          console.log('ServiceWorkerManager: Unknown message type:', type);
         }
       });
 
       console.log('ServiceWorkerManager: Registered successfully', this.registration.scope);
+      
+      // Force une vérification de mise à jour après l'enregistrement
+      setTimeout(() => {
+        console.log('ServiceWorkerManager: Forcing update check...');
+        this.registration?.update();
+      }, 1000);
+      
       return true;
     } catch (error) {
       console.error('ServiceWorkerManager: Registration failed', error);

@@ -228,36 +228,49 @@ self.addEventListener('fetch', (event) => {
               .then(cachedResponse => {
                 // Fetch nouvelle version en arrière-plan
                 const fetchPromise = fetch(request)
-                  .then(response => {
+                  .then(async response => {
                     if (response.ok) {
                       // Compare le contenu pour détecter les changements
                       if (cachedResponse) {
-                        Promise.all([
-                          cachedResponse.clone().text(),
-                          response.clone().text()
-                        ]).then(([cachedContent, newContent]) => {
+                        try {
+                          const [cachedContent, newContent] = await Promise.all([
+                            cachedResponse.clone().text(),
+                            response.clone().text()
+                          ]);
+                          
+                          console.log('Service Worker: Comparing HTML content', {
+                            cachedLength: cachedContent.length,
+                            newLength: newContent.length,
+                            same: cachedContent === newContent
+                          });
+                          
                           if (cachedContent !== newContent) {
                             console.log('Service Worker: HTML content changed, updating cache and notifying clients');
-                            cache.put(request, response.clone());
+                            await cache.put(request, response.clone());
+                            
                             // Notifie les clients qu'une mise à jour est disponible
-                            self.clients.matchAll().then(clients => {
-                              clients.forEach(client => {
-                                client.postMessage({
-                                  type: 'HTML_UPDATE_AVAILABLE',
-                                  url: url
-                                });
+                            const clients = await self.clients.matchAll();
+                            console.log('Service Worker: Notifying', clients.length, 'clients');
+                            clients.forEach(client => {
+                              client.postMessage({
+                                type: 'HTML_UPDATE_AVAILABLE',
+                                url: url
                               });
                             });
+                          } else {
+                            console.log('Service Worker: HTML content unchanged');
                           }
-                        }).catch(error => {
+                        } catch (error) {
                           console.warn('Service Worker: Error comparing HTML content:', error);
-                          cache.put(request, response.clone());
-                        });
+                          await cache.put(request, response.clone());
+                        }
                       } else {
                         // Première mise en cache
-                        cache.put(request, response.clone());
+                        await cache.put(request, response.clone());
                         console.log('Service Worker: HTML cached for first time:', url);
                       }
+                    } else {
+                      console.warn('Service Worker: HTML fetch returned non-OK status:', response.status);
                     }
                     return response;
                   })
