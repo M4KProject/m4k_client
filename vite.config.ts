@@ -18,12 +18,34 @@ export default defineConfig(() => {
 				name: 'copy-pdf-worker-plugin',
 				buildStart() {
 					// Copy PDF.js worker to public directory before Vite processes public folder
-					const workerSrc = path.resolve(__dirname, 'node_modules/pdfjs-dist/build/pdf.worker.min.mjs');
+					const possiblePaths = [
+						path.resolve(__dirname, 'node_modules/pdfjs-dist/build/pdf.worker.min.mjs'),
+						path.resolve(__dirname, 'node_modules/pdfjs-dist/build/pdf.worker.mjs'),
+						path.resolve(__dirname, 'node_modules/pdfjs-dist/legacy/build/pdf.worker.min.js'),
+						path.resolve(__dirname, 'node_modules/pdfjs-dist/pdf.worker.min.mjs'),
+						path.resolve(__dirname, 'node_modules/pdfjs-dist/pdf.worker.mjs')
+					];
+					
 					const workerDest = path.resolve(__dirname, 'public/pdf.worker.min.mjs');
+					let workerSrc: string | null = null;
+					
+					// Find the first existing worker file
+					for (const possiblePath of possiblePaths) {
+						if (fs.existsSync(possiblePath)) {
+							workerSrc = possiblePath;
+							break;
+						}
+					}
+					
+					if (!workerSrc) {
+						console.warn('PDF.js worker not found in any expected location');
+						console.warn('Checked paths:', possiblePaths);
+						return;
+					}
 					
 					try {
 						fs.copyFileSync(workerSrc, workerDest);
-						console.log('PDF.js worker copied to public/');
+						console.log(`PDF.js worker copied from ${workerSrc} to public/`);
 					} catch (error) {
 						console.warn('Failed to copy PDF.js worker:', error);
 					}
