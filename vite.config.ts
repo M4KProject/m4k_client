@@ -4,7 +4,6 @@ import { defineConfig } from 'vite';
 import preact from '@preact/preset-vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import path from 'node:path';
-import fs from 'node:fs';
 
 // https://vitejs.dev/config/
 export default defineConfig(() => {
@@ -14,43 +13,6 @@ export default defineConfig(() => {
 	return {
 		plugins: [
 			preact(),
-			{
-				name: 'copy-pdf-worker-plugin',
-				buildStart() {
-					// Copy PDF.js worker to public directory before Vite processes public folder
-					const possiblePaths = [
-						path.resolve(__dirname, 'node_modules/pdfjs-dist/build/pdf.worker.min.mjs'),
-						path.resolve(__dirname, 'node_modules/pdfjs-dist/build/pdf.worker.mjs'),
-						path.resolve(__dirname, 'node_modules/pdfjs-dist/legacy/build/pdf.worker.min.js'),
-						path.resolve(__dirname, 'node_modules/pdfjs-dist/pdf.worker.min.mjs'),
-						path.resolve(__dirname, 'node_modules/pdfjs-dist/pdf.worker.mjs')
-					];
-					
-					const workerDest = path.resolve(__dirname, 'public/pdf.worker.min.mjs');
-					let workerSrc: string | null = null;
-					
-					// Find the first existing worker file
-					for (const possiblePath of possiblePaths) {
-						if (fs.existsSync(possiblePath)) {
-							workerSrc = possiblePath;
-							break;
-						}
-					}
-					
-					if (!workerSrc) {
-						console.warn('PDF.js worker not found in any expected location');
-						console.warn('Checked paths:', possiblePaths);
-						return;
-					}
-					
-					try {
-						fs.copyFileSync(workerSrc, workerDest);
-						console.log(`PDF.js worker copied from ${workerSrc} to public/`);
-					} catch (error) {
-						console.warn('Failed to copy PDF.js worker:', error);
-					}
-				}
-			},
 			VitePWA({
 				registerType: 'autoUpdate',
 				workbox: {
@@ -61,6 +23,17 @@ export default defineConfig(() => {
 							handler: 'CacheFirst',
 							options: {
 								cacheName: 'm4k-fonts',
+							},
+						},
+						{
+							urlPattern: /^https:\/\/cdnjs\.cloudflare\.com\/ajax\/libs\//,
+							handler: 'CacheFirst',
+							options: {
+								cacheName: 'cloudflare-cdnjs',
+								expiration: {
+									maxEntries: 50,
+									maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+								},
 							},
 						},
 						{

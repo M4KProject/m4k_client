@@ -171,9 +171,9 @@ export const PDFViewer = ({ url }: { url: string }) => {
 
     console.debug('PDFViewer useAsyncEffect', containerEl);
 
-    // Configure PDF.js worker - use local worker
-    pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
-    console.debug('PDFViewer useAsyncEffect pdfjsLib configured with local worker');
+    // Configure PDF.js worker - use CDN worker
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.worker.min.js';
+    console.debug('PDFViewer useAsyncEffect pdfjsLib configured with CDN worker');
 
     const pdf = await pdfjsLib.getDocument(url).promise;
     console.debug('PDFViewer useAsyncEffect pdf', pdf);
