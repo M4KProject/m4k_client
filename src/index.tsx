@@ -1,11 +1,11 @@
 import { addResponsiveListener, router } from '@common/helpers';
-import { initServiceWorker } from './serviceWorker';
+import { usePWA } from './serviceWorker';
 import './app';
 
 addResponsiveListener();
 
-// Initialise le service worker pour le cache des médias
-initServiceWorker();
+// PWA is automatically registered by Vite PWA plugin
+usePWA();
 
 // router.add('/cvc', () => import('./cvc'));
 // router.add('/cvc/:page', () => import('./cvc'));
