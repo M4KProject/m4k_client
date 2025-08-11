@@ -9,6 +9,7 @@
 	"dependencies": {
 		"date-fns": "^4.1.0",
 		"flag-icons": "^7.5.0",
+		"pdfjs-dist": "^5.4.54",
 		"preact": "^10.26.9",
 		"react-icons": "^5.5.0",
 		"workbox-window": "^7.3.0"

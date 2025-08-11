@@ -4,6 +4,7 @@ import { defineConfig } from 'vite';
 import preact from '@preact/preset-vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import path from 'node:path';
+import fs from 'node:fs';
 
 // https://vitejs.dev/config/
 export default defineConfig(() => {
@@ -16,7 +17,7 @@ export default defineConfig(() => {
 			VitePWA({
 				registerType: 'autoUpdate',
 				workbox: {
-					globPatterns: ['**/*.{js,css,html,ico,png,svg,webp,jpg,jpeg}'],
+					globPatterns: ['**/*.{js,mjs,css,html,ico,png,svg,webp,jpg,jpeg}'],
 					runtimeCaching: [
 						{
 							urlPattern: /^https:\/\/fonts\.m4k\.fr\//,
@@ -85,5 +86,26 @@ export default defineConfig(() => {
 				"react-dom": "preact/compat"
 			},
 		},
+		build: {
+			rollupOptions: {
+				plugins: [
+					{
+						name: 'copy-pdf-worker',
+						buildStart() {
+							// Copy PDF.js worker to public directory
+							const workerSrc = path.resolve(__dirname, 'node_modules/pdfjs-dist/build/pdf.worker.min.mjs');
+							const workerDest = path.resolve(__dirname, 'public/pdf.worker.min.mjs');
+							
+							try {
+								fs.copyFileSync(workerSrc, workerDest);
+								console.log('PDF.js worker copied to public/');
+							} catch (error) {
+								console.warn('Failed to copy PDF.js worker:', error);
+							}
+						}
+					}
+				]
+			}
+		}
 	}
 });
