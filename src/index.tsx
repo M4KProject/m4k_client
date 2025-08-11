@@ -1,11 +1,7 @@
 import { addResponsiveListener, router } from '@common/helpers';
-import { usePWA } from './serviceWorker';
 import './app';
 
 addResponsiveListener();
-
-// PWA is automatically registered by Vite PWA plugin
-usePWA();
 
 // router.add('/cvc', () => import('./cvc'));
 // router.add('/cvc/:page', () => import('./cvc'));

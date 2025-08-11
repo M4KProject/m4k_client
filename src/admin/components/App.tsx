@@ -2,6 +2,7 @@ import { SideBar } from './SideBar';
 import { Css, flexCenter, flexRow } from '@common/helpers';
 import { useCss, useMsg } from '@common/hooks';
 import { Div } from '@common/components';
+import { usePWA } from '../../serviceWorker';
 import { JSX } from 'preact';
 import { LoadingPage } from '../pages/LoadingPage';
 import { GroupsPage } from '../pages/GroupsPage';
@@ -54,6 +55,9 @@ const AppRouter = () => {
 const AppContent = () => {
   const c = useCss('App', css);
   const auth = useMsg(auth$);
+
+  // Initialize PWA
+  usePWA();
 
   // console.debug("AppContent", { c, auth });
   if (!auth) {

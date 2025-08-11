@@ -1,6 +1,7 @@
 import { Css, flexCenter, flexRow } from '@common/helpers';
 import { useCss, useMsg } from '@common/hooks';
 import { device$ } from '../services/device';
+import { usePWA } from '../../serviceWorker';
 import { Div, Side, SideButton, SideSep } from '@common/components';
 import { JSX } from 'preact';
 import { page$, usePage } from '../messages/page$';
@@ -61,6 +62,9 @@ const AppContent = () => {
   const c = useCss('App', css);
   const page = usePage();
   const device = useMsg(device$);
+  
+  // Initialize PWA
+  usePWA();
   
   // Si le device n'a pas de groupe, afficher la page de pairage
   if (!device?.group) {
