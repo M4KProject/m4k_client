@@ -14,6 +14,21 @@ export default defineConfig(() => {
 	return {
 		plugins: [
 			preact(),
+			{
+				name: 'copy-pdf-worker-plugin',
+				buildStart() {
+					// Copy PDF.js worker to public directory before Vite processes public folder
+					const workerSrc = path.resolve(__dirname, 'node_modules/pdfjs-dist/build/pdf.worker.min.mjs');
+					const workerDest = path.resolve(__dirname, 'public/pdf.worker.min.mjs');
+					
+					try {
+						fs.copyFileSync(workerSrc, workerDest);
+						console.log('PDF.js worker copied to public/');
+					} catch (error) {
+						console.warn('Failed to copy PDF.js worker:', error);
+					}
+				}
+			},
 			VitePWA({
 				registerType: 'autoUpdate',
 				workbox: {
@@ -87,25 +102,7 @@ export default defineConfig(() => {
 			},
 		},
 		build: {
-			rollupOptions: {
-				plugins: [
-					{
-						name: 'copy-pdf-worker',
-						buildStart() {
-							// Copy PDF.js worker to public directory
-							const workerSrc = path.resolve(__dirname, 'node_modules/pdfjs-dist/build/pdf.worker.min.mjs');
-							const workerDest = path.resolve(__dirname, 'public/pdf.worker.min.mjs');
-							
-							try {
-								fs.copyFileSync(workerSrc, workerDest);
-								console.log('PDF.js worker copied to public/');
-							} catch (error) {
-								console.warn('Failed to copy PDF.js worker:', error);
-							}
-						}
-					}
-				]
-			}
+			rollupOptions: {}
 		}
 	}
 });
