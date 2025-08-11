@@ -1,9 +1,8 @@
 import { useAsyncEffect, useCss } from '@common/hooks';
-import { Css, flexColumn } from '@common/helpers';
+import { addJsFileAsync, Css, flexColumn, global } from '@common/helpers';
 import { Div } from '@common/components';
 import { useRef, useState, useEffect } from 'preact/hooks';
 import { PDFToolbar } from './PDFToolbar';
-import * as pdfjsLib from 'pdfjs-dist';
 
 const css: Css = {
   '&': {
@@ -171,9 +170,13 @@ export const PDFViewer = ({ url }: { url: string }) => {
 
     console.debug('PDFViewer useAsyncEffect', containerEl);
 
-    // Configure PDF.js worker - use CDN worker
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.8.69/pdf.worker.min.js';
-    console.debug('PDFViewer useAsyncEffect pdfjsLib configured with CDN worker');
+    await addJsFileAsync("https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js");
+
+    // Assure-toi que pdfjsLib est bien disponible globalement
+    const pdfjsLib = global.pdfjsLib;
+    console.debug('PDFViewer useAsyncEffect pdfjsLib', pdfjsLib);
+
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
     const pdf = await pdfjsLib.getDocument(url).promise;
     console.debug('PDFViewer useAsyncEffect pdf', pdf);
