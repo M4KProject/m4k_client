@@ -21,6 +21,7 @@ This is a multi-interface content management system with three main applications
 
 - **Framework**: Preact with Vite build system
 - **Language**: TypeScript with JSX
+- **PWA**: Vite PWA plugin with Workbox for service worker generation and offline support
 - **Styling**: CSS-in-JS approach using a custom styling system with `useCss` hook and `Css` objects
 - **State Management**: Custom message-based reactive system (`Msg` class with `useMsg` hook)
 - **Routing**: Custom router implementation handling multiple application routes
@@ -91,6 +92,7 @@ The content viewer supports multiple content types:
 - **HTML**: Raw HTML content rendering
 - **Playlist**: Media playlist interface
 - **Hiboutik**: Integration with Hiboutik POS system
+- **PDF**: PDF document viewer using local PDF.js library (offline-capable)
 
 ### State Management Pattern
 
@@ -116,3 +118,33 @@ const Component = () => {
   return <Div cls={c}>Content</Div>;
 };
 ```
+
+## PWA Configuration
+
+The application is configured as a Progressive Web App (PWA) using Vite PWA plugin:
+
+### Service Worker
+- **Auto-generated**: Workbox generates service worker automatically
+- **Auto-update**: Service worker updates automatically on new builds
+- **Precaching**: All build assets are precached for offline access
+- **Runtime caching**: External resources (fonts, media, scripts) are cached with appropriate strategies
+
+### Caching Strategies
+- **M4K Fonts**: CacheFirst strategy for `https://fonts.m4k.fr/`
+- **Media Files**: StaleWhileRevalidate with 7-day expiration for `/files/*.{jpg,png,pdf,mp4,etc}`
+- **External Assets**: CacheFirst with 30-day expiration for external CSS/JS/fonts
+
+### Offline Support
+- **PDF.js**: Local PDF.js library (no CDN dependency) with worker precached at `/pdf.worker.min.mjs`
+- **Full offline capability**: All application code and resources work without internet connection
+- **Background updates**: New versions downloaded in background and activated on next visit
+
+### PWA Integration
+- **Admin & Device apps**: Service worker registration via `usePWA()` hook in App components
+- **Automatic registration**: PWA registers automatically on app load
+- **Update notifications**: Can be extended to show update prompts to users
+
+### Build Process
+- **Worker copying**: PDF.js worker automatically copied to public directory during build
+- **Asset optimization**: All assets optimized and fingerprinted for caching
+- **Manifest generation**: Web app manifest generated for installability
