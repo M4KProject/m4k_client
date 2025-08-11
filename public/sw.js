@@ -1,60 +1,41 @@
-// Service Worker pour le cache complet (médias + assets)
-const CACHE_VERSION = 'v1';
-const STATIC_CACHE_NAME = `m4k-static-${CACHE_VERSION}`;
-const MEDIA_CACHE_NAME = `m4k-media-${CACHE_VERSION}`;
-const MEDIA_CACHE_DURATION = 60 * 60 * 1000; // 1 heure en millisecondes
+const VERSION = 'v2';
+const STATIC_CACHE_NAME = `m4k-static-${VERSION}`;
+const MEDIA_CACHE_NAME = `m4k-media-${VERSION}`;
+const MEDIA_CACHE_DURATION = 60 * 60 * 1000;
 
-// Fichiers statiques à pré-cacher
 const STATIC_ASSETS = [
   '/',
-  '/index.html',
-  // Les assets seront ajoutés dynamiquement
+  '/index.html'
 ];
 
 console.log('Service Worker: Loading with static assets to precache:', STATIC_ASSETS);
 
-// Types de fichiers médias à mettre en cache (API)
 const MEDIA_EXTENSIONS = [
-  // Images
   'jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp', 'ico',
-  // Vidéos
   'mp4', 'webm', 'ogg', 'avi', 'mov', 'wmv', 'flv', 'm4v',
-  // Documents
   'pdf',
-  // Audio
   'mp3', 'wav', 'ogg', 'm4a', 'aac'
 ];
 
-// Types de fichiers assets à mettre en cache (statiques)
 const ASSET_EXTENSIONS = [
-  // Scripts et styles
   'js', 'css', 'mjs', 'ts',
-  // Images statiques
   'jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'bmp', 'ico',
-  // Polices
   'woff', 'woff2', 'ttf', 'eot',
-  // Autres assets
   'json', 'xml'
 ];
 
-/**
- * Détermine le type de cache pour une URL
- */
 function getCacheType(url) {
   try {
     const urlObj = new URL(url);
     const pathname = urlObj.pathname;
     const hostname = urlObj.hostname;
     
-    // CDN externes - Cache tous les fichiers avec extensions valides
     const currentDomain = self.location.hostname;
     if (hostname !== currentDomain && hostname !== 'localhost') {
-      // fonts.m4k.fr : cache tout peu importe l'extension
       if (hostname === 'fonts.m4k.fr') {
         return 'static';
       }
       
-      // Autres CDN : cache selon l'extension
       const filename = pathname.split('/').pop() || '';
       const extension = filename.split('.').pop()?.toLowerCase() || '';
       
@@ -63,7 +44,6 @@ function getCacheType(url) {
       }
     }
     
-    // Assets statiques
     if (pathname.startsWith('/assets/') || pathname === '/' || pathname === '/index.html') {
       const filename = pathname.split('/').pop() || '';
       const extension = filename.split('.').pop()?.toLowerCase() || '';
@@ -73,7 +53,6 @@ function getCacheType(url) {
       }
     }
     
-    // Médias de l'API
     if (pathname.includes('/files/')) {
       const filename = pathname.split('/').pop() || '';
       const extension = filename.split('.').pop()?.toLowerCase() || '';
@@ -89,23 +68,14 @@ function getCacheType(url) {
   }
 }
 
-/**
- * Vérifie si une URL d'asset statique doit être mise en cache
- */
 function shouldCacheStatic(url) {
   return getCacheType(url) === 'static';
 }
 
-/**
- * Vérifie si une URL de média doit être mise en cache
- */
 function shouldCacheMedia(url) {
   return getCacheType(url) === 'media';
 }
 
-/**
- * Vérifie si un élément du cache est encore valide
- */
 function isCacheValid(cachedResponse) {
   if (!cachedResponse) return false;
   
@@ -118,9 +88,6 @@ function isCacheValid(cachedResponse) {
   return (now - cacheTime) < MEDIA_CACHE_DURATION;
 }
 
-/**
- * Ajoute les métadonnées de cache à la réponse
- */
 function addCacheMetadata(response) {
   const headers = new Headers(response.headers);
   headers.set('sw-cached-date', Date.now().toString());
@@ -133,27 +100,22 @@ function addCacheMetadata(response) {
   });
 }
 
-// Installation du service worker
 self.addEventListener('install', (event) => {
   console.log('Service Worker: Installing...');
   
   event.waitUntil(
     Promise.all([
-      // Ouvre les caches
       caches.open(STATIC_CACHE_NAME),
       caches.open(MEDIA_CACHE_NAME),
-      // Pré-cache les assets statiques critiques
       caches.open(STATIC_CACHE_NAME).then(cache => {
         console.log('Service Worker: Pre-caching static assets...', STATIC_ASSETS);
         return cache.addAll(STATIC_ASSETS).then(() => {
           console.log('Service Worker: Pre-cache completed successfully');
-          // Vérifie que index.html est bien en cache
           return cache.match('/index.html').then(response => {
             console.log('Service Worker: index.html cached?', !!response);
           });
         }).catch(error => {
           console.error('Service Worker: Pre-cache failed', error);
-          // Essaie de cacher au moins index.html individuellement
           return Promise.all(STATIC_ASSETS.map(url => {
             return cache.add(url).then(() => {
               console.log('Service Worker: Successfully cached', url);
@@ -165,13 +127,11 @@ self.addEventListener('install', (event) => {
       })
     ]).then(() => {
       console.log('Service Worker: Installation complete');
-      // Force l'activation immédiate
       return self.skipWaiting();
     })
   );
 });
 
-// Activation du service worker
 self.addEventListener('activate', (event) => {
   console.log('Service Worker: Activating...');
   
@@ -191,20 +151,17 @@ self.addEventListener('activate', (event) => {
       );
     }).then(() => {
       console.log('Service Worker: Activated');
-      // Prend le contrôle immédiatement
       return self.clients.claim();
     })
   );
 });
 
-// Interception des requêtes
 self.addEventListener('fetch', (event) => {
   const request = event.request;
   const url = request.url;
   
   console.log('Service Worker: Intercepting request:', request.method, url, 'destination:', request.destination);
   
-  // Ne traite que les requêtes GET
   if (request.method !== 'GET') {
     console.log('Service Worker: Ignoring non-GET request:', request.method);
     return;
@@ -218,7 +175,6 @@ self.addEventListener('fetch', (event) => {
     const isIndexHtml = urlObj.pathname === '/' || urlObj.pathname === '/index.html';
     
     if (isIndexHtml) {
-      // Stratégie Stale While Revalidate pour index.html
       console.log('Service Worker: Intercepting HTML request with SWR:', url);
       
       event.respondWith(
@@ -226,11 +182,13 @@ self.addEventListener('fetch', (event) => {
           .then(cache => {
             return cache.match(request)
               .then(cachedResponse => {
-                // Fetch nouvelle version en arrière-plan
                 const fetchPromise = fetch(request)
                   .then(async response => {
+                    if (response.status === 206) {
+                      console.log('Service Worker: Skipping cache for partial response:', url);
+                      return response;
+                    }
                     if (response.ok) {
-                      // Compare le contenu pour détecter les changements
                       if (cachedResponse) {
                         try {
                           const [cachedContent, newContent] = await Promise.all([
@@ -248,7 +206,6 @@ self.addEventListener('fetch', (event) => {
                             console.log('Service Worker: HTML content changed, updating cache and notifying clients');
                             await cache.put(request, response.clone());
                             
-                            // Notifie les clients qu'une mise à jour est disponible
                             const clients = await self.clients.matchAll();
                             console.log('Service Worker: Notifying', clients.length, 'clients');
                             clients.forEach(client => {
@@ -265,7 +222,6 @@ self.addEventListener('fetch', (event) => {
                           await cache.put(request, response.clone());
                         }
                       } else {
-                        // Première mise en cache
                         await cache.put(request, response.clone());
                         console.log('Service Worker: HTML cached for first time:', url);
                       }
@@ -277,19 +233,16 @@ self.addEventListener('fetch', (event) => {
                   .catch(error => {
                     console.error('Service Worker: HTML fetch failed (offline?):', url, error);
                     
-                    // Si on a un cache, on le retourne
                     if (cachedResponse) {
                       return cachedResponse;
                     }
                     
-                    // Pour SPA, essaie de servir index.html depuis le cache
                     return cache.match('/index.html').then(indexResponse => {
                       if (indexResponse) {
                         console.log('Service Worker: Serving cached index.html for SPA route offline');
                         return indexResponse;
                       }
                       
-                      // Si pas d'index.html en cache, retourne une page d'erreur
                       return new Response(
                         '<!DOCTYPE html><html><head><title>Hors ligne</title></head><body><h1>Application non disponible hors ligne</h1><p><button onclick="window.location.reload()">Réessayer</button></p></body></html>',
                         { 
@@ -301,7 +254,6 @@ self.addEventListener('fetch', (event) => {
                     });
                   });
                 
-                // Retourne immédiatement le cache si disponible, sinon attend le fetch
                 if (cachedResponse) {
                   console.log('Service Worker: Serving HTML from cache (SWR):', url);
                   return cachedResponse;
@@ -313,7 +265,6 @@ self.addEventListener('fetch', (event) => {
           })
       );
     } else {
-      // Stratégie Cache First pour tous les autres assets statiques (CDN, locaux)
       console.log('Service Worker: Intercepting static asset request (Cache First):', url);
       
       event.respondWith(
@@ -326,10 +277,13 @@ self.addEventListener('fetch', (event) => {
                   return cachedResponse;
                 }
                 
-                // Télécharge et met en cache
                 console.log('Service Worker: Fetching and caching static (Cache First):', url);
                 return fetch(request)
                   .then(response => {
+                    if (response.status === 206) {
+                      console.log('Service Worker: Skipping cache for partial response:', url);
+                      return response;
+                    }
                     if (response.ok) {
                       cache.put(request, response.clone());
                       console.log('Service Worker: Static cached successfully (Cache First):', url);
@@ -339,7 +293,6 @@ self.addEventListener('fetch', (event) => {
                   .catch(error => {
                     console.error('Service Worker: Static fetch failed (offline?):', url, error);
                     
-                    // Pour les routes de navigation (SPA), essaie de servir index.html depuis le cache
                     if (request.destination === 'document') {
                       console.log('Service Worker: Navigation failed offline, trying to serve index.html from cache');
                       return cache.match('/index.html').then(indexResponse => {
@@ -348,7 +301,6 @@ self.addEventListener('fetch', (event) => {
                           return indexResponse;
                         }
                         
-                        // Si pas d'index.html en cache, retourne une page d'erreur
                         return new Response(
                           '<!DOCTYPE html><html><head><title>Hors ligne</title></head><body><h1>Application non disponible hors ligne</h1><p><button onclick="window.location.reload()">Réessayer</button></p></body></html>',
                           { 
@@ -359,7 +311,6 @@ self.addEventListener('fetch', (event) => {
                         );
                       });
                     } else {
-                      // Pour les autres ressources, retourne une erreur 503 appropriée
                       console.log('Service Worker: Returning 503 for failed static resource:', url);
                       return new Response('Ressource temporairement indisponible', {
                         status: 503,
@@ -374,7 +325,6 @@ self.addEventListener('fetch', (event) => {
     }
     
   } else if (cacheType === 'media') {
-    // Stratégie Stale While Revalidate pour les médias
     console.log('Service Worker: Intercepting media request:', url);
     
     event.respondWith(
@@ -382,18 +332,19 @@ self.addEventListener('fetch', (event) => {
         .then(cache => {
           return cache.match(request)
             .then(cachedResponse => {
-              // Vérifie si le cache est encore valide
               if (isCacheValid(cachedResponse)) {
                 console.log('Service Worker: Serving media from cache:', url);
                 return cachedResponse;
               }
               
-              // Télécharge et met en cache
               console.log('Service Worker: Fetching and caching media:', url);
               return fetch(request)
                 .then(response => {
+                  if (response.status === 206) {
+                    console.log('Service Worker: Skipping cache for partial response:', url);
+                    return response;
+                  }
                   if (response.ok) {
-                    // Clone la réponse pour la mettre en cache
                     const responseToCache = addCacheMetadata(response.clone());
                     cache.put(request, responseToCache);
                     
@@ -404,13 +355,11 @@ self.addEventListener('fetch', (event) => {
                 .catch(error => {
                   console.error('Service Worker: Media fetch failed (offline?):', url, error);
                   
-                  // Retourne le cache expiré si disponible
                   if (cachedResponse) {
                     console.log('Service Worker: Serving expired media cache as fallback:', url);
                     return cachedResponse;
                   }
                   
-                  // Pour les médias, retourne une réponse d'erreur appropriée
                   return new Response('Média indisponible hors ligne', {
                     status: 503,
                     statusText: 'Service Unavailable'
@@ -421,7 +370,6 @@ self.addEventListener('fetch', (event) => {
     );
   }
   
-  // Gestion spéciale pour les routes SPA (navigation)
   if (request.destination === 'document') {
     console.log('Service Worker: Document request detected, handling as SPA route:', url);
     
@@ -429,7 +377,6 @@ self.addEventListener('fetch', (event) => {
       fetch(request).catch(error => {
         console.error('Service Worker: SPA route fetch failed (offline?):', url, error);
         
-        // Pour les routes SPA, sert toujours index.html depuis le cache
         console.log('Service Worker: SPA route offline, serving index.html from cache');
         return caches.open(STATIC_CACHE_NAME).then(cache => {
           return cache.match('/index.html').then(indexResponse => {
@@ -438,14 +385,12 @@ self.addEventListener('fetch', (event) => {
               return indexResponse;
             }
             
-            // Essaie aussi de chercher avec une requête vers la racine
             return cache.match('/').then(rootResponse => {
               if (rootResponse) {
                 console.log('Service Worker: Serving cached root for SPA route:', url);
                 return rootResponse;
               }
               
-              // Si pas d'index.html en cache, retourne une page d'erreur
               console.log('Service Worker: No cached HTML found, serving offline page');
               return new Response(
                 '<!DOCTYPE html><html><head><title>Hors ligne</title></head><body><h1>Application non disponible hors ligne</h1><p>Impossible de charger la page <code>' + url + '</code></p><p><button onclick="window.location.reload()">Réessayer</button></p></body></html>',
@@ -461,12 +406,10 @@ self.addEventListener('fetch', (event) => {
       })
     );
   } else if (!cacheType) {
-    // Pour les autres requêtes non-cachées (API, etc.)
     event.respondWith(
       fetch(request).catch(error => {
         console.error('Service Worker: Non-cached request failed (offline?):', url, error);
         
-        // Pour les requêtes API, retourne une erreur JSON
         if (request.headers.get('accept')?.includes('application/json')) {
           return new Response(
             JSON.stringify({ 
@@ -481,7 +424,6 @@ self.addEventListener('fetch', (event) => {
           );
         }
         
-        // Pour les autres, retourne une erreur générique
         return new Response('Service temporairement indisponible', {
           status: 503,
           statusText: 'Service Unavailable'
@@ -491,7 +433,6 @@ self.addEventListener('fetch', (event) => {
   }
 });
 
-// Message handler pour les commandes depuis l'application
 self.addEventListener('message', (event) => {
   const { type, payload } = event.data || {};
   
@@ -515,9 +456,6 @@ self.addEventListener('message', (event) => {
   }
 });
 
-/**
- * Nettoie le cache avec un pattern optionnel
- */
 async function clearCache(pattern, cacheType) {
   const cacheNames = [];
   
@@ -550,9 +488,6 @@ async function clearCache(pattern, cacheType) {
   console.log(`Service Worker: Total cleared ${totalDeleted} cache entries`);
 }
 
-/**
- * Récupère les informations sur le cache
- */
 async function getCacheInfo() {
   const info = {
     totalEntries: 0,
@@ -561,7 +496,6 @@ async function getCacheInfo() {
     media: { entries: 0, size: 0, items: [] }
   };
   
-  // Cache statique
   try {
     const staticCache = await caches.open(STATIC_CACHE_NAME);
     const staticRequests = await staticCache.keys();
@@ -575,7 +509,7 @@ async function getCacheInfo() {
         info.static.size += size;
         info.static.items.push({
           url: request.url,
-          cachedDate: null, // Assets statiques n'ont pas d'expiration
+          cachedDate: null,
           size: size,
           valid: true
         });
@@ -585,7 +519,6 @@ async function getCacheInfo() {
     console.warn('Error reading static cache:', e);
   }
   
-  // Cache média
   try {
     const mediaCache = await caches.open(MEDIA_CACHE_NAME);
     const mediaRequests = await mediaCache.keys();
