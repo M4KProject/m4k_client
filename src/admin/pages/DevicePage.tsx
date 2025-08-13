@@ -1,10 +1,12 @@
-import { Css, flexCenter, flexColumn, flexRow } from '@common/helpers';
+import { Css, flexRow, flexColumn } from '@common/helpers';
 import { useCss, useMsg } from '@common/hooks';
-import { Page, PageHeader, PageBody, Div, Button, Field } from '@common/components';
+import { Page, PageHeader, PageBody, Div, Button, tooltip } from '@common/components';
 import { deviceColl } from '@common/api';
 import { device$ } from '../controllers/Router';
 import { useState } from 'preact/hooks';
-import { MdSync } from 'react-icons/md';
+import { MdRefresh, MdPowerSettingsNew, MdExitToApp } from 'react-icons/md';
+import { DeviceScreen } from '../components/DeviceScreen';
+import { DeviceConsole } from '../components/DeviceConsole';
 
 const css: Css = {
     '&Body': {
@@ -16,74 +18,20 @@ const css: Css = {
         flex: 1,
         gap: 2,
     },
-    '&Preview': {
-        ...flexCenter(),
-        flex: 1,
-        rounded: 2,
-        bg: '#000',
-        m: 0.5,
-        position: 'relative',
-        bgMode: 'contain',
-    },
-    '&NoCapture': {
-        ...flexCenter(),
-        bg: '#FFF',
-        fg: '#000',
-        p: 1,
-    },
-    '&WH': {
-        position: 'absolute',
-        xy: 0,
-        fg: '#FFF',
-        m: 1,
-    },
-    '&Console': {
-        ...flexColumn({ align: 'stretch' }),
-        w: '300px',
-        bg: '#1e1e1e',
-        border: '1px solid #333',
-        borderRadius: '4px',
-        overflow: 'hidden',
-        m: 0.5,
-    },
-    '&ConsoleHeader': {
-        ...flexCenter(),
-        p: 1,
-        bg: '#333',
-        fg: '#fff',
-        fontSize: '14px',
-        fontWeight: 'bold',
-    },
-    '&Logs': {
-        flex: 1,
-        p: 1,
-        bg: '#000',
-        fg: '#0f0',
-        fontFamily: 'monospace',
-        fontSize: '12px',
-        overflow: 'auto',
-        whiteSpace: 'pre-wrap',
-    },
-    '&Actions': {
-        ...flexRow({ justify: 'center', align: 'center' }),
-        gap: 1,
-        p: 0.5,
-    }
 };
 
 export const DevicePage = () => {
     const c = useCss('DevicePage', css);
     const device = useMsg(device$);
     const deviceKey = device?.key;
-    const [command, setCommand] = useState('');
     const [consoleOutput, setConsoleOutput] = useState('Console ready...\n');
 
     const refreshDevice = async () => device$.set(await deviceColl.findKey(deviceKey));
 
-    const executeAction = async (action: string) => {
+    const executeAction = async (action: string, input?: any) => {
         if (!device) return;
         try {
-            await deviceColl.update(device.id, { action: action as any });
+            await deviceColl.update(device.id, { action: action as any, input });
             setConsoleOutput(prev => prev + `> Action: ${action}\n`);
             await refreshDevice();
         } catch (error) {
@@ -91,15 +39,14 @@ export const DevicePage = () => {
         }
     };
 
-    const sendCommand = async () => {
+    const sendCommand = async (command: string) => {
         if (!device || !command.trim()) return;
         try {
             await deviceColl.update(device.id, { 
-                action: 'sh',
+                action: 'js',
                 input: command 
             });
             setConsoleOutput(prev => prev + `> ${command}\n`);
-            setCommand('');
             await refreshDevice();
         } catch (error) {
             setConsoleOutput(prev => prev + `> Error: ${error}\n`);
@@ -140,58 +87,34 @@ export const DevicePage = () => {
         <Page cls={c}>
             <PageHeader title={device.name || device.key}>
                 <Button
-                    icon={<MdSync />}
-                    title="Rafraîchir"
+                    icon={<MdRefresh />}
+                    {...tooltip("Rafraîchir")}
                     onClick={() => executeAction('refresh')}
                 />
                 <Button
-                    icon={<MdSync />}
-                    title="Redemarrer"
+                    icon={<MdPowerSettingsNew />}
+                    {...tooltip("Redémarrer")}
                     onClick={() => executeAction('reboot')}
                 />
                 <Button 
-                    icon={<MdSync />}
-                    title="Fermer le Kiosk"
-                    onClick={() => executeAction('exit')}
-                />
-                <Button 
-                    icon={<MdSync />}
-                    title="Fermer le Kiosk"
+                    icon={<MdExitToApp />}
+                    {...tooltip("Fermer le Kiosk")}
                     onClick={() => executeAction('exit')}
                 />
             </PageHeader>
             <PageBody cls={`${c}Body`}>
                 <Div cls={`${c}Screen`}>
-                    <Div cls={`${c}Preview`} style={{
-                        backgroundImage: captureUrl
-                    }}>
-                        <Div cls={`${c}WH`}>
-                            {deviceWidth} × {deviceHeight}
-                        </Div>
-
-                        {!captureUrl && (
-                            <Div cls={`${c}NoCapture`}>
-                                Aucune capture disponible
-                            </Div>
-                        )}
-                    </Div>
-                    <Div cls={`${c}Console`}>
-                        <Div cls={`${c}Logs`}>
-                            {consoleOutput}
-                            {device.result && `${device.result}\n`}
-                        </Div>
-                        <Field
-                            type="text"
-                            value={command}
-                            onValue={setCommand}
-                            onKeyDown={(e: KeyboardEvent) => {
-                                if (e.key === 'Enter') {
-                                    e.preventDefault();
-                                    sendCommand();
-                                }
-                            }}
-                        />
-                    </Div>
+                    <DeviceScreen 
+                        captureUrl={captureUrl}
+                        deviceWidth={deviceWidth}
+                        deviceHeight={deviceHeight}
+                    />
+                    <DeviceConsole
+                        device={device}
+                        consoleOutput={consoleOutput}
+                        onExecuteAction={executeAction}
+                        onSendCommand={sendCommand}
+                    />
                 </Div>
             </PageBody>
         </Page>
