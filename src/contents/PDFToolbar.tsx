@@ -75,7 +75,7 @@ export const PDFToolbar = ({
         color={currentPage >= totalPages ? "secondary" : "primary"} 
         onClick={currentPage >= totalPages ? undefined : onNextPage}
       />
-      <Button 
+      {/* <Button 
         icon={<MdZoomOut />} 
         color="primary" 
         onClick={onZoomOut} 
@@ -89,7 +89,7 @@ export const PDFToolbar = ({
         icon={<MdFitScreen />} 
         color="primary" 
         onClick={onFitWidth} 
-      />
+      /> */}
     </Div>
   );
 };
