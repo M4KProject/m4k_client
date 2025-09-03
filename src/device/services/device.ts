@@ -1,10 +1,9 @@
 import { m4k, M4kResizeOptions } from '@common/m4k';
 import { Msg, req, sleep, toNbr, toRecord, toStr, uuid } from '@common/helpers';
-import { DeviceModel, deviceColl, UserModel, login, signUp, apiNow } from '@common/api';
+import { DeviceModel, deviceColl, UserModel, login, signUp, apiNow, auth$ } from '@common/api';
 
 export const authEmail$ = new Msg('', 'auth_email', true);
 export const authPassword$ = new Msg('', 'auth_password', true);
-export const auth$ = new Msg<DeviceModel|null>(null, 'auth', true);
 export const device$ = new Msg<DeviceModel|null>(null, 'device', true);
 
 const uniqueKey = () => uuid().split('-').join('');
@@ -39,7 +38,7 @@ export const deviceLogin = async (): Promise<UserModel> => {
             }
             return await deviceLogin();
         }
-        console.warn('deviceLogin error2', { ...error }, error);
+        console.warn('deviceLogin error2', error);
         throw error;
     }
 }
@@ -47,16 +46,15 @@ export const deviceLogin = async (): Promise<UserModel> => {
 export const _deviceInit = async () => {
     let device: DeviceModel|null;
 
-    const auth = await deviceLogin();
-    console.debug('auth', auth);
-    auth$.set(auth);
+    const user = await deviceLogin();
+    console.debug('_deviceInit user', user.id);
 
     const { width, height, type, ...info } = await m4k.info();
 
     device = await deviceColl.upsert(
-        { user: auth.id },
+        { user: user.id },
         {
-            user: auth.id,
+            user: user.id,
             status: 'started',
             started: apiNow(),
             online: apiNow(),
@@ -66,11 +64,11 @@ export const _deviceInit = async () => {
             info,
         },
     );
-    console.debug('device', device);
+    console.debug('device', device.id);
     device$.set(device);
 
     while(true) {
-        await sleep(5000);
+        await sleep(10000);
         try {
             const update = await deviceColl.update(device.id, {
                 status: 'updated',
@@ -132,12 +130,10 @@ const execAction = async (device: DeviceModel) => {
             return await m4k.reboot();
         case 'restart':
             return await m4k.restart();
-        case 'set':
-            return await m4k.set(input.prop, input.value);
         case 'kiosk_on':
-            return await m4k.set("isKioskOn", input !== false);
+            return await m4k.setKioskOn(input !== false);
         case 'screen_on':
-            return await m4k.set("isScreenOn", input !== false);
+            return await m4k.setScreenOn(input !== false);
     }
 }
 

@@ -28,4 +28,4 @@ dist-ssr
 
 public/pdf.worker.min.mjs
 
-publish-*
+publish*
