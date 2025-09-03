@@ -1,13 +1,23 @@
 import { m4k } from "@common/m4k";
-import {Msg} from "@common/helpers/Msg";
+import { Msg } from "@common/helpers/Msg";
 import { readUrlParams } from "@common/helpers/urlParams";
-import {useMsg} from "@common/hooks/useMsg";
 
-export const page$ = new Msg(readUrlParams().page || 'kiosk')
+export type PageName =
+    'codePin'|
+    'kiosk'|
+    'actions'|
+    'site'|
+    'playlist'|
+    'configPlaylist'|
+    'wifi'|
+    'test'|
+    'debug'|
+    'logs'|
+    'events'|
+    'pairing'|
+    '';
 
-export const usePage = () => useMsg(page$)
-
-export const setPage = (value: string) => page$.set(value)
+export const page$ = new Msg<PageName>((readUrlParams().page as PageName) || 'kiosk');
 
 page$.on((page, oldPage) => {
     if (oldPage !== page && page === 'kiosk') {

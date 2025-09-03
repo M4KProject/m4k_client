@@ -1,7 +1,8 @@
 import { useCss, useMsg } from '@common/hooks';
 import { Css, flexColumn } from '@common/helpers';
-import { Div } from '@common/components';
+import { Button, Div } from '@common/components';
 import { device$ } from '../services/device';
+import { page$ } from '../messages/page$';
 
 const css: Css = {
   '&': {
@@ -113,6 +114,10 @@ export const PairingPage = () => {
         <p className={`${c}Footer`}>
           Cette clé est unique à cet appareil
         </p>
+
+        <Button title="Mode Offline" color="primary" onClick={() => {
+          page$.set('codePin')
+        }}/>
       </Div>
     </Div>
   );

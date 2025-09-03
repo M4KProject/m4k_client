@@ -29,11 +29,7 @@ export const mount = () => {
 
   m4k.subscribe(async e => {
     if (e.type !== 'storage' || e.action !== 'mounted') return;
-
-    const copyDir = await m4k.get('copyDir') || 'playlist';
-    if (!copyDir) return;
-
-    await copyPlaylist(`${e.path}/${copyDir}`);
+    await copyPlaylist(`${e.path}/playlist`);
   });
 
   console.debug('device mounted');

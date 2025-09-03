@@ -4,10 +4,10 @@ import { device$ } from '../services/device';
 import { usePWA } from '../../serviceWorker';
 import { Div, Side, SideButton, SideSep } from '@common/components';
 import { JSX } from 'preact';
-import { page$, usePage } from '../messages/page$';
+import { page$, PageName } from '../messages/page$';
 import { LoadingPage } from '../pages/LoadingPage';
 import { MdOutlineScreenshotMonitor, MdSettings, MdBugReport, MdDeveloperBoard, MdEvent, MdPassword, MdFormatListBulleted, MdWeb, MdAccountCircle, MdBuild } from 'react-icons/md';
-import { PasswordPage } from '../pages/PasswordPage';
+import { CodePinPage } from '../pages/CodePinPage';
 import { SitePage } from '../pages/SitePage';
 import { ConfigPlaylistPage } from '../pages/ConfigPlaylistPage';
 import { TestPage } from '../pages/TestPage';
@@ -18,6 +18,7 @@ import { ActionsPage } from '../pages/ActionsPage';
 import { EventsPage } from '../pages/EventsPage';
 import { PlaylistPage } from '../pages/PlaylistPage';
 import { PairingPage } from '../pages/PairingPage';
+import { useEffect } from 'preact/hooks';
 
 const css: Css = {
   '&': {
@@ -37,10 +38,10 @@ const css: Css = {
   }
 }
 
-const CompByPage: Record<string, () => JSX.Element> = {
+const CompByPage: Record<PageName, () => JSX.Element> = {
+  '': KioskPage,
   kiosk: KioskPage,
   actions: ActionsPage,
-  password: PasswordPage,
   site: SitePage,
   playlist: PlaylistPage,
   configPlaylist: ConfigPlaylistPage,
@@ -49,22 +50,32 @@ const CompByPage: Record<string, () => JSX.Element> = {
   debug: DebugPage,
   // logs: LoadingPage,
   events: EventsPage,
+  pairing: PairingPage,
+  codePin: CodePinPage,
+  logs: function (): JSX.Element {
+    throw new Error('Function not implemented.');
+  }
 }
 
 const AppRouter = () => {
-  const page = usePage();
+  const page = useMsg(page$);
   const Page = CompByPage[page] || ActionsPage;
   return <Page />;
 }
 
-
 const AppContent = () => {
   const c = useCss('App', css);
-  const page = usePage();
+  const page = useMsg(page$);
   const device = useMsg(device$);
   
   // Initialize PWA
   usePWA();
+
+  useEffect(() => {
+    if (!device?.group) {
+      page$.set('pairing');
+    }
+  });
   
   // Si le device n'a pas de groupe, afficher la page de pairage
   if (!device?.group) {
@@ -73,7 +84,7 @@ const AppContent = () => {
   
   return (
     <Div cls={c}>
-      {page !== 'kiosk' && (
+      {page !== 'kiosk' && page !== 'codePin' && page !== 'pairing' && (
         <Side page$={page$}>
           <SideSep />
           <SideButton icon={<MdOutlineScreenshotMonitor />} page="kiosk" title="Kiosk" />
