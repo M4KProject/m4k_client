@@ -1,4 +1,4 @@
-import { isArray, isObject } from "@common/helpers";
+import { isArrayOfRecords, isRecord } from "@common/helpers";
 import { newMsg } from "@common/helpers/Msg";
 
 export interface Playlist {
@@ -6,8 +6,8 @@ export interface Playlist {
 }
 
 export const isPlaylist = (playlist: Playlist) => (
-    isObject(playlist) &&
-    isArray(playlist.items)
+    isRecord(playlist) &&
+    isArrayOfRecords(playlist.items)
 )
 
 export const playlist$ = newMsg<Playlist>({ items: [] }, 'playlist', true, isPlaylist);

@@ -1,7 +1,9 @@
 import { newProgressDialog } from "./components/ProgressView"
 import { m4k } from "@common/m4k"
-import { sleep } from "@common/helpers"
+import { sleep, stringify } from "@common/helpers"
 import { M4kFileInfo } from "@common/m4k/m4kInterface"
+import { playlist$ } from "./messages"
+import { getStored } from "@common/helpers/storage"
 
 const PLAYLIST_DIR = 'playlist'
 
@@ -134,9 +136,12 @@ const copyPlaylist = async (fromDir: string) => {
   )
 
   console.debug('playlist items', items)
-  await m4k.set('playlist', { items })
+  playlist$.set({ items });
+  
+  // Wait for localStorage persistence
+  await sleep(5000);
 
-  await m4k.restart()
+  await m4k.restart();
 }
 
 export default copyPlaylist
