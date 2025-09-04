@@ -1,6 +1,6 @@
 import { Field, Form, Page, PageBody, PageHeader } from "@common/components";
 import { useMsgState } from "@common/hooks";
-import { copyDir$, hasVideoMuted$, itemAnim$, itemDurationMs$, itemFit$ } from "../messages";
+import { copyDir$, hasVideoMuted$, itemAnim$, itemDurationMs$, itemFit$, appRotation$ } from "../messages";
 
 export const ConfigPlaylistPage = () => {
   const [copyDir, setCopyDir] = useMsgState(copyDir$);
@@ -8,10 +8,11 @@ export const ConfigPlaylistPage = () => {
   const [itemFit, setItemFit] = useMsgState(itemFit$);
   const [itemAnim, setItemAnim] = useMsgState(itemAnim$);
   const [hasVideoMuted, setHasVideoMuted] = useMsgState(hasVideoMuted$);
+  const [appRotation, setAppRotation] = useMsgState(appRotation$);
 
   return (
     <Page>
-      <PageHeader title="Configuration de la Playlist" />
+      <PageHeader title="Configuration" />
       <PageBody>
         <Form>
           <Field label="Copier le dossier" value={copyDir} onValue={setCopyDir} />
@@ -40,6 +41,18 @@ export const ConfigPlaylistPage = () => {
             ]}
           />
           <Field label="Video sans audio" type="switch" value={hasVideoMuted} onValue={setHasVideoMuted} />
+          <Field
+            label="WebView Rotation"
+            value={appRotation}
+            onValue={setAppRotation}
+            type="select"
+            items={[
+              ['rightToLeft', 'droite gauche'],
+              ['topToBottom', 'haut bas'],
+              ['fade', 'fondu'],
+              ['zoom', 'zoom'],
+            ]}
+          />
         </Form>
       </PageBody>
     </Page>

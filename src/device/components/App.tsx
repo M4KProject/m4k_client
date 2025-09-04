@@ -1,4 +1,4 @@
-import { Css, flexCenter, flexRow } from '@common/helpers';
+import { Css, flexCenter, flexRow, setCss } from '@common/helpers';
 import { useCss, useMsg } from '@common/hooks';
 import { device$ } from '../services/device';
 import { usePWA } from '../../serviceWorker';
@@ -18,7 +18,7 @@ import { EventsPage } from '../pages/EventsPage';
 import { PlaylistPage } from '../pages/PlaylistPage';
 import { PairingPage } from '../pages/PairingPage';
 import { useEffect } from 'preact/hooks';
-import { offlineMode$ } from '../messages';
+import { appRotation$, offlineMode$ } from '../messages';
 
 const css: Css = {
   '&': {
@@ -66,9 +66,32 @@ const AppContent = () => {
   const c = useCss('App', css);
   const page = useMsg(page$);
   const device = useMsg(device$);
+  const appRotation = useMsg(appRotation$);
   
   // Initialize PWA
   usePWA();
+
+  useEffect(() => {
+    console.debug('apply appRotation', appRotation);
+
+    const w = screen.width;
+    const h = screen.height;
+
+    const isInvert = appRotation === 90 || appRotation === 270;
+
+    setCss('appRotation', {
+        [`.${c}`]: {
+            w: (isInvert ? h : w) + 'px',
+            h: (isInvert ? w : h) + 'px',
+            transform: `rotate(${appRotation}deg)`,
+            transformOrigin: 'center center',
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            overflow: 'hidden'
+        }
+    })
+  }, [appRotation])
 
   useEffect(() => {
     if (!device?.group && !offlineMode$.v) {
