@@ -1,7 +1,9 @@
 import { setCss } from "@common/helpers";
 import { newMsg } from "@common/helpers/Msg";
 
-export const contentRotation$ = newMsg(0, 'contentRotation', true);
+export type ContentRotation = 0|90|180|270;
+export const isContentRotation = (v: number) => v===0||v===90||v===180||v===270;
+export const contentRotation$ = newMsg<0|90|180|270>(0, 'contentRotation', true, isContentRotation);
 
 const applyContentRotation = () => {
     const v = contentRotation$.v;

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'preact/hooks';
 import { m4k } from '@common/m4k';
-import { stringify, toErr } from '@common/helpers';
+import { stringify, toErr, withTimeout } from '@common/helpers';
 import { Button, Cell, CellHeader, Field, Form, Page, PageBody, PageHeader, Row, Table, TableBody, TableHead } from '@common/components';
 
 interface TestResult {
@@ -155,8 +155,11 @@ export const TestPage = () => {
         const current = tests[index];
         if (!current) return;
 
-        current.getResult().then(result => {
+        withTimeout(current.getResult(), 3000).then(result => {
             current.result = result;
+            setCurrentIndex(index);
+        }).catch(error => {
+            current.result = error;
             setCurrentIndex(index);
         });
     }, [tests, currentIndex]);
