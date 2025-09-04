@@ -1,7 +1,6 @@
 import { toNbr, flexColumn, Css, flexCenter, clsx } from "@common/helpers";
-import { Button, Div, Iframe } from "@common/components";
+import { Button, Div } from "@common/components";
 import { useCss, usePromise, useMsg } from "@common/hooks";
-// import { m4k, PlaylistItem  } from "@common/m4k";
 import { useEffect, useRef, useState } from "preact/hooks";
 import { openCodePinDialog } from "../components/CodePinView";
 import { device$ } from "../services/device";
@@ -73,96 +72,58 @@ const css: Css = {
     },
 }
 
-// (async () => {
-//     const itemFit = await getOrDefault('itemFit')
-//     const itemAnim = await getOrDefault('itemAnim')
 
-//     setCss('m4kKioskPage', {
-//         '&': {
-//         }
-//     });
-    
-//     setCss('m4kItem', {
-//         '&': {
-//         },
-//         '& .m4kItemEmpty': {
-//             ...flexColumn({ align: 'center', justify: 'center' }),
-//         },
-//         '&-hidden': {
-//             visibility: 'hidden',
-//         },
-//         '&-curr': {
-//         },
-//         '&-prev': {
-//         },
-//         '&-next': {
-//         },
-//         '& div': {
-//             width: '100%',
-//             height: '100%',
-//             bgMode: itemFit,
-//         },
-//         '& video': {
-//             itemFit: itemFit,
-//         },
-//         '& span': {
-//             ...flexCenter(),
-//             position: 'absolute',
-//             inset: 0,
-//             zIndex: 20,
-//             color: cWarn,
-//         }
-//     });
-// })()
+const KioskVideo = ({ url, hasVideoMuted, gotoNext }: {
+    url: string,
+    hasVideoMuted?: boolean,
+    gotoNext: () => void
+}) => {
+    const ref = useRef<HTMLVideoElement>(null);
+    const el = ref.current;
 
-// const ImageItem = ({ item, info, pos, gotoNext }: { item: PlaylistItem, info: M4kFileInfo, pos: 'hidden'|'prev'|'curr'|'next', gotoNext: () => void }) => {
-//     const [itemDurationMs] = useConfigProp('itemDurationMs');
+    useEffect(() => {
+        if (!el) return;
 
-//     useEffect(() => {
-//         console.debug('ImageItem ')
-//         if (pos === 'curr') {
-//             const timer = setTimeout(gotoNext, toNbr(item.waitMs, itemDurationMs));
-//             return () => clearTimeout(timer);
-//         }
-//     }, [pos, itemDurationMs])
+        el.setAttribute('playsinline', 'true');
+        el.setAttribute('webkit-playsinline', 'true');
+        el.muted = hasVideoMuted;
+        el.preload = 'metadata';
 
-//     return (
-//         <div style={{ backgroundImage: `url('${info.url}')` }} />
-//     )
-// }
+        const canPlay = el.canPlayType('video/mp4');
+        console.debug(`[ITEM_VIDEO] Can play MP4:`, canPlay);
 
-// const VideoItem = ({ info, gotoNext }: { item: PlaylistItem, info: M4kFileInfo, pos: 'hidden'|'prev'|'curr'|'next', gotoNext: () => void }) => {
-//     const [hasVideoMuted] = useConfigProp('hasVideoMuted');
-//     const videoRef = useRef<HTMLVideoElement>(null);
-//     const el = videoRef.current
-
-//     useEffect(() => {
-//         if (!el) return
+        el.onloadstart = () => console.debug(`[ITEM_VIDEO] Video loadstart:`, url);
+        el.onloadedmetadata = () => console.debug(`[ITEM_VIDEO] Video metadata loaded:`, url);
+        el.oncanplay = () => {
+            console.debug(`[ITEM_VIDEO] Video can play:`, url);
+            el.play().catch(e => console.error(`[ITEM_VIDEO] Play error:`, e));
+        };
         
-//         const time$ = new Msg(0);
+        el.onerror = (e) => {
+            console.error(`[ITEM_VIDEO] Video error:`, e, url);
+            setTimeout(() => gotoNext(), 1000);
+        };
 
-//         const off1 = time$.debounce(2000).on(gotoNext)
-//         const off2 = addListener(el, 'timeupdate', () => time$.set(Date.now()));
-//         const off3 = addListener(el, 'ended', gotoNext);
-        
-//         return () => {
-//             off1()
-//             off2()
-//             off3()
-//         };
-//     }, [el, info.url, gotoNext]);
+        el.onended = (e) => {
+            console.error(`[ITEM_VIDEO] Video ended:`, e, url);
+            gotoNext();
+        };
 
-//     return (
-//         <video
-//             ref={videoRef}
-//             src={info.url}
-//             autoPlay
-//             loop
-//             muted={hasVideoMuted}
-//             onError={gotoNext}
-//         />
-//     )
-// }
+        // Charger la source
+        el.src = url;
+        el.load(); // Force le chargement
+    }, [ref, el, gotoNext]);
+
+    return (
+        <video
+            ref={ref}
+            src={url}
+            autoPlay
+            loop
+            muted={hasVideoMuted}
+        />
+    )
+}
 
 const KioskItem = ({ item, itemFit, itemAnim, hasVideoMuted, itemDurationMs, pos, gotoNext }: {
     item: PlaylistItem,
@@ -205,14 +166,8 @@ const KioskItem = ({ item, itemFit, itemAnim, hasVideoMuted, itemDurationMs, pos
 
     return (
         <Div cls={[`${c}`, itemFit && `${c}-${itemFit}`, itemAnim && `${c}-${itemAnim}`, `${c}-${pos}`]}>
-            {isVideo ? (
-                <video
-                    ref={ref}
-                    src={info.url}
-                    autoPlay
-                    loop
-                    muted={hasVideoMuted}
-                />
+            {(isVideo && isCurr && info && info.url) ? (
+                <KioskVideo url={info.url} gotoNext={gotoNext} hasVideoMuted={hasVideoMuted} />
             ) : isImage ? (
                 <div ref={ref} style={{ backgroundImage: `url('${info?.url}')` }} />
             ) : (
