@@ -5,6 +5,7 @@ import { Button, Div } from "@common/components";
 import copyPlaylist from "../copyPlaylist";
 import { newProgressDialog } from "../components/ProgressView";
 import { clearAllCache } from "../../serviceWorker";
+import { copyDir$, url$ } from "../messages";
 
 const css: Css = {
     '&': {
@@ -142,9 +143,7 @@ export const ActionsPage = () => {
                     Vider le cache et recharger
                 </Button>
                 <Button onClick={async () => {
-                    const copyDir = await m4k.get('copyDir') || 'playlist'
-                    if (!copyDir) return
-                    await copyPlaylist(`@storage/${copyDir}`)
+                    await copyPlaylist(`@storage/${copyDir$.v}`)
                 }}>
                     Copier la playlist locale
                 </Button>
@@ -222,7 +221,7 @@ export const ActionsPage = () => {
             <b>Autre :</b>
             <Div cls={`${c}Buttons`}>
                 <Button onClick={async () => {
-                    await m4k.set('url', 'https://boardscreen.fr/');
+                    url$.set('https://boardscreen.fr/');
                     await m4k.restart();
                 }}>Boardscreen</Button>
             </Div>
