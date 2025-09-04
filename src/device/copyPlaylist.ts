@@ -100,6 +100,36 @@ const copyPlaylist = async (fromDir: string) => {
 
   await newFilesProcess(
     PLAYLIST_DIR,
+    `Installation d'application`,
+    (_, type) => type === 'apk',
+    null,
+    async (path) => {
+      await m4k.installApk(path)
+      await m4k.rm(path)
+    }
+  )
+
+  await newFilesProcess(
+    PLAYLIST_DIR,
+    `Exécution de script`,
+    (_, type) => type === 'sh',
+    null,
+    async (path) => {
+      const chmodResult = await m4k.su(`chmod +x "${path}"`)
+      if (chmodResult.code !== 0) {
+        throw new Error(`Failed to set execute permission: ${chmodResult.err}`)
+      }
+      const result = await m4k.su(`"${path}"`)
+      console.info('Script execution result:', stringify(result))
+      await m4k.rm(path)
+      if (result.code !== 0) {
+        throw new Error(`Script failed with code ${result.code}: ${result.err}`)
+      }
+    }
+  )
+
+  await newFilesProcess(
+    PLAYLIST_DIR,
     `Convertion des fichiers PDF en images`,
     (_, type) => type === 'pdf',
     null,
@@ -119,47 +149,6 @@ const copyPlaylist = async (fromDir: string) => {
       const resizedPath = await m4k.resize(sourcePath)
       if (sourcePath !== resizedPath) {
         await m4k.rm(sourcePath)
-      }
-    }
-  )
-
-  await newFilesProcess(
-    PLAYLIST_DIR,
-    `Compression des vidéos`,
-    (_, type) => type === 'video',
-    null,
-    async (path) => {
-      const sourcePath = await m4k.absolutePath(path)
-      
-      const ffprobeCmd = `ffprobe -v quiet -print_format json -show_format -show_streams -i "${sourcePath}"`;
-      console.debug('video ffprobe cmd: ' + ffprobeCmd);
-
-      // Get video metadata with ffprobe
-      const probeResult = await m4k.su(ffprobeCmd);
-      console.debug('video ffprobe result: ' + stringify(probeResult));
-      
-      const { streams, format } = parse(probeResult.out || '{}')
-      if (!streams || !format) return
-      
-      const v = streams.find(s => s.codec_type === 'video') || {}
-      const width = parseInt(v.width) || 0
-      const height = parseInt(v.height) || 0
-      const bytes = parseInt(format.size) || 0
-      
-      console.debug(`video ffprobe width:${width} ${height} ${bytes}`);
-      
-      // Only compress if video is large or high resolution
-      if (bytes > 50 * 1024 * 1024 || width > 1920 || height > 1920) {
-        const compressedPath = sourcePath.replace(/\.[^.]+$/, '_compressed.mp4')
-        
-        const ffmpegCmd = `ffmpeg -y -loglevel info -i "${sourcePath}" -c:v libx264 -c:a aac -preset fast -crf 23 -vf "scale='min(1920,iw)':'min(1920,ih)':force_original_aspect_ratio=decrease:eval=frame" -movflags +faststart -pix_fmt yuv420p -f mp4 ${compressedPath}`;
-        console.debug('video ffmpeg cmd: ' + ffmpegCmd);
-
-        const ffmpegResult = await m4k.su(ffmpegCmd);
-        console.debug('video ffmpeg result: ' + stringify(ffmpegResult));
-        
-        await m4k.rm(sourcePath)
-        await m4k.mv(compressedPath, sourcePath)
       }
     }
   )
