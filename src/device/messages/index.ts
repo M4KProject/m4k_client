@@ -3,7 +3,7 @@ import { newMsg } from "@common/helpers/Msg";
 export * from "./dialog$";
 export * from "./page$";
 export * from "./playlist$";
-export * from "./viewRotation$";
+export * from "./contentRotation$";
 
 export const codePin$ = newMsg('yoyo', 'codePin', true);
 export const copyDir$ = newMsg('', 'copyDir', true);

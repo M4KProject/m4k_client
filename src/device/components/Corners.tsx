@@ -11,9 +11,10 @@ const css: Css = {
         w: 4,
         h: 4,
         m: -2,
-        bg: 'black',
-        opacity: 0,
-        transform: 'rotate(45deg)'
+        bg: 'red',
+        opacity: 0.5,
+        transform: 'rotate(45deg)',
+        pointerEvents: 'auto'
     },
 }
 

@@ -1,6 +1,6 @@
 import { Field, Form, Page, PageBody, PageHeader } from "@common/components";
 import { useMsgState } from "@common/hooks";
-import { copyDir$, hasVideoMuted$, itemAnim$, itemDurationMs$, itemFit$, appRotation$ } from "../messages";
+import { copyDir$, hasVideoMuted$, itemAnim$, itemDurationMs$, itemFit$, contentRotation$ } from "../messages";
 
 export const ConfigPlaylistPage = () => {
   const [copyDir, setCopyDir] = useMsgState(copyDir$);
@@ -8,7 +8,7 @@ export const ConfigPlaylistPage = () => {
   const [itemFit, setItemFit] = useMsgState(itemFit$);
   const [itemAnim, setItemAnim] = useMsgState(itemAnim$);
   const [hasVideoMuted, setHasVideoMuted] = useMsgState(hasVideoMuted$);
-  const [appRotation, setAppRotation] = useMsgState(appRotation$);
+  const [contentRotation, setContentRotation] = useMsgState(contentRotation$);
 
   return (
     <Page>
@@ -42,15 +42,15 @@ export const ConfigPlaylistPage = () => {
           />
           <Field label="Video sans audio" type="switch" value={hasVideoMuted} onValue={setHasVideoMuted} />
           <Field
-            label="WebView Rotation"
-            value={appRotation}
-            onValue={setAppRotation}
+            label="Rotation du contenu"
+            value={contentRotation}
+            onValue={setContentRotation}
             type="select"
             items={[
-              ['rightToLeft', 'droite gauche'],
-              ['topToBottom', 'haut bas'],
-              ['fade', 'fondu'],
-              ['zoom', 'zoom'],
+              [0, '0°'],
+              [90, '90°'],
+              [180, '180°'],
+              [270, '270°'],
             ]}
           />
         </Form>
