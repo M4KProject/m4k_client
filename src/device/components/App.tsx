@@ -19,6 +19,7 @@ import { PlaylistPage } from '../pages/PlaylistPage';
 import { PairingPage } from '../pages/PairingPage';
 import { useEffect } from 'preact/hooks';
 import { offlineMode$ } from '../messages';
+import { DialogContainer } from './DialogContainer';
 
 const css: Css = {
   '&': {
@@ -99,6 +100,7 @@ const AppContent = () => {
       )}
       <Corners />
       <AppRouter />
+      <DialogContainer />
     </Div>
   );
 }
