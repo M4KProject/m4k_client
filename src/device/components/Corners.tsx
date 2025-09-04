@@ -29,7 +29,7 @@ export const Corners = () => {
         last = Date.now();
         count++;
         console.debug('Corners handle', last, count);
-        if (count > 5) {
+        if (count > 3) {
             count = 0;
             openCodePinDialog();
         }

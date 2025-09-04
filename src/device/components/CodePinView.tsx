@@ -8,6 +8,9 @@ import { device$ } from "../services/device";
 import { codePin$, offlineMode$ } from "../messages";
 
 const css: Css = {
+    '&': {
+        zIndex: 99999,
+    },
     '&Code': {
         w: '100%',
         fontSize: 2,
@@ -41,7 +44,7 @@ export const CodePinView = ({ open$ }: { open$: Msg<boolean> }) => {
     }, [codePin]);
 
     return (
-        <Form>
+        <Form cls={c}>
             <Div cls={`${c}Code`}>{device?.key}</Div>
             <Field
                 type="password"
