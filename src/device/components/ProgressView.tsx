@@ -61,7 +61,7 @@ const ProgressView = () => {
 
     return (
         <Div cls={c}>
-            <Progress progress={value} step={step ? step[1] : ''} />
+            <Progress progress={value * 100} step={step ? step[1] : ''} />
             <Div ref={logsRef} cls={`${c}Logs`}>
                 {logs.map((log, i) => (
                     <div key={i + log[1]} className={`m4kLog-${log[0]}`}>
