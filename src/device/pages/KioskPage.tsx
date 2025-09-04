@@ -174,29 +174,37 @@ const KioskItem = ({ item, itemFit, itemAnim, hasVideoMuted, itemDurationMs, pos
     gotoNext: () => void
 }) => {
     const c = useCss('Kiosk', css);
-    const ref = useRef<HTMLVideoElement&HTMLDivElement>(null);
-    const [info] = usePromise(() => m4k.fileInfo(item.path), [item])
+    const ref = useRef(null);
+    const [info] = usePromise(() => m4k.fileInfo(item.path), [item]);
 
     const isCurr = pos === 'curr';
-    const isImage = !!info && info.mimeType.startsWith('image')
-    const isVideo = !!info && info.mimeType.startsWith('video')
-    const duration = isVideo ? 0 : toNbr(item.waitMs, itemDurationMs||5000)
+    const isImage = !!info && info.mimeType.startsWith('image');
+    const isVideo = !!info && info.mimeType.startsWith('video');
+    const duration = isImage ? toNbr(item.waitMs, itemDurationMs || 5000) : 0;
 
     useEffect(() => {
-        if (isCurr || duration) {
+        const el = ref.current;
+        if (!el || !isCurr) return;
+
+        if (isVideo) {
+            const handleEnded = () => gotoNext();
+            const handleError = () => gotoNext();
+            
+            el.addEventListener('ended', handleEnded);
+            el.addEventListener('error', handleError);
+            
+            return () => {
+                el.removeEventListener('ended', handleEnded);
+                el.removeEventListener('error', handleError);
+            };
+        } else if (isImage && duration > 0) {
             const timer = setTimeout(gotoNext, duration);
             return () => clearTimeout(timer);
         }
-    }, [isCurr])
+    }, [isCurr, isVideo, isImage, duration, gotoNext]);
 
     return (
-        <Div cls={[`${c}`, itemFit && `${c}-${itemFit}`, itemAnim && `${c}-${itemAnim}`, pos && `${c}-${pos}`]}>
-            {/* Fichier: {item.path}<br />
-            Pos: {pos}<br />
-            Type: {info?.type}<br />
-            Url: {info?.url}<br />
-            Duration: {duration}<br />
-            Clsx: {clsx([`${c}`, itemFit && `${c}-${itemFit}`, itemAnim && `${c}-${itemAnim}`, pos && `${c}-${pos}`])} */}
+        <Div cls={[`${c}`, itemFit && `${c}-${itemFit}`, itemAnim && `${c}-${itemAnim}`, `${c}-${pos}`]}>
             {isVideo ? (
                 <video
                     ref={ref}
@@ -204,28 +212,15 @@ const KioskItem = ({ item, itemFit, itemAnim, hasVideoMuted, itemDurationMs, pos
                     autoPlay
                     loop
                     muted={hasVideoMuted}
-                    onError={gotoNext}
-                    onEnded={gotoNext}
                 />
-            ) :
-            isImage ? (
-                <div ref={ref} style={{ backgroundImage: `url('${info?.url}')` }} /> 
+            ) : isImage ? (
+                <div ref={ref} style={{ backgroundImage: `url('${info?.url}')` }} />
             ) : (
                 <span>Fichier: {item.path} Type: {info?.type}</span>
             )}
         </Div>
-        // <Div className={`${c} ${c}-${itemFit} ${c}-${itemAnim} ${c}-${pos}`}>
-        //     {pos === 'hidden' ? null : (
-        //         // isImage ? <ImageItem item={item} info={info} pos={pos} gotoNext={gotoNext} /> :
-        //         // isVideo ? <VideoItem item={item} info={info} pos={pos} gotoNext={gotoNext} /> :
-        //         isImage ? <div style={{ backgroundImage: `url('${info.url}')` }} /> :
-        //         isVideo ? <span>Video:{item.path} {pos} type:{info?.type} url:{info?.url}</span> :
-        //         <span>Fichier:{item.path} {pos} type:{info?.type} url:{info?.url}</span>
-        //     )}
-        //     <span>url:{info?.url}</span>
-        // </Div>
-    )
-}
+    );
+};
 
 export const KioskPage = () => {
     const c = useCss('Kiosk', css);
@@ -294,9 +289,9 @@ export const KioskPage = () => {
 
     return (
         <Div cls={`${c}Container`} onClick={() => setOpen(true)}>
-            {items.map(item => (
+            {items.map((item, index) => (
                 <KioskItem
-                    key={item.path}
+                    key={`${item.path}-${index}`}
                     item={item}
                     itemFit={itemFit||'contain'}
                     itemAnim={itemAnim||'zoom'}
