@@ -1,14 +1,13 @@
 import { Field, Form, Page, PageBody, PageHeader } from "@common/components";
-import { useConfigProp } from "../hooks/useConfigProp";
-
-
+import { useMsgState } from "@common/hooks";
+import { copyDir$, hasVideoMuted$, itemAnim$, itemDurationMs$, itemFit$ } from "../messages";
 
 export const ConfigPlaylistPage = () => {
-  const [copyDir, setCopyDir] = useConfigProp("copyDir");
-  const [itemDurationMs, setItemDurationMs] = useConfigProp("itemDurationMs");
-  const [itemFit, setItemFit] = useConfigProp("itemFit");
-  const [itemAnim, setItemAnim] = useConfigProp("itemAnim");
-  const [hasVideoMuted, setHasVideoMuted] = useConfigProp("hasVideoMuted");
+  const [copyDir, setCopyDir] = useMsgState(copyDir$);
+  const [itemDurationMs, setItemDurationMs] = useMsgState(itemDurationMs$);
+  const [itemFit, setItemFit] = useMsgState(itemFit$);
+  const [itemAnim, setItemAnim] = useMsgState(itemAnim$);
+  const [hasVideoMuted, setHasVideoMuted] = useMsgState(hasVideoMuted$);
 
   return (
     <Page>

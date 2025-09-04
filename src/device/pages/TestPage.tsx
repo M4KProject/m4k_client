@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'preact/hooks';
 import { m4k } from '@common/m4k';
-import { toErr } from '@common/helpers';
-import { Cell, CellHeader, Page, PageBody, PageHeader, Row, Table, TableBody, TableHead } from '@common/components';
+import { stringify, toErr } from '@common/helpers';
+import { Button, Cell, CellHeader, Field, Form, Page, PageBody, PageHeader, Row, Table, TableBody, TableHead } from '@common/components';
 
 interface TestResult {
     success?: true,
@@ -69,19 +69,6 @@ const initTests = (): TestData[] => {
         t('js5', () => m4k.js('() => { return 5 }'), { success: true, value: 5 }),
         t('su', () => m4k.su('echo "abc"'), r => r.code === 0),
         t('sh', () => m4k.sh('echo "abc"'), r => r.code === 0),
-        t('set string', () => m4k.set(testKey, testString)),
-        t('get string', () => m4k.get(testKey), testString),
-        t('set number', () => m4k.set(testKey, 5)),
-        t('get number', () => m4k.get(testKey), 5),
-        t('set number 2', () => m4k.set(testKey, 1.4)),
-        t('get number 2', () => m4k.get(testKey), 1.4),
-        t('set object', () => m4k.set(testKey, testObject)),
-        t('get object', () => m4k.get(testKey), testObject),
-        t('save config', () => m4k.save()),
-        t('load config', () => m4k.load()),
-        t('get saved object', () => m4k.get(testKey), testObject),
-        t('set undefined', () => m4k.set(testKey, undefined)),
-        t('get undefined', () => m4k.get(testKey), undefined),
         t('mkdir', () => m4k.mkdir(dir)),
         t('file', () => m4k.fileInfo(dir), i => i.type === 'dir'),
         t('write', () => m4k.write(b64Path, btoa("abc"), 'base64')),
@@ -144,9 +131,24 @@ const Test = ({ next, data } : { next: boolean, data: TestData }) => {
 }
 
 export const TestPage = () => {
+    const [script, setScript] = useState('');
+    const [type, setType] = useState('');
+    const [result, setResult] = useState<any>(null);
     const tests = useMemo(() => initTests(), []);
     const [currentIndex, setCurrentIndex] = useState(-1);
 
+    const handleExec = async () => {
+        console.debug('DebugPage handle');
+        const result = await (() => {
+            switch (type) {
+                case 'su': return m4k.su(script);
+                case 'sh': return m4k.sh(script);
+                default: return m4k.js(script);
+            }
+        })();
+        setResult(result);
+    }
+    
     useEffect(() => {
         if (!tests) return
         const index = currentIndex + 1;
@@ -163,6 +165,17 @@ export const TestPage = () => {
         <Page>
             <PageHeader title="Test des fonctions" />
             <PageBody>
+                <Form>
+                    <Field label="Script" required type="multiline" value={script} onValue={setScript} />
+                    <Field label="Type" type="select" value={type} onValue={setType} items={[
+                        ['js', 'JS'],
+                        ['su', 'SU'],
+                        ['sh', 'SH'],
+                    ]} />
+                    <Field label="Résultat" type="multiline" value={stringify(result, null, 2)||String(result)} />
+                    <Field label="Valeur" type="multiline" value={stringify(result?.value, null, 2)||String(result?.value)} />
+                    <Button onClick={handleExec}>Executer</Button>
+                </Form>
                 <Table>
                     <TableHead>
                         <Row>

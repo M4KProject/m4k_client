@@ -1,13 +1,15 @@
 import { useCss, useMsg } from '@common/hooks';
-import { Css, flexColumn } from '@common/helpers';
-import { Button, Div } from '@common/components';
+import { Css, flexColumn, flexRow } from '@common/helpers';
+import { Button, ButtonRow, Div } from '@common/components';
 import { device$ } from '../services/device';
 import { page$ } from '../messages/page$';
+import { offlineMode$ } from '../messages';
+import { useEffect } from 'preact/hooks';
 
 const css: Css = {
   '&': {
     ...flexColumn({ align: 'center', justify: 'center' }),
-    hMin: '100vh',
+    wh: '100%',
     backgroundColor: '#f5f5f5',
     fontFamily: 'Roboto, sans-serif',
     p: 1.25,
@@ -76,18 +78,11 @@ const css: Css = {
     fontFamily: 'monospace',
     wordBreak: 'break-all', // Permet de couper les longues clés si nécessaire
   },
-  '&Footer': {
-    color: '#999',
-    fontSize: 0.875,
-    m: '0',
-  }
 };
 
 export const PairingPage = () => {
   const c = useCss('PairingPage', css);
   const device = useMsg(device$);
-  
-  // Utilise la clé du device comme code de pairage
   const pairingCode = device?.key || device?.id || 'Chargement...';
   
   return (
@@ -111,13 +106,12 @@ export const PairingPage = () => {
           </Div>
         </Div>
         
-        <p className={`${c}Footer`}>
-          Cette clé est unique à cet appareil
-        </p>
-
-        <Button title="Mode Offline" color="primary" onClick={() => {
-          page$.set('codePin')
-        }}/>
+        <ButtonRow>
+          <Button title="Mode Offline" color="secondary" onClick={() => {
+            offlineMode$.set(true);
+            page$.set('kiosk')
+          }}/>
+        </ButtonRow>
       </Div>
     </Div>
   );

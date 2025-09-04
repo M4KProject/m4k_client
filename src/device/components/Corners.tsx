@@ -2,7 +2,7 @@
 import { Css, repeat } from '@common/helpers';
 import { useCss } from '@common/hooks';
 import { Div } from '@common/components';
-import { openPasswordDialog } from './PasswordView';
+import { openCodePinDialog } from './CodePinView';
 
 const css: Css = {
     '&': {
@@ -28,9 +28,9 @@ export const Corners = () => {
         last = Date.now();
         count++;
         console.debug('Corners handle', last, count);
-        if (count > 3) {
+        if (count > 5) {
             count = 0;
-            openPasswordDialog();
+            openCodePinDialog();
         }
     }
 

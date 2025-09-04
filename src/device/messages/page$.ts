@@ -11,7 +11,6 @@ export type PageName =
     'configPlaylist'|
     'wifi'|
     'test'|
-    'debug'|
     'logs'|
     'events'|
     'pairing'|

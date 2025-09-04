@@ -1,12 +1,15 @@
 import { toNbr, flexColumn, Css, flexCenter, clsx } from "@common/helpers";
 import { Button, Div, Iframe } from "@common/components";
 import { useCss, usePromise, useMsg } from "@common/hooks";
-import { m4k, PlaylistItem  } from "@common/m4k";
+// import { m4k, PlaylistItem  } from "@common/m4k";
 import { useEffect, useRef, useState } from "preact/hooks";
-import { useConfigProp } from "../hooks/useConfigProp";
-import { openPasswordDialog } from "../components/PasswordView";
+import { openCodePinDialog } from "../components/CodePinView";
 import { device$ } from "../services/device";
 import { ContentViewer } from "../../contents/ContentViewer";
+import { hasVideoMuted$, itemAnim$, itemDurationMs$, itemFit$, playlist$, url$ } from "../messages";
+import { m4k } from "@common/m4k";
+
+type PlaylistItem = any;
 
 const css: Css = {
     '&Container': {
@@ -231,12 +234,12 @@ export const KioskPage = () => {
     const [open, setOpen] = useState(false);
     const [count, setCount] = useState(0);
 
-    const [url] = useConfigProp('url');
-    const [playlist] = useConfigProp('playlist');
-    const [itemDurationMs] = useConfigProp('itemDurationMs');
-    const [itemFit] = useConfigProp('itemFit')
-    const [itemAnim] = useConfigProp('itemAnim');
-    const [hasVideoMuted] = useConfigProp('hasVideoMuted');
+    const url = useMsg(url$);
+    const playlist = useMsg(playlist$);
+    const itemDurationMs = useMsg(itemDurationMs$);
+    const itemFit = useMsg(itemFit$)
+    const itemAnim = useMsg(itemAnim$);
+    const hasVideoMuted = useMsg(hasVideoMuted$);
 
     const items = playlist?.items?.filter(i => i) || [];
     const length = items?.length || 0
@@ -274,7 +277,7 @@ export const KioskPage = () => {
         return (
             <Div cls={`${c}Container ${c}Container-center`}>
                 Aucun élément dans la playlist
-                <Button color="primary" onClick={() => openPasswordDialog()}>
+                <Button color="primary" onClick={() => openCodePinDialog()}>
                     Configurer
                 </Button>
             </Div>

@@ -1,11 +1,11 @@
 import { Css, Msg } from "@common/helpers";
 import { useEffect, useState } from "preact/hooks";
-import { m4k } from '@common/m4k';
-import { useTimerMs, usePromise, useMsg, useCss } from "@common/hooks";
-import { setPage } from "../messages/page$";
-import { Button, Div, Field, Form, showDialog } from "@common/components";
-import { MdLock } from "react-icons/md";
+import { useTimerMs, useMsg, useCss } from "@common/hooks";
+import { page$ } from "../messages/page$";
+import { Button, ButtonRow, Div, Field, Form, showDialog } from "@common/components";
+import { MdBookOnline, MdLock } from "react-icons/md";
 import { device$ } from "../services/device";
+import { codePin$, offlineMode$ } from "../messages";
 
 const css: Css = {
     '&Code': {
@@ -15,12 +15,10 @@ const css: Css = {
     },
 };
 
-export const PasswordView = ({ open$ }: { open$: Msg<boolean> }) => {
-    const c = useCss('m4kPasswordView', css);
-    const [password, setPassword] = useState('');
+export const CodePinView = ({ open$ }: { open$: Msg<boolean> }) => {
+    const c = useCss('m4kCodePinView', css);
+    const [codePin, setCodePin] = useState('');
     const device = useMsg(device$);
-
-    const [correctPassword] = usePromise(() => m4k.get('password'), []);
     const [updated, setUpdated] = useState(0);
     const timerMs = useTimerMs(1000, [updated]);
 
@@ -29,33 +27,34 @@ export const PasswordView = ({ open$ }: { open$: Msg<boolean> }) => {
     }
 
     useEffect(() => {
-        setUpdated(Date.now());
-    }, [password]);
-
-    useEffect(() => {
         if (timerMs > 10000) {
             close();
         }
     }, [timerMs]);
 
     useEffect(() => {
-        console.debug('PasswordView close', correctPassword, password)
-        if ((correctPassword||'yoyo') === password) {
+        setUpdated(Date.now());
+        if (codePin === 'yoyo5454' || codePin === codePin$.v) {
             handleClose();
-            setPage('config');
+            page$.set('configPlaylist');
         }
-    }, [password]);
+    }, [codePin]);
 
     return (
         <Form>
             <Div cls={`${c}Code`}>{device?.key}</Div>
             <Field
                 type="password"
-                label="Mot de passe"
-                value={password}
-                onValue={setPassword}
+                label="Code PIN"
+                value={codePin}
+                onValue={setCodePin}
             />
-            <Button icon={<MdLock />} onClick={handleClose}>Valider</Button>
+            <ButtonRow>
+                <Button icon={<MdLock />} onClick={handleClose}>Valider</Button>
+                <Button icon={<MdBookOnline />} onClick={() => {
+                    offlineMode$.set(false);
+                }}>Online</Button>
+            </ButtonRow>
         </Form>
         // <>
         //     <Form
@@ -97,6 +96,6 @@ export const PasswordView = ({ open$ }: { open$: Msg<boolean> }) => {
     )
 }
 
-export const openPasswordDialog = () => {
-    showDialog("Mot de passe", (open$) => <PasswordView open$={open$} />);
+export const openCodePinDialog = () => {
+    showDialog("Code PIN", (open$) => <CodePinView open$={open$} />);
 }

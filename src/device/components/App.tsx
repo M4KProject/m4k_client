@@ -6,12 +6,11 @@ import { Div, Side, SideButton, SideSep } from '@common/components';
 import { JSX } from 'preact';
 import { page$, PageName } from '../messages/page$';
 import { LoadingPage } from '../pages/LoadingPage';
-import { MdOutlineScreenshotMonitor, MdSettings, MdBugReport, MdDeveloperBoard, MdEvent, MdPassword, MdFormatListBulleted, MdWeb, MdAccountCircle, MdBuild } from 'react-icons/md';
+import { MdOutlineScreenshotMonitor, MdSettings, MdBugReport, MdEvent, MdPassword, MdFormatListBulleted, MdWeb, MdAccountCircle, MdBuild } from 'react-icons/md';
 import { CodePinPage } from '../pages/CodePinPage';
 import { SitePage } from '../pages/SitePage';
 import { ConfigPlaylistPage } from '../pages/ConfigPlaylistPage';
 import { TestPage } from '../pages/TestPage';
-import { DebugPage } from '../pages/DebugPage';
 import { Corners } from './Corners';
 import { KioskPage } from '../pages/KioskPage';
 import { ActionsPage } from '../pages/ActionsPage';
@@ -19,6 +18,7 @@ import { EventsPage } from '../pages/EventsPage';
 import { PlaylistPage } from '../pages/PlaylistPage';
 import { PairingPage } from '../pages/PairingPage';
 import { useEffect } from 'preact/hooks';
+import { offlineMode$ } from '../messages';
 
 const css: Css = {
   '&': {
@@ -47,7 +47,6 @@ const CompByPage: Record<PageName, () => JSX.Element> = {
   configPlaylist: ConfigPlaylistPage,
   wifi: LoadingPage,
   test: TestPage,
-  debug: DebugPage,
   // logs: LoadingPage,
   events: EventsPage,
   pairing: PairingPage,
@@ -72,15 +71,10 @@ const AppContent = () => {
   usePWA();
 
   useEffect(() => {
-    if (!device?.group) {
+    if (!device?.group && !offlineMode$.v) {
       page$.set('pairing');
     }
-  });
-  
-  // Si le device n'a pas de groupe, afficher la page de pairage
-  if (!device?.group) {
-    return <PairingPage />;
-  }
+  }, [device]);
   
   return (
     <Div cls={c}>
@@ -96,7 +90,6 @@ const AppContent = () => {
           {/* <SideButton icon={<MdWifi />} page="wifi" title="Wifi" /> */}
           <SideSep />
           <SideButton icon={<MdBugReport />} page="test" title="Test" />
-          <SideButton icon={<MdDeveloperBoard />} page="debug" title="Debug" />
           {/* <SideButton icon={<MdListAlt />} page="logs" title="Logs" /> */}
           <SideButton icon={<MdEvent />} page="events" title="Events" />
           <SideSep />

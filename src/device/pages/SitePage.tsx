@@ -1,8 +1,9 @@
 import { Field, Form, Page, PageBody, PageHeader } from "@common/components";
-import { useConfigProp } from "../hooks/useConfigProp";
+import { useMsgState } from "@common/hooks";
+import { url$ } from "../messages";
 
 export const SitePage = () => {
-  const [url, setUrl] = useConfigProp("url");
+  const [url, setUrl] = useMsgState(url$);
   return (
     <Page>
       <PageHeader title="Configuration du site web" />

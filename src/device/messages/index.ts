@@ -1,3 +1,20 @@
-import { Msg } from "@common/helpers/Msg";
+import { isArray, isObject } from "@common/helpers";
+import { newMsg } from "@common/helpers/Msg";
 
-export const codePin$ = new Msg('yoyo', 'codePin', true);
+export interface Playlist {
+    items: any[];
+}
+
+export const isPlaylist = (playlist: Playlist) => (
+    isObject(playlist) && isArray(playlist.items)
+)
+
+export const codePin$ = newMsg('yoyo', 'codePin', true);
+export const copyDir$ = newMsg('', 'copyDir', true);
+export const itemDurationMs$ = newMsg(5000, 'itemDurationMs', true);
+export const itemFit$ = newMsg('', 'itemFit', true);
+export const itemAnim$ = newMsg('', 'itemAnim', true);
+export const hasVideoMuted$ = newMsg(true, 'hasVideoMuted', true);
+export const url$ = newMsg('', 'url', true);
+export const offlineMode$ = newMsg(false, 'offlineMode', true);
+export const playlist$ = newMsg<Playlist>({ items: [] }, 'playlist', true, isPlaylist);
