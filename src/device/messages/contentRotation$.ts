@@ -1,4 +1,4 @@
-import { setCss } from "@common/helpers";
+import { repeat, setCss } from "@common/helpers";
 import { newMsg } from "@common/helpers/Msg";
 
 export type ContentRotation = 0|90|180|270;
@@ -35,4 +35,35 @@ const applyContentRotation = () => {
 }
 
 contentRotation$.on(applyContentRotation);
-applyContentRotation();
+
+repeat(10, (i) => {
+    setTimeout(applyContentRotation, i * 1000);
+});
+
+// Reset WebView zoom (for Android virtual keyboard issues)
+const resetZoom = () => {
+    if (typeof document !== 'undefined') {
+        // Reset viewport zoom
+        let viewport = document.querySelector('meta[name=viewport]');
+        if (!viewport) {
+            viewport = document.createElement('meta');
+            viewport.setAttribute('name', 'viewport');
+            document.head.appendChild(viewport);
+        }
+        viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+    }
+};
+
+// Also listen to window resize events
+if (typeof window !== 'undefined') {
+    window.addEventListener('resize', () => {
+        setTimeout(resetZoom, 100);
+        setTimeout(applyContentRotation, 200);
+    });
+    
+    // Reset zoom periodically to fix keyboard issues
+    setInterval(() => {
+        resetZoom();
+        applyContentRotation();
+    }, 10 * 1000);
+}
