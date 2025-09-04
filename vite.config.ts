@@ -3,17 +3,20 @@
 import { defineConfig } from 'vite';
 import preact from '@preact/preset-vite';
 import { VitePWA } from 'vite-plugin-pwa';
+import { viteSingleFile } from 'vite-plugin-singlefile';
 import path from 'node:path';
 
 // https://vitejs.dev/config/
-export default defineConfig(() => {
-	const define: Record<string, any> = {};
+export default defineConfig(({ mode }) => {
+	const define: Record<string, any> = {
+		'import.meta.env.APK_MODE': mode === 'apk'
+	};
 	Object.entries(define).map(([k, v]) => define[k] = JSON.stringify(v));
 
 	return {
 		plugins: [
 			preact(),
-			VitePWA({
+			mode === 'apk' ? viteSingleFile() : VitePWA({
 				registerType: 'autoUpdate',
 				workbox: {
 					globPatterns: ['**/*.{js,mjs,css,html,ico,png,svg,webp,jpg,jpeg}'],
@@ -84,7 +87,7 @@ export default defineConfig(() => {
 					]
 				}
 			})
-		],
+		].filter(Boolean),
 		define: define,
 		resolve: {
 			alias: {
@@ -93,11 +96,15 @@ export default defineConfig(() => {
 				
 				// Map React imports from common library to Preact
 				"react": "preact/compat",
-				"react-dom": "preact/compat"
+				"react-dom": "preact/compat",
 			},
 		},
 		build: {
-			rollupOptions: {}
+			rollupOptions: {
+				...(mode === 'apk' ? {
+					input: path.resolve(__dirname, 'device.html')
+				} : {})
+			}
 		}
 	}
 });

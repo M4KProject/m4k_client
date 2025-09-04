@@ -1,2 +1,2 @@
-// Permet d'obtenir un fichier « device-*.js »
-export * from "./device/index";
+import { mount } from "./device/index";
+mount();

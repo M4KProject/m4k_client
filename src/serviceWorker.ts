@@ -1,4 +1,19 @@
-import { useRegisterSW } from 'virtual:pwa-register/preact';
+// Conditional import based on build mode
+let useRegisterSW: any = null;
+
+// Only import PWA register in non-APK mode
+if (!import.meta.env.APK_MODE) {
+  try {
+    // Dynamic import will be resolved at build time
+    import('virtual:pwa-register/preact').then(pwaModule => {
+      useRegisterSW = pwaModule.useRegisterSW;
+    }).catch(e => {
+      console.warn('PWA register not available:', e);
+    });
+  } catch (e) {
+    console.warn('PWA register import failed:', e);
+  }
+}
 
 export interface CacheInfo {
   totalEntries: number;
@@ -26,6 +41,24 @@ export interface CacheInfo {
 }
 
 export const usePWA = () => {
+  // In APK mode, return a mock PWA hook
+  if (import.meta.env.APK_MODE) {
+    return {
+      needRefresh: [false, () => {}],
+      offlineReady: [false, () => {}],
+      updateServiceWorker: () => {}
+    };
+  }
+  
+  // If PWA is not loaded yet, return mock until it's ready
+  if (!useRegisterSW) {
+    return {
+      needRefresh: [false, () => {}],
+      offlineReady: [false, () => {}],
+      updateServiceWorker: () => {}
+    };
+  }
+  
   return useRegisterSW({
     onNeedRefresh() {
       console.log('PWA: Update available');
