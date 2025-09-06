@@ -1,4 +1,4 @@
-import { toNbr, flexColumn, Css, flexCenter, clsx } from "@common/helpers";
+import { toNbr, flexColumn, Css, flexCenter, clsx, stringify } from "@common/helpers";
 import { Button, Div } from "@common/components";
 import { useCss, usePromise, useMsg } from "@common/hooks";
 import { useEffect, useRef, useState } from "preact/hooks";
@@ -84,6 +84,18 @@ const KioskVideo = ({ url, hasVideoMuted, gotoNext }: {
     useEffect(() => {
         if (!el) return;
 
+        // Fetch HEAD request to check video headers
+        fetch(url, { method: 'HEAD' })
+            .then(response => {
+                console.debug(`[ITEM_VIDEO] HEAD response status:`, response.status);
+                console.debug(`[ITEM_VIDEO] HEAD response headers:`, {
+                    'content-type': response.headers.get('content-type'),
+                    'content-length': response.headers.get('content-length'),
+                    'accept-ranges': response.headers.get('accept-ranges'),
+                });
+            })
+            .catch(e => console.error(`[ITEM_VIDEO] HEAD request error:`, stringify(e), url));
+
         el.setAttribute('playsinline', 'true');
         el.setAttribute('webkit-playsinline', 'true');
         el.muted = hasVideoMuted;
@@ -100,12 +112,12 @@ const KioskVideo = ({ url, hasVideoMuted, gotoNext }: {
         };
         
         el.onerror = (e) => {
-            console.error(`[ITEM_VIDEO] Video error:`, e, url);
+            console.error(`[ITEM_VIDEO] Video error:`, stringify(e), url);
             setTimeout(() => gotoNext(), 1000);
         };
 
         el.onended = (e) => {
-            console.error(`[ITEM_VIDEO] Video ended:`, e, url);
+            console.error(`[ITEM_VIDEO] Video ended:`, stringify(e), url);
             gotoNext();
         };
 
