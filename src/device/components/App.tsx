@@ -94,9 +94,9 @@ const AppContent = () => {
           <SideSep />
           <SideButton icon={<MonitorSpeaker />} page="kiosk" title="Kiosk" />
           <SideButton icon={<Wrench />} page="actions" title="Actions" />
-          <SideButton icon={<KeyRound />} page="password" title="Mot de passe" />
+          {/* <SideButton icon={<KeyRound />} page="password" title="Mot de passe" /> */}
           <SideButton icon={<List />} page="playlist" title="Playlist" />
-          <SideButton icon={<Settings />} page="configPlaylist" title="Playlist Config" />
+          <SideButton icon={<Settings />} page="configPlaylist" title="Config" />
           <SideButton icon={<Globe />} page="site" title="Site Web" />
           {/* <SideButton icon={<MdWifi />} page="wifi" title="Wifi" /> */}
           <SideSep />
@@ -104,7 +104,7 @@ const AppContent = () => {
           {/* <SideButton icon={<MdListAlt />} page="logs" title="Logs" /> */}
           <SideButton icon={<Calendar />} page="events" title="Events" />
           <SideSep />
-          <SideButton icon={<User />} page="account" title="Mon Compte" />
+          {/* <SideButton icon={<User />} page="account" title="Mon Compte" /> */}
           {/* <SideSep style={{ fontSize: 0.7, opacity: 0.5 }}>2.0.0</SideSep> */}
         </Side>
       )}

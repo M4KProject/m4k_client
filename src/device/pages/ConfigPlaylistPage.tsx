@@ -8,6 +8,7 @@ import {
   itemFit$,
   contentRotation$,
 } from '../messages';
+import { round } from '@common/helpers';
 
 export const ConfigPlaylistPage = () => {
   const [copyDir, setCopyDir] = useMsgState(copyDir$);
@@ -24,9 +25,9 @@ export const ConfigPlaylistPage = () => {
         <Form>
           <Field label="Copier le dossier" value={copyDir} onValue={setCopyDir} />
           <Field
-            label="Durée d'affichage d'une image (ms)"
-            value={itemDurationMs}
-            onValue={setItemDurationMs}
+            label="Durée d'affichage d'une image (en secondes)"
+            value={round(itemDurationMs/1000, 1)}
+            onValue={s => setItemDurationMs(s*1000)}
           />
           <Field
             label="Mode d'affichage"
