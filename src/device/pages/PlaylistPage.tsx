@@ -1,4 +1,5 @@
 import {
+  Button,
   Cell,
   CellHeader,
   Div,
@@ -10,9 +11,11 @@ import {
   Table,
   TableBody,
   TableHead,
+  tooltip,
 } from '@common/components';
 import { Css, round } from '@common/helpers';
 import { useCss, useMsg } from '@common/hooks';
+import { Copy, Trash2 } from 'lucide-react';
 import { playlist$ } from '../messages';
 
 const css: Css = {
@@ -46,10 +49,9 @@ const sizeFormat = (size?: number) => {
   return size + 'o';
 };
 
-const durationFormat = (duration?: number) => {
-  if (!duration) return '';
-  const s = duration / 1000;
-  return Math.round(s) + 's';
+const getFileName = (path?: string) => {
+  if (!path) return '';
+  return path.split('/').pop() || path;
 };
 
 export const PlaylistPage = () => {
@@ -68,6 +70,33 @@ export const PlaylistPage = () => {
     
     playlist$.set(updatedPlaylist);
   };
+
+  const handleDuplicate = (index: number) => {
+    if (!playlist) return;
+    
+    const itemToDuplicate = playlist.items[index];
+    const updatedPlaylist = {
+      ...playlist,
+      items: [
+        ...playlist.items.slice(0, index + 1),
+        { ...itemToDuplicate },
+        ...playlist.items.slice(index + 1)
+      ]
+    };
+    
+    playlist$.set(updatedPlaylist);
+  };
+
+  const handleDelete = (index: number) => {
+    if (!playlist) return;
+    
+    const updatedPlaylist = {
+      ...playlist,
+      items: playlist.items.filter((_, i) => i !== index)
+    };
+    
+    playlist$.set(updatedPlaylist);
+  };
   return (
     <Page>
       <PageHeader title="Élément dans la playlist" />
@@ -77,10 +106,11 @@ export const PlaylistPage = () => {
             <Row>
               <CellHeader>Type</CellHeader>
               <CellHeader>Aperçu</CellHeader>
-              <CellHeader>Path</CellHeader>
+              <CellHeader>Nom du fichier</CellHeader>
               <CellHeader>Taille</CellHeader>
               <CellHeader>Format</CellHeader>
               <CellHeader>Durée (s)</CellHeader>
+              <CellHeader>Actions</CellHeader>
             </Row>
           </TableHead>
           <TableBody>
@@ -97,7 +127,7 @@ export const PlaylistPage = () => {
                     />
                   )}
                 </Cell>
-                <Cell>{item.path}</Cell>
+                <Cell>{getFileName(item.path)}</Cell>
                 <Cell>{sizeFormat(item.size)}</Cell>
                 <Cell>
                   {item.width}x{item.height}
@@ -107,6 +137,20 @@ export const PlaylistPage = () => {
                     type="number"
                     value={round(item.waitMs/1000, 2)}
                     onValue={(waitMs) => handleDurationUpdate(i, Number(waitMs))}
+                  />
+                </Cell>
+                <Cell variant="around">
+                  <Button
+                    icon={<Copy />}
+                    color="primary"
+                    {...tooltip('Dupliquer')}
+                    onClick={() => handleDuplicate(i)}
+                  />
+                  <Button
+                    icon={<Trash2 />}
+                    color="error"
+                    {...tooltip('Supprimer')}
+                    onClick={() => handleDelete(i)}
                   />
                 </Cell>
               </Row>
