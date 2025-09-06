@@ -64,7 +64,7 @@
 //         const timer = setInterval(async () => {
 //             if (!isLoad) return;
 //             const newLogs = await m4k.popLogs(20);
-//             if (!Array.isArray(newLogs)) return;
+//             if (!isList(newLogs)) return;
 //             setLogs(logs => {
 //                 const next = [ ...logs, ...newLogs ];
 //                 if (next.length > 200) next.splice(0, next.length-10);

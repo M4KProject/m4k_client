@@ -1,12 +1,12 @@
 import { contentColl, ContentModel, deviceColl, DeviceModel, groupColl, groupId$, GroupModel } from '@common/api';
-import { isObject, router, toStr } from '@common/helpers';
+import { isItem, router, toStr } from '@common/helpers';
 import { Msg } from "@common/helpers";
 
 export type AdminPage = 'account' | 'groups' | 'members' | 'devices' | 'device' | 'contents' | 'medias' | 'content';
 export const adminPage$ = new Msg<AdminPage>("groups");
 
-export const device$ = new Msg<DeviceModel|null>(null, "device", true, isObject);
-export const group$ = new Msg<GroupModel|null>(null, "group", true, isObject);
+export const device$ = new Msg<DeviceModel|null>(null, "device", true, isItem);
+export const group$ = new Msg<GroupModel|null>(null, "group", true, isItem);
 export const content$ = new Msg<ContentModel|null>(null, "content");
 
 group$.on(g => groupId$.set(g?.id || ''));

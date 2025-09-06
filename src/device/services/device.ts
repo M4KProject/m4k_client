@@ -1,5 +1,5 @@
 import { m4k, M4kResizeOptions } from '@common/m4k';
-import { Msg, req, sleep, toNbr, toRecord, toStr, uuid } from '@common/helpers';
+import { Msg, req, sleep, toNbr, toItem, toStr, uuid } from '@common/helpers';
 import { DeviceModel, deviceColl, UserModel, login, signUp, apiNow, auth$ } from '@common/api';
 
 export const authEmail$ = new Msg('', 'auth_email', true);
@@ -112,7 +112,7 @@ const execAction = async (device: DeviceModel) => {
         case 'reload':
             return m4k.reload();
         case 'capture':
-            await capture(device, toRecord(input));
+            await capture(device, toItem(input));
             return;
         case 'js':
             return await m4k.js(toStr(input));

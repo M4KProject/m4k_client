@@ -1,5 +1,5 @@
 import { useCss, useMsg } from '@common/hooks';
-import { Css, flexColumn, dateToSeconds, Msg, uniq, toArray } from '@common/helpers';
+import { Css, flexColumn, dateToSeconds, Msg, uniq, toList } from '@common/helpers';
 import { Div, Field, Flag } from '@common/components';
 import { useEffect, useMemo } from 'preact/hooks';
 import type { ContentProps } from './ContentViewer';
@@ -98,7 +98,7 @@ export const PlaylistContent = ({ content, medias }: ContentProps<PlaylistConten
   console.debug('PlaylistContent filter', { items, filteredItems, selected, medias });
 
   const mediaId = selected?.media;
-  const media = mediaId ? toArray(medias).find(m => m.id === mediaId) : null;
+  const media = mediaId ? toList(medias).find(m => m.id === mediaId) : null;
   const mediaUrl = media ? mediaColl.getUrl(mediaId, media.file) : null;
 
   console.debug('PlaylistContent media', { mediaId, medias, media, mediaUrl });

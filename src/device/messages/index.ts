@@ -1,4 +1,4 @@
-import { isStringNotWhite } from "@common/helpers";
+import { isStrNotEmpty } from "@common/helpers";
 import { newMsg } from "@common/helpers/Msg";
 
 export * from "./dialog$";
@@ -6,9 +6,9 @@ export * from "./page$";
 export * from "./playlist$";
 export * from "./contentRotation$";
 
-export const codePin$ = newMsg('yoyo', 'codePin', true, isStringNotWhite);
+export const codePin$ = newMsg('yoyo', 'codePin', true, isStrNotEmpty);
 
-export const copyDir$ = newMsg('playlist', 'copyDir', true, isStringNotWhite);
+export const copyDir$ = newMsg('playlist', 'copyDir', true, isStrNotEmpty);
 
 export const itemDurationMs$ = newMsg(5000, 'itemDurationMs', true);
 

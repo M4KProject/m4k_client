@@ -1,5 +1,5 @@
 import { mediaColl, PlaylistContentModel, PlaylistEntry } from "@common/api";
-import { addItem, Css, flexColumn, removeIndex, toArray, updateIndex, secondsToTimeString, parseToSeconds } from "@common/helpers";
+import { addItem, Css, flexColumn, removeIndex, toList, updateIndex, secondsToTimeString, parseToSeconds } from "@common/helpers";
 import { useAsync, useCss } from "@common/hooks";
 import { Div, Table, TableHead, TableBody, Row, Cell, CellHeader, Field, Button, tooltip, Flag } from "@common/components";
 import { ContentProps } from "./ContentProps";
@@ -15,7 +15,7 @@ export const PlaylistContent = ({ data, updateData } : ContentProps<PlaylistCont
     const c = useCss('PlaylistContent', css);
     
     // Initialiser les données de la playlist si elles n'existent pas
-    const items: PlaylistEntry[] = toArray(data.items, []);
+    const items: PlaylistEntry[] = toList(data.items, []);
 
     const setItems = (items: PlaylistEntry[]) => updateData({ items });
     
