@@ -1,5 +1,5 @@
 import { m4k, M4kResizeOptions } from '@common/m4k';
-import { Msg, req, sleep, toNbr, toItem, toStr, uuid, toErr, parse } from '@common/helpers';
+import { Msg, req, sleep, toNbr, toStr, uuid, toErr, parse } from '@common/helpers';
 import { DeviceModel, deviceColl, UserModel, login, signUp, apiNow } from '@common/api';
 
 export const authEmail$ = new Msg('', 'auth_email', true);
