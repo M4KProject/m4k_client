@@ -4,6 +4,7 @@
   "scripts": {
     "dev": "vite --host",
     "build": "vite build",
+    "build:apk": "vite build --mode apk",
     "preview": "vite preview",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
