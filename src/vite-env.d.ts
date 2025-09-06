@@ -2,11 +2,11 @@
 /// <reference types="vite-plugin-pwa/client" />
 
 declare module 'virtual:pwa-register/preact' {
-  import type { RegisterSWOptions } from 'vite-plugin-pwa/types'
-  
+  import type { RegisterSWOptions } from 'vite-plugin-pwa/types';
+
   export function useRegisterSW(options?: RegisterSWOptions): {
-    needRefresh: [boolean, (value: boolean) => void]
-    offlineReady: [boolean, (value: boolean) => void]
-    updateServiceWorker: (reloadPage?: boolean) => Promise<void>
-  }
+    needRefresh: [boolean, (value: boolean) => void];
+    offlineReady: [boolean, (value: boolean) => void];
+    updateServiceWorker: (reloadPage?: boolean) => Promise<void>;
+  };
 }

@@ -1,16 +1,32 @@
-import { contentColl, ContentModel, deviceColl, DeviceModel, groupColl, groupId$, GroupModel } from '@common/api';
+import {
+  contentColl,
+  ContentModel,
+  deviceColl,
+  DeviceModel,
+  groupColl,
+  groupId$,
+  GroupModel,
+} from '@common/api';
 import { isItem, router, toStr } from '@common/helpers';
-import { Msg } from "@common/helpers";
+import { Msg } from '@common/helpers';
 
-export type AdminPage = 'account' | 'groups' | 'members' | 'devices' | 'device' | 'contents' | 'medias' | 'content';
-export const adminPage$ = new Msg<AdminPage>("groups");
+export type AdminPage =
+  | 'account'
+  | 'groups'
+  | 'members'
+  | 'devices'
+  | 'device'
+  | 'contents'
+  | 'medias'
+  | 'content';
+export const adminPage$ = new Msg<AdminPage>('groups');
 
-export const device$ = new Msg<DeviceModel|null>(null, "device", true, isItem);
-export const group$ = new Msg<GroupModel|null>(null, "group", true, isItem);
-export const content$ = new Msg<ContentModel|null>(null, "content");
+export const device$ = new Msg<DeviceModel | null>(null, 'device', true, isItem);
+export const group$ = new Msg<GroupModel | null>(null, 'group', true, isItem);
+export const content$ = new Msg<ContentModel | null>(null, 'content');
 
-group$.on(g => groupId$.set(g?.id || ''));
-groupId$.on(async id => {
+group$.on((g) => groupId$.set(g?.id || ''));
+groupId$.on(async (id) => {
   if (group$.v?.id === id) return;
   if (!id) return group$.set(null);
   group$.set(await groupColl.get(id));
@@ -36,8 +52,10 @@ export const openDevices = () => router.push(`/admin/devices/${getGroupKey()}`);
 export const openContents = () => router.push(`/admin/contents/${getGroupKey()}`);
 export const openMedias = () => router.push(`/admin/medias/${getGroupKey()}`);
 
-export const openContent = (contentKey: string) => router.push(`/admin/contents/${getGroupKey()}/${contentKey}`);
-export const openDevice = (deviceKey: string) => router.push(`/admin/device/${getGroupKey()}/${deviceKey}`);
+export const openContent = (contentKey: string) =>
+  router.push(`/admin/contents/${getGroupKey()}/${contentKey}`);
+export const openDevice = (deviceKey: string) =>
+  router.push(`/admin/device/${getGroupKey()}/${deviceKey}`);
 
 // export const openDevice = (deviceKey: string) => router.push(`/devices/${deviceKey}`);
 // export const openContent = (contentKey: string) => router.push(`/contents/${contentKey}`);
@@ -50,8 +68,7 @@ export const openDevice = (deviceKey: string) => router.push(`/admin/device/${ge
 // export const openContentPage = (contentKey: string, contentPage: string) => router.push(`/${contentKey}/${contentPage}`);
 
 export const initAdminRouter = () => {
-
-  const _params = (adminPage: AdminPage) => ({ adminPage })
+  const _params = (adminPage: AdminPage) => ({ adminPage });
 
   router.add('/admin', null, _params('groups'));
 
@@ -68,7 +85,7 @@ export const initAdminRouter = () => {
   // router.add('/devices/:deviceId', null, _params('device'));
   // router.add('/contents/:contentId', null, _params('content'));
   // router.add('/medias/:mediaId', null, _params('media'));
-  
+
   // router.add('/admin/editor/:contentKey', null, _params('editor'));
   // router.add('/admin/editor/:contentKey/:contentPage', null, _params('editor'));
 
@@ -77,15 +94,12 @@ export const initAdminRouter = () => {
 
     adminPage$.set(toStr(adminPage, '') as AdminPage);
 
-    if (device$.v?.key !== deviceKey)
-      device$.set(await deviceColl.findKey(deviceKey));
+    if (device$.v?.key !== deviceKey) device$.set(await deviceColl.findKey(deviceKey));
 
-    if (content$.v?.key !== contentKey)
-      content$.set(await contentColl.findKey(contentKey));
+    if (content$.v?.key !== contentKey) content$.set(await contentColl.findKey(contentKey));
 
-    if (group$.v?.key !== groupKey)
-      group$.set(await groupColl.findKey(groupKey));
+    if (group$.v?.key !== groupKey) group$.set(await groupColl.findKey(groupKey));
   });
 
   router.forceRefresh();
-}
+};

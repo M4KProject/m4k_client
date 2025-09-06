@@ -1,2 +1,2 @@
-import { mount } from "./device/index";
+import { mount } from './device/index';
 mount();

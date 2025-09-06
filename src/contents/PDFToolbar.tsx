@@ -56,23 +56,23 @@ export const PDFToolbar = ({
   onNextPage,
   onZoomIn,
   onZoomOut,
-  onFitWidth
+  onFitWidth,
 }: PDFToolbarProps) => {
   const c = useCss('PDFToolbar', css);
-  
+
   return (
     <Div cls={`${c}`}>
-      <Button 
-        icon={<MdNavigateBefore />} 
-        color={currentPage <= 1 ? "secondary" : "primary"} 
+      <Button
+        icon={<MdNavigateBefore />}
+        color={currentPage <= 1 ? 'secondary' : 'primary'}
         onClick={currentPage <= 1 ? undefined : onPreviousPage}
       />
       <Div cls={`${c}PageInfo`}>
         {currentPage} / {totalPages}
       </Div>
-      <Button 
-        icon={<MdNavigateNext />} 
-        color={currentPage >= totalPages ? "secondary" : "primary"} 
+      <Button
+        icon={<MdNavigateNext />}
+        color={currentPage >= totalPages ? 'secondary' : 'primary'}
         onClick={currentPage >= totalPages ? undefined : onNextPage}
       />
       {/* <Button 

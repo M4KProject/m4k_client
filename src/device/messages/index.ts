@@ -1,10 +1,10 @@
-import { isStrNotEmpty } from "@common/helpers";
-import { newMsg } from "@common/helpers/Msg";
+import { isStrNotEmpty } from '@common/helpers';
+import { newMsg } from '@common/helpers/Msg';
 
-export * from "./dialog$";
-export * from "./page$";
-export * from "./playlist$";
-export * from "./contentRotation$";
+export * from './dialog$';
+export * from './page$';
+export * from './playlist$';
+export * from './contentRotation$';
 
 export const codePin$ = newMsg('yoyo', 'codePin', true, isStrNotEmpty);
 
@@ -12,12 +12,13 @@ export const copyDir$ = newMsg('playlist', 'copyDir', true, isStrNotEmpty);
 
 export const itemDurationMs$ = newMsg(5000, 'itemDurationMs', true);
 
-export type ItemFit = 'contain'|'cover'|'fill';
-export const isItemFit = (v: string) => v==='contain'||v==='cover'||v==='fill';
+export type ItemFit = 'contain' | 'cover' | 'fill';
+export const isItemFit = (v: string) => v === 'contain' || v === 'cover' || v === 'fill';
 export const itemFit$ = newMsg<ItemFit>('contain', 'itemFit', true, isItemFit);
 
-export type ItemAnim = 'rightToLeft'|'topToBottom'|'fade'|'zoom';
-export const isItemAnim = (v: string) => v==='rightToLeft'||v==='topToBottom'||v==='fade'||v==='zoom';
+export type ItemAnim = 'rightToLeft' | 'topToBottom' | 'fade' | 'zoom';
+export const isItemAnim = (v: string) =>
+  v === 'rightToLeft' || v === 'topToBottom' || v === 'fade' || v === 'zoom';
 export const itemAnim$ = newMsg<ItemAnim>('zoom', 'itemAnim', true, isItemAnim);
 
 export const hasVideoMuted$ = newMsg(true, 'hasVideoMuted', true);

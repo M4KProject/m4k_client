@@ -31,16 +31,18 @@ This is a multi-interface content management system with three main applications
 The application is split into three main interfaces:
 
 #### 1. Admin Interface (`/admin/`)
+
 - **Location**: `src/admin/`
 - **Entry Point**: `src/admin/index.tsx`
 - **Purpose**: Content management system administration
 - **Pages**: Groups, Members, Devices, Contents, Medias, Account, Auth
-- **Key Features**: 
+- **Key Features**:
   - Device pairing with Dialog-based interface
   - Content management with CRUD operations
   - Group and member management
 
 #### 2. Device Interface (`/device/`)
+
 - **Location**: `src/device/`
 - **Entry Point**: `src/device/index.tsx`
 - **Purpose**: Device control and configuration interface
@@ -50,6 +52,7 @@ The application is split into three main interfaces:
   - Device key-based pairing system
 
 #### 3. Contents Viewer (`/:contentKey`)
+
 - **Location**: `src/contents/`
 - **Entry Point**: `ContentViewer.tsx`
 - **Purpose**: Content visualization for different content types
@@ -59,7 +62,7 @@ The application is split into three main interfaces:
 
 - `src/index.tsx` - Main application routing between admin, device, and contents
 - `src/admin/` - Admin interface components and pages
-- `src/device/` - Device interface components and pages  
+- `src/device/` - Device interface components and pages
 - `src/contents/` - Content viewer components for different content types
 - `src/controllers/` - Application logic and routing
 - `src/messages/` - Reactive state management messages
@@ -79,6 +82,7 @@ The application is split into three main interfaces:
 ### Device Pairing System
 
 Devices without an assigned group automatically display the `PairingPage` which:
+
 - Shows the device's unique key as the pairing code
 - Uses a spinner animation while waiting for pairing
 - Integrates with the admin interface's device management
@@ -86,6 +90,7 @@ Devices without an assigned group automatically display the `PairingPage` which:
 ### Content System
 
 The content viewer supports multiple content types:
+
 - **Empty**: Basic empty content display
 - **Form**: Interactive form content
 - **Table**: Tabular data display
@@ -97,6 +102,7 @@ The content viewer supports multiple content types:
 ### State Management Pattern
 
 Uses a custom reactive messaging system where:
+
 - `adminPage$` controls current admin page
 - `groupKey$` and `group$` manage selected group context
 - `contentKey$` and `content$` manage selected content context
@@ -106,6 +112,7 @@ Uses a custom reactive messaging system where:
 ### CSS-in-JS Pattern
 
 Components use the `useCss` hook with `Css` objects:
+
 ```typescript
 const css: Css = {
   '&': { /* component root styles */ },
@@ -124,27 +131,32 @@ const Component = () => {
 The application is configured as a Progressive Web App (PWA) using Vite PWA plugin:
 
 ### Service Worker
+
 - **Auto-generated**: Workbox generates service worker automatically
 - **Auto-update**: Service worker updates automatically on new builds
 - **Precaching**: All build assets are precached for offline access
 - **Runtime caching**: External resources (fonts, media, scripts) are cached with appropriate strategies
 
 ### Caching Strategies
+
 - **M4K Fonts**: CacheFirst strategy for `https://fonts.m4k.fr/`
 - **Media Files**: StaleWhileRevalidate with 7-day expiration for `/files/*.{jpg,png,pdf,mp4,etc}`
 - **External Assets**: CacheFirst with 30-day expiration for external CSS/JS/fonts
 
 ### Offline Support
+
 - **PDF.js**: Local PDF.js library (no CDN dependency) with worker precached at `/pdf.worker.min.mjs`
 - **Full offline capability**: All application code and resources work without internet connection
 - **Background updates**: New versions downloaded in background and activated on next visit
 
 ### PWA Integration
+
 - **Admin & Device apps**: Service worker registration via `usePWA()` hook in App components
 - **Automatic registration**: PWA registers automatically on app load
 - **Update notifications**: Can be extended to show update prompts to users
 
 ### Build Process
+
 - **Worker copying**: PDF.js worker automatically copied to public directory during build
 - **Asset optimization**: All assets optimized and fingerprinted for caching
 - **Manifest generation**: Web app manifest generated for installability

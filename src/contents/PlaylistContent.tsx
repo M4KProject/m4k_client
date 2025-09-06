@@ -59,29 +59,29 @@ export const PlaylistContent = ({ content, medias }: ContentProps<PlaylistConten
   const c = useCss('PlaylistContent', css);
   console.debug('PlaylistContent', content, content.data.items);
 
-  const selected$ = useMemo(() => new Msg<PlaylistEntry|null>(null), []);
+  const selected$ = useMemo(() => new Msg<PlaylistEntry | null>(null), []);
   const language$ = useMemo(() => new Msg(''), []);
 
-  console.debug('PlaylistContent msg', { selected$, language$ })
+  console.debug('PlaylistContent msg', { selected$, language$ });
 
   const selected = useMsg(selected$);
   const language = useMsg(language$);
 
   const items = content.data.items;
-  const filteredItems = items.filter(i => i.language === (language || 'fr'));
+  const filteredItems = items.filter((i) => i.language === (language || 'fr'));
 
   useEffect(() => {
     if (selected) {
-      if (!filteredItems.find(item => item === selected)) {
+      if (!filteredItems.find((item) => item === selected)) {
         selected$.set(null);
       }
       return;
     }
-    
+
     const time = dateToSeconds();
     console.debug('PlaylistContent time', time);
 
-    const timeItems = filteredItems.filter(i => i.startTime <= time && i.endTime >= time);
+    const timeItems = filteredItems.filter((i) => i.startTime <= time && i.endTime >= time);
     console.debug('PlaylistContent timeItems', timeItems);
 
     const first = timeItems[0];
@@ -90,7 +90,7 @@ export const PlaylistContent = ({ content, medias }: ContentProps<PlaylistConten
     }
   }, [selected, items, language]);
 
-  console.debug('PlaylistContent values', { selected, language })
+  console.debug('PlaylistContent values', { selected, language });
 
   // const timeItems = filteredItems.filter(i => i.startTime <= time && i.endTime >= time);
   // const currentItem = selected || filteredItems[0] || items[0];
@@ -98,12 +98,12 @@ export const PlaylistContent = ({ content, medias }: ContentProps<PlaylistConten
   console.debug('PlaylistContent filter', { items, filteredItems, selected, medias });
 
   const mediaId = selected?.media;
-  const media = mediaId ? toList(medias).find(m => m.id === mediaId) : null;
+  const media = mediaId ? toList(medias).find((m) => m.id === mediaId) : null;
   const mediaUrl = media ? mediaColl.getUrl(mediaId, media.file) : null;
 
   console.debug('PlaylistContent media', { mediaId, medias, media, mediaUrl });
 
-  const languages = uniq(items.map(item => item.language));
+  const languages = uniq(items.map((item) => item.language));
 
   // Détermine si les boutons doivent être visibles
   const hasMedia = !!mediaUrl;
@@ -113,10 +113,18 @@ export const PlaylistContent = ({ content, medias }: ContentProps<PlaylistConten
   return (
     <Div cls={`${c}`}>
       <Div cls={`${c}ItemSelect ${hasMedia ? '' : 'autoHide'}`}>
-        <Field type="select" items={filteredItems.map(item => [item, item.title])} msg={selected$} />
+        <Field
+          type="select"
+          items={filteredItems.map((item) => [item, item.title])}
+          msg={selected$}
+        />
       </Div>
       <Div cls={`${c}LanguageSelect ${hasMedia ? '' : 'autoHide'}`}>
-        <Field type="picker" items={languages.map(iso => [iso, <Flag iso={iso} />])} msg={language$} />
+        <Field
+          type="picker"
+          items={languages.map((iso) => [iso, <Flag iso={iso} />])}
+          msg={language$}
+        />
       </Div>
 
       {mediaUrl && (

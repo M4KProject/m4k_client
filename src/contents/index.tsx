@@ -9,7 +9,7 @@ import { router } from '@common/helpers';
 
 console.debug('content loaded');
 
-let _rootEl: HTMLElement|null = null;
+let _rootEl: HTMLElement | null = null;
 
 export const mount = () => {
   console.debug('mount content');
@@ -21,11 +21,11 @@ export const mount = () => {
 
   const contentKey = router.current.params.contentKey;
 
-  _rootEl = addEl('div', { id: 'm4kContent', parent: 'body' })
+  _rootEl = addEl('div', { id: 'm4kContent', parent: 'body' });
   render(<ContentViewer contentKey={contentKey} />, _rootEl);
 
   console.debug('content mounted', { contentKey });
-}
+};
 
 export const unmount = () => {
   console.debug('unmount content');
@@ -34,4 +34,4 @@ export const unmount = () => {
     _rootEl.remove();
     _rootEl = null;
   }
-}
+};

@@ -1,3 +1,3 @@
 // @ts-nocheck
 // @ts-ignore
-if (!window.globalThis) window.globalThis=window;
+if (!window.globalThis) window.globalThis = window;

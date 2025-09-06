@@ -1,3 +1,3 @@
-export * from "./isAdmin$";
-export * from "./isAdvanced$";
-export * from "./search$";
+export * from './isAdmin$';
+export * from './isAdvanced$';
+export * from './search$';

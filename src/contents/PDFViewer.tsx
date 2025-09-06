@@ -59,13 +59,13 @@ export const PDFViewer = ({ url }: { url: string }) => {
 
       const renderContext = {
         canvasContext: context,
-        viewport: viewport
+        viewport: viewport,
       };
-      
+
       await page.render(renderContext).promise;
       containerEl.appendChild(canvas);
     }
-    
+
     setAllPagesRendered(true);
   };
 
@@ -106,7 +106,7 @@ export const PDFViewer = ({ url }: { url: string }) => {
 
   const scrollToPage = (pageNum: number) => {
     if (!containerRef.current || !allPagesRendered) return;
-    
+
     const canvases = containerRef.current.querySelectorAll('canvas');
     const targetCanvas = canvases[pageNum - 1];
     if (targetCanvas) {
@@ -129,8 +129,6 @@ export const PDFViewer = ({ url }: { url: string }) => {
       scrollToPage(newPage);
     }
   };
-
-
 
   // Track which page is currently visible
   useEffect(() => {
@@ -160,7 +158,6 @@ export const PDFViewer = ({ url }: { url: string }) => {
     return () => observer.disconnect();
   }, [allPagesRendered]);
 
-
   useAsyncEffect(async () => {
     const containerEl = containerRef.current;
     if (!containerEl || typeof containerEl.appendChild !== 'function') {
@@ -170,13 +167,14 @@ export const PDFViewer = ({ url }: { url: string }) => {
 
     console.debug('PDFViewer useAsyncEffect', containerEl);
 
-    await addJsFileAsync("https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js");
+    await addJsFileAsync('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js');
 
     // Assure-toi que pdfjsLib est bien disponible globalement
     const pdfjsLib = global.pdfjsLib;
     console.debug('PDFViewer useAsyncEffect pdfjsLib', pdfjsLib);
 
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
     const pdf = await pdfjsLib.getDocument(url).promise;
     console.debug('PDFViewer useAsyncEffect pdf', pdf);
@@ -186,7 +184,7 @@ export const PDFViewer = ({ url }: { url: string }) => {
     setTotalPages(pdf.numPages);
     setCurrentPage(1);
     setAllPagesRendered(false);
-    
+
     // Render all pages directly with pdf reference
     containerEl.innerHTML = '';
 
@@ -195,7 +193,7 @@ export const PDFViewer = ({ url }: { url: string }) => {
     const firstViewport = firstPage.getViewport({ scale: 1 });
     const containerWidth = containerEl.offsetWidth;
     const fitScale = containerWidth / firstViewport.width;
-    
+
     // Use the calculated fit scale instead of the default scale
     const actualScale = fitScale;
     setScale(actualScale);
@@ -216,13 +214,13 @@ export const PDFViewer = ({ url }: { url: string }) => {
 
       const renderContext = {
         canvasContext: context,
-        viewport: viewport
+        viewport: viewport,
       };
-      
+
       await page.render(renderContext).promise;
       containerEl.appendChild(canvas);
     }
-    
+
     setAllPagesRendered(true);
 
     console.debug('PDFViewer initial render complete');
@@ -233,7 +231,7 @@ export const PDFViewer = ({ url }: { url: string }) => {
   return (
     <Div cls={`${c}`}>
       <div className={`${c}Container`} ref={containerRef} />
-      
+
       <PDFToolbar
         currentPage={currentPage}
         totalPages={totalPages}

@@ -6,7 +6,17 @@ import { Div, Side, SideButton, SideSep } from '@common/components';
 import { JSX } from 'preact';
 import { page$, PageName } from '../messages/page$';
 import { LoadingPage } from '../pages/LoadingPage';
-import { MdOutlineScreenshotMonitor, MdSettings, MdBugReport, MdEvent, MdPassword, MdFormatListBulleted, MdWeb, MdAccountCircle, MdBuild } from 'react-icons/md';
+import {
+  MdOutlineScreenshotMonitor,
+  MdSettings,
+  MdBugReport,
+  MdEvent,
+  MdPassword,
+  MdFormatListBulleted,
+  MdWeb,
+  MdAccountCircle,
+  MdBuild,
+} from 'react-icons/md';
 import { CodePinPage } from '../pages/CodePinPage';
 import { SitePage } from '../pages/SitePage';
 import { ConfigPlaylistPage } from '../pages/ConfigPlaylistPage';
@@ -35,9 +45,9 @@ const css: Css = {
     ...flexCenter(),
   },
   '& .Button': {
-    fontSize: 1.4
-  }
-}
+    fontSize: 1.4,
+  },
+};
 
 const CompByPage: Record<PageName, () => JSX.Element> = {
   '': KioskPage,
@@ -54,20 +64,20 @@ const CompByPage: Record<PageName, () => JSX.Element> = {
   codePin: CodePinPage,
   logs: function (): JSX.Element {
     throw new Error('Function not implemented.');
-  }
-}
+  },
+};
 
 const AppRouter = () => {
   const page = useMsg(page$);
   const Page = CompByPage[page] || ActionsPage;
   return <Page />;
-}
+};
 
 const AppContent = () => {
   const c = useCss('App', css);
   const page = useMsg(page$);
   const device = useMsg(device$);
-  
+
   // Initialize PWA
   usePWA();
 
@@ -76,7 +86,7 @@ const AppContent = () => {
       page$.set('pairing');
     }
   }, [device]);
-  
+
   return (
     <Div cls={c}>
       {page !== 'kiosk' && page !== 'codePin' && page !== 'pairing' && (
@@ -103,10 +113,8 @@ const AppContent = () => {
       <DialogContainer />
     </Div>
   );
-}
+};
 
 export const App = () => {
-  return (
-    <AppContent />
-  )
-}
+  return <AppContent />;
+};

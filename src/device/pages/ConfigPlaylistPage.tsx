@@ -1,6 +1,13 @@
-import { Field, Form, Page, PageBody, PageHeader } from "@common/components";
-import { useMsgState } from "@common/hooks";
-import { copyDir$, hasVideoMuted$, itemAnim$, itemDurationMs$, itemFit$, contentRotation$ } from "../messages";
+import { Field, Form, Page, PageBody, PageHeader } from '@common/components';
+import { useMsgState } from '@common/hooks';
+import {
+  copyDir$,
+  hasVideoMuted$,
+  itemAnim$,
+  itemDurationMs$,
+  itemFit$,
+  contentRotation$,
+} from '../messages';
 
 export const ConfigPlaylistPage = () => {
   const [copyDir, setCopyDir] = useMsgState(copyDir$);
@@ -16,16 +23,20 @@ export const ConfigPlaylistPage = () => {
       <PageBody>
         <Form>
           <Field label="Copier le dossier" value={copyDir} onValue={setCopyDir} />
-          <Field label="Durée d'affichage d'une image (ms)" value={itemDurationMs} onValue={setItemDurationMs} />
+          <Field
+            label="Durée d'affichage d'une image (ms)"
+            value={itemDurationMs}
+            onValue={setItemDurationMs}
+          />
           <Field
             label="Mode d'affichage"
             value={itemFit}
             onValue={setItemFit}
             type="select"
             items={[
-              ["contain", "contient"],
-              ["cover", "couverture"],
-              ["fill", "remplissage"],
+              ['contain', 'contient'],
+              ['cover', 'couverture'],
+              ['fill', 'remplissage'],
             ]}
           />
           <Field
@@ -40,7 +51,12 @@ export const ConfigPlaylistPage = () => {
               ['zoom', 'zoom'],
             ]}
           />
-          <Field label="Video sans audio" type="switch" value={hasVideoMuted} onValue={setHasVideoMuted} />
+          <Field
+            label="Video sans audio"
+            type="switch"
+            value={hasVideoMuted}
+            onValue={setHasVideoMuted}
+          />
           <Field
             label="Rotation du contenu"
             value={contentRotation}
@@ -56,5 +72,5 @@ export const ConfigPlaylistPage = () => {
         </Form>
       </PageBody>
     </Page>
-  )
-}
+  );
+};

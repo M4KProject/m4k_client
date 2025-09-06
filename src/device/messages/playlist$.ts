@@ -1,13 +1,10 @@
-import { isListOfItem, isItem } from "@common/helpers";
-import { newMsg } from "@common/helpers/Msg";
+import { isListOfItem, isItem } from '@common/helpers';
+import { newMsg } from '@common/helpers/Msg';
 
 export interface Playlist {
-    items: any[];
+  items: any[];
 }
 
-export const isPlaylist = (playlist: Playlist) => (
-    isItem(playlist) &&
-    isListOfItem(playlist.items)
-)
+export const isPlaylist = (playlist: Playlist) => isItem(playlist) && isListOfItem(playlist.items);
 
 export const playlist$ = newMsg<Playlist>({ items: [] }, 'playlist', true, isPlaylist);

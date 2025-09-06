@@ -1,6 +1,16 @@
-import { Cell, CellHeader, Page, PageBody, PageHeader, Row, Table, TableBody, TableHead } from "@common/components";
-import { useMsg } from "@common/hooks";
-import { playlist$ } from "../messages";
+import {
+  Cell,
+  CellHeader,
+  Page,
+  PageBody,
+  PageHeader,
+  Row,
+  Table,
+  TableBody,
+  TableHead,
+} from '@common/components';
+import { useMsg } from '@common/hooks';
+import { playlist$ } from '../messages';
 
 export const PlaylistPage = () => {
   const playlist = useMsg(playlist$);
@@ -24,7 +34,9 @@ export const PlaylistPage = () => {
                 <Cell>{item.mimeType}</Cell>
                 <Cell>{item.path}</Cell>
                 <Cell>{item.size}</Cell>
-                <Cell>{item.width}x{item.height}</Cell>
+                <Cell>
+                  {item.width}x{item.height}
+                </Cell>
                 <Cell>{item.waitMs}</Cell>
               </Row>
             ))}
@@ -32,5 +44,5 @@ export const PlaylistPage = () => {
         </Table>
       </PageBody>
     </Page>
-  )
-}
+  );
+};

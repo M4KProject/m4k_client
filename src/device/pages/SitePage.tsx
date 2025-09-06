@@ -1,6 +1,6 @@
-import { Field, Form, Page, PageBody, PageHeader } from "@common/components";
-import { useMsgState } from "@common/hooks";
-import { url$ } from "../messages";
+import { Field, Form, Page, PageBody, PageHeader } from '@common/components';
+import { useMsgState } from '@common/hooks';
+import { url$ } from '../messages';
 
 export const SitePage = () => {
   const [url, setUrl] = useMsgState(url$);
@@ -13,5 +13,5 @@ export const SitePage = () => {
         </Form>
       </PageBody>
     </Page>
-  )
-}
+  );
+};

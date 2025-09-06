@@ -24,7 +24,7 @@ const css: Css = {
     ...flexCenter(),
     textAlign: 'center',
     fontSize: 1.2,
-    fontWeight: "bold",
+    fontWeight: 'bold',
     p: 1,
     bg: 'header',
     fg: 'headerTitle',
@@ -43,10 +43,8 @@ export const DialogContainer = () => {
 
   return (
     <Div cls={c} onClick={() => dialog.onClose?.()}>
-      <Div cls={`${c}Window`} onClick={e => e.stopPropagation()}>
-        <Div cls={`${c}Header`}>
-          {dialog.title}
-        </Div>
+      <Div cls={`${c}Window`} onClick={(e) => e.stopPropagation()}>
+        <Div cls={`${c}Header`}>{dialog.title}</Div>
         <Div cls={`${c}Content`}>
           <dialog.content />
         </Div>

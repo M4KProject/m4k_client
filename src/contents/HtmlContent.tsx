@@ -12,15 +12,13 @@ const css: Css = {
   '&Container': {
     w: '100%',
     h: '100%',
-  }
+  },
 };
 
 export const HtmlContent = ({ content }: ContentProps<HtmlContentModel>) => {
   const c = useCss('HtmlContent', css);
-  
+
   const htmlContent = content.data.html || '<p>Aucun contenu HTML défini</p>';
-  
-  return (
-    <Div cls={`${c}`} dangerouslySetInnerHTML={{ __html: htmlContent }} />
-  );
+
+  return <Div cls={`${c}`} dangerouslySetInnerHTML={{ __html: htmlContent }} />;
 };

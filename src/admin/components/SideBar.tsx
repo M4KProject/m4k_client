@@ -1,11 +1,27 @@
 import { useMsg } from '@common/hooks';
-import { openGroups, openMembers, openDevices, openContents, openAccount, adminPage$, openMedias, group$ } from '../controllers/Router';
+import {
+  openGroups,
+  openMembers,
+  openDevices,
+  openContents,
+  openAccount,
+  adminPage$,
+  openMedias,
+  group$,
+} from '../controllers/Router';
 import { useCss } from '@common/hooks';
 import { Css, Msg } from '@common/helpers';
 import { flexColumn } from '@common/helpers';
 import { Side, SideButton, SideSep } from '@common/components';
 import { Div } from '@common/components';
-import { MdHouse, MdPeople, MdDevices, MdSystemUpdate, MdPermMedia, MdAccountCircle } from "react-icons/md";
+import {
+  MdHouse,
+  MdPeople,
+  MdDevices,
+  MdSystemUpdate,
+  MdPermMedia,
+  MdAccountCircle,
+} from 'react-icons/md';
 import { isAdvanced$ } from '../messages';
 
 const css: Css = {
@@ -64,7 +80,7 @@ const css: Css = {
     borderRadius: '0 0.5em 0.5em 0',
   },
   '&-editor &Sep': { visibility: 'hidden' },
-}
+};
 
 export const SideBar = () => {
   const c = useCss('SideBar', css);
@@ -81,13 +97,23 @@ export const SideBar = () => {
           <Div cls={`${c}Sep ${c}Sep-group`}>{group?.name}</Div>
           <SideButton title="Membres" icon={<MdPeople />} page="members" onClick={openMembers} />
           <SideButton title="Appareils" icon={<MdDevices />} page="devices" onClick={openDevices} />
-          <SideButton title="Contenus" icon={<MdSystemUpdate />} page="contents" onClick={openContents} />
+          <SideButton
+            title="Contenus"
+            icon={<MdSystemUpdate />}
+            page="contents"
+            onClick={openContents}
+          />
           <SideButton title="Médias" icon={<MdPermMedia />} page="medias" onClick={openMedias} />
         </>
       ) : null}
       <SideSep />
       <Div cls={`${c}Sep ${c}Sep-version`}>2.0.0</Div>
-      <SideButton title="Mon Compte" icon={<MdAccountCircle />} page="account" onClick={openAccount} />
+      <SideButton
+        title="Mon Compte"
+        icon={<MdAccountCircle />}
+        page="account"
+        onClick={openAccount}
+      />
     </Side>
   );
-}
+};

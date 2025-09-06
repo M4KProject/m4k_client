@@ -46,9 +46,9 @@ const css: Css = {
       count: 'infinite',
       keyframes: {
         '0%': { transform: { rotate: 0 } },
-        '100%': { transform: { rotate: 360 } }
-      }
-    }
+        '100%': { transform: { rotate: 360 } },
+      },
+    },
   },
   '&Title': {
     color: '#333',
@@ -71,7 +71,7 @@ const css: Css = {
     mb: 1.25,
   },
   '&Code': {
-    fontSize: 1.5,  // font-size: 24px (réduit pour s'adapter aux clés plus longues)
+    fontSize: 1.5, // font-size: 24px (réduit pour s'adapter aux clés plus longues)
     fontWeight: 'bold',
     color: '#28A8D9',
     letterSpacing: '2px', // Espacement réduit pour les clés plus longues
@@ -84,33 +84,31 @@ export const PairingPage = () => {
   const c = useCss('PairingPage', css);
   const device = useMsg(device$);
   const pairingCode = device?.key || device?.id || 'Chargement...';
-  
+
   return (
     <Div cls={`${c}`}>
       <Div cls={`${c}Container`}>
         <Div cls={`${c}SpinnerContainer`}>
           <Div cls={`${c}Spinner`} />
         </Div>
-        
-        <h1 className={`${c}Title`}>
-          En attente de pairage
-        </h1>
-        
-        <p className={`${c}Subtitle`}>
-          Saisissez cette clé dans l'interface d'administration
-        </p>
-        
+
+        <h1 className={`${c}Title`}>En attente de pairage</h1>
+
+        <p className={`${c}Subtitle`}>Saisissez cette clé dans l'interface d'administration</p>
+
         <Div cls={`${c}CodeContainer`}>
-          <Div cls={`${c}Code`}>
-            {pairingCode}
-          </Div>
+          <Div cls={`${c}Code`}>{pairingCode}</Div>
         </Div>
-        
+
         <ButtonRow>
-          <Button title="Mode Offline" color="secondary" onClick={() => {
-            offlineMode$.set(true);
-            page$.set('kiosk')
-          }}/>
+          <Button
+            title="Mode Offline"
+            color="secondary"
+            onClick={() => {
+              offlineMode$.set(true);
+              page$.set('kiosk');
+            }}
+          />
         </ButtonRow>
       </Div>
     </Div>

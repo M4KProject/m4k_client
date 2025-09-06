@@ -40,8 +40,11 @@ export const ContentViewer = ({ contentKey }: ContentViewerProps) => {
   const auth = useMsg(auth$);
   const authToken = auth?.token || '';
 
-  const [content] = useAsync(null, () => contentColl.findKey(contentKey), "content", [authToken, contentKey]);
-  const [medias] = useAsync([], () => mediaColl.find({}), "medias", [authToken, contentKey]);
+  const [content] = useAsync(null, () => contentColl.findKey(contentKey), 'content', [
+    authToken,
+    contentKey,
+  ]);
+  const [medias] = useAsync([], () => mediaColl.find({}), 'medias', [authToken, contentKey]);
 
   console.debug('ContentViewer', { auth, content, medias });
 
@@ -60,12 +63,12 @@ export const ContentViewer = ({ contentKey }: ContentViewerProps) => {
     return (
       <Div cls={`${c}Error`}>
         <h2>Contenu vide</h2>
-        <p>Le contenu "{contentKey}" de type "{content.type}" est vide.</p>
+        <p>
+          Le contenu "{contentKey}" de type "{content.type}" est vide.
+        </p>
       </Div>
     );
   }
 
-  return (
-    <ContentComponent content={content} medias={medias} />
-  );
+  return <ContentComponent content={content} medias={medias} />;
 };

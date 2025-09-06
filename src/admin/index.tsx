@@ -13,7 +13,7 @@ import * as messages from './messages';
 
 console.debug('loaded');
 
-let _rootEl: HTMLElement|null = null;
+let _rootEl: HTMLElement | null = null;
 
 Object.assign(app, controllers);
 Object.assign(app, messages);
@@ -30,12 +30,12 @@ export const mount = () => {
 
   initAdminRouter();
 
-  _rootEl = addEl('div', { id: 'm4kAdmin', parent: 'body' })
+  _rootEl = addEl('div', { id: 'm4kAdmin', parent: 'body' });
   render(<App />, _rootEl);
 
   console.debug('admin mounted');
   authRefresh();
-}
+};
 
 export const unmount = () => {
   console.debug('admin unmount');
@@ -44,4 +44,4 @@ export const unmount = () => {
     _rootEl.remove();
     _rootEl = null;
   }
-}
+};

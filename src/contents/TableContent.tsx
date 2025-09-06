@@ -13,12 +13,12 @@ const css: Css = {
     fontSize: 1.2,
     color: '#666',
     textAlign: 'center',
-  }
+  },
 };
 
 export const TableContent = ({ content }: ContentProps) => {
   const c = useCss('TableContent', css);
-  
+
   return (
     <Div cls={`${c}`}>
       <Div cls={`${c}Message`}>

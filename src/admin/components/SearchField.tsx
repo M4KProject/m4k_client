@@ -1,18 +1,18 @@
-import { Field } from "@common/components";
-import { useMsg } from "@common/hooks";
-import { Div } from "@common/components";
-import { MdSearch } from "react-icons/md";
-import { flexRow } from "@common/helpers";
-import { Css } from "@common/helpers";
-import { useCss } from "@common/hooks";
-import { Button } from "@common/components";
-import { search$ } from "../messages/search$";
+import { Field } from '@common/components';
+import { useMsg } from '@common/hooks';
+import { Div } from '@common/components';
+import { MdSearch } from 'react-icons/md';
+import { flexRow } from '@common/helpers';
+import { Css } from '@common/helpers';
+import { useCss } from '@common/hooks';
+import { Button } from '@common/components';
+import { search$ } from '../messages/search$';
 
 const css: Css = {
   '&': {
-    ...flexRow({ align: 'center' })
+    ...flexRow({ align: 'center' }),
   },
-}
+};
 
 export const SearchField = () => {
   const c = useCss('SearchField', css);

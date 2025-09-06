@@ -31,9 +31,9 @@ const css: Css = {
     ...flexCenter(),
   },
   '& .Button': {
-    fontSize: 1.4
-  }
-}
+    fontSize: 1.4,
+  },
+};
 
 const CompByPage: Record<AdminPage, () => JSX.Element> = {
   groups: GroupsPage,
@@ -44,13 +44,13 @@ const CompByPage: Record<AdminPage, () => JSX.Element> = {
   device: DevicePage,
   account: AccountPage,
   content: ContentPage,
-}
+};
 
 const AppRouter = () => {
   const adminPage = useMsg(adminPage$);
   const Page = CompByPage[adminPage] || LoadingPage;
   return <Page />;
-}
+};
 
 const AppContent = () => {
   const c = useCss('App', css);
@@ -61,7 +61,7 @@ const AppContent = () => {
 
   // console.debug("AppContent", { c, auth });
   if (!auth) {
-    return <AuthPage />
+    return <AuthPage />;
   }
 
   // console.debug("Div", { c, auth });
@@ -72,8 +72,8 @@ const AppContent = () => {
       <AppRouter />
     </Div>
   );
-}
+};
 
 export const App = () => {
-  return <AppContent />
-}
+  return <AppContent />;
+};
