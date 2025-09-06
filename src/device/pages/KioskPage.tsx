@@ -87,51 +87,39 @@ const KioskVideo = ({
   useEffect(() => {
     if (!el) return;
 
-    // Fetch HEAD request to check video headers
-    fetch(url, { method: 'HEAD' })
-      .then((response) => {
-        console.debug(`[ITEM_VIDEO] HEAD response status:`, response.status);
-        console.debug(`[ITEM_VIDEO] HEAD response headers:`, {
-          'content-type': response.headers.get('content-type'),
-          'content-length': response.headers.get('content-length'),
-          'accept-ranges': response.headers.get('accept-ranges'),
-        });
-      })
-      .catch((e) => console.error(`[ITEM_VIDEO] HEAD request error:`, toErr(e), url));
+    console.debug(`[ITEM_VIDEO] Setting up video:`, url);
 
     el.setAttribute('playsinline', 'true');
     el.setAttribute('webkit-playsinline', 'true');
-    el.muted = hasVideoMuted;
+    el.muted = hasVideoMuted ?? true;
     el.preload = 'metadata';
-
-    const canPlay = el.canPlayType('video/mp4');
-    console.debug(`[ITEM_VIDEO] Can play MP4:`, canPlay);
+    el.autoplay = true;
 
     el.onloadstart = () => console.debug(`[ITEM_VIDEO] Video loadstart:`, url);
-    el.onloadedmetadata = () => console.debug(`[ITEM_VIDEO] Video metadata loaded:`, url);
+    el.onloadedmetadata = () => {
+      console.debug(`[ITEM_VIDEO] Video metadata loaded - duration:`, el.duration, 'url:', url);
+    };
     el.oncanplay = () => {
       console.debug(`[ITEM_VIDEO] Video can play:`, url);
       el.play().catch((e) => console.error(`[ITEM_VIDEO] Play error:`, e));
     };
 
     el.onerror = (e) => {
-      const error = toErr(e);
-      console.error(`[ITEM_VIDEO] Video error:`, error, url);
+      console.error(`[ITEM_VIDEO] Video error:`, toErr(e), url);
       setTimeout(() => gotoNext(), 1000);
     };
 
-    el.onended = (e) => {
-      const error = toErr(e);
-      console.error(`[ITEM_VIDEO] Video ended:`, error, url);
+    el.onended = () => {
+      console.debug(`[ITEM_VIDEO] Video ended normally:`, url);
       gotoNext();
     };
 
     // Charger la source
     el.src = url;
-    el.load(); // Force le chargement
-  }, [ref, el, gotoNext]);
+    el.load();
+  }, [el, url, hasVideoMuted, gotoNext]);
 
-  return <video ref={ref} src={url} autoPlay loop muted={hasVideoMuted} />;
+  return <video ref={ref} style={{ width: '100%', height: '100%' }} />;
 };
 
 const KioskItem = ({
