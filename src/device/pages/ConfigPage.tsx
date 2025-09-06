@@ -26,7 +26,8 @@ const ConfigPage = () => {
     // Base configuration state
     const [password, setPassword] = useState('');
     const [initBase] = usePromise(async () => {
-        const passwordValue = await m4k.get("password");
+        const config = await m4k.getConfig();
+        const passwordValue = config.password;
         setPassword(passwordValue || '');
         return passwordValue;
     }, []);
@@ -35,8 +36,9 @@ const ConfigPage = () => {
     const [url, setUrl] = useState('');
     const [backColor, setBackColor] = useState('');
     const [initSite] = usePromise(async () => {
-        const urlValue = await m4k.get("url");
-        const backColorValue = await m4k.get("backColor");
+        const config = await m4k.getConfig();
+        const urlValue = config.url;
+        const backColorValue = config.backColor;
         setUrl(urlValue || '');
         setBackColor(backColorValue || '');
         return { url: urlValue, backColor: backColorValue };
@@ -49,12 +51,13 @@ const ConfigPage = () => {
     const [itemAnim, setItemAnim] = useState<'rightToLeft'|'topToBottom'|'fade'|'zoom'>('rightToLeft');
     const [hasVideoMuted, setHasVideoMuted] = useState<string>('true');
     const [initPlaylist] = usePromise(async () => {
-        const copyDirValue = await m4k.get("copyDir");
-        const itemDurationMs = await m4k.get("itemDurationMs");
-        const itemDurationValue = itemDurationMs / 1000 + 's';
-        const itemFitValue = await m4k.get("itemFit");
-        const itemAnimValue = await m4k.get("itemAnim");
-        const hasVideoMutedValue = await m4k.get("hasVideoMuted");
+        const config = await m4k.getConfig();
+        const copyDirValue = config.copyDir;
+        const itemDurationMs = config.itemDurationMs;
+        const itemDurationValue = itemDurationMs ? itemDurationMs / 1000 + 's' : '10s';
+        const itemFitValue = config.itemFit;
+        const itemAnimValue = config.itemAnim;
+        const hasVideoMutedValue = config.hasVideoMuted;
         
         setCopyDir(copyDirValue || '');
         setItemDuration(itemDurationValue || '10s');
@@ -68,20 +71,24 @@ const ConfigPage = () => {
     const handleBaseSubmit = async (e: Event) => {
         e.preventDefault();
         const passwordValue = password.toLowerCase() || 'mediactil';
-        await m4k.merge({ password: passwordValue });
+        const config = await m4k.getConfig();
+        await m4k.setConfig({ ...config, password: passwordValue });
         await m4k.reload();
     };
 
     const handleSiteSubmit = async (e: Event) => {
         e.preventDefault();
-        await m4k.merge({ url, backColor });
+        const config = await m4k.getConfig();
+        await m4k.setConfig({ ...config, url, backColor });
         await m4k.reload();
     };
 
     const handlePlaylistSubmit = async (e: Event) => {
         e.preventDefault();
         const itemDurationMs = toNbr(itemDuration.replace('s', ''), 10) * 1000;
-        await m4k.merge({ 
+        const config = await m4k.getConfig();
+        await m4k.setConfig({ 
+            ...config,
             copyDir, 
             itemDurationMs, 
             itemFit, 
