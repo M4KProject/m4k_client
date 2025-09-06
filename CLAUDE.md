@@ -4,14 +4,21 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Development Commands
 
-- `pnpm dev` - Start development server at http://localhost:5173/
-- `pnpm build` - Build for production, emitting to `dist/`
+- `pnpm dev` - Start development server at http://localhost:5173/ with host access for device testing
+- `pnpm build` - Build standard PWA for production, emitting to `dist/`
+- `pnpm build:apk` - Build single-file APK version (no PWA features)
 - `pnpm preview` - Start preview server at http://localhost:4173/ to test production build
+- `pnpm analyze` - Build APK version and analyze bundle with vite-bundle-analyzer
+- `pnpm analyze:open` - Build APK version and open bundle analysis in browser
+- `pnpm format` - Format code using Prettier
+- `pnpm format:check` - Check code formatting without changing files
 
 ### Linting and Type Checking
 
 - `npx eslint .` - Run ESLint on the codebase
 - `npx tsc --noEmit` - Type check TypeScript without emitting files
+
+**Important:** Always run both linting and type checking after significant changes to ensure code quality.
 
 ## Architecture Overview
 
@@ -19,12 +26,14 @@ This is a multi-interface content management system with three main applications
 
 ### Core Architecture
 
-- **Framework**: Preact with Vite build system
-- **Language**: TypeScript with JSX
-- **PWA**: Vite PWA plugin with Workbox for service worker generation and offline support
-- **Styling**: CSS-in-JS approach using a custom styling system with `useCss` hook and `Css` objects
-- **State Management**: Custom message-based reactive system (`Msg` class with `useMsg` hook)
-- **Routing**: Custom router implementation handling multiple application routes
+- **Framework**: Preact 10.26.9 with Vite 6.0.4 build system and React compatibility layer
+- **Language**: TypeScript with comprehensive type checking and JSX
+- **PWA**: Vite PWA plugin with Workbox for offline-first architecture (disabled in APK mode)
+- **Styling**: Custom CSS-in-JS system using `useCss(componentName, css)` hook with `Css` type objects
+- **State Management**: Custom message-based reactive system (`Msg<T>` class with `useMsg` hook and localStorage persistence)
+- **Routing**: Custom router with lazy loading, pattern matching, and multi-app support
+- **Data Layer**: Collection-based API with TypeScript models, authentication, and real-time updates
+- **Build Modes**: Dual build system - PWA mode for web deployment, APK mode for single-file Android packaging
 
 ### Application Structure
 
@@ -100,13 +109,23 @@ The content viewer supports multiple content types:
 
 ### State Management Pattern
 
-Uses a custom reactive messaging system where:
+Uses a custom reactive messaging system with persistent storage:
 
-- `adminPage$` controls current admin page
-- `groupKey$` and `group$` manage selected group context
-- `contentKey$` and `content$` manage selected content context
-- `device$` manages device state and pairing status
-- Router updates trigger state changes via message subscriptions
+**Key Message Patterns:**
+- `adminPage$` - Controls current admin page navigation
+- `groupKey$` and `group$` - Manage selected group context across admin interface
+- `contentKey$` and `content$` - Manage selected content context
+- `device$` - Manages device state, pairing status, and online status
+- `auth$` - Global authentication state with token management
+
+**Message Creation Pattern:**
+```typescript
+export const message$ = new Msg<Type>(defaultValue, 'storageKey', persist?, validator?);
+const value = useMsg(message$); // Auto-reactive in components
+message$.set(newValue); // Update from anywhere
+```
+
+**Router Integration:** Router updates automatically trigger state changes via message subscriptions, enabling deep-linking and browser history support.
 
 ### CSS-in-JS Pattern
 
@@ -157,3 +176,106 @@ The application is configured as a Progressive Web App (PWA) using Vite PWA plug
 
 - **Asset optimization**: All assets optimized and fingerprinted for caching
 - **Manifest generation**: Web app manifest generated for installability
+
+## Data Layer Architecture
+
+### API Collection Pattern
+
+The codebase uses a collection-based API system with type-safe operations:
+
+```typescript
+// Collection usage pattern
+const items = await contentColl.find({ group: groupId });
+const item = await contentColl.get(id);
+const newItem = await contentColl.create({ name: 'New Item', group: groupId });
+await contentColl.update(id, { name: 'Updated Name' });
+await contentColl.delete(id);
+```
+
+**Available Collections:**
+- `contentColl` - Content management (forms, tables, HTML, playlists)
+- `deviceColl` - Device registration, status, and control
+- `mediaColl` - File and media management with upload support
+- `groupColl` - Organization and access control
+- `memberColl` - User-group relationships with role-based permissions
+- `userColl` - User management and authentication
+
+### Model Generation System
+
+Models are generated in `common/api/models.generated.ts` from backend schema:
+- **Base interfaces** (prefixed with `_`) contain raw API fields
+- **Extended interfaces** add client-specific typing and computed properties
+- **Role-based access** via `Role.admin > Role.editor > Role.viewer` hierarchy
+
+### Authentication Flow
+
+```typescript
+// Authentication pattern
+const auth = useMsg(auth$); // { id, email, token, ...UserModel }
+if (!auth) {
+  // Redirect to login or show auth UI
+  return <AuthPage />;
+}
+// User is authenticated, proceed with app
+```
+
+## Device Integration Architecture
+
+### Device Pairing System
+
+- **Automatic pairing mode**: Devices without groups show `PairingPage`
+- **Unique device keys**: Generated UUID-based pairing codes
+- **Real-time status**: Online/offline tracking with heartbeat system
+- **Action execution**: Remote command system for device control
+
+### Device Communication Patterns
+
+- **Heartbeat system**: Regular status updates every 10 seconds
+- **Command execution**: `action` and `input` fields for remote operations
+- **Result handling**: Structured response with success/error states
+- **Media synchronization**: Playlist and content caching system
+
+## Development Patterns
+
+### Component Creation Pattern
+
+```typescript
+import { useCss } from '@common/hooks';
+import { Css } from '@common/helpers';
+import { Div, Button } from '@common/components';
+
+const css: Css = {
+  '&': { /* component root */ },
+  '&Item': { /* nested element */ }
+};
+
+export const MyComponent = ({ children }: { children?: any }) => {
+  const c = useCss('MyComponent', css);
+  return (
+    <Div cls={c}>
+      <Div cls={`${c}Item`}>
+        {children}
+      </Div>
+    </Div>
+  );
+};
+```
+
+### Adding New Content Types
+
+1. Define interface in `common/api/models.ts`:
+```typescript
+export interface MyContentModel extends ContentModel {
+  type: 'my-type';
+  data: { customField: string; };
+}
+```
+
+2. Create viewer in `src/contents/MyTypeContent.tsx`
+3. Register in `src/contents/index.tsx` content type mapping
+
+### Error Handling Patterns
+
+- **API errors**: Use `.catch(showError)` for user-friendly error display  
+- **Form validation**: Integrated with `Field` component validation system
+- **Network resilience**: Automatic retry logic and offline queue management
