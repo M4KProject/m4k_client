@@ -26,8 +26,8 @@ export const ConfigPlaylistPage = () => {
           <Field label="Copier le dossier" value={copyDir} onValue={setCopyDir} />
           <Field
             label="Durée d'affichage d'une image (en secondes)"
-            value={round(itemDurationMs/1000, 1)}
-            onValue={s => setItemDurationMs(s*1000)}
+            value={round(itemDurationMs / 1000, 1)}
+            onValue={(s) => setItemDurationMs(s * 1000)}
           />
           <Field
             label="Mode d'affichage"
