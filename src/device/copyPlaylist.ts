@@ -1,6 +1,6 @@
 import { newProgressDialog } from "./components/ProgressView"
 import { m4k } from "@common/m4k"
-import { parse, sleep, stringify } from "@common/helpers"
+import { parse, sleep, stringify, toErr } from "@common/helpers"
 import { M4kFileInfo } from "@common/m4k/m4kInterface"
 import { playlist$ } from "./messages"
 import { getStored } from "@common/helpers/storage"
@@ -54,7 +54,8 @@ const copyPlaylist = async (fromDir: string) => {
         prog(step, 'info', `Traitement "${fileName}"`)
         await process(path, fileName)
       }
-      catch (error) {
+      catch (e) {
+        const error = toErr(e);
         console.error(`playlistFilter "${fileName}" : ${error}`)
         prog(step, 'error', `Erreur "${fileName}" : ${error}`)
         await sleep(4000)

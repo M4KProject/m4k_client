@@ -1,4 +1,4 @@
-import { Css, flexRow } from "@common/helpers";
+import { Css, flexRow, toErr } from "@common/helpers";
 import { m4k } from '@common/m4k';
 import { useCss, usePromise } from "@common/hooks";
 import { Button, Div } from "@common/components";
@@ -116,7 +116,8 @@ const clearCacheAndReload = async () => {
         setTimeout(() => {
             window.location.reload()
         }, 1000)
-    } catch (error) {
+    } catch (e) {
+        const error = toErr(e);
         prog(1, 'error', `Erreur: ${error}`)
         console.error('Failed to clear SW cache:', error)
     }

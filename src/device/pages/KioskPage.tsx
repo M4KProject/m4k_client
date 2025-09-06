@@ -1,4 +1,4 @@
-import { toNbr, flexColumn, Css, flexCenter, clsx, stringify } from "@common/helpers";
+import { toNbr, flexColumn, Css, flexCenter, clsx, stringify, toErr } from "@common/helpers";
 import { Button, Div } from "@common/components";
 import { useCss, usePromise, useMsg } from "@common/hooks";
 import { useEffect, useRef, useState } from "preact/hooks";
@@ -94,7 +94,7 @@ const KioskVideo = ({ url, hasVideoMuted, gotoNext }: {
                     'accept-ranges': response.headers.get('accept-ranges'),
                 });
             })
-            .catch(e => console.error(`[ITEM_VIDEO] HEAD request error:`, stringify(e), url));
+            .catch(e => console.error(`[ITEM_VIDEO] HEAD request error:`, toErr(e), url));
 
         el.setAttribute('playsinline', 'true');
         el.setAttribute('webkit-playsinline', 'true');
@@ -112,12 +112,14 @@ const KioskVideo = ({ url, hasVideoMuted, gotoNext }: {
         };
         
         el.onerror = (e) => {
-            console.error(`[ITEM_VIDEO] Video error:`, stringify(e), url);
+            const error = toErr(e);
+            console.error(`[ITEM_VIDEO] Video error:`, error, url);
             setTimeout(() => gotoNext(), 1000);
         };
 
         el.onended = (e) => {
-            console.error(`[ITEM_VIDEO] Video ended:`, stringify(e), url);
+            const error = toErr(e);
+            console.error(`[ITEM_VIDEO] Video ended:`, error, url);
             gotoNext();
         };
 

@@ -1,4 +1,4 @@
-import { Css, formatDateTime, isSearched, stringify } from '@common/helpers';
+import { Css, formatDateTime, isSearched, stringify, toErr } from '@common/helpers';
 import { useAsync, useCss, useMsg } from '@common/hooks';
 import { search$ } from '../messages/search$';
 import { contentColl, deviceColl, DeviceModel, fun, getApiTime, groupColl, groupId$, memberColl, ModelUpdate, Role, toTime } from '@common/api';
@@ -27,7 +27,8 @@ export const PairingForm = ({ onClose }: { onClose: () => void }) => {
             await memberColl.create({ user: device.user, group, role: Role.viewer });
 
             onClose();
-        } catch (error) {
+        } catch (e) {
+            const error = toErr(e);
             console.error('Erreur lors du pairage:', error);
             alert('Erreur lors du pairage. Vérifiez le code et réessayez.');
             onClose();
