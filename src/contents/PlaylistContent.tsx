@@ -99,7 +99,7 @@ export const PlaylistContent = ({ content, medias }: ContentProps<PlaylistConten
 
   const mediaId = selected?.media;
   const media = mediaId ? toList(medias).find((m) => m.id === mediaId) : null;
-  const mediaUrl = media ? mediaColl.getUrl(mediaId, media.file) : null;
+  const mediaUrl = media ? mediaColl.getUrl(mediaId, media.source) : null;
 
   console.debug('PlaylistContent media', { mediaId, medias, media, mediaUrl });
 

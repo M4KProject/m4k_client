@@ -64,8 +64,8 @@ export const DevicePage = () => {
     );
   }
 
-  const deviceWidth = device.width || 1920;
-  const deviceHeight = device.height || 1080;
+  const deviceWidth = device.info?.width || 1920;
+  const deviceHeight = device.info?.height || 1080;
   const aspectRatio = deviceWidth / deviceHeight;
 
   // Calcul de la taille d'affichage (max 80% de la fenêtre)

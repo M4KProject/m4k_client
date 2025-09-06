@@ -316,15 +316,15 @@ export const MediasPage = () => {
                   <Div
                     cls={`${c}Preview`}
                     style={{
-                      backgroundImage: `url("${mediaColl.getThumbUrl(m.id, m.file, [300, 300])}")`,
+                      backgroundImage: `url("${mediaColl.getThumbUrl(m.id, m.source, [300, 300])}")`,
                     }}
                   />
                 </Cell>
-                <Cell>{sizeFormat(m.size)}</Cell>
+                <Cell>{sizeFormat(m.bytes)}</Cell>
                 <Cell>
-                  {m.width}x{m.height}
+                  {m.meta?.width || 0}x{m.meta?.height || 0}
                 </Cell>
-                <Cell>{durationFormat(m.duration)}</Cell>
+                <Cell>{durationFormat(m.meta?.duration)}</Cell>
                 <Cell variant="around">
                   {/* {item.mimetype === 'application/zip' && (
                                         <Button

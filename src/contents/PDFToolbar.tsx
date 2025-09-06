@@ -1,7 +1,7 @@
 import { useCss } from '@common/hooks';
 import { Css } from '@common/helpers';
 import { Button, Div } from '@common/components';
-import { Maximize, ZoomIn, ZoomOut, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const css: Css = {
   '&': {

@@ -1,9 +1,8 @@
 import { newProgressDialog } from './components/ProgressView';
 import { m4k } from '@common/m4k';
-import { parse, sleep, stringify, toErr } from '@common/helpers';
+import { sleep, stringify, toErr } from '@common/helpers';
 import { M4kFileInfo } from '@common/m4k/m4kInterface';
 import { playlist$ } from './messages';
-import { getStored } from '@common/helpers/storage';
 
 const PLAYLIST_DIR = 'playlist';
 

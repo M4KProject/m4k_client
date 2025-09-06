@@ -1,6 +1,6 @@
 import { m4k, M4kResizeOptions } from '@common/m4k';
-import { Msg, req, sleep, toNbr, toItem, toStr, uuid, toErr } from '@common/helpers';
-import { DeviceModel, deviceColl, UserModel, login, signUp, apiNow, auth$ } from '@common/api';
+import { Msg, req, sleep, toNbr, toItem, toStr, uuid, toErr, parse } from '@common/helpers';
+import { DeviceModel, deviceColl, UserModel, login, signUp, apiNow } from '@common/api';
 
 export const authEmail$ = new Msg('', 'auth_email', true);
 export const authPassword$ = new Msg('', 'auth_password', true);
@@ -49,18 +49,14 @@ export const _deviceInit = async () => {
   const user = await deviceLogin();
   console.debug('_deviceInit user', user.id);
 
-  const { width, height, type, ...info } = await m4k.info();
+  const info = await m4k.info();
+  info.started = apiNow();
 
   device = await deviceColl.upsert(
     { user: user.id },
     {
       user: user.id,
-      status: 'started',
-      started: apiNow(),
       online: apiNow(),
-      type,
-      width,
-      height,
       info,
     }
   );
@@ -71,7 +67,6 @@ export const _deviceInit = async () => {
     await sleep(10000);
     try {
       const update = await deviceColl.update(device.id, {
-        status: 'updated',
         online: apiNow(),
       });
       if (!update) break;
@@ -110,7 +105,7 @@ const execAction = async (device: DeviceModel) => {
     case 'reload':
       return m4k.reload();
     case 'capture':
-      await capture(device, toItem(input));
+      await capture(device, parse(input) as M4kResizeOptions);
       return;
     case 'js':
       return await m4k.js(toStr(input));
@@ -129,16 +124,16 @@ const execAction = async (device: DeviceModel) => {
     case 'restart':
       return await m4k.restart();
     case 'kiosk_on':
-      return await m4k.setKioskOn(input !== false);
+      return await m4k.setKioskOn(input !== 'false');
     case 'screen_on':
-      return await m4k.setScreenOn(input !== false);
+      return await m4k.setScreenOn(input !== 'false');
   }
 };
 
 const runAction = async (device: DeviceModel) => {
   const { action } = device;
 
-  await deviceColl.update(device.id, { status: 'action_started' });
+  await deviceColl.update(device.id, { online: apiNow() });
 
   let value: any = null;
   let error: any = null;
@@ -157,7 +152,7 @@ const runAction = async (device: DeviceModel) => {
       value,
       error,
     },
-    status: 'action_ended',
+    online: apiNow(),
   });
 };
 

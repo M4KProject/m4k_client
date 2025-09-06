@@ -31,9 +31,9 @@ interface TestData {
 }
 
 const initTests = (): TestData[] => {
-  const testKey: 'test' = 'test';
-  const testString = '{}()[]<>\n\té&"è^$€\'\"';
-  const testObject = { a: [{}, [1, 5.2], testString] };
+  // const testKey: 'test' = 'test';
+  const testString = '{}()[]<>\n\té&"è^$€\'"';
+  // const testObject = { a: [{}, [1, 5.2], testString] };
   const dir = `app/test`;
   const b64Name = '_b64';
   const b64Path = `${dir}/${b64Name}`;

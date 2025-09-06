@@ -185,7 +185,7 @@ export const DevicesPage = () => {
                   <Cell>
                     <Field
                       {...tooltip(() => stringify(d.info, null, 2))}
-                      value={`${d.type} ${d.version}`}
+                      value={`${d.info?.type || ''} ${d.info?.version || ''}`}
                       readonly
                     />
                   </Cell>
@@ -193,7 +193,7 @@ export const DevicesPage = () => {
                 <Cell>
                   <Field value={d.name} onValue={(name) => handleUpdate(d, { name })} />
                 </Cell>
-                <Cell>{`${d.width}x${d.height}`}</Cell>
+                <Cell>{`${d.info?.width || 0}x${d.info?.height || 0}`}</Cell>
                 <Cell>
                   <Field
                     {...tooltip(formatDateTime(d.online))}
@@ -203,7 +203,7 @@ export const DevicesPage = () => {
                   />
                 </Cell>
                 {/* {isAdvanced && <Cell>{formatDateTime(d.created)}</Cell>} */}
-                {isAdvanced && <Cell>{formatDateTime(d.started)}</Cell>}
+                {isAdvanced && <Cell>{formatDateTime(d.info?.started)}</Cell>}
                 <Cell>
                   <Field
                     type="select"

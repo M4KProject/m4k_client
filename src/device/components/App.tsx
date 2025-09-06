@@ -1,4 +1,4 @@
-import { Css, flexCenter, flexRow, setCss } from '@common/helpers';
+import { Css, flexCenter, flexRow } from '@common/helpers';
 import { useCss, useMsg } from '@common/hooks';
 import { device$ } from '../services/device';
 import { usePWA } from '../../serviceWorker';
@@ -11,10 +11,8 @@ import {
   Settings,
   Bug,
   Calendar,
-  KeyRound,
   List,
   Globe,
-  User,
   Wrench,
 } from 'lucide-react';
 import { CodePinPage } from '../pages/CodePinPage';
