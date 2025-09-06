@@ -29,7 +29,7 @@ import {
   showDialog,
   Form,
 } from '@common/components';
-import { MdAddToPhotos, MdSync, MdDeleteForever } from 'react-icons/md';
+import { Plus, RefreshCw, Trash2 } from 'lucide-react';
 import { SearchField } from '../components/SearchField';
 import { useState } from 'preact/hooks';
 import { isAdvanced$ } from '../messages';
@@ -125,11 +125,11 @@ export const MembersPage = () => {
       <PageHeader title="Les membres">
         <Button
           title="Ajouter un membre"
-          icon={<MdAddToPhotos />}
+          icon={<Plus />}
           color="primary"
           onClick={handleAdd}
         />
-        <Button title="Rafraîchir" icon={<MdSync />} color="primary" onClick={refresh} />
+        <Button title="Rafraîchir" icon={<RefreshCw />} color="primary" onClick={refresh} />
         <SearchField />
       </PageHeader>
       <PageBody>
@@ -178,7 +178,7 @@ export const MembersPage = () => {
                 </Cell>
                 <Cell variant="around">
                   <Button
-                    icon={<MdDeleteForever />}
+                    icon={<Trash2 />}
                     color="error"
                     {...tooltip('Supprimer')}
                     onClick={() => handleDelete(m)}

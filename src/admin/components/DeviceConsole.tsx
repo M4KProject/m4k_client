@@ -3,7 +3,7 @@ import { useCss } from '@common/hooks';
 import { Div, Button, Field } from '@common/components';
 import { DeviceModel } from '@common/api';
 import { useState } from 'preact/hooks';
-import { MdSend, MdRefresh } from 'react-icons/md';
+import { Send, RefreshCw } from 'lucide-react';
 
 const css: Css = {
   '&': {
@@ -62,8 +62,8 @@ export const DeviceConsole = ({
       </Div>
       <Div cls={`${c}Actions`}>
         <Field type="text" value={command} onValue={setCommand} />
-        <Button icon={<MdSend />} onClick={handleSendCommand} />
-        <Button icon={<MdRefresh />} onClick={() => onExecuteAction('refresh')} />
+        <Button icon={<Send />} onClick={handleSendCommand} />
+        <Button icon={<RefreshCw />} onClick={() => onExecuteAction('refresh')} />
       </Div>
     </Div>
   );

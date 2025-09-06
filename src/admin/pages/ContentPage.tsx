@@ -2,7 +2,7 @@ import { Css } from '@common/helpers';
 import { useCss } from '@common/hooks';
 import { contentColl, ContentModel } from '@common/api';
 import { Button } from '@common/components';
-import { MdSync } from 'react-icons/md';
+import { RefreshCw } from 'lucide-react';
 import { Page, PageHeader, PageBody } from '@common/components';
 import { SearchField } from '../components/SearchField';
 import { FormContent } from './Content/FormContent';
@@ -56,7 +56,7 @@ export const ContentPage = () => {
       <PageHeader title={`${label}: ${title}`}>
         <Button
           title="Rafraîchir"
-          icon={<MdSync />}
+          icon={<RefreshCw />}
           color="primary"
           onClick={() => content$.signal()}
         />

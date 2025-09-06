@@ -1,7 +1,7 @@
 import { useCss } from '@common/hooks';
 import { Css } from '@common/helpers';
 import { Button, Div } from '@common/components';
-import { MdFitScreen, MdZoomIn, MdZoomOut, MdNavigateBefore, MdNavigateNext } from 'react-icons/md';
+import { Maximize, ZoomIn, ZoomOut, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const css: Css = {
   '&': {
@@ -63,7 +63,7 @@ export const PDFToolbar = ({
   return (
     <Div cls={`${c}`}>
       <Button
-        icon={<MdNavigateBefore />}
+        icon={<ChevronLeft />}
         color={currentPage <= 1 ? 'secondary' : 'primary'}
         onClick={currentPage <= 1 ? undefined : onPreviousPage}
       />
@@ -71,22 +71,22 @@ export const PDFToolbar = ({
         {currentPage} / {totalPages}
       </Div>
       <Button
-        icon={<MdNavigateNext />}
+        icon={<ChevronRight />}
         color={currentPage >= totalPages ? 'secondary' : 'primary'}
         onClick={currentPage >= totalPages ? undefined : onNextPage}
       />
       {/* <Button 
-        icon={<MdZoomOut />} 
+        icon={<ZoomOut />} 
         color="primary" 
         onClick={onZoomOut} 
       />
       <Button 
-        icon={<MdZoomIn />} 
+        icon={<ZoomIn />} 
         color="primary" 
         onClick={onZoomIn} 
       />
       <Button 
-        icon={<MdFitScreen />} 
+        icon={<Maximize />} 
         color="primary" 
         onClick={onFitWidth} 
       /> */}

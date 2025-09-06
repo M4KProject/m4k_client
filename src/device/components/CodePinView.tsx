@@ -3,7 +3,7 @@ import { useEffect, useState } from 'preact/hooks';
 import { useTimerMs, useMsg, useCss } from '@common/hooks';
 import { page$ } from '../messages/page$';
 import { Button, ButtonRow, Div, Field, Form, showDialog } from '@common/components';
-import { MdBookOnline, MdLock } from 'react-icons/md';
+import { Globe, Lock } from 'lucide-react';
 import { device$ } from '../services/device';
 import { codePin$, offlineMode$ } from '../messages';
 
@@ -48,11 +48,11 @@ export const CodePinView = ({ open$ }: { open$: Msg<boolean> }) => {
       <Div cls={`${c}Code`}>{device?.key}</Div>
       <Field type="password" label="Code PIN" value={codePin} onValue={setCodePin} />
       <ButtonRow>
-        <Button icon={<MdLock />} onClick={handleClose}>
+        <Button icon={<Lock />} onClick={handleClose}>
           Valider
         </Button>
         <Button
-          icon={<MdBookOnline />}
+          icon={<Globe />}
           onClick={() => {
             offlineMode$.set(false);
           }}

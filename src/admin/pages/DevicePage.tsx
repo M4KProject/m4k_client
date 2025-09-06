@@ -4,7 +4,7 @@ import { Page, PageHeader, PageBody, Div, Button, tooltip } from '@common/compon
 import { deviceColl } from '@common/api';
 import { device$ } from '../controllers/Router';
 import { useState } from 'preact/hooks';
-import { MdRefresh, MdPowerSettingsNew, MdExitToApp } from 'react-icons/md';
+import { RefreshCw, Power, LogOut } from 'lucide-react';
 import { DeviceScreen } from '../components/DeviceScreen';
 import { DeviceConsole } from '../components/DeviceConsole';
 
@@ -86,17 +86,17 @@ export const DevicePage = () => {
     <Page cls={c}>
       <PageHeader title={device.name || device.key}>
         <Button
-          icon={<MdRefresh />}
+          icon={<RefreshCw />}
           {...tooltip('Rafraîchir')}
           onClick={() => executeAction('refresh')}
         />
         <Button
-          icon={<MdPowerSettingsNew />}
+          icon={<Power />}
           {...tooltip('Redémarrer')}
           onClick={() => executeAction('reboot')}
         />
         <Button
-          icon={<MdExitToApp />}
+          icon={<LogOut />}
           {...tooltip('Fermer le Kiosk')}
           onClick={() => executeAction('exit')}
         />

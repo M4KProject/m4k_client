@@ -24,7 +24,7 @@ import {
   Flag,
 } from '@common/components';
 import { ContentProps } from './ContentProps';
-import { MdAddToPhotos, MdDeleteForever } from 'react-icons/md';
+import { Plus, Trash2 } from 'lucide-react';
 
 const css: Css = {
   '&': {
@@ -125,7 +125,7 @@ export const PlaylistContent = ({ data, updateData }: ContentProps<PlaylistConte
               </Cell>
               <Cell variant="around">
                 <Button
-                  icon={<MdDeleteForever />}
+                  icon={<Trash2 />}
                   color="error"
                   {...tooltip('Supprimer')}
                   onClick={() => handleDelete(index)}
@@ -137,7 +137,7 @@ export const PlaylistContent = ({ data, updateData }: ContentProps<PlaylistConte
       </Table>
       <Button
         title="Ajouter une entrée"
-        icon={<MdAddToPhotos />}
+        icon={<Plus />}
         color="primary"
         onClick={handleAdd}
       />

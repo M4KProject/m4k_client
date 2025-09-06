@@ -7,16 +7,16 @@ import { JSX } from 'preact';
 import { page$, PageName } from '../messages/page$';
 import { LoadingPage } from '../pages/LoadingPage';
 import {
-  MdOutlineScreenshotMonitor,
-  MdSettings,
-  MdBugReport,
-  MdEvent,
-  MdPassword,
-  MdFormatListBulleted,
-  MdWeb,
-  MdAccountCircle,
-  MdBuild,
-} from 'react-icons/md';
+  MonitorSpeaker,
+  Settings,
+  Bug,
+  Calendar,
+  KeyRound,
+  List,
+  Globe,
+  User,
+  Wrench,
+} from 'lucide-react';
 import { CodePinPage } from '../pages/CodePinPage';
 import { SitePage } from '../pages/SitePage';
 import { ConfigPlaylistPage } from '../pages/ConfigPlaylistPage';
@@ -92,19 +92,19 @@ const AppContent = () => {
       {page !== 'kiosk' && page !== 'codePin' && page !== 'pairing' && (
         <Side page$={page$}>
           <SideSep />
-          <SideButton icon={<MdOutlineScreenshotMonitor />} page="kiosk" title="Kiosk" />
-          <SideButton icon={<MdBuild />} page="actions" title="Actions" />
-          <SideButton icon={<MdPassword />} page="password" title="Mot de passe" />
-          <SideButton icon={<MdFormatListBulleted />} page="playlist" title="Playlist" />
-          <SideButton icon={<MdSettings />} page="configPlaylist" title="Playlist Config" />
-          <SideButton icon={<MdWeb />} page="site" title="Site Web" />
+          <SideButton icon={<MonitorSpeaker />} page="kiosk" title="Kiosk" />
+          <SideButton icon={<Wrench />} page="actions" title="Actions" />
+          <SideButton icon={<KeyRound />} page="password" title="Mot de passe" />
+          <SideButton icon={<List />} page="playlist" title="Playlist" />
+          <SideButton icon={<Settings />} page="configPlaylist" title="Playlist Config" />
+          <SideButton icon={<Globe />} page="site" title="Site Web" />
           {/* <SideButton icon={<MdWifi />} page="wifi" title="Wifi" /> */}
           <SideSep />
-          <SideButton icon={<MdBugReport />} page="test" title="Test" />
+          <SideButton icon={<Bug />} page="test" title="Test" />
           {/* <SideButton icon={<MdListAlt />} page="logs" title="Logs" /> */}
-          <SideButton icon={<MdEvent />} page="events" title="Events" />
+          <SideButton icon={<Calendar />} page="events" title="Events" />
           <SideSep />
-          <SideButton icon={<MdAccountCircle />} page="account" title="Mon Compte" />
+          <SideButton icon={<User />} page="account" title="Mon Compte" />
           {/* <SideSep style={{ fontSize: 0.7, opacity: 0.5 }}>2.0.0</SideSep> */}
         </Side>
       )}

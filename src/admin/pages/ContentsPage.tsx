@@ -25,13 +25,13 @@ import {
   tooltip,
 } from '@common/components';
 import {
-  MdAddToPhotos,
-  MdSync,
-  MdContentCopy,
-  MdContentPaste,
-  MdEdit,
-  MdDeleteForever,
-} from 'react-icons/md';
+  Plus,
+  RefreshCw,
+  Copy,
+  Clipboard,
+  Edit,
+  Trash2,
+} from 'lucide-react';
 import { openContent } from '../controllers/Router';
 import { SearchField } from '../components/SearchField';
 import { isAdvanced$ } from '../messages';
@@ -106,11 +106,11 @@ export const ContentsPage = () => {
       <PageHeader title="Les contenus">
         <Button
           title="Ajouter un contenu"
-          icon={<MdAddToPhotos />}
+          icon={<Plus />}
           color="primary"
           onClick={handleAdd}
         />
-        <Button title="Rafraîchir" icon={<MdSync />} color="primary" onClick={contentsRefresh} />
+        <Button title="Rafraîchir" icon={<RefreshCw />} color="primary" onClick={contentsRefresh} />
         <SearchField />
       </PageHeader>
       <PageBody>
@@ -175,25 +175,25 @@ export const ContentsPage = () => {
                 </Cell>
                 <Cell variant="around">
                   <Button
-                    icon={<MdContentCopy />}
+                    icon={<Copy />}
                     color="primary"
                     {...tooltip('Copier')}
                     onClick={() => handleCopy(c)}
                   />
                   <Button
-                    icon={<MdContentPaste />}
+                    icon={<Clipboard />}
                     color="primary"
                     {...tooltip('Coller')}
                     onClick={() => handlePaste(c)}
                   />
                   <Button
-                    icon={<MdEdit />}
+                    icon={<Edit />}
                     color="primary"
                     {...tooltip('Modifier')}
                     onClick={() => openContent(c.key || c.id)}
                   />
                   <Button
-                    icon={<MdDeleteForever />}
+                    icon={<Trash2 />}
                     color="error"
                     {...tooltip('Supprimer')}
                     onClick={() => handleDelete(c)}

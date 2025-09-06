@@ -1,7 +1,7 @@
 import { Field } from '@common/components';
 import { useMsg } from '@common/hooks';
 import { Div } from '@common/components';
-import { MdSearch } from 'react-icons/md';
+import { Search } from 'lucide-react';
 import { flexRow } from '@common/helpers';
 import { Css } from '@common/helpers';
 import { useCss } from '@common/hooks';
@@ -21,7 +21,7 @@ export const SearchField = () => {
   return (
     <Div cls={c}>
       <Field name="search" value={search} onValue={search$.setter()} />
-      <Button icon={<MdSearch />} color="primary" onClick={() => search$.signal()} />
+      <Button icon={<Search />} color="primary" onClick={() => search$.signal()} />
     </Div>
   );
 };

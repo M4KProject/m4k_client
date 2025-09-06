@@ -1,6 +1,6 @@
 import { useAsync, useCss, useMsg } from '@common/hooks';
 import { search$ } from '../messages/search$';
-import { MdAddToPhotos, MdSync, MdDeleteForever } from 'react-icons/md';
+import { Plus, RefreshCw, Trash2 } from 'lucide-react';
 import {
   Field,
   Button,
@@ -63,8 +63,8 @@ export const GroupsPage = () => {
   return (
     <Page cls={c}>
       <PageHeader title="Gestionnaire de groupes">
-        <Button title="Ajouter" icon={<MdAddToPhotos />} color="primary" onClick={handleAdd} />
-        <Button title="Rafraîchir" icon={<MdSync />} color="primary" onClick={groupsRefresh} />
+        <Button title="Ajouter" icon={<Plus />} color="primary" onClick={handleAdd} />
+        <Button title="Rafraîchir" icon={<RefreshCw />} color="primary" onClick={groupsRefresh} />
         <SearchField />
       </PageHeader>
       <PageBody>
@@ -102,7 +102,7 @@ export const GroupsPage = () => {
                 </Cell>
                 <Cell variant="row">
                   <Button
-                    icon={<MdDeleteForever />}
+                    icon={<Trash2 />}
                     color="error"
                     {...tooltip('Supprimer')}
                     onClick={() => handleDelete(g)}

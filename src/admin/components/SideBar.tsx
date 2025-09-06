@@ -15,13 +15,13 @@ import { flexColumn } from '@common/helpers';
 import { Side, SideButton, SideSep } from '@common/components';
 import { Div } from '@common/components';
 import {
-  MdHouse,
-  MdPeople,
-  MdDevices,
-  MdSystemUpdate,
-  MdPermMedia,
-  MdAccountCircle,
-} from 'react-icons/md';
+  Home,
+  Users,
+  Monitor,
+  Settings,
+  Image,
+  User,
+} from 'lucide-react';
 import { isAdvanced$ } from '../messages';
 
 const css: Css = {
@@ -90,27 +90,27 @@ export const SideBar = () => {
   return (
     <Side page$={adminPage$ as Msg<string>}>
       <SideSep />
-      <SideButton title="Groupes" icon={<MdHouse />} page="groups" onClick={() => openGroups()} />
+      <SideButton title="Groupes" icon={<Home />} page="groups" onClick={() => openGroups()} />
       <SideSep />
       {group || isAdvanced ? (
         <>
           <Div cls={`${c}Sep ${c}Sep-group`}>{group?.name}</Div>
-          <SideButton title="Membres" icon={<MdPeople />} page="members" onClick={openMembers} />
-          <SideButton title="Appareils" icon={<MdDevices />} page="devices" onClick={openDevices} />
+          <SideButton title="Membres" icon={<Users />} page="members" onClick={openMembers} />
+          <SideButton title="Appareils" icon={<Monitor />} page="devices" onClick={openDevices} />
           <SideButton
             title="Contenus"
-            icon={<MdSystemUpdate />}
+            icon={<Settings />}
             page="contents"
             onClick={openContents}
           />
-          <SideButton title="Médias" icon={<MdPermMedia />} page="medias" onClick={openMedias} />
+          <SideButton title="Médias" icon={<Image />} page="medias" onClick={openMedias} />
         </>
       ) : null}
       <SideSep />
       <Div cls={`${c}Sep ${c}Sep-version`}>2.0.0</Div>
       <SideButton
         title="Mon Compte"
-        icon={<MdAccountCircle />}
+        icon={<User />}
         page="account"
         onClick={openAccount}
       />

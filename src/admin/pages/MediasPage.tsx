@@ -2,15 +2,15 @@ import { Css, flexRow, isSearched, round } from '@common/helpers';
 import { addTranslates, useAsync, useCss, useMsg } from '@common/hooks';
 import { isAdvanced$, search$ } from '../messages';
 import {
-  MdFileUpload,
-  MdSync,
-  MdFolder,
-  MdImage,
-  MdVideoCameraBack,
-  MdPictureAsPdf,
-  MdSquare,
-  MdDelete,
-} from 'react-icons/md';
+  Upload,
+  RefreshCw,
+  FolderOpen,
+  FileImage,
+  Video,
+  FileText,
+  Square,
+  Trash2,
+} from 'lucide-react';
 import {
   FAILED,
   groupColl,
@@ -93,20 +93,20 @@ const css: Css = {
   [`&-${SUCCESS}`]: { fg: 'success' },
 };
 
-const iconByType: Record<string, [string, string, typeof MdFolder]> = {
-  'application/folderectory': ['Dossier', '', MdFolder],
-  'application/pdf': ['PDF', '', MdPictureAsPdf],
-  'application/site': ['Site', '', MdImage],
-  'image/svg+xml': ['Image', 'SVG', MdImage],
-  'image/jpeg': ['Image', 'JPEG', MdImage],
-  'image/png': ['Image', 'PNG', MdImage],
-  'video/mp4': ['Video', 'MP4', MdVideoCameraBack],
-  'video/webm': ['Video', 'WEBM', MdVideoCameraBack],
+const iconByType: Record<string, [string, string, typeof FolderOpen]> = {
+  'application/folderectory': ['Dossier', '', FolderOpen],
+  'application/pdf': ['PDF', '', FileText],
+  'application/site': ['Site', '', FileImage],
+  'image/svg+xml': ['Image', 'SVG', FileImage],
+  'image/jpeg': ['Image', 'JPEG', FileImage],
+  'image/png': ['Image', 'PNG', FileImage],
+  'video/mp4': ['Video', 'MP4', Video],
+  'video/webm': ['Video', 'WEBM', Video],
 };
 
 const getIcon = (_c: string, type: string) => {
   const c = useCss('Media', css);
-  const [title, codec, Icon] = iconByType[type] || [type, '', MdSquare];
+  const [title, codec, Icon] = iconByType[type] || [type, '', Square];
   return (
     <Div cls={`${c}Icon`} {...(codec ? tooltip(codec) : {})}>
       <Icon />
@@ -259,14 +259,14 @@ export const MediasPage = () => {
         <UploadButton
           title="Téléverser"
           {...tooltip('Téléverser des medias')}
-          icon={<MdFileUpload />}
+          icon={<Upload />}
           color="primary"
           onFiles={upload}
         />
         <Button
           title="Rafraîchir"
           {...tooltip('Rafraîchir')}
-          icon={<MdSync />}
+          icon={<RefreshCw />}
           color="primary"
           onClick={handleRefresh}
         />
@@ -359,7 +359,7 @@ export const MediasPage = () => {
                                         }}
                                     /> */}
                   <Button
-                    icon={<MdDelete />}
+                    icon={<Trash2 />}
                     color="error"
                     {...tooltip('Supprimer')}
                     onClick={() => handleDelete(m)}

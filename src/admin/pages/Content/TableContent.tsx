@@ -2,7 +2,7 @@ import { Css, clone } from '@common/helpers';
 import { useCss } from '@common/hooks';
 import { TableContentModel } from '@common/api';
 import { Button } from '@common/components';
-import { MdContentCopy, MdDeleteForever } from 'react-icons/md';
+import { Copy, Trash2 } from 'lucide-react';
 import {
   Div,
   Field,
@@ -68,7 +68,7 @@ export const TableContent = (props: ContentProps<TableContentModel>) => {
               })}
               <Cell variant="row">
                 <Button
-                  icon={<MdContentCopy />}
+                  icon={<Copy />}
                   color="primary"
                   {...tooltip('Copier')}
                   onClick={() => {
@@ -79,7 +79,7 @@ export const TableContent = (props: ContentProps<TableContentModel>) => {
                   }}
                 />
                 <Button
-                  icon={<MdDeleteForever />}
+                  icon={<Trash2 />}
                   color="error"
                   {...tooltip('Supprimer')}
                   onClick={() => {

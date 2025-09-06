@@ -1,13 +1,13 @@
 import { Css } from '@common/helpers';
 import { useCss } from '@common/hooks';
-import { MdSync } from 'react-icons/md';
+import { RefreshCw } from 'lucide-react';
 import { Page, PageHeader, PageBody, PageActions } from '@common/components';
 import { Button } from '@common/components';
 import { Form } from '@common/components';
 import { Field } from '@common/components';
 import { useMsg } from '@common/hooks';
 import { auth$, logout, userColl } from '@common/api';
-import { MdLogout, MdPassword } from 'react-icons/md';
+import { LogOut, KeyRound } from 'lucide-react';
 import { useState } from 'preact/hooks';
 import { LoadingPage } from './LoadingPage';
 import { isAdvanced$ } from '../messages';
@@ -37,7 +37,7 @@ export const AccountPage = () => {
   return (
     <Page cls={c}>
       <PageHeader title="Mon compte">
-        <Button title="Rafraîchir" icon={<MdSync />} color="primary" onClick={() => {}} />
+        <Button title="Rafraîchir" icon={<RefreshCw />} color="primary" onClick={() => {}} />
       </PageHeader>
       <PageBody>
         <Form title="Mon compte">
@@ -77,10 +77,10 @@ export const AccountPage = () => {
         </Form>
       </PageBody>
       <PageActions>
-        <Button title="Deconnexion" icon={<MdLogout />} onClick={logout} />
+        <Button title="Deconnexion" icon={<LogOut />} onClick={logout} />
         <Button
           title="Changer de mot de passe"
-          icon={<MdPassword />}
+          icon={<KeyRound />}
           onClick={handleUpdatePassword}
         />
       </PageActions>

@@ -17,7 +17,7 @@ import {
 import { isAdvanced$ } from '../../messages/isAdvanced$';
 import { ContentProps } from './ContentProps';
 import { ComponentChildren } from 'preact';
-import { MdDeleteForever } from 'react-icons/md';
+import { Trash2 } from 'lucide-react';
 
 const css: Css = {
   '&Actions': { ...flexRow({ align: 'center' }) },
@@ -99,7 +99,7 @@ export const FieldsEdit = ({
                 </Cell>
                 <Cell variant="row">
                   <Button
-                    icon={<MdDeleteForever />}
+                    icon={<Trash2 />}
                     color="error"
                     {...tooltip('Supprimer')}
                     onClick={() => {

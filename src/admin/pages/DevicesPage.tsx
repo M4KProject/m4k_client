@@ -32,12 +32,12 @@ import {
   Form,
 } from '@common/components';
 import {
-  MdSync,
-  MdDeleteForever,
-  MdSettingsRemote,
-  MdAddToPhotos,
-  MdPersonAdd,
-} from 'react-icons/md';
+  RefreshCw,
+  Trash2,
+  Settings,
+  Plus,
+  UserPlus,
+} from 'lucide-react';
 import { SearchField } from '../components/SearchField';
 import { isAdvanced$ } from '../messages';
 import { useState } from 'preact/hooks';
@@ -140,11 +140,11 @@ export const DevicesPage = () => {
     <Page cls={c}>
       <PageHeader title="Les écrans">
         {isAdvanced && (
-          <Button icon={<MdAddToPhotos />} color="primary" onClick={handleAdd}>
+          <Button icon={<Plus />} color="primary" onClick={handleAdd}>
             Ajouter
           </Button>
         )}
-        <Button icon={<MdSync />} color="primary" onClick={devicesRefresh}>
+        <Button icon={<RefreshCw />} color="primary" onClick={devicesRefresh}>
           Rafraîchir
         </Button>
         <SearchField />
@@ -220,14 +220,14 @@ export const DevicesPage = () => {
                 </Cell>
                 <Cell variant="around">
                   <Button
-                    icon={<MdSettingsRemote />}
+                    icon={<Settings />}
                     color="primary"
                     {...tooltip('Mode remote')}
                     onClick={() => handleRemote(d)}
                   />
                   {d.user && (
                     <Button
-                      icon={<MdPersonAdd />}
+                      icon={<UserPlus />}
                       color="success"
                       {...tooltip('Ajouter comme membre')}
                       onClick={() => handleAddAsMember(d)}
@@ -235,7 +235,7 @@ export const DevicesPage = () => {
                   )}
                   {isAdvanced && (
                     <Button
-                      icon={<MdDeleteForever />}
+                      icon={<Trash2 />}
                       color="error"
                       {...tooltip('Supprimer')}
                       onClick={() => handleDelete(d)}
