@@ -14,14 +14,7 @@ import { Css, Msg } from '@common/helpers';
 import { flexColumn } from '@common/helpers';
 import { Side, SideButton, SideSep } from '@common/components';
 import { Div } from '@common/components';
-import {
-  Home,
-  Users,
-  Monitor,
-  Settings,
-  Image,
-  User,
-} from 'lucide-react';
+import { Home, Users, Monitor, Settings, Image, User } from 'lucide-react';
 import { isAdvanced$ } from '../messages';
 
 const css: Css = {
@@ -97,23 +90,13 @@ export const SideBar = () => {
           <Div cls={`${c}Sep ${c}Sep-group`}>{group?.name}</Div>
           <SideButton title="Membres" icon={<Users />} page="members" onClick={openMembers} />
           <SideButton title="Appareils" icon={<Monitor />} page="devices" onClick={openDevices} />
-          <SideButton
-            title="Contenus"
-            icon={<Settings />}
-            page="contents"
-            onClick={openContents}
-          />
+          <SideButton title="Contenus" icon={<Settings />} page="contents" onClick={openContents} />
           <SideButton title="Médias" icon={<Image />} page="medias" onClick={openMedias} />
         </>
       ) : null}
       <SideSep />
       <Div cls={`${c}Sep ${c}Sep-version`}>2.0.0</Div>
-      <SideButton
-        title="Mon Compte"
-        icon={<User />}
-        page="account"
-        onClick={openAccount}
-      />
+      <SideButton title="Mon Compte" icon={<User />} page="account" onClick={openAccount} />
     </Side>
   );
 };

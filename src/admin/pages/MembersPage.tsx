@@ -123,12 +123,7 @@ export const MembersPage = () => {
   return (
     <Page cls={c}>
       <PageHeader title="Les membres">
-        <Button
-          title="Ajouter un membre"
-          icon={<Plus />}
-          color="primary"
-          onClick={handleAdd}
-        />
+        <Button title="Ajouter un membre" icon={<Plus />} color="primary" onClick={handleAdd} />
         <Button title="Rafraîchir" icon={<RefreshCw />} color="primary" onClick={refresh} />
         <SearchField />
       </PageHeader>

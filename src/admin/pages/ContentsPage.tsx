@@ -24,14 +24,7 @@ import {
   TableHead,
   tooltip,
 } from '@common/components';
-import {
-  Plus,
-  RefreshCw,
-  Copy,
-  Clipboard,
-  Edit,
-  Trash2,
-} from 'lucide-react';
+import { Plus, RefreshCw, Copy, Clipboard, Edit, Trash2 } from 'lucide-react';
 import { openContent } from '../controllers/Router';
 import { SearchField } from '../components/SearchField';
 import { isAdvanced$ } from '../messages';
@@ -104,12 +97,7 @@ export const ContentsPage = () => {
   return (
     <Page cls={c}>
       <PageHeader title="Les contenus">
-        <Button
-          title="Ajouter un contenu"
-          icon={<Plus />}
-          color="primary"
-          onClick={handleAdd}
-        />
+        <Button title="Ajouter un contenu" icon={<Plus />} color="primary" onClick={handleAdd} />
         <Button title="Rafraîchir" icon={<RefreshCw />} color="primary" onClick={contentsRefresh} />
         <SearchField />
       </PageHeader>

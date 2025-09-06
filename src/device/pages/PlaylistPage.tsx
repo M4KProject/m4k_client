@@ -60,50 +60,50 @@ export const PlaylistPage = () => {
 
   const handleDurationUpdate = (index: number, newDuration: number) => {
     if (!playlist) return;
-    
+
     const updatedPlaylist = {
       ...playlist,
-      items: playlist.items.map((item, i) => 
-        i === index ? { ...item, waitMs: newDuration*1000 } : item
-      )
+      items: playlist.items.map((item, i) =>
+        i === index ? { ...item, waitMs: newDuration * 1000 } : item
+      ),
     };
-    
+
     playlist$.set(updatedPlaylist);
   };
 
   const handleDuplicate = (index: number) => {
     if (!playlist) return;
-    
+
     const itemToDuplicate = playlist.items[index];
     const updatedPlaylist = {
       ...playlist,
       items: [
         ...playlist.items.slice(0, index + 1),
         { ...itemToDuplicate },
-        ...playlist.items.slice(index + 1)
-      ]
+        ...playlist.items.slice(index + 1),
+      ],
     };
-    
+
     playlist$.set(updatedPlaylist);
   };
 
   const handleDelete = (index: number) => {
     if (!playlist) return;
-    
+
     const updatedPlaylist = {
       ...playlist,
-      items: playlist.items.filter((_, i) => i !== index)
+      items: playlist.items.filter((_, i) => i !== index),
     };
-    
+
     playlist$.set(updatedPlaylist);
   };
 
   const handleMoveUp = (index: number) => {
     if (!playlist) return;
-    
+
     const items = [...playlist.items];
     const item = items[index];
-    
+
     if (index === 0) {
       // Premier élément : déplacer à la fin
       items.splice(index, 1);
@@ -112,21 +112,21 @@ export const PlaylistPage = () => {
       // Échanger avec l'élément précédent
       [items[index - 1], items[index]] = [items[index], items[index - 1]];
     }
-    
+
     const updatedPlaylist = {
       ...playlist,
-      items
+      items,
     };
-    
+
     playlist$.set(updatedPlaylist);
   };
 
   const handleMoveDown = (index: number) => {
     if (!playlist) return;
-    
+
     const items = [...playlist.items];
     const item = items[index];
-    
+
     if (index === playlist.items.length - 1) {
       // Dernier élément : déplacer au début
       items.splice(index, 1);
@@ -135,12 +135,12 @@ export const PlaylistPage = () => {
       // Échanger avec l'élément suivant
       [items[index], items[index + 1]] = [items[index + 1], items[index]];
     }
-    
+
     const updatedPlaylist = {
       ...playlist,
-      items
+      items,
     };
-    
+
     playlist$.set(updatedPlaylist);
   };
   return (
@@ -181,7 +181,7 @@ export const PlaylistPage = () => {
                 <Cell>
                   <Field
                     type="number"
-                    value={round(item.waitMs/1000, 2)}
+                    value={round(item.waitMs / 1000, 2)}
                     onValue={(waitMs) => handleDurationUpdate(i, Number(waitMs))}
                   />
                 </Cell>
@@ -195,7 +195,9 @@ export const PlaylistPage = () => {
                   <Button
                     icon={<ArrowDown />}
                     color="primary"
-                    {...tooltip(i === (playlist?.items?.length || 0) - 1 ? 'Aller au début' : 'Descendre')}
+                    {...tooltip(
+                      i === (playlist?.items?.length || 0) - 1 ? 'Aller au début' : 'Descendre'
+                    )}
                     onClick={() => handleMoveDown(i)}
                   />
                   <Button

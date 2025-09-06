@@ -31,13 +31,7 @@ import {
   showDialog,
   Form,
 } from '@common/components';
-import {
-  RefreshCw,
-  Trash2,
-  Settings,
-  Plus,
-  UserPlus,
-} from 'lucide-react';
+import { RefreshCw, Trash2, Settings, Plus, UserPlus } from 'lucide-react';
 import { SearchField } from '../components/SearchField';
 import { isAdvanced$ } from '../messages';
 import { useState } from 'preact/hooks';

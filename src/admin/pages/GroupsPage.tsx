@@ -37,13 +37,17 @@ export const GroupsPage = () => {
 
   const handleAdd = async () => {
     if (!auth) return;
-    const group = await groupColl.create({ name: 'Nouveau Groupe', user: auth.id }).catch(showError);
+    const group = await groupColl
+      .create({ name: 'Nouveau Groupe', user: auth.id })
+      .catch(showError);
     if (group) {
-      await memberColl.create({
-        user: auth.id,
-        group: group.id,
-        role: Role.viewer,
-      }).catch(showError);
+      await memberColl
+        .create({
+          user: auth.id,
+          group: group.id,
+          role: Role.viewer,
+        })
+        .catch(showError);
     }
     await groupsRefresh();
   };

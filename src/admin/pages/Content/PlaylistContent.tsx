@@ -135,12 +135,7 @@ export const PlaylistContent = ({ data, updateData }: ContentProps<PlaylistConte
           ))}
         </TableBody>
       </Table>
-      <Button
-        title="Ajouter une entrée"
-        icon={<Plus />}
-        color="primary"
-        onClick={handleAdd}
-      />
+      <Button title="Ajouter une entrée" icon={<Plus />} color="primary" onClick={handleAdd} />
     </Div>
   );
 };
