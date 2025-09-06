@@ -18,7 +18,7 @@ import {
 } from '@common/components';
 import { isSearched, Css } from '@common/helpers';
 import { SearchField } from '../components/SearchField';
-import { ModelUpdate, GroupModel, groupColl, auth$ } from '@common/api';
+import { ModelUpdate, GroupModel, groupColl, memberColl, Role, auth$ } from '@common/api';
 import { group$ } from '../controllers';
 import { isAdvanced$ } from '../messages';
 import { useEffect } from 'preact/hooks';
@@ -37,7 +37,14 @@ export const GroupsPage = () => {
 
   const handleAdd = async () => {
     if (!auth) return;
-    await groupColl.create({ name: 'Nouveau Groupe', user: auth.id }).catch(showError);
+    const group = await groupColl.create({ name: 'Nouveau Groupe', user: auth.id }).catch(showError);
+    if (group) {
+      await memberColl.create({
+        user: auth.id,
+        group: group.id,
+        role: Role.viewer,
+      }).catch(showError);
+    }
     await groupsRefresh();
   };
 
