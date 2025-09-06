@@ -6,6 +6,8 @@
     "build": "vite build",
     "build:apk": "vite build --mode apk",
     "preview": "vite preview",
+    "analyze": "vite build --mode apk && npx vite-bundle-analyzer dist",
+    "analyze:open": "vite build --mode apk && npx rollup-plugin-visualizer dist/stats.html --open",
     "format": "prettier --write .",
     "format:check": "prettier --check ."
   },
@@ -24,8 +26,10 @@
     "eslint": "^9.31.0",
     "eslint-config-preact": "^2.0.0",
     "prettier": "^3.6.2",
+    "rollup-plugin-visualizer": "^6.0.3",
     "typescript": "^5.8.3",
     "vite": "^6.0.4",
+    "vite-bundle-analyzer": "^1.2.3",
     "vite-plugin-pwa": "^1.0.2",
     "vite-plugin-singlefile": "^2.3.0"
   }

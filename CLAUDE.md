@@ -97,7 +97,6 @@ The content viewer supports multiple content types:
 - **HTML**: Raw HTML content rendering
 - **Playlist**: Media playlist interface
 - **Hiboutik**: Integration with Hiboutik POS system
-- **PDF**: PDF document viewer using local PDF.js library (offline-capable)
 
 ### State Management Pattern
 
@@ -145,7 +144,6 @@ The application is configured as a Progressive Web App (PWA) using Vite PWA plug
 
 ### Offline Support
 
-- **PDF.js**: Local PDF.js library (no CDN dependency) with worker precached at `/pdf.worker.min.mjs`
 - **Full offline capability**: All application code and resources work without internet connection
 - **Background updates**: New versions downloaded in background and activated on next visit
 
@@ -157,6 +155,5 @@ The application is configured as a Progressive Web App (PWA) using Vite PWA plug
 
 ### Build Process
 
-- **Worker copying**: PDF.js worker automatically copied to public directory during build
 - **Asset optimization**: All assets optimized and fingerprinted for caching
 - **Manifest generation**: Web app manifest generated for installability

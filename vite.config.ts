@@ -4,6 +4,7 @@ import { defineConfig } from 'vite';
 import preact from '@preact/preset-vite';
 import { VitePWA } from 'vite-plugin-pwa';
 import { viteSingleFile } from 'vite-plugin-singlefile';
+import { visualizer } from 'rollup-plugin-visualizer';
 import path from 'node:path';
 
 // https://vitejs.dev/config/
@@ -90,6 +91,12 @@ export default defineConfig(({ mode }) => {
               ],
             },
           }),
+      mode === 'apk' ? visualizer({
+        filename: 'dist/bundle-analysis.html',
+        open: false,
+        gzipSize: true,
+        brotliSize: true,
+      }) : null,
     ].filter(Boolean),
     define: define,
     resolve: {
