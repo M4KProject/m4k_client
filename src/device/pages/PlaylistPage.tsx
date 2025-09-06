@@ -15,7 +15,7 @@ import {
 } from '@common/components';
 import { Css, round } from '@common/helpers';
 import { useCss, useMsg } from '@common/hooks';
-import { Copy, Trash2 } from 'lucide-react';
+import { ArrowUp, ArrowDown, Copy, Trash2 } from 'lucide-react';
 import { playlist$ } from '../messages';
 
 const css: Css = {
@@ -97,6 +97,52 @@ export const PlaylistPage = () => {
     
     playlist$.set(updatedPlaylist);
   };
+
+  const handleMoveUp = (index: number) => {
+    if (!playlist) return;
+    
+    const items = [...playlist.items];
+    const item = items[index];
+    
+    if (index === 0) {
+      // Premier élément : déplacer à la fin
+      items.splice(index, 1);
+      items.push(item);
+    } else {
+      // Échanger avec l'élément précédent
+      [items[index - 1], items[index]] = [items[index], items[index - 1]];
+    }
+    
+    const updatedPlaylist = {
+      ...playlist,
+      items
+    };
+    
+    playlist$.set(updatedPlaylist);
+  };
+
+  const handleMoveDown = (index: number) => {
+    if (!playlist) return;
+    
+    const items = [...playlist.items];
+    const item = items[index];
+    
+    if (index === playlist.items.length - 1) {
+      // Dernier élément : déplacer au début
+      items.splice(index, 1);
+      items.unshift(item);
+    } else {
+      // Échanger avec l'élément suivant
+      [items[index], items[index + 1]] = [items[index + 1], items[index]];
+    }
+    
+    const updatedPlaylist = {
+      ...playlist,
+      items
+    };
+    
+    playlist$.set(updatedPlaylist);
+  };
   return (
     <Page>
       <PageHeader title="Élément dans la playlist" />
@@ -140,6 +186,18 @@ export const PlaylistPage = () => {
                   />
                 </Cell>
                 <Cell variant="around">
+                  <Button
+                    icon={<ArrowUp />}
+                    color="primary"
+                    {...tooltip(i === 0 ? 'Aller à la fin' : 'Monter')}
+                    onClick={() => handleMoveUp(i)}
+                  />
+                  <Button
+                    icon={<ArrowDown />}
+                    color="primary"
+                    {...tooltip(i === (playlist?.items?.length || 0) - 1 ? 'Aller au début' : 'Descendre')}
+                    onClick={() => handleMoveDown(i)}
+                  />
                   <Button
                     icon={<Copy />}
                     color="primary"
