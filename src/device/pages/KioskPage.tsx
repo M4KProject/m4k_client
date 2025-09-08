@@ -216,10 +216,10 @@ export const KioskPage = () => {
   console.debug('KioskPage', { prev, curr, next, device });
 
   // Si un contenu est associé au device, l'afficher via ContentViewer
-  if (device?.content) {
+  if (device?.media) {
     return (
       <Div cls={`${c}Container`}>
-        <ContentViewer contentKey={device?.content} />
+        {/* TODO media <ContentViewer contentKey={device?.media} /> */}
       </Div>
     );
   }

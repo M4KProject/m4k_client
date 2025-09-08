@@ -119,7 +119,7 @@ export const PlaylistContent = ({ data, updateData }: ContentProps<PlaylistConte
                 <Field
                   type="select"
                   value={entry.media || ''}
-                  items={medias.map((g) => [g.id, g.name])}
+                  items={medias.map((g) => [g.id, g.title])}
                   onValue={(id) => handleUpdate(index, { media: id || '' })}
                 />
               </Cell>

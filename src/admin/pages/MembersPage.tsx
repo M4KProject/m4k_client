@@ -3,13 +3,11 @@ import { useAsync, useCss } from '@common/hooks';
 import { useMsg } from '@common/hooks';
 import { search$ } from '../messages/search$';
 import {
-  getAuthId,
-  getGroupId,
+  addJob,
   groupColl,
   memberColl,
   MemberModel,
   ModelUpdate,
-  Role,
   userColl,
 } from '@common/api';
 import {
@@ -38,35 +36,38 @@ import { group$ } from '../controllers';
 const css: Css = {};
 
 export const MemberForm = ({ onClose }: { onClose: () => void }) => {
-  const [users] = useAsync([], () => userColl.find({}));
-  const [groups] = useAsync([], () => groupColl.find({}));
-  const [userId, setUserId] = useState(getAuthId() || '');
-  const [groupId, setGroupId] = useState(getGroupId() || '');
+  const [email, setEmail] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handle = async () => {
-    await memberColl.create({
-      user: userId,
-      group: groupId,
-      role: Role.viewer,
-    });
-    onClose();
+    if (!email) {
+      setError('Email requis');
+      return;
+    }
+    
+    setLoading(true);
+    setError('');
+    
+    try {
+      const job = await addJob('addMember', { email });
+      onClose();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Erreur lors de l\'ajout du membre');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <Form>
+    <Form onSubmit={(e) => { e.preventDefault(); handle(); }}>
       <Field
-        type="select"
-        items={users.map((u) => [u.id, u.name || u.email || u.id])}
-        value={userId}
-        onValue={setUserId}
+        type="email"
+        value={email}
+        onValue={setEmail}
+        error={error}
       />
-      <Field
-        type="select"
-        items={groups.map((g) => [g.id, g.name])}
-        value={groupId}
-        onValue={setGroupId}
-      />
-      <Button title="Ajouter" onClick={handle} />
+      <Button title={loading ? "Ajout..." : "Ajouter"} onClick={loading ? undefined : handle} />
     </Form>
   );
 };
@@ -92,7 +93,7 @@ export const MembersPage = () => {
   // const groups = useMsg(groups$);
 
   const handleAdd = async () => {
-    showDialog('Ajouter un utilisateur à un groupe', (open$) => {
+    showDialog('Ajouter un membre', (open$) => {
       return (
         <MemberForm
           onClose={() => {

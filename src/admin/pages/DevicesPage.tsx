@@ -9,6 +9,7 @@ import {
   getApiTime,
   groupColl,
   groupId$,
+  mediaColl,
   memberColl,
   ModelUpdate,
   Role,
@@ -77,10 +78,10 @@ export const DevicesPage = () => {
 
   const [groups, groupsRefresh] = useAsync([], () => groupColl.find({}));
 
-  const [contents, contentsRefresh] = useAsync(
+  const [medias, mediasRefresh] = useAsync(
     [],
-    () => contentColl.find({ group: groupId }),
-    'contents',
+    () => mediaColl.find({ group: groupId }),
+    'medias',
     [groupId]
   );
 
@@ -112,7 +113,7 @@ export const DevicesPage = () => {
     await deviceColl.update(device.id, changes);
     await groupsRefresh();
     await devicesRefresh();
-    await contentsRefresh();
+    await mediasRefresh();
   };
 
   const handleDelete = (device: DeviceModel) => deviceColl.delete(device.id);
@@ -207,9 +208,9 @@ export const DevicesPage = () => {
                 <Cell>
                   <Field
                     type="select"
-                    items={contents.map((c) => [c.id, c.title || c.key || c.id])}
-                    value={d.content}
-                    onValue={(content) => handleUpdate(d, { content })}
+                    items={medias.map((c) => [c.id, c.title || c.key || c.id])}
+                    value={d.media}
+                    onValue={media => handleUpdate(d, { media })}
                   />
                 </Cell>
                 <Cell variant="around">
