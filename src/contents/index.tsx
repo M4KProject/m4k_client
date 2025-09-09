@@ -2,8 +2,6 @@ import { render } from 'preact';
 import { addFont } from '@common/helpers';
 import { setTheme } from '@common/helpers';
 import { addEl, addResponsiveListener } from '@common/helpers';
-import { setDefaultOptions } from 'date-fns';
-import { fr } from 'date-fns/locale';
 import { ContentViewer } from './ContentViewer';
 import { router } from '@common/helpers';
 
@@ -14,7 +12,6 @@ let _rootEl: HTMLElement | null = null;
 export const mount = () => {
   console.debug('mount content');
 
-  setDefaultOptions({ locale: fr });
   addResponsiveListener();
   addFont('Roboto');
   setTheme('#28A8D9');

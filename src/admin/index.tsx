@@ -4,8 +4,6 @@ import { initAdminRouter } from './controllers/Router';
 import { addFont } from '@common/helpers';
 import { setTheme } from '@common/helpers';
 import { addEl, addResponsiveListener, setCss } from '@common/helpers';
-import { setDefaultOptions } from 'date-fns';
-import { fr } from 'date-fns/locale';
 import { authRefresh } from '@common/api';
 import { app } from '../app';
 import * as controllers from './controllers';
@@ -21,7 +19,6 @@ Object.assign(app, messages);
 export const mount = () => {
   console.debug('admin mount');
 
-  setDefaultOptions({ locale: fr });
   addResponsiveListener();
   addFont('Roboto');
   setTheme('#28A8D9');
