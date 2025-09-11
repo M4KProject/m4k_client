@@ -138,8 +138,10 @@ export const MembersPage = () => {
           <TableHead>
             <Row>
               {isAdvanced && <CellHeader>Groupe</CellHeader>}
-              <CellHeader>Membre</CellHeader>
+              <CellHeader>Appareil</CellHeader>
+              <CellHeader>Email</CellHeader>
               <CellHeader>Role</CellHeader>
+              <CellHeader>Description</CellHeader>
               <CellHeader>Actions</CellHeader>
             </Row>
           </TableHead>
@@ -156,6 +158,9 @@ export const MembersPage = () => {
                     />
                   </Cell>
                 )}
+                <Cell>
+                  <Field type="switch" value={!!m.device} readonly />
+                </Cell>
                 <Cell>{m.email}</Cell>
                 <Cell>
                   <Field
@@ -168,6 +173,9 @@ export const MembersPage = () => {
                     value={toStr(m.role)}
                     onValue={(role) => handleUpdate(m, { role: toNbr(role) })}
                   />
+                </Cell>
+                <Cell>
+                  <Field type="text" value={m.desc} onValue={(desc) => handleUpdate(m, { desc })} />
                 </Cell>
                 <Cell variant="around">
                   <Button
