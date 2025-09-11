@@ -1,13 +1,14 @@
-import { Css, isSearched, toNbr, toStr } from '@common/helpers';
+import { Css, isSearched, randPass, ReqError, toErr, toNbr, toStr, uuid } from '@common/helpers';
 import { useAsync, useCss } from '@common/hooks';
 import { useMsg } from '@common/hooks';
 import { search$ } from '../messages/search$';
 import {
-  addJob,
   groupColl,
   memberColl,
   MemberModel,
   ModelUpdate,
+  needGroupId,
+  Role,
   userColl,
 } from '@common/api';
 import {
@@ -38,36 +39,40 @@ const css: Css = {};
 export const MemberForm = ({ onClose }: { onClose: () => void }) => {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
 
   const handle = async () => {
     if (!email) {
       setError('Email requis');
       return;
     }
-    
-    setLoading(true);
     setError('');
-    
     try {
-      const job = await addJob('addMember', { email });
+      await memberColl.create({ email, group: needGroupId(), role: Role.editor });
       onClose();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erreur lors de l\'ajout du membre');
-    } finally {
-      setLoading(false);
+    }
+    catch(e) {
+      console.warn('add member', e);
+      if (e instanceof ReqError) {
+        if (e.ctx.status === 404) {
+          const password = randPass(8);
+          await userColl.create({ email, password, passwordConfirm: password });
+          console.debug('password', password);
+        }
+      }
+      setError(String(error));
     }
   };
 
   return (
-    <Form onSubmit={(e) => { e.preventDefault(); handle(); }}>
+    <Form onSubmit={handle}>
       <Field
+        label="Email"
         type="email"
         value={email}
         onValue={setEmail}
         error={error}
       />
-      <Button title={loading ? "Ajout..." : "Ajouter"} onClick={loading ? undefined : handle} />
+      <Button type="submit" title="Ajouter" />
     </Form>
   );
 };
@@ -78,9 +83,8 @@ export const MembersPage = () => {
   const group = useMsg(group$);
   const isAdvanced = useMsg(isAdvanced$);
 
-  const [users, usersRefresh] = useAsync([], () => userColl.find({}));
+  // TODO DEVICES
   const [groups, groupsRefresh] = useAsync([], () => groupColl.find({}));
-
   const [members, membersRefresh] = useAsync(
     [],
     () => memberColl.find(group ? { group: group.id } : {}),
@@ -89,20 +93,15 @@ export const MembersPage = () => {
   );
   const filteredMembers = search ? members.filter((g) => isSearched(g.desc, search)) : members;
 
-  // const emails = useMsg(emails$);
-  // const groups = useMsg(groups$);
-
-  const handleAdd = async () => {
-    showDialog('Ajouter un membre', (open$) => {
-      return (
-        <MemberForm
-          onClose={() => {
-            open$.set(false);
-            membersRefresh();
-          }}
-        />
-      );
-    });
+  const handleCreate = async () => {
+    showDialog('Ajouter un membre', (open$) => (
+      <MemberForm
+        onClose={() => {
+          open$.set(false);
+          membersRefresh();
+        }}
+      />
+    ));
   };
 
   const handleUpdate = async (member: MemberModel, changes: ModelUpdate<MemberModel>) => {
@@ -117,14 +116,13 @@ export const MembersPage = () => {
 
   const refresh = () => {
     membersRefresh();
-    usersRefresh();
     groupsRefresh();
   };
 
   return (
     <Page cls={c}>
       <PageHeader title="Les membres">
-        <Button title="Ajouter un membre" icon={<Plus />} color="primary" onClick={handleAdd} />
+        <Button title="Ajouter un membre" icon={<Plus />} color="primary" onClick={handleCreate} />
         <Button title="Rafraîchir" icon={<RefreshCw />} color="primary" onClick={refresh} />
         <SearchField />
       </PageHeader>
@@ -152,13 +150,7 @@ export const MembersPage = () => {
                   </Cell>
                 )}
                 <Cell>
-                  <Field
-                    type="select"
-                    items={users.map((u) => [u.id, u.name || u.email || u.id])}
-                    value={m.user}
-                    onValue={(user) => handleUpdate(m, { user })}
-                  />
-                  <Div cls={`${c}UserEmail`}>{/* {emails[member.user_id] || ''} */}</Div>
+                  {m.email}
                 </Cell>
                 <Cell>
                   <Field

@@ -1,4 +1,4 @@
-import { Css, clone } from '@common/helpers';
+import { Css, deepClone } from '@common/helpers';
 import { useCss } from '@common/hooks';
 import { TableContentModel } from '@common/api';
 import { Button } from '@common/components';
@@ -73,7 +73,7 @@ export const TableContent = (props: ContentProps<TableContentModel>) => {
                   {...tooltip('Copier')}
                   onClick={() => {
                     const nextItems = [...items];
-                    const copy = clone(items[i]);
+                    const copy = deepClone(items[i]);
                     nextItems.splice(i, 0, copy);
                     updateData({ items: nextItems });
                   }}
