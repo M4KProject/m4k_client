@@ -138,7 +138,7 @@ export const MembersPage = () => {
           <TableHead>
             <Row>
               {isAdvanced && <CellHeader>Groupe</CellHeader>}
-              <CellHeader>Appareil</CellHeader>
+              {isAdvanced && <CellHeader>Appareil</CellHeader>}
               <CellHeader>Email</CellHeader>
               <CellHeader>Role</CellHeader>
               <CellHeader>Description</CellHeader>
@@ -146,7 +146,7 @@ export const MembersPage = () => {
             </Row>
           </TableHead>
           <TableBody>
-            {filteredMembers.map((m) => (
+            {(isAdvanced ? filteredMembers : filteredMembers.filter(m => !m.device)).map((m) => (
               <Row key={m.id}>
                 {isAdvanced && (
                   <Cell>
@@ -158,10 +158,12 @@ export const MembersPage = () => {
                     />
                   </Cell>
                 )}
-                <Cell>
-                  <Field type="switch" value={!!m.device} readonly />
-                </Cell>
-                <Cell>{m.email}</Cell>
+                {isAdvanced && (
+                  <Cell>
+                    <Field type="switch" value={!!m.device} readonly />
+                  </Cell>
+                )}
+                <Cell>{m.email||m.id}</Cell>
                 <Cell>
                   <Field
                     type="select"
