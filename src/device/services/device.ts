@@ -1,6 +1,6 @@
 import { m4k, M4kResizeOptions } from '@common/m4k';
 import { Msg, req, sleep, toNbr, toStr, uuid, toErr, parse } from '@common/helpers';
-import { DeviceModel, deviceColl, UserModel, login, signUp, apiNow } from '@common/api';
+import { DeviceModel, deviceColl, UserModel, login, signUp, serverDate } from '@common/api';
 
 export const authEmail$ = new Msg('', 'auth_email', true);
 export const authPassword$ = new Msg('', 'auth_password', true);
@@ -50,13 +50,13 @@ export const _deviceInit = async () => {
   console.debug('_deviceInit user', user.id);
 
   const info = await m4k.info();
-  info.started = apiNow();
+  info.started = serverDate();
 
   device = await deviceColl.upsert(
     { user: user.id },
     {
       user: user.id,
-      online: apiNow(),
+      online: serverDate(),
       info,
     }
   );
@@ -67,7 +67,7 @@ export const _deviceInit = async () => {
     await sleep(10000);
     try {
       const update = await deviceColl.update(device.id, {
-        online: apiNow(),
+        online: serverDate(),
       });
       if (!update) break;
       device = update;
@@ -133,7 +133,7 @@ const execAction = async (device: DeviceModel) => {
 const runAction = async (device: DeviceModel) => {
   const { action } = device;
 
-  await deviceColl.update(device.id, { online: apiNow() });
+  await deviceColl.update(device.id, { online: serverDate() });
 
   let value: any = null;
   let error: any = null;
@@ -152,7 +152,7 @@ const runAction = async (device: DeviceModel) => {
       value,
       error,
     },
-    online: apiNow(),
+    online: serverDate(),
   });
 };
 

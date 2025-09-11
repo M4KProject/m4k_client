@@ -1,19 +1,17 @@
-import { Css, formatDateTime, isSearched, stringify, toErr } from '@common/helpers';
+import { Css, formatDateTime, isSearched, stringify, toErr, toTime } from '@common/helpers';
 import { useAsync, useCss, useMsg } from '@common/hooks';
 import { search$ } from '../messages/search$';
 import {
-  contentColl,
+  apiGet,
   deviceColl,
   DeviceModel,
-  fun,
-  getApiTime,
   groupColl,
   groupId$,
   mediaColl,
   memberColl,
   ModelUpdate,
   Role,
-  toTime,
+  serverTime,
 } from '@common/api';
 import { openDevice } from '../controllers/Router';
 import {
@@ -48,11 +46,7 @@ export const PairingForm = ({ onClose }: { onClose: () => void }) => {
 
     try {
       console.log('Tentative de pairage avec le code:', key);
-      await fun('GET', `pair/${key}/${group}`);
-
-      const device = await deviceColl.findKey(key);
-      await memberColl.create({ user: device.user, group, role: Role.viewer });
-
+      await apiGet(`pair/${key}/${group}`);
       onClose();
     } catch (e) {
       const error = toErr(e);
@@ -94,7 +88,7 @@ export const DevicesPage = () => {
 
   const filteredDevices = search ? devices.filter((d) => isSearched(d.name, search)) : devices;
 
-  const onlineMin = getApiTime() - 30 * 1000;
+  const onlineMin = serverTime() - (30 * 1000);
 
   const handleAdd = async () => {
     showDialog('Pairer un nouvel écran', (open$) => {
