@@ -36,7 +36,7 @@ import { group$ } from '../controllers';
 
 const css: Css = {};
 
-export const MemberForm = ({ onClose }: { onClose: () => void }) => {
+export const CreateMemberForm = ({ onClose }: { onClose: () => void }) => {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
 
@@ -95,7 +95,7 @@ export const MembersPage = () => {
 
   const handleCreate = async () => {
     showDialog('Ajouter un membre', (open$) => (
-      <MemberForm
+      <CreateMemberForm
         onClose={() => {
           open$.set(false);
           membersRefresh();

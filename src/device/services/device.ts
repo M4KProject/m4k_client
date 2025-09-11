@@ -95,7 +95,7 @@ export const deviceInit = async () => {
 
 const capture = async (device: DeviceModel, options?: M4kResizeOptions | undefined) => {
   const url = await m4k.capture(options);
-  const blob = await req('GET', url, { responseType: 'blob' });
+  const blob = await req('GET', url, { resType: 'blob' });
   return await deviceColl.update(device.id, { capture: blob });
 };
 
