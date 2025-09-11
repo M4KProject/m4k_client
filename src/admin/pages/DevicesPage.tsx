@@ -1,4 +1,4 @@
-import { Css, formatDateTime, isSearched, stringify, toErr, toTime } from '@common/helpers';
+import { Css, formatDateTime, isSearched, stringify, toDate, toErr, toTime } from '@common/helpers';
 import { useAsync, useCss, useMsg } from '@common/hooks';
 import { search$ } from '../messages/search$';
 import {
@@ -188,7 +188,7 @@ export const DevicesPage = () => {
                 <Cell>{`${d.info?.width || 0}x${d.info?.height || 0}`}</Cell>
                 <Cell>
                   <Field
-                    {...tooltip(formatDateTime(d.online))}
+                    {...tooltip(`${formatDateTime(toDate(d.online))} ${toTime(d.online)} > ${onlineMin}`)}
                     type="switch"
                     value={d.online && toTime(d.online) > onlineMin}
                     readonly
