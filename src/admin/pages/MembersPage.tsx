@@ -38,6 +38,8 @@ const css: Css = {};
 
 export const CreateMemberForm = ({ onClose }: { onClose: () => void }) => {
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [isNew, setIsNewField] = useState(false);
   const [error, setError] = useState('');
 
   const handle = async () => {
@@ -45,21 +47,30 @@ export const CreateMemberForm = ({ onClose }: { onClose: () => void }) => {
       setError('Email requis');
       return;
     }
+    if (isNew && !password) {
+      setError('Mot de passe requis');
+      return;
+    }
     setError('');
     try {
-      await memberColl.create({ email, group: needGroupId(), role: Role.editor });
+      if (isNew) {
+        await userColl.create({ email, password, passwordConfirm: password });
+        await memberColl.create({ email, group: needGroupId(), role: Role.editor });
+      } else {
+        await memberColl.create({ email, group: needGroupId(), role: Role.editor });
+      }
       onClose();
     }
     catch(e) {
-      console.warn('add member', e);
+      console.warn('create member', e);
       if (e instanceof ReqError) {
-        if (e.ctx.status === 404) {
-          const password = randPass(8);
-          await userColl.create({ email, password, passwordConfirm: password });
-          console.debug('password', password);
+        if (e.status === 404 && !isNew) {
+          setIsNewField(true);
+          setPassword(randPass(8));
+          return;
         }
       }
-      setError(String(error));
+      setError(String(e));
     }
   };
 
@@ -72,6 +83,14 @@ export const CreateMemberForm = ({ onClose }: { onClose: () => void }) => {
         onValue={setEmail}
         error={error}
       />
+      {isNew && (
+        <Field
+          label="Mot de passe"
+          type="password"
+          value={password}
+          onValue={setPassword}
+        />
+      )}
       <Button type="submit" title="Ajouter" />
     </Form>
   );
