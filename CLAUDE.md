@@ -112,6 +112,7 @@ The content viewer supports multiple content types:
 Uses a custom reactive messaging system with persistent storage:
 
 **Key Message Patterns:**
+
 - `adminPage$` - Controls current admin page navigation
 - `groupKey$` and `group$` - Manage selected group context across admin interface
 - `contentKey$` and `content$` - Manage selected content context
@@ -119,6 +120,7 @@ Uses a custom reactive messaging system with persistent storage:
 - `auth$` - Global authentication state with token management
 
 **Message Creation Pattern:**
+
 ```typescript
 export const message$ = new Msg<Type>(defaultValue, 'storageKey', persist?, validator?);
 const value = useMsg(message$); // Auto-reactive in components
@@ -193,6 +195,7 @@ await contentColl.delete(id);
 ```
 
 **Available Collections:**
+
 - `contentColl` - Content management (forms, tables, HTML, playlists)
 - `deviceColl` - Device registration, status, and control
 - `mediaColl` - File and media management with upload support
@@ -203,6 +206,7 @@ await contentColl.delete(id);
 ### Model Generation System
 
 Models are generated in `common/api/models.generated.ts` from backend schema:
+
 - **Base interfaces** (prefixed with `_`) contain raw API fields
 - **Extended interfaces** add client-specific typing and computed properties
 - **Role-based access** via `Role.admin > Role.editor > Role.viewer` hierarchy
@@ -264,10 +268,11 @@ export const MyComponent = ({ children }: { children?: any }) => {
 ### Adding New Content Types
 
 1. Define interface in `common/api/models.ts`:
+
 ```typescript
 export interface MyContentModel extends ContentModel {
   type: 'my-type';
-  data: { customField: string; };
+  data: { customField: string };
 }
 ```
 
@@ -276,6 +281,6 @@ export interface MyContentModel extends ContentModel {
 
 ### Error Handling Patterns
 
-- **API errors**: Use `.catch(showError)` for user-friendly error display  
+- **API errors**: Use `.catch(showError)` for user-friendly error display
 - **Form validation**: Integrated with `Field` component validation system
 - **Network resilience**: Automatic retry logic and offline queue management

@@ -72,12 +72,9 @@ export const DevicesPage = () => {
 
   const [groups, groupsRefresh] = useAsync([], () => groupColl.find({}));
 
-  const [medias, mediasRefresh] = useAsync(
-    [],
-    () => mediaColl.find({ group: groupId }),
-    'medias',
-    [groupId]
-  );
+  const [medias, mediasRefresh] = useAsync([], () => mediaColl.find({ group: groupId }), 'medias', [
+    groupId,
+  ]);
 
   const [devices, devicesRefresh] = useAsync(
     [],
@@ -88,7 +85,7 @@ export const DevicesPage = () => {
 
   const filteredDevices = search ? devices.filter((d) => isSearched(d.name, search)) : devices;
 
-  const onlineMin = serverTime() - (30 * 1000);
+  const onlineMin = serverTime() - 30 * 1000;
 
   const handleAdd = async () => {
     showDialog('Pairer un nouvel écran', (open$) => {
@@ -204,7 +201,7 @@ export const DevicesPage = () => {
                     type="select"
                     items={medias.map((c) => [c.id, c.title || c.key || c.id])}
                     value={d.media}
-                    onValue={media => handleUpdate(d, { media })}
+                    onValue={(media) => handleUpdate(d, { media })}
                   />
                 </Cell>
                 <Cell variant="around">

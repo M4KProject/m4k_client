@@ -60,8 +60,7 @@ export const CreateMemberForm = ({ onClose }: { onClose: () => void }) => {
         await memberColl.create({ email, group: needGroupId(), role: Role.editor });
       }
       onClose();
-    }
-    catch(e) {
+    } catch (e) {
       console.warn('create member', e);
       if (e instanceof ReqError) {
         if (e.status === 404 && !isNew) {
@@ -76,20 +75,9 @@ export const CreateMemberForm = ({ onClose }: { onClose: () => void }) => {
 
   return (
     <Form onSubmit={handle}>
-      <Field
-        label="Email"
-        type="email"
-        value={email}
-        onValue={setEmail}
-        error={error}
-      />
+      <Field label="Email" type="email" value={email} onValue={setEmail} error={error} />
       {isNew && (
-        <Field
-          label="Mot de passe"
-          type="password"
-          value={password}
-          onValue={setPassword}
-        />
+        <Field label="Mot de passe" type="password" value={password} onValue={setPassword} />
       )}
       <Button type="submit" title="Ajouter" />
     </Form>
@@ -168,9 +156,7 @@ export const MembersPage = () => {
                     />
                   </Cell>
                 )}
-                <Cell>
-                  {m.email}
-                </Cell>
+                <Cell>{m.email}</Cell>
                 <Cell>
                   <Field
                     type="select"

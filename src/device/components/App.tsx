@@ -6,15 +6,7 @@ import { Div, Side, SideButton, SideSep } from '@common/components';
 import { JSX } from 'preact';
 import { page$, PageName } from '../messages/page$';
 import { LoadingPage } from '../pages/LoadingPage';
-import {
-  MonitorSpeaker,
-  Settings,
-  Bug,
-  Calendar,
-  List,
-  Globe,
-  Wrench,
-} from 'lucide-react';
+import { MonitorSpeaker, Settings, Bug, Calendar, List, Globe, Wrench } from 'lucide-react';
 import { CodePinPage } from '../pages/CodePinPage';
 import { SitePage } from '../pages/SitePage';
 import { ConfigPlaylistPage } from '../pages/ConfigPlaylistPage';
