@@ -1,4 +1,13 @@
-import { Css, formatDateTime, isSearched, stringify, toDate, toErr, toTime } from '@common/helpers';
+import {
+  Css,
+  formatDate,
+  formatDateTime,
+  isSearched,
+  stringify,
+  toDate,
+  toErr,
+  toTime,
+} from '@common/helpers';
 import { useAsync, useCss, useMsg } from '@common/hooks';
 import { search$ } from '../messages/search$';
 import {
@@ -145,9 +154,8 @@ export const DevicesPage = () => {
               <CellHeader>Nom</CellHeader>
               <CellHeader>Résolution</CellHeader>
               <CellHeader>Online</CellHeader>
-              {/* {isAdvanced && <CellHeader>Création</CellHeader>} */}
-              {isAdvanced && <CellHeader>Démarrage</CellHeader>}
-              <CellHeader>Contenu</CellHeader>
+              <CellHeader>Création</CellHeader>
+              <CellHeader>Média</CellHeader>
               <CellHeader>Actions</CellHeader>
             </Row>
           </TableHead>
@@ -188,14 +196,16 @@ export const DevicesPage = () => {
                 <Cell>{`${d.info?.width || 0}x${d.info?.height || 0}`}</Cell>
                 <Cell>
                   <Field
-                    {...tooltip(`${formatDateTime(toDate(d.online))} ${toTime(d.online)} > ${onlineMin}`)}
+                    {...tooltip(
+                      `${formatDateTime(toDate(d.online))} ${toTime(d.online)} > ${onlineMin}`
+                    )}
                     type="switch"
                     value={d.online && toTime(d.online) > onlineMin}
                     readonly
                   />
                 </Cell>
                 {/* {isAdvanced && <Cell>{formatDateTime(d.created)}</Cell>} */}
-                {isAdvanced && <Cell>{formatDateTime(d.info?.started)}</Cell>}
+                <Cell>{formatDate(d.created)}</Cell>
                 <Cell>
                   <Field
                     type="select"
