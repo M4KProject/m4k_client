@@ -1,4 +1,4 @@
-import { Css, isSearched, ReqError, toNbr, toStr } from '@common/helpers';
+import { Css, isSearched, randKey, ReqError, toNbr, toStr } from '@common/helpers';
 import { useAsync, useCss } from '@common/hooks';
 import { useMsg } from '@common/hooks';
 import { search$ } from '../messages/search$';
@@ -12,7 +12,6 @@ import {
   userColl,
 } from '@common/api';
 import {
-  Div,
   Field,
   Button,
   Page,
@@ -65,7 +64,7 @@ export const CreateMemberForm = ({ onClose }: { onClose: () => void }) => {
       if (e instanceof ReqError) {
         if (e.status === 404 && !isNew) {
           setIsNewField(true);
-          setPassword(randPass(8));
+          setPassword(randKey(10));
           return;
         }
       }
