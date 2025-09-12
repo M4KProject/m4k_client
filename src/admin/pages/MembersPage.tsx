@@ -1,4 +1,4 @@
-import { Css, isSearched, randPass, ReqError, toErr, toNbr, toStr, uuid } from '@common/helpers';
+import { Css, isSearched, ReqError, toNbr, toStr } from '@common/helpers';
 import { useAsync, useCss } from '@common/hooks';
 import { useMsg } from '@common/hooks';
 import { search$ } from '../messages/search$';
@@ -146,7 +146,7 @@ export const MembersPage = () => {
             </Row>
           </TableHead>
           <TableBody>
-            {(isAdvanced ? filteredMembers : filteredMembers.filter(m => !m.device)).map((m) => (
+            {(isAdvanced ? filteredMembers : filteredMembers.filter((m) => !m.device)).map((m) => (
               <Row key={m.id}>
                 {isAdvanced && (
                   <Cell>
@@ -163,7 +163,7 @@ export const MembersPage = () => {
                     <Field type="switch" value={!!m.device} readonly />
                   </Cell>
                 )}
-                <Cell>{m.email||m.id}</Cell>
+                <Cell>{m.email || m.id}</Cell>
                 <Cell>
                   <Field
                     type="select"
