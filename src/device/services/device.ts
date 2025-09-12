@@ -1,58 +1,65 @@
 import { m4k, M4kResizeOptions } from '@common/m4k';
-import { Msg, req, sleep, toNbr, toStr, uuid, toErr, parse } from '@common/helpers';
+import {
+  Msg,
+  req,
+  sleep,
+  toStr,
+  uuid,
+  toErr,
+  parse,
+  randKey,
+  ReqError,
+  toVoidAsync,
+} from '@common/helpers';
 import { DeviceModel, deviceColl, UserModel, login, signUp, serverDate } from '@common/api';
 
-export const authEmail$ = new Msg('', 'auth_email', true);
-export const authPassword$ = new Msg('', 'auth_password', true);
+export const deviceEmail$ = new Msg('', 'deviceEmail', true);
+export const devicePassword$ = new Msg('', 'devicePassword', true);
+export const deviceUser$ = new Msg<UserModel | null>(null, 'deviceUser', true);
 export const device$ = new Msg<DeviceModel | null>(null, 'device', true);
+export const deviceAction$ = new Msg<DeviceModel['action'] | null>(null, 'deviceAction', true);
 
-const uniqueKey = () => uuid().split('-').join('');
+const deviceLogin = async (): Promise<DeviceModel> => {
+  let email = deviceEmail$.v;
+  let password = devicePassword$.v;
+  console.debug('deviceLogin', email);
 
-const getErrorStatus = (error: any) => toNbr(error?.data?.status, null);
+  let user: UserModel | null = null;
 
-export const deviceLogin = async (): Promise<UserModel> => {
-  let email = authEmail$.v;
-  let password = authPassword$.v;
-  console.debug('deviceLogin', email, password);
-
-  if (!email) authEmail$.set((email = uniqueKey() + '@m4k.fr'));
-  if (!password) authPassword$.set((password = uniqueKey()));
-
-  try {
-    const response = await login(email, password);
-    console.debug('deviceLogin response', response);
-    return response;
-  } catch (e) {
-    const error = toErr(e);
-    // TODO getErrorStatus
-    if (getErrorStatus(error) === 400) {
-      console.warn('deviceLogin error 400', error);
-      try {
-        await signUp(email, password);
-      } catch (error) {
-        console.warn('deviceLogin create error', error);
-        if (getErrorStatus(error) === 400) {
-          authEmail$.set((email = ''));
-          authPassword$.set((password = ''));
-        }
-      }
-      return await deviceLogin();
+  if (email && password) {
+    try {
+      user = await login(email, password);
+      console.debug('deviceLogin login user', user);
+    } catch (error) {
+      console.info('deviceLogin login error', error);
+      if (!(error instanceof ReqError)) throw error;
+      if (error.status !== 400) throw error;
     }
-    console.warn('deviceLogin error2', error);
-    throw error;
   }
-};
 
-export const _deviceInit = async () => {
-  let device: DeviceModel | null;
+  if (!user) {
+    email = uuid() + '@m4k.fr';
+    password = randKey(20);
 
-  const user = await deviceLogin();
-  console.debug('_deviceInit user', user.id);
+    try {
+      user = await signUp(email, password);
+      console.debug('deviceLogin signUp user', user);
+    } catch (error) {
+      console.info('deviceLogin signUp error', error);
+      throw error;
+    }
+  }
+
+  if (!user) throw new Error('no user');
+
+  deviceUser$.set(user);
+  deviceEmail$.set(email);
+  devicePassword$.set(password);
 
   const info = await m4k.info();
   info.started = serverDate();
 
-  device = await deviceColl.upsert(
+  const device = await deviceColl.upsert(
     { user: user.id },
     {
       user: user.id,
@@ -60,38 +67,70 @@ export const _deviceInit = async () => {
       info,
     }
   );
-  console.debug('device', device.id);
+  console.debug('deviceLogin device', device);
+
   device$.set(device);
 
-  while (true) {
-    await sleep(10000);
-    try {
-      const update = await deviceColl.update(device.id, {
-        online: serverDate(),
-      });
-      if (!update) break;
-      device = update;
-      device$.set(update);
-      if (device.action) {
-        console.debug('device action', device.action, device.input);
-        await runAction(device);
-      }
-    } catch (e) {
-      console.warn('deviceInit', toErr(e));
+  return device;
+};
+
+let deviceUnsubscribe = toVoidAsync;
+const deviceStart = async () => {
+  console.debug('deviceStart');
+  const device = await deviceLogin();
+
+  deviceUnsubscribe();
+
+  console.debug('deviceStart subscribe', device.id);
+  deviceUnsubscribe = await deviceColl.subscribe(device.id, (device, action) => {
+    console.debug('deviceStart subscribe', action, device);
+    if (action === 'delete') {
+      deviceLogin();
+      return;
     }
+    device$.set(device);
+  });
+
+  while (true) {
+    await deviceLoop();
+    await sleep(10000);
   }
+};
+
+const deviceLoop = async () => {
+  let device = device$.v;
+  console.debug('deviceLoop device', device);
+
+  if (!device) throw new Error('no device');
+
+  device = await deviceColl.update(device.id, {
+    online: serverDate(),
+  });
+  console.debug('deviceLoop updated', device);
+  if (!device) throw new Error('no device update');
+
+  device$.set(device);
 };
 
 export const deviceInit = async () => {
   while (true) {
     try {
-      await _deviceInit();
+      await deviceStart();
     } catch (e) {
       console.warn('deviceInit', toErr(e));
     }
     await sleep(60000);
   }
 };
+
+device$.on((device) => {
+  deviceAction$.set(device.action);
+});
+
+deviceAction$.on((action) => {
+  const device = device$.v;
+  runAction(device, action);
+});
 
 const capture = async (device: DeviceModel, options?: M4kResizeOptions | undefined) => {
   const url = await m4k.capture(options);
@@ -130,10 +169,13 @@ const execAction = async (device: DeviceModel) => {
   }
 };
 
-const runAction = async (device: DeviceModel) => {
-  const { action } = device;
+const runAction = async (device: DeviceModel, action: DeviceModel['action']) => {
+  console.debug('runAction', device, action);
 
-  await deviceColl.update(device.id, { online: serverDate() });
+  if (!device) throw toErr('no device');
+  if (!action) return;
+
+  await deviceColl.update(device.id, { action: '', online: serverDate() });
 
   let value: any = null;
   let error: any = null;
