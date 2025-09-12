@@ -39,7 +39,7 @@ import {
   showDialog,
   Form,
 } from '@common/components';
-import { RefreshCw, Trash2, Settings, Plus, UserPlus } from 'lucide-react';
+import { RefreshCw, Trash2, Settings, Plus, Power } from 'lucide-react';
 import { SearchField } from '../components/SearchField';
 import { isAdvanced$ } from '../messages';
 import { useState } from 'preact/hooks';
@@ -94,7 +94,7 @@ export const DevicesPage = () => {
 
   const filteredDevices = search ? devices.filter((d) => isSearched(d.name, search)) : devices;
 
-  const onlineMin = serverTime() - 30 * 1000;
+  const onlineMin = serverTime() - 10 * 1000;
 
   const handleAdd = async () => {
     showDialog('Pairer un nouvel écran', (open$) => {
@@ -196,9 +196,7 @@ export const DevicesPage = () => {
                 <Cell>{`${d.info?.width || 0}x${d.info?.height || 0}`}</Cell>
                 <Cell>
                   <Field
-                    {...tooltip(
-                      `${formatDateTime(toDate(d.online))} ${toTime(d.online)} > ${onlineMin}`
-                    )}
+                    {...tooltip(formatDateTime(toDate(d.online)))}
                     type="switch"
                     value={d.online && toTime(d.online) > onlineMin}
                     readonly
@@ -216,17 +214,22 @@ export const DevicesPage = () => {
                 </Cell>
                 <Cell variant="around">
                   <Button
-                    icon={<Settings />}
+                    icon={<RefreshCw />}
                     color="primary"
-                    {...tooltip('Mode remote')}
-                    onClick={() => handleRemote(d)}
+                    {...tooltip('Rafraîchir')}
+                    onClick={() => deviceColl.update(d.id, { action: 'refresh' })}
                   />
-                  {d.user && (
+                  <Button
+                    icon={<Power />}
+                    color="primary"
+                    {...tooltip('Redémarrer')}
+                    onClick={() => deviceColl.update(d.id, { action: 'reboot' })}
+                  />
+                  {isAdvanced && (
                     <Button
-                      icon={<UserPlus />}
-                      color="success"
-                      {...tooltip('Ajouter comme membre')}
-                      onClick={() => handleAddAsMember(d)}
+                      icon={<Settings />}
+                      {...tooltip('Mode remote')}
+                      onClick={() => handleRemote(d)}
                     />
                   )}
                   {isAdvanced && (
