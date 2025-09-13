@@ -217,7 +217,7 @@ export const DevicesPage = () => {
                     icon={<RefreshCw />}
                     color="primary"
                     {...tooltip('Rafraîchir')}
-                    onClick={() => deviceColl.update(d.id, { action: 'refresh' })}
+                    onClick={() => deviceColl.update(d.id, { action: 'reload' })}
                   />
                   <Button
                     icon={<Power />}

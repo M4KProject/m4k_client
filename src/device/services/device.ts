@@ -127,10 +127,7 @@ device$.on((device) => {
   deviceAction$.set(device.action);
 });
 
-deviceAction$.on((action) => {
-  const device = device$.v;
-  runAction(device, action);
-});
+deviceAction$.on(() => runAction(device$.v));
 
 const capture = async (device: DeviceModel, options?: M4kResizeOptions | undefined) => {
   const url = await m4k.capture(options);
@@ -138,11 +135,16 @@ const capture = async (device: DeviceModel, options?: M4kResizeOptions | undefin
   return await deviceColl.update(device.id, { capture: blob });
 };
 
-const execAction = async (device: DeviceModel) => {
-  const { action, input } = device;
+const execAction = async (device: DeviceModel, action: string, input: string) => {
   switch (action) {
     case 'reload':
       return m4k.reload();
+    case 'reboot':
+      return await m4k.reboot();
+    case 'restart':
+      return await m4k.restart();
+    case 'exit':
+      return await m4k.exit();
     case 'capture':
       await capture(device, parse(input) as M4kResizeOptions);
       return;
@@ -152,16 +154,10 @@ const execAction = async (device: DeviceModel) => {
       return await m4k.sh(toStr(input));
     case 'su':
       return await m4k.su(toStr(input));
-    case 'exit':
-      return await m4k.exit();
     case 'info':
       return await m4k.info();
     case 'ping':
-      return 'pong';
-    case 'reboot':
-      return await m4k.reboot();
-    case 'restart':
-      return await m4k.restart();
+      return input;
     case 'kiosk_on':
       return await m4k.setKioskOn(input !== 'false');
     case 'screen_on':
@@ -169,10 +165,12 @@ const execAction = async (device: DeviceModel) => {
   }
 };
 
-const runAction = async (device: DeviceModel, action: DeviceModel['action']) => {
-  console.debug('runAction', device, action);
+const runAction = async (device: DeviceModel) => {
+  console.debug('runAction', device.action, device.input, device);
 
   if (!device) throw toErr('no device');
+
+  const { action, input } = device;
   if (!action) return;
 
   await deviceColl.update(device.id, { action: '', online: serverDate() });
@@ -181,7 +179,7 @@ const runAction = async (device: DeviceModel, action: DeviceModel['action']) => 
   let error: any = null;
 
   try {
-    value = await execAction(device);
+    value = await execAction(device, action, input);
   } catch (err) {
     error = err;
   }
@@ -191,6 +189,7 @@ const runAction = async (device: DeviceModel, action: DeviceModel['action']) => 
     result: {
       success: !error,
       action,
+      input,
       value,
       error,
     },
