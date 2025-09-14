@@ -1,4 +1,4 @@
-import { Css, flexRow, isSearched, round } from '@common/helpers';
+import { by, byId, Css, flexRow, groupBy, isPositive, isSearched, round, sort } from '@common/helpers';
 import { addTranslates, useAsync, useCss, useMsg } from '@common/hooks';
 import { isAdvanced$, search$ } from '../messages';
 import {
@@ -93,25 +93,23 @@ const css: Css = {
   [`&-${SUCCESS}`]: { fg: 'success' },
 };
 
-const iconByType: Record<string, [string, string, typeof FolderOpen]> = {
-  'application/folderectory': ['Dossier', '', FolderOpen],
-  'application/pdf': ['PDF', '', FileText],
-  'application/site': ['Site', '', FileImage],
-  'image/svg+xml': ['Image', 'SVG', FileImage],
-  'image/jpeg': ['Image', 'JPEG', FileImage],
-  'image/png': ['Image', 'PNG', FileImage],
-  'video/mp4': ['Video', 'MP4', Video],
-  'video/webm': ['Video', 'WEBM', Video],
+const infoByType: Record<string, [string, typeof FolderOpen]> = {
+  'folder': ['Dossier', FolderOpen],
+  'pdf': ['PDF', FileText],
+  'site': ['Site', FileImage],
+  'svg': ['Image SVG', FileImage],
+  'jpeg': ['Image JPG', FileImage],
+  'png': ['Image PNG', FileImage],
+  'mp4': ['Video MP4', Video],
+  'webm': ['Video WEBM', Video],
 };
 
-const getIcon = (_c: string, type: string) => {
-  const c = useCss('Media', css);
-  const [title, codec, Icon] = iconByType[type] || [type, '', Square];
+const getTypeIcon = (c: string, type: string) => {
+  const parts = type.split(/\W/);
+  const info = infoByType[type] || infoByType[parts[1]] || [type, Square];
+  const [title, Icon] = info;
   return (
-    <Div cls={`${c}Icon`} {...(codec ? tooltip(codec) : {})}>
-      <Icon />
-      {title && <span>{title}</span>}
-    </Div>
+    <Icon class={`${c}Icon`} {...tooltip(title)} />
   );
 };
 
@@ -126,11 +124,7 @@ const sizeFormat = (size?: number) => {
   return size + 'o';
 };
 
-const durationFormat = (duration?: number) => {
-  if (!duration) return '';
-  const s = duration / 1000;
-  return Math.round(s) + 's';
-};
+const secondsFormat = (s?: number) => isPositive(s) ? round(s) + 's' : '';
 
 // const setDataTransferJson = ({ dataTransfer }: React.DragEvent, data: any) => {
 //     dataTransfer.clearData();
@@ -232,9 +226,27 @@ export const MediasPage = () => {
     'medias',
     [groupId]
   );
+
+  const mediaById = byId(medias);
+
+  // Get Media PATH
+  for (const media of medias) {
+    const paths: string[] = [];
+    let curr = media;
+    while (curr) {
+      paths.push(curr.title);
+      curr = curr.parent ? mediaById[curr.parent] : null;
+    }
+    paths.reverse();
+    media.paths = paths;
+    media.order = paths.join('/');
+  }
+
+  const sortedMedias = sort(medias, m => m.order);
+
   const filteredMedias = search
-    ? medias.filter((m) => isSearched((m.name || '') + (m.desc || '') + (m.type || ''), search))
-    : medias;
+    ? sortedMedias.filter((m) => isSearched((m.title || '') + (m.desc || '') + (m.type || ''), search))
+    : sortedMedias;
 
   useEffect(() => uploadItems$.debounce(100).on(mediasRefresh), [mediasRefresh]);
 
@@ -278,8 +290,7 @@ export const MediasPage = () => {
           <TableHead>
             <Row>
               {isAdvanced && <CellHeader>Groupe</CellHeader>}
-              <CellHeader>Type</CellHeader>
-              <CellHeader>Nom</CellHeader>
+              <CellHeader>Titre</CellHeader>
               <CellHeader>Description</CellHeader>
               <CellHeader>Aperçu</CellHeader>
               <CellHeader>Poids</CellHeader>
@@ -301,12 +312,13 @@ export const MediasPage = () => {
                     />
                   </Cell>
                 )}
-                <Cell variant="row">{getIcon(c, m.type || '')}</Cell>
-                <Cell>
+                <Cell variant="row">
+                  <Div cls={``} style={{ width: (2 * (m.paths.length-1)) + 'em' }} />
+                  {getTypeIcon(c, m.type || '')}
                   <Field
-                    {...(isAdvanced ? tooltip(m.id) : {})}
-                    value={m.name}
-                    onValue={(name) => handleUpdate(m, { name })}
+                    {...(isAdvanced ? tooltip(m.order) : {})}
+                    value={m.title}
+                    onValue={(title) => handleUpdate(m, { title })}
                   />
                 </Cell>
                 <Cell>
@@ -316,15 +328,15 @@ export const MediasPage = () => {
                   <Div
                     cls={`${c}Preview`}
                     style={{
-                      backgroundImage: `url("${mediaColl.getThumbUrl(m.id, m.source, [300, 300])}")`,
+                      backgroundImage: `url("${mediaColl.getThumbUrl(m.id, m.file, [300, 300])}")`,
                     }}
                   />
                 </Cell>
                 <Cell>{sizeFormat(m.bytes)}</Cell>
                 <Cell>
-                  {m.meta?.width || 0}x{m.meta?.height || 0}
+                  {m.width || 0}x{m.height || 0}
                 </Cell>
-                <Cell>{durationFormat(m.meta?.duration)}</Cell>
+                <Cell>{secondsFormat(m.seconds)}</Cell>
                 <Cell variant="around">
                   {/* {item.mimetype === 'application/zip' && (
                                         <Button
