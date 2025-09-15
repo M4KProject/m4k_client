@@ -9,6 +9,7 @@ import { GroupsPage } from '../pages/GroupsPage';
 import { MembersPage } from '../pages/MembersPage';
 import { ContentsPage } from '../pages/ContentsPage';
 import { MediasPage } from '../pages/MediasPage';
+import { JobsPage } from '../pages/JobsPage';
 import { DevicesPage } from '../pages/DevicesPage';
 import { AuthPage } from '../pages/AuthPage';
 import { AccountPage } from '../pages/AccountPage';
@@ -40,6 +41,7 @@ const CompByPage: Record<AdminPage, () => JSX.Element> = {
   members: MembersPage,
   contents: ContentsPage,
   medias: MediasPage,
+  jobs: JobsPage,
   devices: DevicesPage,
   device: DevicePage,
   account: AccountPage,

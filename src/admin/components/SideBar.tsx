@@ -7,6 +7,7 @@ import {
   openAccount,
   adminPage$,
   openMedias,
+  openJobs,
   group$,
 } from '../controllers/Router';
 import { useCss } from '@common/hooks';
@@ -14,7 +15,7 @@ import { Css, Msg } from '@common/helpers';
 import { flexColumn } from '@common/helpers';
 import { Side, SideButton, SideSep } from '@common/components';
 import { Div } from '@common/components';
-import { Home, Users, Monitor, Settings, Image, User } from 'lucide-react';
+import { Home, Users, Monitor, Settings, Image, User, Zap } from 'lucide-react';
 import { isAdvanced$ } from '../messages';
 
 const css: Css = {
@@ -92,6 +93,7 @@ export const SideBar = () => {
           <SideButton title="Appareils" icon={<Monitor />} page="devices" onClick={openDevices} />
           <SideButton title="Contenus" icon={<Settings />} page="contents" onClick={openContents} />
           <SideButton title="Médias" icon={<Image />} page="medias" onClick={openMedias} />
+          <SideButton title="Jobs" icon={<Zap />} page="jobs" onClick={openJobs} />
         </>
       ) : null}
       <SideSep />

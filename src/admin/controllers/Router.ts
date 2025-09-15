@@ -18,6 +18,7 @@ export type AdminPage =
   | 'device'
   | 'contents'
   | 'medias'
+  | 'jobs'
   | 'content';
 export const adminPage$ = new Msg<AdminPage>('groups');
 
@@ -51,6 +52,7 @@ export const openMembers = () => router.push(`/admin/members/${getGroupKey()}`);
 export const openDevices = () => router.push(`/admin/devices/${getGroupKey()}`);
 export const openContents = () => router.push(`/admin/contents/${getGroupKey()}`);
 export const openMedias = () => router.push(`/admin/medias/${getGroupKey()}`);
+export const openJobs = () => router.push(`/admin/jobs/${getGroupKey()}`);
 
 export const openContent = (contentKey: string) =>
   router.push(`/admin/contents/${getGroupKey()}/${contentKey}`);
@@ -81,6 +83,7 @@ export const initAdminRouter = () => {
   router.add('/admin/contents/:groupKey', null, _params('contents'));
   router.add('/admin/contents/:groupKey/:contentKey', null, _params('content'));
   router.add('/admin/medias/:groupKey', null, _params('medias'));
+  router.add('/admin/jobs/:groupKey', null, _params('jobs'));
 
   // router.add('/devices/:deviceId', null, _params('device'));
   // router.add('/contents/:contentId', null, _params('content'));
