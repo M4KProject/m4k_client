@@ -11,7 +11,10 @@ import {
   ReqError,
   toVoidAsync,
 } from '@common/utils';
-import { DeviceModel, deviceColl, UserModel, login, signUp, serverDate } from '@common/api';
+import { DeviceModel, UserModel } from '@common/api/models';
+import { login, signUp } from '@common/api/auth';
+import { serverDate } from '@common/api/serverTime';
+import { collDevices } from '@common/api/collDevices';
 
 export const deviceEmail$ = new Msg('', 'deviceEmail', true);
 export const devicePassword$ = new Msg('', 'devicePassword', true);
@@ -59,7 +62,7 @@ const deviceLogin = async (): Promise<DeviceModel> => {
   const info = await m4k.info();
   info.started = serverDate();
 
-  const device = await deviceColl.upsert(
+  const device = await collDevices.upsert(
     { user: user.id },
     {
       user: user.id,
@@ -82,7 +85,7 @@ const deviceStart = async () => {
   deviceUnsubscribe();
 
   console.debug('deviceStart subscribe', device.id);
-  deviceUnsubscribe = await deviceColl.subscribe(device.id, (device, action) => {
+  deviceUnsubscribe = await collDevices.subscribe(device.id, (device, action) => {
     console.debug('deviceStart subscribe', action, device);
     if (action === 'delete') {
       deviceLogin();
@@ -103,7 +106,7 @@ const deviceLoop = async () => {
 
   if (!device) throw new Error('no device');
 
-  device = await deviceColl.update(device.id, {
+  device = await collDevices.update(device.id, {
     online: serverDate(),
   });
   console.debug('deviceLoop updated', device);
@@ -132,7 +135,7 @@ deviceAction$.on(() => runAction(device$.v));
 const capture = async (device: DeviceModel, options?: M4kResizeOptions | undefined) => {
   const url = await m4k.capture(options);
   const blob = await req('GET', url, { resType: 'blob' });
-  return await deviceColl.update(device.id, { capture: blob });
+  return await collDevices.update(device.id, { capture: blob });
 };
 
 const execAction = async (device: DeviceModel, action: string, input: string) => {
@@ -173,7 +176,7 @@ const runAction = async (device: DeviceModel) => {
   const { action, input } = device;
   if (!action) return;
 
-  await deviceColl.update(device.id, { action: '', online: serverDate() });
+  await collDevices.update(device.id, { action: '', online: serverDate() });
 
   let value: any = null;
   let error: any = null;
@@ -184,7 +187,7 @@ const runAction = async (device: DeviceModel) => {
     error = err;
   }
 
-  await deviceColl.update(device.id, {
+  await collDevices.update(device.id, {
     action: '',
     result: {
       success: !error,

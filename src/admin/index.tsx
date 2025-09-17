@@ -2,7 +2,7 @@ import { render } from 'preact';
 import { App } from './components/App';
 import { initAdminRouter } from './controllers/Router';
 import { addFont, setTheme, addEl, addResponsiveListener, setCss } from '@common/ui';
-import { authRefresh } from '@common/api';
+import { authRefresh } from '@common/api/auth';
 import { app } from '../app';
 import * as controllers from './controllers';
 import * as messages from './messages';

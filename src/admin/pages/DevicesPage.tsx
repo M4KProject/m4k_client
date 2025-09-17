@@ -11,17 +11,8 @@ import {
 import { useAsync, useCss, useMsg } from '@common/hooks';
 import { search$ } from '../messages/search$';
 import {
-  apiGet,
-  deviceColl,
-  DeviceModel,
-  groupColl,
   groupId$,
-  mediaColl,
-  memberColl,
-  ModelUpdate,
-  Role,
-  serverTime,
-} from '@common/api';
+} from '@common/api/messages';
 import { openDevice } from '../controllers/Router';
 import {
   Button,
@@ -43,6 +34,13 @@ import { RefreshCw, Trash2, Settings, Plus, Power } from 'lucide-react';
 import { SearchField } from '../components/SearchField';
 import { isAdvanced$ } from '../messages';
 import { useState } from 'preact/hooks';
+import { apiGet } from '@common/api/call';
+import { collGroups } from '@common/api/collGroups';
+import { collMedias } from '@common/api/collMedias';
+import { collDevices } from '@common/api/collDevices';
+import { serverTime } from '@common/api/serverTime';
+import { DeviceModel, ModelUpdate, Role } from '@common/api/models';
+import { collMembers } from '@common/api/collMembers';
 
 const css: Css = {};
 
@@ -79,15 +77,15 @@ export const DevicesPage = () => {
   const groupId = useMsg(groupId$);
   const isAdvanced = useMsg(isAdvanced$);
 
-  const [groups, groupsRefresh] = useAsync([], () => groupColl.find({}));
+  const [groups, groupsRefresh] = useAsync([], () => collGroups.find({}));
 
-  const [medias, mediasRefresh] = useAsync([], () => mediaColl.find({ group: groupId }), 'medias', [
+  const [medias, mediasRefresh] = useAsync([], () => collMedias.find({ group: groupId }), 'medias', [
     groupId,
   ]);
 
   const [devices, devicesRefresh] = useAsync(
     [],
-    () => deviceColl.find(groupId ? { group: groupId } : {}),
+    () => collDevices.find(groupId ? { group: groupId } : {}),
     'devices',
     [groupId]
   );
@@ -110,13 +108,13 @@ export const DevicesPage = () => {
   };
 
   const handleUpdate = async (device: DeviceModel, changes: ModelUpdate<DeviceModel>) => {
-    await deviceColl.update(device.id, changes);
+    await collDevices.update(device.id, changes);
     await groupsRefresh();
     await devicesRefresh();
     await mediasRefresh();
   };
 
-  const handleDelete = (device: DeviceModel) => deviceColl.delete(device.id);
+  const handleDelete = (device: DeviceModel) => collDevices.delete(device.id);
 
   const handleRemote = (device: DeviceModel) => {
     openDevice(device.key || device.id);
@@ -124,7 +122,7 @@ export const DevicesPage = () => {
 
   const handleAddAsMember = async (device: DeviceModel) => {
     if (!device.user || !groupId) return;
-    await memberColl.create({
+    await collMembers.create({
       user: device.user,
       group: groupId,
       role: Role.viewer,
@@ -217,13 +215,13 @@ export const DevicesPage = () => {
                     icon={<RefreshCw />}
                     color="primary"
                     {...tooltip('Rafraîchir')}
-                    onClick={() => deviceColl.update(d.id, { action: 'reload' })}
+                    onClick={() => collDevices.update(d.id, { action: 'reload' })}
                   />
                   <Button
                     icon={<Power />}
                     color="primary"
                     {...tooltip('Redémarrer')}
-                    onClick={() => deviceColl.update(d.id, { action: 'reboot' })}
+                    onClick={() => collDevices.update(d.id, { action: 'reboot' })}
                   />
                   {isAdvanced && (
                     <Button

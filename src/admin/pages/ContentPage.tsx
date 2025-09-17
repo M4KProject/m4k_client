@@ -1,6 +1,5 @@
 import { Css } from '@common/ui';
 import { useCss } from '@common/hooks';
-import { contentColl, ContentModel } from '@common/api';
 import { Button } from '@common/components';
 import { RefreshCw } from 'lucide-react';
 import { Page, PageHeader, PageBody } from '@common/components';
@@ -16,6 +15,8 @@ import { PlaylistContent } from './Content/PlaylistContent';
 import { content$ } from '../controllers';
 import { EmptyContent } from './Content/EmptyContent';
 import { HiboutikContent } from './Content/HiboutikContent';
+import { collContents } from '@common/api/collContents';
+import { ContentModel } from '@common/api/models';
 
 const css: Css = {};
 
@@ -43,7 +44,7 @@ export const ContentPage = () => {
   const [label, Content] = contentByType[type] || contentByType.empty;
 
   const updateContent = async (changes: Partial<ContentModel>) => {
-    const contentUpdated = await contentColl.update(id, changes);
+    const contentUpdated = await collContents.update(id, changes);
     content$.set(contentUpdated);
   };
 

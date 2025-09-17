@@ -19,10 +19,13 @@ import {
 import { Css } from '@common/ui';
 import { isSearched } from '@common/utils';
 import { SearchField } from '../components/SearchField';
-import { ModelUpdate, GroupModel, groupColl, memberColl, Role, auth$ } from '@common/api';
+import { ModelUpdate, GroupModel, Role } from '@common/api/models';
 import { group$ } from '../controllers';
 import { isAdvanced$ } from '../messages';
 import { useEffect } from 'preact/hooks';
+import { auth$ } from '@common/api/messages';
+import { collGroups } from '@common/api/collGroups';
+import { collMembers } from '@common/api/collMembers';
 
 const css: Css = {};
 
@@ -33,16 +36,16 @@ export const GroupsPage = () => {
   const group = useMsg(group$);
   const isAdvanced = useMsg(isAdvanced$);
 
-  const [groups, groupsRefresh] = useAsync([], () => groupColl.find({}));
+  const [groups, groupsRefresh] = useAsync([], () => collGroups.find({}));
   const filteredGroups = search ? groups.filter((g) => isSearched(g.name, search)) : groups;
 
   const handleAdd = async () => {
     if (!auth) return;
-    const group = await groupColl
+    const group = await collGroups
       .create({ name: 'Nouveau Groupe', user: auth.id })
       .catch(showError);
     if (group) {
-      await memberColl
+      await collMembers
         .create({
           user: auth.id,
           group: group.id,
@@ -55,13 +58,13 @@ export const GroupsPage = () => {
 
   const handleUpdate = async (group: GroupModel, changes: ModelUpdate<GroupModel>) => {
     if (!auth) return;
-    await groupColl.update(group.id, changes).catch(showError);
+    await collGroups.update(group.id, changes).catch(showError);
     await groupsRefresh();
   };
 
   const handleDelete = async (group: GroupModel) => {
     if (!auth) return;
-    await groupColl.delete(group.id).catch(showError);
+    await collGroups.delete(group.id).catch(showError);
     await groupsRefresh();
   };
 

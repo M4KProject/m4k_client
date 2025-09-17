@@ -1,7 +1,7 @@
 import { Css } from '@common/ui';
 import { useCss } from '@common/hooks';
 import { Upload } from 'lucide-react';
-import { upload } from '@common/api';
+import { upload } from '@common/api/medias';
 import { tooltip, Page, PageHeader, PageBody, UploadButton } from '@common/components';
 import { SearchField } from '../components/SearchField';
 import { MediasTable } from '../components/MediasTable';

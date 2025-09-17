@@ -1,4 +1,4 @@
-import { ContentModel } from '@common/api';
+import { ContentModel } from '@common/api/models';
 import { Css } from '@common/ui';
 import { useCss } from '@common/hooks';
 import { Div, Field } from '@common/components';

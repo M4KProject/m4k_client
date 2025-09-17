@@ -1,4 +1,4 @@
-import { FormContentModel } from '@common/api';
+import { FormContentModel } from '@common/api/models';
 import { Css } from '@common/ui';
 import { useCss } from '@common/hooks';
 import { Div, Form, Field } from '@common/components';

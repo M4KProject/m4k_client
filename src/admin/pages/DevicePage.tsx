@@ -1,12 +1,12 @@
 import { Css, flexRow, flexColumn } from '@common/ui';
 import { useCss, useMsg } from '@common/hooks';
 import { Page, PageHeader, PageBody, Div, Button, tooltip } from '@common/components';
-import { deviceColl } from '@common/api';
 import { device$ } from '../controllers/Router';
 import { useState } from 'preact/hooks';
 import { RefreshCw, Power, LogOut } from 'lucide-react';
 import { DeviceScreen } from '../components/DeviceScreen';
 import { DeviceConsole } from '../components/DeviceConsole';
+import { collDevices } from '@common/api/collDevices';
 
 const css: Css = {
   '&Body': {
@@ -26,12 +26,12 @@ export const DevicePage = () => {
   const deviceKey = device?.key;
   const [consoleOutput, setConsoleOutput] = useState('Console ready...\n');
 
-  const refreshDevice = async () => device$.set(await deviceColl.findKey(deviceKey));
+  const refreshDevice = async () => device$.set(await collDevices.findKey(deviceKey));
 
   const executeAction = async (action: string, input?: any) => {
     if (!device) return;
     try {
-      await deviceColl.update(device.id, { action: action as any, input });
+      await collDevices.update(device.id, { action: action as any, input });
       setConsoleOutput((prev) => prev + `> Action: ${action}\n`);
       await refreshDevice();
     } catch (error) {
@@ -42,7 +42,7 @@ export const DevicePage = () => {
   const sendCommand = async (command: string) => {
     if (!device || !command.trim()) return;
     try {
-      await deviceColl.update(device.id, {
+      await collDevices.update(device.id, {
         action: 'js',
         input: command,
       });
@@ -80,7 +80,7 @@ export const DevicePage = () => {
     displayWidth = displayHeight * aspectRatio;
   }
 
-  const captureUrl = device.capture ? deviceColl.getUrl(device.id, device.capture) : '';
+  const captureUrl = device.capture ? collDevices.getUrl(device.id, device.capture) : '';
 
   return (
     <Page cls={c}>

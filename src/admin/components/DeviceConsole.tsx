@@ -2,7 +2,7 @@ import { Css, flexRow, flexColumn } from '@common/ui';
 import { stringify } from '@common/utils';
 import { useCss } from '@common/hooks';
 import { Div, Button, Field } from '@common/components';
-import { DeviceModel } from '@common/api';
+import { DeviceModel } from '@common/api/models';
 import { useState } from 'preact/hooks';
 import { Send, RefreshCw } from 'lucide-react';
 

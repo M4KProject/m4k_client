@@ -1,12 +1,15 @@
 import { useAsync, useCss, useMsg } from '@common/hooks';
 import { Css, flexColumn } from '@common/ui';
 import { Div } from '@common/components';
-import { auth$, contentColl, ContentModel, mediaColl, MediaModel } from '@common/api';
+import { ContentModel, MediaModel } from '@common/api/models';
 import { FormContent } from './FormContent';
 import { TableContent } from './TableContent';
 import { HtmlContent } from './HtmlContent';
 import { PlaylistContent } from './PlaylistContent';
 import { JSX } from 'preact';
+import { auth$ } from '@common/api/messages';
+import { collContents } from '@common/api/collContents';
+import { collMedias } from '@common/api/collMedias';
 
 const css: Css = {
   '&': {
@@ -40,11 +43,11 @@ export const ContentViewer = ({ contentKey }: ContentViewerProps) => {
   const auth = useMsg(auth$);
   const authToken = auth?.token || '';
 
-  const [content] = useAsync(null, () => contentColl.findKey(contentKey), 'content', [
+  const [content] = useAsync(null, () => collContents.findKey(contentKey), 'content', [
     authToken,
     contentKey,
   ]);
-  const [medias] = useAsync([], () => mediaColl.find({}), 'medias', [authToken, contentKey]);
+  const [medias] = useAsync([], () => collMedias.find({}), 'medias', [authToken, contentKey]);
 
   console.debug('ContentViewer', { auth, content, medias });
 

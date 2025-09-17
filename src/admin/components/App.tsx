@@ -14,7 +14,7 @@ import { DevicesPage } from '../pages/DevicesPage';
 import { AuthPage } from '../pages/AuthPage';
 import { AccountPage } from '../pages/AccountPage';
 import { ContentPage } from '../pages/ContentPage';
-import { auth$ } from '@common/api';
+import { auth$ } from '@common/api/messages';
 import { AdminPage, adminPage$ } from '../controllers/Router';
 import { DevicePage } from '../pages/DevicePage';
 

@@ -4,14 +4,10 @@ import { useAsync, useCss } from '@common/hooks';
 import { useMsg } from '@common/hooks';
 import { search$ } from '../messages/search$';
 import {
-  groupColl,
-  memberColl,
   MemberModel,
   ModelUpdate,
-  needGroupId,
   Role,
-  userColl,
-} from '@common/api';
+} from '@common/api/models';
 import {
   Field,
   Button,
@@ -33,6 +29,10 @@ import { SearchField } from '../components/SearchField';
 import { useState } from 'preact/hooks';
 import { isAdvanced$ } from '../messages';
 import { group$ } from '../controllers';
+import { needGroupId } from '@common/api/messages';
+import { collUsers } from '@common/api/collUsers';
+import { collMembers } from '@common/api/collMembers';
+import { collGroups } from '@common/api/collGroups';
 
 const css: Css = {};
 
@@ -54,10 +54,10 @@ export const CreateMemberForm = ({ onClose }: { onClose: () => void }) => {
     setError('');
     try {
       if (isNew) {
-        await userColl.create({ email, password, passwordConfirm: password });
-        await memberColl.create({ email, group: needGroupId(), role: Role.editor });
+        await collUsers.create({ email, password, passwordConfirm: password });
+        await collMembers.create({ email, group: needGroupId(), role: Role.editor });
       } else {
-        await memberColl.create({ email, group: needGroupId(), role: Role.editor });
+        await collMembers.create({ email, group: needGroupId(), role: Role.editor });
       }
       onClose();
     } catch (e) {
@@ -91,10 +91,10 @@ export const MembersPage = () => {
   const isAdvanced = useMsg(isAdvanced$);
 
   // TODO DEVICES
-  const [groups, groupsRefresh] = useAsync([], () => groupColl.find({}));
+  const [groups, groupsRefresh] = useAsync([], () => collGroups.find({}));
   const [members, membersRefresh] = useAsync(
     [],
-    () => memberColl.find(group ? { group: group.id } : {}),
+    () => collMembers.find(group ? { group: group.id } : {}),
     null,
     [group]
   );
@@ -112,12 +112,12 @@ export const MembersPage = () => {
   };
 
   const handleUpdate = async (member: MemberModel, changes: ModelUpdate<MemberModel>) => {
-    await memberColl.update(member.id, changes);
+    await collMembers.update(member.id, changes);
     await membersRefresh();
   };
 
   const handleDelete = async (member: MemberModel) => {
-    await memberColl.delete(member.id);
+    await collMembers.delete(member.id);
     await membersRefresh();
   };
 

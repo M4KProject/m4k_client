@@ -1,7 +1,7 @@
 import { Css } from '@common/ui';
 import { deepClone } from '@common/utils';
 import { useCss } from '@common/hooks';
-import { TableContentModel } from '@common/api';
+import { TableContentModel } from '@common/api/models';
 import { Button } from '@common/components';
 import { Copy, Trash2 } from 'lucide-react';
 import {

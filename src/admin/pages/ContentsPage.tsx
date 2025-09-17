@@ -3,14 +3,9 @@ import { isSearched, toErr, toBool } from '@common/utils';
 import { useAsync, useCss, useMsg } from '@common/hooks';
 import { search$ } from '../messages/search$';
 import {
-  auth$,
   ContentModel,
-  contentColl,
-  groupId$,
-  groupColl,
   ModelUpdate,
-  needGroupId,
-} from '@common/api';
+} from '@common/api/models';
 import {
   Button,
   Field,
@@ -29,13 +24,16 @@ import { Plus, RefreshCw, Copy, Clipboard, Edit, Trash2 } from 'lucide-react';
 import { openContent } from '../controllers/Router';
 import { SearchField } from '../components/SearchField';
 import { isAdvanced$ } from '../messages';
+import { collContents } from '@common/api/collContents';
+import { auth$, groupId$, needGroupId } from '@common/api/messages';
+import { collGroups } from '@common/api/collGroups';
 
 const css: Css = {};
 
 const handleCopy = async (content: ContentModel) => {
   console.debug('handleCopy', content);
   if (!content.data) {
-    const next = await contentColl.get(content.id);
+    const next = await collContents.get(content.id);
     if (!next) throw toErr('no-content-found');
     await clipboardCopy(next);
     return;
@@ -51,7 +49,7 @@ const handlePaste = async (content: ContentModel) => {
   console.debug('handlePaste css', { css, js, data });
   if (typeof data !== 'object') return;
   const nextData = { ...data, css, js };
-  await contentColl.update(content.id, { data: nextData });
+  await collContents.update(content.id, { data: nextData });
 };
 
 export const ContentsPage = () => {
@@ -61,11 +59,11 @@ export const ContentsPage = () => {
   const groupId = useMsg(groupId$);
   const isAdvanced = useMsg(isAdvanced$);
 
-  const [groups, groupsRefresh] = useAsync([], () => groupColl.find({}));
+  const [groups, groupsRefresh] = useAsync([], () => collGroups.find({}));
 
   const [contents, contentsRefresh] = useAsync(
     [],
-    () => contentColl.find(groupId ? { group: groupId } : {}),
+    () => collContents.find(groupId ? { group: groupId } : {}),
     'contents',
     [groupId]
   );
@@ -73,7 +71,7 @@ export const ContentsPage = () => {
 
   const handleAdd = async () => {
     if (!auth) return;
-    await contentColl.create({
+    await collContents.create({
       title: 'Nouveau',
       group: needGroupId(),
       // type: 'empty',
@@ -84,13 +82,13 @@ export const ContentsPage = () => {
   };
 
   const handleUpdate = async (content: ContentModel, changes: ModelUpdate<ContentModel>) => {
-    await contentColl.update(content.id, changes);
+    await collContents.update(content.id, changes);
     await groupsRefresh();
     await contentsRefresh();
   };
 
   const handleDelete = async (content: ContentModel) => {
-    await contentColl.delete(content.id);
+    await collContents.delete(content.id);
     await groupsRefresh();
     await contentsRefresh();
   };

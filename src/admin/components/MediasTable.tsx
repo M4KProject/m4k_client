@@ -4,17 +4,17 @@ import { addTranslates, useAsync, useCss, useMsg } from '@common/hooks';
 import { isAdvanced$, search$ } from '../messages';
 import { FolderOpen, FileImage, Video, FileText, Square, Trash2 } from 'lucide-react';
 import {
-  FAILED,
-  groupId$,
-  mediaColl,
   MediaModel,
   ModelUpdate,
+} from '@common/api/models';
+import {
+  FAILED,
   PENDING,
   PROCESSING,
   SUCCESS,
   UPLOADING,
   uploadItems$,
-} from '@common/api';
+} from '@common/api/medias';
 import {
   tooltip,
   Div,
@@ -35,6 +35,8 @@ import {
 } from '@common/components';
 import { SearchField } from '../components/SearchField';
 import { useEffect } from 'preact/hooks';
+import { collMedias } from '@common/api/collMedias';
+import { groupId$ } from '@common/api/messages';
 
 addTranslates({
   [PENDING]: 'en attente',
@@ -208,7 +210,7 @@ export const MediasTable = () => {
 
   const [medias, mediasRefresh] = useAsync(
     [],
-    () => mediaColl.find(groupId ? { group: groupId } : {}),
+    () => collMedias.find(groupId ? { group: groupId } : {}),
     'medias',
     [groupId]
   );
@@ -243,12 +245,12 @@ export const MediasTable = () => {
   // };
 
   const handleUpdate = async (media: MediaModel, changes: ModelUpdate<MediaModel>) => {
-    await mediaColl.update(media.id, changes);
+    await collMedias.update(media.id, changes);
     mediasRefresh();
   };
 
   const handleDelete = async (media: MediaModel) => {
-    await mediaColl.delete(media.id);
+    await collMedias.delete(media.id);
     await mediasRefresh();
   };
 
@@ -286,7 +288,7 @@ export const MediasTable = () => {
                 <Div
                   cls={`${c}Preview`}
                   style={{
-                    backgroundImage: `url("${mediaColl.getThumbUrl(m.id, m.source, [300, 300])}")`,
+                    backgroundImage: `url("${collMedias.getThumbUrl(m.id, m.source, [300, 300])}")`,
                   }}
                 />
               </Cell>

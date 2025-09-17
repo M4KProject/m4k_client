@@ -1,4 +1,4 @@
-import { FormContentModel } from '@common/api';
+import { FormContentModel } from '@common/api/models';
 import { ContentProps } from './ContentProps';
 import { FormContent } from './FormContent';
 import { FieldInfo } from '@common/components';
