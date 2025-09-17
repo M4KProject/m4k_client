@@ -1,9 +1,6 @@
 import { render } from 'preact';
-import { addFont } from '@common/helpers';
-import { setTheme } from '@common/helpers';
-import { addEl, addResponsiveListener } from '@common/helpers';
+import { router, addFont, setTheme, addEl, addResponsiveListener } from '@common/ui';
 import { ContentViewer } from './ContentViewer';
-import { router } from '@common/helpers';
 
 console.debug('content loaded');
 

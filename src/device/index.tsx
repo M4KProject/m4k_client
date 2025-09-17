@@ -1,7 +1,5 @@
 import { render } from 'preact';
-import { addAutoHideListener, addFont } from '@common/helpers';
-import { setTheme } from '@common/helpers';
-import { addEl, addResponsiveListener } from '@common/helpers';
+import { setTheme, addAutoHideListener, addResponsiveListener, addEl, addFont } from '@common/ui';
 import copyPlaylist from './copyPlaylist';
 import { deviceInit } from './services/device';
 import { m4k } from '@common/m4k';

@@ -1,5 +1,5 @@
 import { useCss } from '@common/hooks';
-import { Css, flexColumn } from '@common/helpers';
+import { Css, flexColumn } from '@common/ui';
 import { Div } from '@common/components';
 import type { ContentProps } from './ContentViewer';
 

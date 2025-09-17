@@ -1,4 +1,4 @@
-import { addResponsiveListener, router } from '@common/helpers';
+import { addResponsiveListener, router } from '@common/ui';
 import './app';
 
 addResponsiveListener();

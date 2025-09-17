@@ -1,4 +1,5 @@
-import { autoScrollEnd, Css, flexColumn, Msg } from '@common/helpers';
+import { autoScrollEnd, Css, flexColumn } from '@common/ui';
+import { Msg } from '@common/utils';
 import { Div, Progress } from '@common/components';
 import { useCss, useMsg } from '@common/hooks';
 import { dialog$ } from '../messages/dialog$';

@@ -1,4 +1,4 @@
-import { Css } from '@common/helpers';
+import { Css } from '@common/ui';
 import { useCss } from '@common/hooks';
 import { Upload } from 'lucide-react';
 import { upload } from '@common/api';

@@ -8,7 +8,7 @@ import {
   itemFit$,
   contentRotation$,
 } from '../messages';
-import { round } from '@common/helpers';
+import { round } from '@common/utils';
 
 export const ConfigPlaylistPage = () => {
   const [copyDir, setCopyDir] = useMsgState(copyDir$);

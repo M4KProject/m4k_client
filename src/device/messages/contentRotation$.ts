@@ -1,4 +1,5 @@
-import { repeat, setCss } from '@common/helpers';
+import { setCss } from '@common/ui';
+import { repeat } from '@common/utils';
 import { newMsg } from '@common/utils/Msg';
 
 export type ContentRotation = 0 | 90 | 180 | 270;

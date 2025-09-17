@@ -1,5 +1,5 @@
 import { FormContentModel } from '@common/api';
-import { Css } from '@common/helpers';
+import { Css } from '@common/ui';
 import { useCss } from '@common/hooks';
 import { Div, Form, Field } from '@common/components';
 import { ContentProps } from './ContentProps';

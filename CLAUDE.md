@@ -79,7 +79,7 @@ The application is split into three main interfaces:
 ### Shared Dependencies
 
 - References `@common` shared library via path alias (`../common`)
-- Uses `@common/api`, `@common/helpers`, `@common/hooks`, and `@common/components`
+- Uses `@common/api`, `@common/utils`, `@common/hooks`, and `@common/components`
 - React compatibility layer for Preact (`react` and `react-dom` aliases point to `preact/compat`)
 
 ### Path Aliases
@@ -245,7 +245,7 @@ if (!auth) {
 
 ```typescript
 import { useCss } from '@common/hooks';
-import { Css } from '@common/helpers';
+import { Css } from '@common/utils';
 import { Div, Button } from '@common/components';
 
 const css: Css = {

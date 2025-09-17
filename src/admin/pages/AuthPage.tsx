@@ -1,5 +1,5 @@
 import { useCss } from '@common/hooks';
-import { Css, flexColumn, flexRow } from '@common/helpers';
+import { Css, flexColumn, flexRow } from '@common/ui';
 import { Div, AuthForm, Button } from '@common/components';
 import logoUrl from '../assets/logo.svg';
 import loginUrl from '../assets/login.svg';

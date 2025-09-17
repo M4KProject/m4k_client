@@ -1,9 +1,7 @@
 import { render } from 'preact';
 import { App } from './components/App';
 import { initAdminRouter } from './controllers/Router';
-import { addFont } from '@common/helpers';
-import { setTheme } from '@common/helpers';
-import { addEl, addResponsiveListener, setCss } from '@common/helpers';
+import { addFont, setTheme, addEl, addResponsiveListener, setCss } from '@common/ui';
 import { authRefresh } from '@common/api';
 import { app } from '../app';
 import * as controllers from './controllers';

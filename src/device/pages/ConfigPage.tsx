@@ -1,9 +1,9 @@
-import { Css } from '@common/helpers';
+import { Css } from '@common/utils';
 import { Form, Field, Button } from '@common/components';
 import { m4k } from '@common/m4k';
 import { usePromise, useCss } from '@common/hooks';
-import { flexRow } from '@common/helpers/flexBox';
-import { toNbr } from '@common/helpers/cast';
+import { flexRow } from '@common/utils/flexBox';
+import { toNbr } from '@common/utils/cast';
 import { useState } from 'preact/hooks';
 
 const css: Css = {

@@ -1,5 +1,5 @@
 import { useCss } from '@common/hooks';
-import { Css } from '@common/helpers';
+import { Css } from '@common/utils';
 import { Button, Div } from '@common/components';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 

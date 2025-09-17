@@ -16,7 +16,8 @@ import {
   tooltip,
   showError,
 } from '@common/components';
-import { isSearched, Css } from '@common/helpers';
+import { Css } from '@common/ui';
+import { isSearched } from '@common/utils';
 import { SearchField } from '../components/SearchField';
 import { ModelUpdate, GroupModel, groupColl, memberColl, Role, auth$ } from '@common/api';
 import { group$ } from '../controllers';

@@ -1,4 +1,4 @@
-import { Css, flexCenter } from '@common/helpers';
+import { Css, flexCenter } from '@common/ui';
 import { useCss } from '@common/hooks';
 import { Loading, Page } from '@common/components';
 

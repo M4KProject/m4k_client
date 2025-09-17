@@ -7,8 +7,9 @@ import {
   groupId$,
   GroupModel,
 } from '@common/api';
-import { isItem, router, toStr } from '@common/helpers';
-import { Msg } from '@common/helpers';
+import { router } from '@common/ui';
+import { isItem, toStr } from '@common/utils';
+import { Msg } from '@common/utils';
 
 export type AdminPage =
   | 'account'

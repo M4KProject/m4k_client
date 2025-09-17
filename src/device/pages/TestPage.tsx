@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'preact/hooks';
 import { m4k } from '@common/m4k';
-import { stringify, toErr, withTimeout } from '@common/helpers';
+import { stringify, toErr, withTimeout } from '@common/utils';
 import {
   Button,
   Cell,

@@ -1,5 +1,5 @@
 import { useCss } from '@common/hooks';
-import { Css } from '@common/helpers';
+import { Css } from '@common/utils';
 import { Div } from '@common/components';
 import type { ContentProps } from './ContentViewer';
 import { HtmlContentModel } from '@common/api';

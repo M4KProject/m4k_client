@@ -1,5 +1,6 @@
 import { useAsyncEffect, useCss } from '@common/hooks';
-import { addJsFileAsync, Css, flexColumn, global } from '@common/helpers';
+import { addJsFileAsync, Css, flexColumn } from '@common/ui';
+import { global } from '@common/utils';
 import { Div } from '@common/components';
 import { useRef, useState, useEffect } from 'preact/hooks';
 import { PDFToolbar } from './PDFToolbar';

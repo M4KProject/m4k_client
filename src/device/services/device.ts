@@ -10,7 +10,7 @@ import {
   randKey,
   ReqError,
   toVoidAsync,
-} from '@common/helpers';
+} from '@common/utils';
 import { DeviceModel, deviceColl, UserModel, login, signUp, serverDate } from '@common/api';
 
 export const deviceEmail$ = new Msg('', 'deviceEmail', true);
@@ -199,11 +199,11 @@ const runAction = async (device: DeviceModel) => {
 
 // import { m4k } from "@common/m4k";
 // import supabase from "./supabase";
-// import { uuid } from "@common/helpers/str";
+// import { uuid } from "@common/utils/str";
 // import { actionRepo, deviceRepo } from "./repos";
 // import { User } from "@supabase/supabase-js";
 // import { Tables } from "./database.types";
-// import { sleep } from "@common/helpers/async";
+// import { sleep } from "@common/utils/async";
 // import { pbDevices, pbUsers } from './pb';
 
 // type Device = Tables<"devices">

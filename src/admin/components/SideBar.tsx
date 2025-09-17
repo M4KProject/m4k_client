@@ -11,8 +11,8 @@ import {
   group$,
 } from '../controllers/Router';
 import { useCss } from '@common/hooks';
-import { Css, Msg } from '@common/helpers';
-import { flexColumn } from '@common/helpers';
+import { Msg } from '@common/utils';
+import { Css, flexColumn } from '@common/ui';
 import { Side, SideButton, SideSep } from '@common/components';
 import { Div } from '@common/components';
 import { Home, Users, Monitor, Settings, Image, User, Zap } from 'lucide-react';

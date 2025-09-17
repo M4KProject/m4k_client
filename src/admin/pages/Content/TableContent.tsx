@@ -1,4 +1,5 @@
-import { Css, deepClone } from '@common/helpers';
+import { Css } from '@common/ui';
+import { deepClone } from '@common/utils';
 import { useCss } from '@common/hooks';
 import { TableContentModel } from '@common/api';
 import { Button } from '@common/components';

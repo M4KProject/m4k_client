@@ -1,4 +1,4 @@
-import { Css, flexCenter, flexColumn } from '@common/helpers';
+import { Css, flexCenter, flexColumn } from '@common/ui';
 import { useCss, useMsg } from '@common/hooks';
 import { Div } from '@common/components';
 import { dialog$ } from '../messages/dialog$';

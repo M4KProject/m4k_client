@@ -1,4 +1,4 @@
-import { Css, repeat } from '@common/helpers';
+import { Css, repeat } from '@common/utils';
 import { useCss } from '@common/hooks';
 import { Div } from '@common/components';
 import { openCodePinDialog } from './CodePinView';

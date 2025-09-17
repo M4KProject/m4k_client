@@ -1,4 +1,4 @@
-import { Css } from '@common/helpers';
+import { Css } from '@common/ui';
 import { useCss } from '@common/hooks';
 import { RefreshCw } from 'lucide-react';
 import { Page, PageHeader, PageBody, PageActions } from '@common/components';
