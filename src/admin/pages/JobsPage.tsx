@@ -1,20 +1,15 @@
 import { Css } from '@common/ui';
 import { isSearched, sort } from '@common/utils';
-import { addTranslates, useAsync, useCss, useMsg } from '@common/hooks';
+import { useAsync, useCss, useMsg } from '@common/hooks';
 import { isAdvanced$, search$ } from '../messages';
 import { RefreshCw } from 'lucide-react';
-import { groupColl, groupId$, jobColl, JobModel, ModelUpdate } from '@common/api';
+import { JobModel, ModelUpdate } from '@common/api/models';
 import { tooltip, Page, PageHeader, PageBody, Button } from '@common/components';
 import { SearchField } from '../components/SearchField';
 import { JobsTable } from '../components/JobsTable';
-
-addTranslates({
-  pending: 'en attente',
-  processing: 'en cours',
-  finished: 'terminé',
-  failed: 'échec',
-  deleted: 'supprimé',
-});
+import { groupId$ } from '@common/api/messages';
+import { collGroups } from '@common/api/collGroups';
+import { collJobs } from '@common/api/collJobs';
 
 const css: Css = {
   '&Page': {},
@@ -26,11 +21,11 @@ export const JobsPage = () => {
   const groupId = useMsg(groupId$);
   const isAdvanced = useMsg(isAdvanced$);
 
-  const [groups, groupsRefresh] = useAsync([], () => groupColl.find({}));
+  const [groups, groupsRefresh] = useAsync([], () => collGroups.find({}));
 
   const [jobs, jobsRefresh] = useAsync(
     [],
-    () => jobColl.find(groupId ? { group: groupId } : {}),
+    () => collJobs.find(groupId ? { group: groupId } : {}),
     'jobs',
     [groupId]
   );
@@ -52,12 +47,12 @@ export const JobsPage = () => {
   };
 
   const handleUpdate = async (job: JobModel, changes: ModelUpdate<JobModel>) => {
-    await jobColl.update(job.id, changes);
+    await collJobs.update(job.id, changes);
     jobsRefresh();
   };
 
   const handleDelete = async (job: JobModel) => {
-    await jobColl.delete(job.id);
+    await collJobs.delete(job.id);
     await jobsRefresh();
   };
 

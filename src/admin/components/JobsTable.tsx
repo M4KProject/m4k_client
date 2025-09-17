@@ -1,4 +1,4 @@
-import { GroupModel, JobModel, ModelUpdate } from '@common/api';
+import { GroupModel, JobModel, ModelUpdate } from '@common/api/models';
 import {
   tooltip,
   Table,
@@ -12,7 +12,7 @@ import {
   Progress,
 } from '@common/components';
 import { Trash2 } from 'lucide-react';
-import { JobStatusIcon } from './JobStatusIcon';
+import { JobStatus } from './JobStatus';
 
 interface JobsTableProps {
   jobs: JobModel[];
@@ -39,9 +39,7 @@ export const JobsTable = ({ jobs, groups, isAdvanced, onUpdate, onDelete }: Jobs
           {isAdvanced && <CellHeader>Groupe</CellHeader>}
           <CellHeader>Action</CellHeader>
           <CellHeader>Statut</CellHeader>
-          <CellHeader>Progression</CellHeader>
-          <CellHeader>Paramètres</CellHeader>
-          <CellHeader>Erreur</CellHeader>
+          <CellHeader>Media</CellHeader>
           <CellHeader>Actions</CellHeader>
         </Row>
       </TableHead>
@@ -60,18 +58,10 @@ export const JobsTable = ({ jobs, groups, isAdvanced, onUpdate, onDelete }: Jobs
             )}
             <Cell>{job.action}</Cell>
             <Cell>
-              <JobStatusIcon status={job.status} />
+              <JobStatus job={job} />
             </Cell>
             <Cell>
-              <Progress progress={job.progress || 0} />
             </Cell>
-            <Cell>
-              <Field
-                value={JSON.stringify(job.input, null, 2)}
-                onValue={(input) => handleInputChange(job, input)}
-              />
-            </Cell>
-            <Cell cls={job.error ? 'error' : ''}>{job.error || '-'}</Cell>
             <Cell variant="around">
               <Button
                 icon={<Trash2 />}

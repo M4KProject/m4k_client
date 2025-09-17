@@ -1,12 +1,8 @@
-import {
-  contentColl,
-  ContentModel,
-  deviceColl,
-  DeviceModel,
-  groupColl,
-  groupId$,
-  GroupModel,
-} from '@common/api';
+import { collContents } from '@common/api/collContents';
+import { collDevices } from '@common/api/collDevices';
+import { collGroups } from '@common/api/collGroups';
+import { groupId$ } from '@common/api/messages';
+import { ContentModel, DeviceModel, GroupModel } from '@common/api/models';
 import { router } from '@common/ui';
 import { isItem, toStr } from '@common/utils';
 import { Msg } from '@common/utils';
@@ -31,7 +27,7 @@ group$.on((g) => groupId$.set(g?.id || ''));
 groupId$.on(async (id) => {
   if (group$.v?.id === id) return;
   if (!id) return group$.set(null);
-  group$.set(await groupColl.get(id));
+  group$.set(await collGroups.get(id));
 });
 
 // content$.on(content => {
@@ -98,11 +94,11 @@ export const initAdminRouter = () => {
 
     adminPage$.set(toStr(adminPage, '') as AdminPage);
 
-    if (device$.v?.key !== deviceKey) device$.set(await deviceColl.findKey(deviceKey));
+    if (device$.v?.key !== deviceKey) device$.set(await collDevices.findKey(deviceKey));
 
-    if (content$.v?.key !== contentKey) content$.set(await contentColl.findKey(contentKey));
+    if (content$.v?.key !== contentKey) content$.set(await collContents.findKey(contentKey));
 
-    if (group$.v?.key !== groupKey) group$.set(await groupColl.findKey(groupKey));
+    if (group$.v?.key !== groupKey) group$.set(await collGroups.findKey(groupKey));
   });
 
   router.forceRefresh();
