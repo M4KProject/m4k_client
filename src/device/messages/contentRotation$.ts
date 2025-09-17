@@ -1,5 +1,5 @@
 import { repeat, setCss } from '@common/helpers';
-import { newMsg } from '@common/helpers/Msg';
+import { newMsg } from '@common/utils/Msg';
 
 export type ContentRotation = 0 | 90 | 180 | 270;
 export const isContentRotation = (v: number) => v === 0 || v === 90 || v === 180 || v === 270;

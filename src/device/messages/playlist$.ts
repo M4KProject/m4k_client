@@ -1,5 +1,5 @@
 import { isListOfItem, isItem } from '@common/helpers';
-import { newMsg } from '@common/helpers/Msg';
+import { newMsg } from '@common/utils/Msg';
 
 export interface Playlist {
   items: any[];

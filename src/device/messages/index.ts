@@ -1,5 +1,5 @@
 import { isStrNotEmpty } from '@common/helpers';
-import { newMsg } from '@common/helpers/Msg';
+import { newMsg } from '@common/utils/Msg';
 
 export * from './dialog$';
 export * from './page$';

@@ -1,5 +1,5 @@
-import { Msg } from '@common/helpers/Msg';
-import { readUrlParams } from '@common/helpers/urlParams';
+import { Msg } from '@common/utils/Msg';
+import { readUrlParams } from '@common/ui/urlParams';
 
 export type PageName =
   | 'codePin'

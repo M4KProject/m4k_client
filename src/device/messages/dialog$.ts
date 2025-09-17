@@ -1,4 +1,4 @@
-import { Msg } from '@common/helpers/Msg';
+import { Msg } from '@common/utils/Msg';
 import { JSX } from 'preact';
 
 export interface DialogOptions {
