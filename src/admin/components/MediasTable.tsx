@@ -306,7 +306,7 @@ export const MediasTable = () => {
                 <Div
                   cls={`${c}Preview`}
                   style={{
-                    backgroundImage: `url("${mediaColl.getThumbUrl(m.id, m.file, [300, 300])}")`,
+                    backgroundImage: `url("${mediaColl.getThumbUrl(m.id, m.source, [300, 300])}")`,
                   }}
                 />
               </Cell>
