@@ -1,18 +1,13 @@
 import { Css, flexRow } from '@common/ui';
-import { byId, isPositive, isSearched, round, sort } from '@common/utils';
-import { addTranslates, useAsync, useCss, useMsg } from '@common/hooks';
-import { isAdvanced$, search$ } from '../messages';
+import { isPositive, round, sort } from '@common/utils';
+import { addTranslates, useCss, useMsg } from '@common/hooks';
+import { isAdvanced$ } from '../messages';
 import { FolderOpen, FileImage, Video, FileText, Square, Trash2 } from 'lucide-react';
-import { MediaModel, ModelUpdate } from '@common/api/models';
 import { FAILED, PENDING, PROCESSING, SUCCESS, UPLOADING, uploadItems$ } from '@common/api/medias';
 import {
   tooltip,
   Div,
-  Page,
-  PageHeader,
-  PageBody,
   Button,
-  UploadButton,
   Table,
   Row,
   CellHeader,
@@ -23,10 +18,11 @@ import {
   Tr,
   Progress,
 } from '@common/components';
-import { SearchField } from '../components/SearchField';
 import { useEffect } from 'preact/hooks';
 import { collMedias } from '@common/api/collMedias';
 import { groupId$ } from '@common/api/messages';
+import { syncJobs } from '@common/api/syncJobs';
+import { syncMedias } from '@common/api/syncMedias';
 
 addTranslates({
   [PENDING]: 'en attente',
@@ -194,18 +190,18 @@ export const MediasProgress = () => {
 
 export const MediasTable = () => {
   const c = useCss('Media', css);
-  const search = useMsg(search$);
+  // const search = useMsg(search$);
   const groupId = useMsg(groupId$);
   const isAdvanced = useMsg(isAdvanced$);
 
-  const [medias, mediasRefresh] = useAsync(
-    [],
-    () => collMedias.find(groupId ? { group: groupId } : {}),
-    'medias',
-    [groupId]
-  );
+  useEffect(() => {
+    syncMedias.init();
+    syncJobs.init();
+  }, []);
 
-  const mediaById = byId(medias);
+  const mediaById = useMsg(syncMedias.dict$);
+  let medias = Object.values(mediaById);
+  medias = medias.filter((m) => m.group === groupId);
 
   // Get Media PATH
   for (const media of medias) {
@@ -220,29 +216,19 @@ export const MediasTable = () => {
     media.order = paths.join('/');
   }
 
-  const sortedMedias = sort(medias, (m) => m.order);
+  medias = sort(medias, (m) => m.order);
 
-  const filteredMedias = search
-    ? sortedMedias.filter((m) =>
-        isSearched((m.title || '') + (m.desc || '') + (m.type || ''), search)
-      )
-    : sortedMedias;
+  // const filteredMedias = search
+  //   ? sortedMedias.filter((m) =>
+  //       isSearched((m.title || '') + (m.desc || '') + (m.type || ''), search)
+  //     )
+  //   : sortedMedias;
 
-  useEffect(() => uploadItems$.debounce(100).on(mediasRefresh), [mediasRefresh]);
+  // useEffect(() => uploadItems$.debounce(100).on(mediasRefresh), [mediasRefresh]);
 
   // const handleRefresh = () => {
   //   mediasRefresh();
   // };
-
-  const handleUpdate = async (media: MediaModel, changes: ModelUpdate<MediaModel>) => {
-    await collMedias.update(media.id, changes);
-    mediasRefresh();
-  };
-
-  const handleDelete = async (media: MediaModel) => {
-    await collMedias.delete(media.id);
-    await mediasRefresh();
-  };
 
   return (
     <>
@@ -260,7 +246,7 @@ export const MediasTable = () => {
           </Row>
         </TableHead>
         <TableBody>
-          {filteredMedias.map((m) => (
+          {medias.map((m) => (
             <Row key={m.id}>
               <Cell variant="row">
                 <Div cls={``} style={{ width: 2 * (m.paths.length - 1) + 'em' }} />
@@ -268,11 +254,11 @@ export const MediasTable = () => {
                 <Field
                   {...(isAdvanced ? tooltip(m.order) : {})}
                   value={m.title}
-                  onValue={(title) => handleUpdate(m, { title })}
+                  onValue={(title) => syncMedias.update(m.id, { title })}
                 />
               </Cell>
               <Cell>
-                <Field value={m.desc} onValue={(desc) => handleUpdate(m, { desc })} />
+                <Field value={m.desc} onValue={(desc) => syncMedias.update(m.id, { desc })} />
               </Cell>
               <Cell cls={`${c}PreviewCell`}>
                 <Div
@@ -324,7 +310,7 @@ export const MediasTable = () => {
                   icon={<Trash2 />}
                   color="error"
                   {...tooltip('Supprimer')}
-                  onClick={() => handleDelete(m)}
+                  onClick={() => syncMedias.delete(m.id)}
                 />
               </Cell>
             </Row>

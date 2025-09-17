@@ -14,13 +14,18 @@ import { syncJobs } from '@common/api/syncJobs';
 import { useMsg } from '@common/hooks/useMsg';
 import { sort } from '@common/utils/list';
 import { groupId$ } from '@common/api/messages';
+import { useAsyncEffect } from '@common/hooks';
 
 export const JobsTable = () => {
   const groupId = useMsg(groupId$);
-  const jobs = useMsg(syncJobs.list$) || [];
+
+  const jobById = useMsg(syncJobs.dict$);
+  let jobs = Object.values(jobById);
+  jobs = jobs.filter((j) => j.group === groupId);
+  jobs = sort(jobs, (j) => -new Date(j.updated).getTime());
   console.debug('jobs', jobs);
-  const filteredJobs = jobs.filter((j) => j.group === groupId);
-  const sortedJobs = sort(filteredJobs, (j) => -new Date(j.updated).getTime());
+
+  useAsyncEffect(() => syncJobs.init(), []);
 
   return (
     <Table>
@@ -33,7 +38,7 @@ export const JobsTable = () => {
         </Row>
       </TableHead>
       <TableBody>
-        {sortedJobs.map((job) => (
+        {jobs.map((job) => (
           <Row key={job.id}>
             <Cell>{job.action}</Cell>
             <Cell>
