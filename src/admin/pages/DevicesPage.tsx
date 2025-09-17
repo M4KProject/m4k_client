@@ -10,9 +10,7 @@ import {
 } from '@common/utils';
 import { useAsync, useCss, useMsg } from '@common/hooks';
 import { search$ } from '../messages/search$';
-import {
-  groupId$,
-} from '@common/api/messages';
+import { groupId$ } from '@common/api/messages';
 import { openDevice } from '../controllers/Router';
 import {
   Button,
@@ -79,9 +77,12 @@ export const DevicesPage = () => {
 
   const [groups, groupsRefresh] = useAsync([], () => collGroups.find({}));
 
-  const [medias, mediasRefresh] = useAsync([], () => collMedias.find({ group: groupId }), 'medias', [
-    groupId,
-  ]);
+  const [medias, mediasRefresh] = useAsync(
+    [],
+    () => collMedias.find({ group: groupId }),
+    'medias',
+    [groupId]
+  );
 
   const [devices, devicesRefresh] = useAsync(
     [],

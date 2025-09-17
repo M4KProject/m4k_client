@@ -36,7 +36,7 @@ const statusIcons: Record<string, typeof Clock> = {
 };
 
 interface JobStatusProps {
-  job: JobModel
+  job: JobModel;
 }
 
 export const JobStatus = ({ job }: JobStatusProps) => {

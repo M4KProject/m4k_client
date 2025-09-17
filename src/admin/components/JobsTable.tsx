@@ -18,8 +18,8 @@ import { groupId$ } from '@common/api/messages';
 export const JobsTable = () => {
   const groupId = useMsg(groupId$);
   const jobs = useMsg(syncJobs.list$) || [];
-  console.debug('jobs',jobs);
-  const filteredJobs = jobs.filter(j => j.group === groupId);
+  console.debug('jobs', jobs);
+  const filteredJobs = jobs.filter((j) => j.group === groupId);
   const sortedJobs = sort(filteredJobs, (j) => -new Date(j.updated).getTime());
 
   return (
@@ -39,8 +39,7 @@ export const JobsTable = () => {
             <Cell>
               <JobStatus job={job} />
             </Cell>
-            <Cell>
-            </Cell>
+            <Cell></Cell>
             <Cell variant="around">
               <Button
                 icon={<Trash2 />}
