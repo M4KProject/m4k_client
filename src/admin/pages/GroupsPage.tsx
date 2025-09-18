@@ -1,6 +1,6 @@
-import { useAsync, useCss, useMsg } from '@common/hooks';
+import { useCss, useMsg } from '@common/hooks';
 import { search$ } from '../messages/search$';
-import { Plus, RefreshCw, Trash2 } from 'lucide-react';
+import { Plus, Trash2 } from 'lucide-react';
 import {
   Field,
   Button,
@@ -17,27 +17,24 @@ import {
   showError,
 } from '@common/components';
 import { Css } from '@common/ui';
-import { isSearched } from '@common/utils';
 import { SearchField } from '../components/SearchField';
-import { ModelUpdate, GroupModel, Role } from '@common/api/models';
+import { Role } from '@common/api/models';
 import { group$ } from '../controllers';
 import { isAdvanced$ } from '../messages';
-import { useEffect } from 'preact/hooks';
 import { auth$ } from '@common/api/messages';
 import { collGroups } from '@common/api/collGroups';
 import { collMembers } from '@common/api/collMembers';
+import { useSyncColl } from '@common/hooks/useSyncColl';
+import { syncGroups } from '@common/api/syncGroups';
 
 const css: Css = {};
 
 export const GroupsPage = () => {
   const c = useCss('GroupsPage', css);
-  const search = useMsg(search$);
   const auth = useMsg(auth$);
   const group = useMsg(group$);
   const isAdvanced = useMsg(isAdvanced$);
-
-  const [groups, groupsRefresh] = useAsync([], () => collGroups.find({}));
-  const filteredGroups = search ? groups.filter((g) => isSearched(g.name, search)) : groups;
+  const groups = useSyncColl(syncGroups);
 
   const handleAdd = async () => {
     if (!auth) return;
@@ -53,33 +50,14 @@ export const GroupsPage = () => {
         })
         .catch(showError);
     }
-    await groupsRefresh();
   };
 
-  const handleUpdate = async (group: GroupModel, changes: ModelUpdate<GroupModel>) => {
-    if (!auth) return;
-    await collGroups.update(group.id, changes).catch(showError);
-    await groupsRefresh();
-  };
-
-  const handleDelete = async (group: GroupModel) => {
-    if (!auth) return;
-    await collGroups.delete(group.id).catch(showError);
-    await groupsRefresh();
-  };
-
-  useEffect(() => {
-    if (!group) group$.set(groups[0] || null);
-    else if (groups.length === 0) group$.set(null);
-  }, [group, groups]);
-
-  console.debug('GroupsPage', { c, search, auth, group, isAdvanced, groups, filteredGroups });
+  console.debug('GroupsPage', { c, auth, group, isAdvanced, groups });
 
   return (
     <Page cls={c}>
       <PageHeader title="Gestionnaire de groupes">
         <Button title="Ajouter" icon={<Plus />} color="primary" onClick={handleAdd} />
-        <Button title="Rafraîchir" icon={<RefreshCw />} color="primary" onClick={groupsRefresh} />
         <SearchField />
       </PageHeader>
       <PageBody>
@@ -93,7 +71,7 @@ export const GroupsPage = () => {
             </Row>
           </TableHead>
           <TableBody>
-            {filteredGroups.map((g, i) => (
+            {groups.map((g, i) => (
               <Row key={g.id}>
                 <Cell>
                   <Field
@@ -108,19 +86,19 @@ export const GroupsPage = () => {
                     <Field
                       {...tooltip(g.id)}
                       value={g.key}
-                      onValue={(key) => handleUpdate(g, { key })}
+                      onValue={(key) => syncGroups.update(g, { key })}
                     />
                   </Cell>
                 )}
                 <Cell>
-                  <Field value={g.name} onValue={(name) => handleUpdate(g, { name })} />
+                  <Field value={g.name} onValue={(name) => syncGroups.update(g, { name })} />
                 </Cell>
                 <Cell variant="row">
                   <Button
                     icon={<Trash2 />}
                     color="error"
                     {...tooltip('Supprimer')}
-                    onClick={() => handleDelete(g)}
+                    onClick={() => syncGroups.delete(g)}
                   />
                 </Cell>
               </Row>

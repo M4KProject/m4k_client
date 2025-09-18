@@ -3,7 +3,6 @@ import {
   openGroups,
   openMembers,
   openDevices,
-  openContents,
   openAccount,
   adminPage$,
   openMedias,
@@ -91,7 +90,6 @@ export const SideBar = () => {
           <Div cls={`${c}Sep ${c}Sep-group`}>{group?.name}</Div>
           <SideButton title="Membres" icon={<Users />} page="members" onClick={openMembers} />
           <SideButton title="Appareils" icon={<Monitor />} page="devices" onClick={openDevices} />
-          <SideButton title="Contenus" icon={<Settings />} page="contents" onClick={openContents} />
           <SideButton title="Médias" icon={<Image />} page="medias" onClick={openMedias} />
           <SideButton title="Jobs" icon={<Zap />} page="jobs" onClick={openJobs} />
         </>

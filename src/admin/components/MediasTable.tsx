@@ -1,5 +1,5 @@
-import { Css, flexRow } from '@common/ui';
-import { isPositive, round, sort } from '@common/utils';
+import { Css, flexColumn, flexRow } from '@common/ui';
+import { byId, isEmpty, isPositive, round, sort } from '@common/utils';
 import { addTranslates, useCss, useMsg } from '@common/hooks';
 import { isAdvanced$ } from '../messages';
 import { FolderOpen, FileImage, Video, FileText, Square, Trash2 } from 'lucide-react';
@@ -17,12 +17,13 @@ import {
   Field,
   Tr,
   Progress,
+  PageHeader,
 } from '@common/components';
-import { useEffect } from 'preact/hooks';
 import { collMedias } from '@common/api/collMedias';
-import { groupId$ } from '@common/api/messages';
 import { syncJobs } from '@common/api/syncJobs';
 import { syncMedias } from '@common/api/syncMedias';
+import { JobsTable } from './JobsTable';
+import { useSyncColl } from '@common/hooks/useSyncColl';
 
 addTranslates({
   [PENDING]: 'en attente',
@@ -69,6 +70,15 @@ const css: Css = {
   [`&-${PROCESSING}`]: { fg: 'secondary' },
   [`&-${FAILED}`]: { fg: 'error' },
   [`&-${SUCCESS}`]: { fg: 'success' },
+
+  ['&Jobs']: {
+    ...flexColumn({ align: 'stretch' }),
+    position: 'absolute',
+    r: 0,
+    b: 0,
+    w: 40,
+    bg: '#f5f5f5',
+  }
 };
 
 const infoByType: Record<string, [string, typeof FolderOpen]> = {
@@ -101,58 +111,6 @@ const sizeFormat = (size?: number) => {
 };
 
 const secondsFormat = (s?: number) => (isPositive(s) ? round(s) + 's' : '');
-
-// const setDataTransferJson = ({ dataTransfer }: React.DragEvent, data: any) => {
-//     dataTransfer.clearData();
-//     dataTransfer.setData("application/json", JSON.stringify(data));
-// }
-
-// const getDataTransferJson = ({ dataTransfer }: React.DragEvent): string => {
-//     return JSON.parse(dataTransfer.getData("application/json"));
-// }
-
-// const setDataTransferText = ({ dataTransfer }: React.DragEvent, text: string) => {
-//     dataTransfer.clearData();
-//     dataTransfer.setData("text/plain", text);
-// }
-
-// const getDataTransferText = ({ dataTransfer }: React.DragEvent): string => {
-//     return dataTransfer.getData("text/plain");
-// }
-
-// const Job = ({ c, jobId }: { c:string, jobId: string }) => {
-//     console.debug('Job', jobId);
-
-//     const jobs = useMsg(jobs$);
-//     const job = jobs[jobId] || {};
-
-//     const status = job.status;
-
-//     useEffect(() => {
-//         waitJob(jobId);
-//     }, [jobId]);
-
-//     useEffect(() => {
-//         if (status === 'finished') {
-//             mediasRefresh();
-//         }
-//     }, [status]);
-
-//     if (job.error) {
-//         return <Button cls={`${c}Job ${c}Job-error`} icon={<MdError />}  {...tooltip(job.error)} />
-//     }
-
-//     switch (status) {
-//         case 'pending':
-//             return <Loading cls={`${c}Job ${c}Job-pending`} />
-//         case 'processing':
-//             return <Progress cls={`${c}Job ${c}Job-processing`} progress={job.progress} />
-//         case 'finished':
-//             return <Progress cls={`${c}Job ${c}Job-finished`} progress={100} />
-//         default:
-//             return <Button cls={`${c}Job ${c}Job-error`} icon={<MdError />} {...tooltip(`status: ${status}`)} />
-//     }
-// };
 
 export const MediasProgress = () => {
   const c = useCss('Media', css);
@@ -190,18 +148,12 @@ export const MediasProgress = () => {
 
 export const MediasTable = () => {
   const c = useCss('Media', css);
-  // const search = useMsg(search$);
-  const groupId = useMsg(groupId$);
   const isAdvanced = useMsg(isAdvanced$);
 
-  useEffect(() => {
-    syncMedias.init();
-    syncJobs.init();
-  }, []);
+  const medias = useSyncColl(syncMedias);
+  const jobs = useSyncColl(syncJobs);
 
-  const mediaById = useMsg(syncMedias.dict$);
-  let medias = Object.values(mediaById);
-  medias = medias.filter((m) => m.group === groupId);
+  const mediaById = byId(medias);
 
   // Get Media PATH
   for (const media of medias) {
@@ -216,19 +168,7 @@ export const MediasTable = () => {
     media.order = paths.join('/');
   }
 
-  medias = sort(medias, (m) => m.order);
-
-  // const filteredMedias = search
-  //   ? sortedMedias.filter((m) =>
-  //       isSearched((m.title || '') + (m.desc || '') + (m.type || ''), search)
-  //     )
-  //   : sortedMedias;
-
-  // useEffect(() => uploadItems$.debounce(100).on(mediasRefresh), [mediasRefresh]);
-
-  // const handleRefresh = () => {
-  //   mediasRefresh();
-  // };
+  const sortedMedias = sort(medias, (m) => m.order);
 
   return (
     <>
@@ -246,7 +186,7 @@ export const MediasTable = () => {
           </Row>
         </TableHead>
         <TableBody>
-          {medias.map((m) => (
+          {sortedMedias.map((m) => (
             <Row key={m.id}>
               <Cell variant="row">
                 <Div cls={``} style={{ width: 2 * (m.paths.length - 1) + 'em' }} />
@@ -274,38 +214,6 @@ export const MediasTable = () => {
               </Cell>
               <Cell>{secondsFormat(m.seconds)}</Cell>
               <Cell variant="around">
-                {/* {item.mimetype === 'application/zip' && (
-                                      <Button
-                                          icon={<TbFileTypeZip />}
-                                          color="primary"
-                                          {...tooltip("Décompression")}
-                                          onClick={async () => {
-                                              const mediaId = (item as MediaInfo).id;
-                                              const groupId = groupId$.v;
-                                              if (!mediaId) return;
-                                              if (!groupId) return;
-                                              const job = await addJob(groupId, 'unzip', { name: item.name });
-                                              if (!job) return;
-                                              await updateMediaData(item.id, { jobId: job.id });
-                                              // await mediasRefresh();
-                                          }}
-                                      />
-                                  )} */}
-                {/* <Button
-                                      icon={<MdRefresh />}
-                                      color="primary"
-                                      {...tooltip("Optimiser le média")}
-                                      onClick={async () => {
-                                          const mediaId = (item as MediaInfo).id;
-                                          const groupId = groupId$.v;
-                                          if (!mediaId) return;
-                                          if (!groupId) return;
-                                          const job = await addJob(groupId, 'convert', { name: item.name });
-                                          if (!job) return;
-                                          await updateMediaData(item.id, { jobId: job.id });
-                                          // await mediasRefresh();
-                                      }}
-                                  /> */}
                 <Button
                   icon={<Trash2 />}
                   color="error"
@@ -315,6 +223,12 @@ export const MediasTable = () => {
               </Cell>
             </Row>
           ))}
+          {!isEmpty(jobs.filter(job => job.status !== 'finished' && !!job.media)) && (
+            <Div cls={`${c}Jobs`}>
+              <PageHeader title="Les jobs" />
+              <JobsTable filter={job => job.status !== 'finished' && !!job.media} />
+            </Div>
+          )}
         </TableBody>
       </Table>
     </>

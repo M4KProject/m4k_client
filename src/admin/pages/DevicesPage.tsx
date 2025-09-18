@@ -2,14 +2,12 @@ import { Css } from '@common/ui';
 import {
   formatDate,
   formatDateTime,
-  isSearched,
   stringify,
   toDate,
   toErr,
   toTime,
 } from '@common/utils';
-import { useAsync, useCss, useMsg } from '@common/hooks';
-import { search$ } from '../messages/search$';
+import { useCss, useMsg } from '@common/hooks';
 import { groupId$ } from '@common/api/messages';
 import { openDevice } from '../controllers/Router';
 import {
@@ -29,16 +27,16 @@ import {
   Form,
 } from '@common/components';
 import { RefreshCw, Trash2, Settings, Plus, Power } from 'lucide-react';
-import { SearchField } from '../components/SearchField';
 import { isAdvanced$ } from '../messages';
-import { useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 import { apiGet } from '@common/api/call';
-import { collGroups } from '@common/api/collGroups';
-import { collMedias } from '@common/api/collMedias';
-import { collDevices } from '@common/api/collDevices';
 import { serverTime } from '@common/api/serverTime';
-import { DeviceModel, ModelUpdate, Role } from '@common/api/models';
+import { DeviceModel, Role } from '@common/api/models';
 import { collMembers } from '@common/api/collMembers';
+import { syncMedias } from '@common/api/syncMedias';
+import { syncDevices } from '@common/api/syncDevices';
+import { useSyncColl } from '@common/hooks/useSyncColl';
+import { SearchField } from '../components/SearchField';
 
 const css: Css = {};
 
@@ -71,51 +69,23 @@ export const PairingForm = ({ onClose }: { onClose: () => void }) => {
 
 export const DevicesPage = () => {
   const c = useCss('DevicesPage', css);
-  const search = useMsg(search$);
   const groupId = useMsg(groupId$);
   const isAdvanced = useMsg(isAdvanced$);
 
-  const [groups, groupsRefresh] = useAsync([], () => collGroups.find({}));
+  const medias = useSyncColl(syncMedias);
+  const devices = useSyncColl(syncDevices);
 
-  const [medias, mediasRefresh] = useAsync(
-    [],
-    () => collMedias.find({ group: groupId }),
-    'medias',
-    [groupId]
-  );
-
-  const [devices, devicesRefresh] = useAsync(
-    [],
-    () => collDevices.find(groupId ? { group: groupId } : {}),
-    'devices',
-    [groupId]
-  );
-
-  const filteredDevices = search ? devices.filter((d) => isSearched(d.name, search)) : devices;
+  // search ? devices.filter((d) => isSearched(d.name, search)) : devices;
 
   const onlineMin = serverTime() - 10 * 1000;
 
   const handleAdd = async () => {
     showDialog('Pairer un nouvel écran', (open$) => {
       return (
-        <PairingForm
-          onClose={() => {
-            open$.set(false);
-            devicesRefresh();
-          }}
-        />
+        <PairingForm onClose={() => open$.set(false)} />
       );
     });
   };
-
-  const handleUpdate = async (device: DeviceModel, changes: ModelUpdate<DeviceModel>) => {
-    await collDevices.update(device.id, changes);
-    await groupsRefresh();
-    await devicesRefresh();
-    await mediasRefresh();
-  };
-
-  const handleDelete = (device: DeviceModel) => collDevices.delete(device.id);
 
   const handleRemote = (device: DeviceModel) => {
     openDevice(device.key || device.id);
@@ -124,6 +94,7 @@ export const DevicesPage = () => {
   const handleAddAsMember = async (device: DeviceModel) => {
     if (!device.user || !groupId) return;
     await collMembers.create({
+      device: device.id,
       user: device.user,
       group: groupId,
       role: Role.viewer,
@@ -133,13 +104,8 @@ export const DevicesPage = () => {
   return (
     <Page cls={c}>
       <PageHeader title="Les écrans">
-        {isAdvanced && (
-          <Button icon={<Plus />} color="primary" onClick={handleAdd}>
-            Ajouter
-          </Button>
-        )}
-        <Button icon={<RefreshCw />} color="primary" onClick={devicesRefresh}>
-          Rafraîchir
+        <Button icon={<Plus />} color="primary" onClick={handleAdd}>
+          Ajouter
         </Button>
         <SearchField />
       </PageHeader>
@@ -147,7 +113,6 @@ export const DevicesPage = () => {
         <Table>
           <TableHead>
             <Row>
-              {isAdvanced && <CellHeader>Groupe</CellHeader>}
               {isAdvanced && <CellHeader>Clé</CellHeader>}
               {isAdvanced && <CellHeader>Type</CellHeader>}
               <CellHeader>Nom</CellHeader>
@@ -159,24 +124,14 @@ export const DevicesPage = () => {
             </Row>
           </TableHead>
           <TableBody>
-            {filteredDevices.map((d) => (
+            {devices.map((d) => (
               <Row key={d.id}>
-                {isAdvanced && (
-                  <Cell>
-                    <Field
-                      type="select"
-                      items={groups.map((g) => [g.id, g.name])}
-                      value={d.group}
-                      onValue={(group) => handleUpdate(d, { group })}
-                    />
-                  </Cell>
-                )}
                 {isAdvanced && (
                   <Cell>
                     <Field
                       {...tooltip(d.id)}
                       value={d.key}
-                      onValue={(key) => handleUpdate(d, { key })}
+                      onValue={(key) => syncDevices.update(d, { key })}
                     />
                   </Cell>
                 )}
@@ -190,7 +145,7 @@ export const DevicesPage = () => {
                   </Cell>
                 )}
                 <Cell>
-                  <Field value={d.name} onValue={(name) => handleUpdate(d, { name })} />
+                  <Field value={d.name} onValue={(name) => syncDevices.update(d, { name })} />
                 </Cell>
                 <Cell>{`${d.info?.width || 0}x${d.info?.height || 0}`}</Cell>
                 <Cell>
@@ -208,7 +163,7 @@ export const DevicesPage = () => {
                     type="select"
                     items={medias.map((c) => [c.id, c.title || c.key || c.id])}
                     value={d.media}
-                    onValue={(media) => handleUpdate(d, { media })}
+                    onValue={(media) => syncDevices.update(d, { media })}
                   />
                 </Cell>
                 <Cell variant="around">
@@ -216,13 +171,13 @@ export const DevicesPage = () => {
                     icon={<RefreshCw />}
                     color="primary"
                     {...tooltip('Rafraîchir')}
-                    onClick={() => collDevices.update(d.id, { action: 'reload' })}
+                    onClick={() => syncDevices.update(d, { action: 'reload' })}
                   />
                   <Button
                     icon={<Power />}
                     color="primary"
                     {...tooltip('Redémarrer')}
-                    onClick={() => collDevices.update(d.id, { action: 'reboot' })}
+                    onClick={() => syncDevices.update(d, { action: 'reboot' })}
                   />
                   {isAdvanced && (
                     <Button
@@ -236,7 +191,7 @@ export const DevicesPage = () => {
                       icon={<Trash2 />}
                       color="error"
                       {...tooltip('Supprimer')}
-                      onClick={() => handleDelete(d)}
+                      onClick={() => syncDevices.delete(d)}
                     />
                   )}
                 </Cell>

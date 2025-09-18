@@ -1,23 +1,26 @@
 import { Css } from '@common/ui';
-import { randKey, ReqError } from '@common/utils';
+import { randKey, ReqError, toNbr, toStr } from '@common/utils';
 import { useCss } from '@common/hooks';
 import { Role } from '@common/api/models';
 import {
   Field,
   Button,
-  Page,
-  PageHeader,
-  PageBody,
-  showDialog,
+  tooltip,
+  Table,
+  Cell,
+  CellHeader,
+  Row,
+  TableBody,
+  TableHead,
   Form,
 } from '@common/components';
-import { Plus } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
 import { useState } from 'preact/hooks';
 import { needGroupId } from '@common/api/messages';
 import { collUsers } from '@common/api/collUsers';
 import { collMembers } from '@common/api/collMembers';
-import { MemberTable } from '../components/MembersTable';
-import { SearchField } from '../components/SearchField';
+import { syncMembers } from '@common/api/syncMembers';
+import { useSyncColl } from '@common/hooks/useSyncColl';
 
 const css: Css = {};
 
@@ -69,24 +72,55 @@ export const CreateMemberForm = ({ onClose }: { onClose: () => void }) => {
   );
 };
 
-export const MembersPage = () => {
-  const c = useCss('MembersPage', css);
+export const MemberTable = () => {
+  const c = useCss('MemberTable', css);
 
-  const handleCreate = () => {
-    showDialog('Ajouter un membre', (open$) => (
-      <CreateMemberForm onClose={() => open$.set(false)} />
-    ));
-  };
+  const members = useSyncColl(syncMembers);
 
   return (
-    <Page cls={c}>
-      <PageHeader title="Les membres">
-        <Button title="Ajouter un membre" icon={<Plus />} color="primary" onClick={handleCreate} />
-        <SearchField />
-      </PageHeader>
-      <PageBody>
-        <MemberTable />
-      </PageBody>
-    </Page>
+    <Table cls={c}>
+      <TableHead>
+        <Row>
+          <CellHeader>Appareil</CellHeader>
+          <CellHeader>Email</CellHeader>
+          <CellHeader>Role</CellHeader>
+          <CellHeader>Description</CellHeader>
+          <CellHeader>Actions</CellHeader>
+        </Row>
+      </TableHead>
+      <TableBody>
+        {members.map((m) => (
+          <Row key={m.id}>
+            <Cell>
+              <Field type="switch" value={!!m.device} readonly />
+            </Cell>
+            <Cell>{m.email || m.id}</Cell>
+            <Cell>
+              <Field
+                type="select"
+                items={[
+                  ['10', 'Spectateur'],
+                  ['20', 'Éditeur'],
+                  ['30', 'Administrateur'],
+                ]}
+                value={toStr(m.role)}
+                onValue={(role) => syncMembers.update(m, { role: toNbr(role) })}
+              />
+            </Cell>
+            <Cell>
+              <Field type="text" value={m.desc} onValue={(desc) => syncMembers.update(m, { desc })} />
+            </Cell>
+            <Cell variant="around">
+              <Button
+                icon={<Trash2 />}
+                color="error"
+                {...tooltip('Supprimer')}
+                onClick={() => syncMembers.delete(m)}
+              />
+            </Cell>
+          </Row>
+        ))}
+      </TableBody>
+    </Table>
   );
 };

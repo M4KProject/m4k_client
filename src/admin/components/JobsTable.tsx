@@ -11,21 +11,15 @@ import {
 import { Trash2 } from 'lucide-react';
 import { JobStatus } from './JobStatus';
 import { syncJobs } from '@common/api/syncJobs';
-import { useMsg } from '@common/hooks/useMsg';
 import { sort } from '@common/utils/list';
-import { groupId$ } from '@common/api/messages';
-import { useAsyncEffect } from '@common/hooks';
+import { useSyncColl } from '@common/hooks/useSyncColl';
+import { JobModel } from '@common/api/models';
 
-export const JobsTable = () => {
-  const groupId = useMsg(groupId$);
-
-  const jobById = useMsg(syncJobs.dict$);
-  let jobs = Object.values(jobById);
-  jobs = jobs.filter((j) => j.group === groupId);
-  jobs = sort(jobs, (j) => -new Date(j.updated).getTime());
-  console.debug('jobs', jobs);
-
-  useAsyncEffect(() => syncJobs.init(), []);
+export const JobsTable = ({ filter }: { filter?: (job: JobModel) => boolean }) => {
+  const jobs = useSyncColl(syncJobs);
+  const filteredJobs = filter ? jobs.filter(filter) : jobs;
+  const sortedJobs = sort(filteredJobs, (j) => -new Date(j.updated).getTime());
+  console.debug('jobs', sortedJobs);
 
   return (
     <Table>
@@ -38,7 +32,7 @@ export const JobsTable = () => {
         </Row>
       </TableHead>
       <TableBody>
-        {jobs.map((job) => (
+        {sortedJobs.map((job) => (
           <Row key={job.id}>
             <Cell>{job.action}</Cell>
             <Cell>
