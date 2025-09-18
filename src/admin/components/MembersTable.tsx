@@ -108,7 +108,11 @@ export const MemberTable = () => {
               />
             </Cell>
             <Cell>
-              <Field type="text" value={m.desc} onValue={(desc) => syncMembers.update(m, { desc })} />
+              <Field
+                type="text"
+                value={m.desc}
+                onValue={(desc) => syncMembers.update(m, { desc })}
+              />
             </Cell>
             <Cell variant="around">
               <Button

@@ -18,20 +18,21 @@ import * as collUsers from '@common/api/collUsers';
 
 export const app = global._app || (global._app = {});
 
-Object.assign(app,
-    utils,
-    ui,
-    auth,
-    call,
-    job,
-    medias,
-    messages,
-    serverTime,
-    collContents,
-    collDevices,
-    collGroups,
-    collJobs,
-    collMedias,
-    collMembers,
-    collUsers,
+Object.assign(
+  app,
+  utils,
+  ui,
+  auth,
+  call,
+  job,
+  medias,
+  messages,
+  serverTime,
+  collContents,
+  collDevices,
+  collGroups,
+  collJobs,
+  collMedias,
+  collMembers,
+  collUsers
 );

@@ -1,12 +1,5 @@
 import { Css } from '@common/ui';
-import {
-  formatDate,
-  formatDateTime,
-  stringify,
-  toDate,
-  toErr,
-  toTime,
-} from '@common/utils';
+import { formatDate, formatDateTime, stringify, toDate, toErr, toTime } from '@common/utils';
 import { useCss, useMsg } from '@common/hooks';
 import { groupId$ } from '@common/api/messages';
 import { openDevice } from '../controllers/Router';
@@ -81,9 +74,7 @@ export const DevicesPage = () => {
 
   const handleAdd = async () => {
     showDialog('Pairer un nouvel écran', (open$) => {
-      return (
-        <PairingForm onClose={() => open$.set(false)} />
-      );
+      return <PairingForm onClose={() => open$.set(false)} />;
     });
   };
 

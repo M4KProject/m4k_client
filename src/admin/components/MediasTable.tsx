@@ -78,7 +78,7 @@ const css: Css = {
     b: 0,
     w: 40,
     bg: '#f5f5f5',
-  }
+  },
 };
 
 const infoByType: Record<string, [string, typeof FolderOpen]> = {
@@ -223,10 +223,10 @@ export const MediasTable = () => {
               </Cell>
             </Row>
           ))}
-          {!isEmpty(jobs.filter(job => job.status !== 'finished' && !!job.media)) && (
+          {!isEmpty(jobs.filter((job) => job.status !== 'finished' && !!job.media)) && (
             <Div cls={`${c}Jobs`}>
               <PageHeader title="Les jobs" />
-              <JobsTable filter={job => job.status !== 'finished' && !!job.media} />
+              <JobsTable filter={(job) => job.status !== 'finished' && !!job.media} />
             </Div>
           )}
         </TableBody>
