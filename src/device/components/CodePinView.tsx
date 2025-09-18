@@ -1,4 +1,5 @@
-import { Css, Msg } from '@common/utils';
+import { Css } from '@common/ui';
+import { Msg } from '@common/utils';
 import { useEffect, useState } from 'preact/hooks';
 import { useTimerMs, useMsg, useCss } from '@common/hooks';
 import { page$ } from '../messages/page$';

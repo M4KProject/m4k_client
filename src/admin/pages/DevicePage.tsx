@@ -1,12 +1,13 @@
 import { Css, flexRow, flexColumn } from '@common/ui';
-import { useCss, useMsg } from '@common/hooks';
+import { useCss } from '@common/hooks';
 import { Page, PageHeader, PageBody, Div, Button, tooltip } from '@common/components';
-import { device$ } from '../controllers/Router';
-import { useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 import { RefreshCw, Power, LogOut } from 'lucide-react';
 import { DeviceScreen } from '../components/DeviceScreen';
 import { DeviceConsole } from '../components/DeviceConsole';
 import { collDevices } from '@common/api/collDevices';
+import { stringify } from '@common/utils';
+import { useDevice } from '../messages/device$';
 
 const css: Css = {
   '&Body': {
@@ -22,37 +23,25 @@ const css: Css = {
 
 export const DevicePage = () => {
   const c = useCss('DevicePage', css);
-  const device = useMsg(device$);
-  const deviceKey = device?.key;
+
+  const device = useDevice();
+
   const [consoleOutput, setConsoleOutput] = useState('Console ready...\n');
 
-  const refreshDevice = async () => device$.set(await collDevices.findKey(deviceKey));
+  useEffect(() => {
+    setConsoleOutput(p => p + stringify(device.result, null, 2) + '\n');
+  }, [device.result]);
 
   const executeAction = async (action: string, input?: any) => {
     if (!device) return;
     try {
       await collDevices.update(device.id, { action: action as any, input });
-      setConsoleOutput((prev) => prev + `> Action: ${action}\n`);
-      await refreshDevice();
+      setConsoleOutput(p => p + `> Action: ${action}\n`);
     } catch (error) {
-      setConsoleOutput((prev) => prev + `> Error: ${error}\n`);
+      setConsoleOutput(p => p + `> Error: ${error}\n`);
     }
   };
-
-  const sendCommand = async (command: string) => {
-    if (!device || !command.trim()) return;
-    try {
-      await collDevices.update(device.id, {
-        action: 'js',
-        input: command,
-      });
-      setConsoleOutput((prev) => prev + `> ${command}\n`);
-      await refreshDevice();
-    } catch (error) {
-      setConsoleOutput((prev) => prev + `> Error: ${error}\n`);
-    }
-  };
-
+  
   if (!device) {
     return (
       <Page cls={c}>
@@ -112,7 +101,6 @@ export const DevicePage = () => {
             device={device}
             consoleOutput={consoleOutput}
             onExecuteAction={executeAction}
-            onSendCommand={sendCommand}
           />
         </Div>
       </PageBody>

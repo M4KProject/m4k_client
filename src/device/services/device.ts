@@ -9,7 +9,7 @@ import {
   parse,
   randKey,
   ReqError,
-  toVoidAsync,
+  toVoid,
 } from '@common/utils';
 import { DeviceModel, UserModel } from '@common/api/models';
 import { login, signUp } from '@common/api/auth';
@@ -77,7 +77,7 @@ const deviceLogin = async (): Promise<DeviceModel> => {
   return device;
 };
 
-let deviceUnsubscribe = toVoidAsync;
+let deviceUnsubscribe = toVoid;
 const deviceStart = async () => {
   console.debug('deviceStart');
   const device = await deviceLogin();
@@ -85,7 +85,7 @@ const deviceStart = async () => {
   deviceUnsubscribe();
 
   console.debug('deviceStart subscribe', device.id);
-  deviceUnsubscribe = await collDevices.subscribe(device.id, (device, action) => {
+  deviceUnsubscribe = collDevices.subscribe(device.id, (device, action) => {
     console.debug('deviceStart subscribe', action, device);
     if (action === 'delete') {
       deviceLogin();

@@ -1,10 +1,9 @@
 import { Css, flexRow, flexColumn } from '@common/ui';
-import { stringify } from '@common/utils';
 import { useCss } from '@common/hooks';
 import { Div, Button, Field } from '@common/components';
 import { DeviceModel } from '@common/api/models';
 import { useState } from 'preact/hooks';
-import { Send, RefreshCw } from 'lucide-react';
+import { Send, RefreshCw, FileJson } from 'lucide-react';
 
 const css: Css = {
   '&': {
@@ -37,33 +36,23 @@ interface DeviceConsoleProps {
   device: DeviceModel;
   consoleOutput: string;
   onExecuteAction: (action: string, input?: any) => Promise<void>;
-  onSendCommand: (command: string) => Promise<void>;
 }
 
-export const DeviceConsole = ({
-  device,
-  consoleOutput,
-  onExecuteAction,
-  onSendCommand,
-}: DeviceConsoleProps) => {
+export const DeviceConsole = ({ consoleOutput, onExecuteAction }: DeviceConsoleProps) => {
   const c = useCss('DeviceConsole', css);
   const [command, setCommand] = useState('');
 
-  const handleSendCommand = async () => {
-    if (!command.trim()) return;
-    await onSendCommand(command);
-    // setCommand(''); // Uncomment if you want to clear after sending
-  };
-
   return (
     <Div cls={c}>
-      <Div cls={`${c}Logs`}>
-        {consoleOutput}
-        {device.result && `${stringify(device.result, null, 2)}\n`}
-      </Div>
+      <Div cls={`${c}Logs`}>{consoleOutput}</Div>
       <Div cls={`${c}Actions`}>
         <Field type="text" value={command} onValue={setCommand} />
-        <Button icon={<Send />} onClick={handleSendCommand} />
+        <Button icon={<Send />} onClick={() => {
+          onExecuteAction('sh', command.trim());
+        }} />
+        <Button icon={<FileJson />} onClick={() => {
+          onExecuteAction('js', command.trim());
+        }} />
         <Button icon={<RefreshCw />} onClick={() => onExecuteAction('refresh')} />
       </Div>
     </Div>

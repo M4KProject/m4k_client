@@ -15,8 +15,8 @@ import { AuthPage } from '../pages/AuthPage';
 import { AccountPage } from '../pages/AccountPage';
 import { ContentPage } from '../pages/ContentPage';
 import { auth$ } from '@common/api/messages';
-import { AdminPage, adminPage$ } from '../controllers/Router';
 import { DevicePage } from '../pages/DevicePage';
+import { AdminPage, useAdminPage } from '../messages/adminPage$';
 
 const css: Css = {
   '&': {
@@ -37,6 +37,7 @@ const css: Css = {
 };
 
 const CompByPage: Record<AdminPage, () => JSX.Element> = {
+  '': GroupsPage,
   groups: GroupsPage,
   members: MembersPage,
   contents: ContentsPage,
@@ -49,7 +50,7 @@ const CompByPage: Record<AdminPage, () => JSX.Element> = {
 };
 
 const AppRouter = () => {
-  const adminPage = useMsg(adminPage$);
+  const adminPage = useAdminPage();
   const Page = CompByPage[adminPage] || LoadingPage;
   return <Page />;
 };

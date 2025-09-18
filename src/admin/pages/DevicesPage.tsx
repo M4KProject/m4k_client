@@ -2,7 +2,6 @@ import { Css } from '@common/ui';
 import { formatDate, formatDateTime, stringify, toDate, toErr, toTime } from '@common/utils';
 import { useCss, useMsg } from '@common/hooks';
 import { groupId$ } from '@common/api/messages';
-import { openDevice } from '../controllers/Router';
 import {
   Button,
   Field,
@@ -20,7 +19,7 @@ import {
   Form,
 } from '@common/components';
 import { RefreshCw, Trash2, Settings, Plus, Power } from 'lucide-react';
-import { isAdvanced$ } from '../messages';
+import { adminPage$, device$, isAdvanced$ } from '../messages';
 import { useEffect, useState } from 'preact/hooks';
 import { apiGet } from '@common/api/call';
 import { serverTime } from '@common/api/serverTime';
@@ -79,18 +78,19 @@ export const DevicesPage = () => {
   };
 
   const handleRemote = (device: DeviceModel) => {
-    openDevice(device.key || device.id);
+    device$.set(device);
+    adminPage$.set('device');
   };
 
-  const handleAddAsMember = async (device: DeviceModel) => {
-    if (!device.user || !groupId) return;
-    await collMembers.create({
-      device: device.id,
-      user: device.user,
-      group: groupId,
-      role: Role.viewer,
-    });
-  };
+  // const handleAddAsMember = async (device: DeviceModel) => {
+  //   if (!device.user || !groupId) return;
+  //   await collMembers.create({
+  //     device: device.id,
+  //     user: device.user,
+  //     group: groupId,
+  //     role: Role.viewer,
+  //   });
+  // };
 
   return (
     <Page cls={c}>

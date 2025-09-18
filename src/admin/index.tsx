@@ -1,17 +1,14 @@
 import { render } from 'preact';
 import { App } from './components/App';
-import { initAdminRouter } from './controllers/Router';
 import { addFont, setTheme, addEl, addResponsiveListener, setCss } from '@common/ui';
 import { authRefresh } from '@common/api/auth';
 import { app } from '../app';
-import * as controllers from './controllers';
 import * as messages from './messages';
 
 console.debug('loaded');
 
 let _rootEl: HTMLElement | null = null;
 
-Object.assign(app, controllers);
 Object.assign(app, messages);
 
 export const mount = () => {
@@ -22,8 +19,6 @@ export const mount = () => {
   setTheme('#28A8D9');
 
   setCss('font', { 'html,body': { fontFamily: 'Roboto' } });
-
-  initAdminRouter();
 
   _rootEl = addEl('div', { id: 'm4kAdmin', parent: 'body' });
   render(<App />, _rootEl);

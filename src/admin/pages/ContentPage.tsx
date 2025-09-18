@@ -9,10 +9,8 @@ import { TableContent } from './Content/TableContent';
 import { HtmlContent } from './Content/HtmlContent';
 import { ContentProps } from './Content/ContentProps';
 import { JSX } from 'preact';
-import { useMsg } from '@common/hooks';
 import { Loading } from '@common/components';
 import { PlaylistContent } from './Content/PlaylistContent';
-import { content$ } from '../controllers';
 import { EmptyContent } from './Content/EmptyContent';
 import { HiboutikContent } from './Content/HiboutikContent';
 import { collContents } from '@common/api/collContents';
@@ -32,7 +30,7 @@ export const contentByType: Record<string, [string, (props: ContentProps) => JSX
 export const ContentPage = () => {
   const c = useCss('ContentPage', css);
   // const auth = useMsg(auth$);
-  const content = useMsg(content$);
+  const content = null as any; // useMsg(content$);
 
   if (!content) return <Loading />;
 
@@ -45,7 +43,7 @@ export const ContentPage = () => {
 
   const updateContent = async (changes: Partial<ContentModel>) => {
     const contentUpdated = await collContents.update(id, changes);
-    content$.set(contentUpdated);
+    // content$.set(contentUpdated);
   };
 
   const updateData = async (changes: Partial<ContentModel['data']>) => {
@@ -59,7 +57,9 @@ export const ContentPage = () => {
           title="Rafraîchir"
           icon={<RefreshCw />}
           color="primary"
-          onClick={() => content$.signal()}
+          onClick={() => {
+            // content$.signal()
+          }}
         />
         <SearchField />
       </PageHeader>

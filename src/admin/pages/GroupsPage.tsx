@@ -1,5 +1,4 @@
 import { useCss, useMsg } from '@common/hooks';
-import { search$ } from '../messages/search$';
 import { Plus, Trash2 } from 'lucide-react';
 import {
   Field,
@@ -19,8 +18,7 @@ import {
 import { Css } from '@common/ui';
 import { SearchField } from '../components/SearchField';
 import { Role } from '@common/api/models';
-import { group$ } from '../controllers';
-import { isAdvanced$ } from '../messages';
+import { group$, isAdvanced$, useGroup } from '../messages';
 import { auth$ } from '@common/api/messages';
 import { collGroups } from '@common/api/collGroups';
 import { collMembers } from '@common/api/collMembers';
@@ -32,7 +30,7 @@ const css: Css = {};
 export const GroupsPage = () => {
   const c = useCss('GroupsPage', css);
   const auth = useMsg(auth$);
-  const group = useMsg(group$);
+  const group = useGroup();
   const isAdvanced = useMsg(isAdvanced$);
   const groups = useSyncColl(syncGroups);
 

@@ -13,7 +13,8 @@ import {
   TableHead,
   tooltip,
 } from '@common/components';
-import { Css, round } from '@common/utils';
+import { Css } from '@common/ui';
+import { round } from '@common/utils';
 import { useCss, useMsg } from '@common/hooks';
 import { ArrowUp, ArrowDown, Copy, Trash2 } from 'lucide-react';
 import { playlist$ } from '../messages';

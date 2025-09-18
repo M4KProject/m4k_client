@@ -83,7 +83,7 @@ export const MemberTable = () => {
         <Row>
           <CellHeader>Appareil</CellHeader>
           <CellHeader>Email</CellHeader>
-          <CellHeader>Role</CellHeader>
+          <CellHeader>Droit</CellHeader>
           <CellHeader>Description</CellHeader>
           <CellHeader>Actions</CellHeader>
         </Row>
@@ -94,13 +94,13 @@ export const MemberTable = () => {
             <Cell>
               <Field type="switch" value={!!m.device} readonly />
             </Cell>
-            <Cell>{m.email || m.id}</Cell>
+            <Cell>{m.email}</Cell>
             <Cell>
               <Field
                 type="select"
                 items={[
-                  ['10', 'Spectateur'],
-                  ['20', 'Éditeur'],
+                  ['10', 'Lire'],
+                  ['20', 'Lire et Écrire'],
                   ['30', 'Administrateur'],
                 ]}
                 value={toStr(m.role)}

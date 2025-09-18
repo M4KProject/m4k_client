@@ -1,8 +1,7 @@
-import { Css } from '@common/utils';
+import { Css, flexRow } from '@common/ui';
 import { Form, Field, Button } from '@common/components';
 import { m4k } from '@common/m4k';
 import { usePromise, useCss } from '@common/hooks';
-import { flexRow } from '@common/utils/flexBox';
 import { toNbr } from '@common/utils/cast';
 import { useState } from 'preact/hooks';
 

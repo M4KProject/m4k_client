@@ -1,5 +1,5 @@
 import { render } from 'preact';
-import { router, addFont, setTheme, addEl, addResponsiveListener } from '@common/ui';
+import { addFont, setTheme, addEl, addResponsiveListener } from '@common/ui';
 import { ContentViewer } from './ContentViewer';
 
 console.debug('content loaded');
@@ -13,7 +13,7 @@ export const mount = () => {
   addFont('Roboto');
   setTheme('#28A8D9');
 
-  const contentKey = router.current.params.contentKey;
+  const contentKey = null; // router.current.params.contentKey;
 
   _rootEl = addEl('div', { id: 'm4kContent', parent: 'body' });
   render(<ContentViewer contentKey={contentKey} />, _rootEl);

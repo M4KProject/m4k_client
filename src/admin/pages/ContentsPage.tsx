@@ -18,7 +18,6 @@ import {
   tooltip,
 } from '@common/components';
 import { Plus, RefreshCw, Copy, Clipboard, Edit, Trash2 } from 'lucide-react';
-import { openContent } from '../controllers/Router';
 import { SearchField } from '../components/SearchField';
 import { isAdvanced$ } from '../messages';
 import { collContents } from '@common/api/collContents';
@@ -170,12 +169,12 @@ export const ContentsPage = () => {
                     {...tooltip('Coller')}
                     onClick={() => handlePaste(c)}
                   />
-                  <Button
+                  {/* <Button
                     icon={<Edit />}
                     color="primary"
                     {...tooltip('Modifier')}
                     onClick={() => openContent(c.key || c.id)}
-                  />
+                  /> */}
                   <Button
                     icon={<Trash2 />}
                     color="error"

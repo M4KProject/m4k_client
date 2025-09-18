@@ -1,26 +1,27 @@
-import { addResponsiveListener, router } from '@common/ui';
+import { addResponsiveListener } from '@common/ui';
+import { getUrlQuery } from '@common/ui/getUrlQuery';
 import './app';
+import { isFun, isItem } from '@common/utils';
 
 addResponsiveListener();
 
-// router.add('/cvc', () => import('./cvc'));
-// router.add('/cvc/:page', () => import('./cvc'));
-// router.add('/cvc/:page/:doc', () => import('./cvc'));
-
-router.add('/admin', () => import('./admin'));
-router.add('/device', () => import('./device'));
-router.add('/:contentKey', () => import('./contents'));
-
-// Check if we're on root path and redirect to admin
-const checkRootRedirect = () => {
-  const path = window.location.pathname;
-  if (path === '/' || path === '') {
-    const isDevice = localStorage.getItem('isDevice');
-    router.push(isDevice ? '/device/' : '/admin/');
+const main = () => {
+  const query = getUrlQuery();
+  if (query.device !== false) {
+    const isDevice = localStorage.getItem('isDevice') || query.device;
+    if (isDevice) {
+      import('./device').then(module => {
+        console.debug('device module', module);
+        if (isItem(module) && isFun(module.mount)) module.mount();
+      });
+      return;
+    }
   }
-};
 
-// Check on initial load
-checkRootRedirect();
+  import('./admin').then(module => {
+    console.debug('admin module', module);
+    if (isItem(module) && isFun(module.mount)) module.mount();
+  });
+}
 
-router.forceRefresh();
+main();
