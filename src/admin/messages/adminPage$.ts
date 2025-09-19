@@ -1,7 +1,8 @@
 import { useMsg } from '@common/hooks';
 import { Msg } from '@common/utils';
 
-export type AdminPage = ''
+export type AdminPage =
+  | ''
   | 'account'
   | 'groups'
   | 'members'

@@ -47,12 +47,18 @@ export const DeviceConsole = ({ consoleOutput, onExecuteAction }: DeviceConsoleP
       <Div cls={`${c}Logs`}>{consoleOutput}</Div>
       <Div cls={`${c}Actions`}>
         <Field type="text" value={command} onValue={setCommand} />
-        <Button icon={<Send />} onClick={() => {
-          onExecuteAction('sh', command.trim());
-        }} />
-        <Button icon={<FileJson />} onClick={() => {
-          onExecuteAction('js', command.trim());
-        }} />
+        <Button
+          icon={<Send />}
+          onClick={() => {
+            onExecuteAction('sh', command.trim());
+          }}
+        />
+        <Button
+          icon={<FileJson />}
+          onClick={() => {
+            onExecuteAction('js', command.trim());
+          }}
+        />
         <Button icon={<RefreshCw />} onClick={() => onExecuteAction('refresh')} />
       </Div>
     </Div>

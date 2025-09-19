@@ -13,11 +13,11 @@ const main = () => {
   }
 
   if (isDevice$.v) {
-    import('./device/index').then(m => m.mount());
+    import('./device/index').then((m) => m.mount());
     return;
   }
 
-  import('./admin/index').then(m => m.mount());
-}
+  import('./admin/index').then((m) => m.mount());
+};
 
 main();

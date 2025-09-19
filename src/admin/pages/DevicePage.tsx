@@ -29,19 +29,19 @@ export const DevicePage = () => {
   const [consoleOutput, setConsoleOutput] = useState('Console ready...\n');
 
   useEffect(() => {
-    setConsoleOutput(p => p + stringify(device.result, null, 2) + '\n');
+    setConsoleOutput((p) => p + stringify(device.result, null, 2) + '\n');
   }, [device.result]);
 
   const executeAction = async (action: string, input?: any) => {
     if (!device) return;
     try {
       await collDevices.update(device.id, { action: action as any, input });
-      setConsoleOutput(p => p + `> Action: ${action}\n`);
+      setConsoleOutput((p) => p + `> Action: ${action}\n`);
     } catch (error) {
-      setConsoleOutput(p => p + `> Error: ${error}\n`);
+      setConsoleOutput((p) => p + `> Error: ${error}\n`);
     }
   };
-  
+
   if (!device) {
     return (
       <Page cls={c}>
