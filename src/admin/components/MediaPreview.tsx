@@ -4,7 +4,7 @@ import { Div } from '@common/components';
 import { collMedias } from '@common/api/collMedias';
 import { FileInfo, MediaModel } from '@common/api/models';
 import { useState } from 'preact/hooks';
-import { first, isStrNotEmpty } from '@common/utils';
+import { isStrNotEmpty } from '@common/utils';
 
 const css: Css = {
   '&': {
@@ -28,7 +28,9 @@ const css: Css = {
   },
   '& video': {
     wh: '100%',
-  }
+    objectFit: 'contain',
+    cursor: 'pointer',
+  },
 };
 
 interface Variant extends FileInfo {
@@ -81,9 +83,21 @@ export const MediaPreview = ({ media }: { media: MediaModel }) => {
       }}
     >
       {(isOver && videos.length) ? (
-        <video controls muted autoPlay>
-          {videos.map(v => (
-            <source type={v.mime} src={getUrl(v)} />
+        <video 
+          controls 
+          muted 
+          autoPlay 
+          loop
+          onLoadStart={(e) => {
+            // Start playing when video loads
+            e.currentTarget.currentTime = 0;
+          }}
+          onError={(e) => {
+            console.warn('Video preview error:', e);
+          }}
+        >
+          {videos.map((v, i) => (
+            <source key={i} type={v.mime} src={getUrl(v)} />
           ))}
         </video>
       ) : null}
