@@ -26,6 +26,7 @@ import { syncMedias } from '@common/api/syncMedias';
 import { JobsTable } from './JobsTable';
 import { useSyncColl } from '@common/hooks/useSyncColl';
 import { SearchField } from './SearchField';
+import { needAuthId, needGroupId } from '@common/api/messages';
 
 addTranslates({
   [PENDING]: 'en attente',
@@ -180,10 +181,12 @@ export const MediasTable = () => {
           icon={<FolderPlus />}
           {...tooltip('Créer un nouveau dossier')}
           onClick={() => {
-            syncMedias.create({
+            collMedias.create({
               title: 'Nouveau Dossier',
               mime: 'application/folder',
               type: 'folder',
+              user: needAuthId(),
+              group: needGroupId(),
             });
           }}
         >
@@ -194,6 +197,7 @@ export const MediasTable = () => {
       <Table>
         <TableHead>
           <Row>
+            <CellHeader />
             <CellHeader>Titre</CellHeader>
             <CellHeader>Description</CellHeader>
             <CellHeader>Aperçu</CellHeader>
@@ -205,7 +209,10 @@ export const MediasTable = () => {
         </TableHead>
         <TableBody>
           {sortedMedias.map((m) => (
-            <Row key={m.id} draggable>
+            <Row key={m.id}>
+              <Cell variant="check">
+                <Field type="check" />
+              </Cell>
               <Cell variant="row">
                 <Div cls={``} style={{ width: 2 * (m.paths.length - 1) + 'em' }} />
                 {getTypeIcon(c, m.type || '')}
@@ -228,7 +235,7 @@ export const MediasTable = () => {
               </Cell>
               <Cell>{sizeFormat(m.bytes)}</Cell>
               <Cell>
-                {m.width || 0}x{m.height || 0}
+                {(m.width||m.height)?(m.width||0)+'x'+(m.height||0):''}
               </Cell>
               <Cell>{secondsFormat(m.seconds)}</Cell>
               <Cell variant="around">
