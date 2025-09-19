@@ -2,7 +2,7 @@ import { Css, flexColumn, flexRow } from '@common/ui';
 import { byId, isEmpty, isPositive, round, sort } from '@common/utils';
 import { addTranslates, useCss, useMsg } from '@common/hooks';
 import { isAdvanced$ } from '../messages';
-import { FolderOpen, FileImage, Video, FileText, Square, Trash2 } from 'lucide-react';
+import { FolderOpen, FileImage, Video, FileText, Square, Trash2, FolderPlus } from 'lucide-react';
 import { FAILED, PENDING, PROCESSING, SUCCESS, UPLOADING, uploadItems$ } from '@common/api/medias';
 import {
   tooltip,
@@ -18,12 +18,14 @@ import {
   Tr,
   Progress,
   PageHeader,
+  Toolbar,
 } from '@common/components';
 import { collMedias } from '@common/api/collMedias';
 import { syncJobs } from '@common/api/syncJobs';
 import { syncMedias } from '@common/api/syncMedias';
 import { JobsTable } from './JobsTable';
 import { useSyncColl } from '@common/hooks/useSyncColl';
+import { SearchField } from './SearchField';
 
 addTranslates({
   [PENDING]: 'en attente',
@@ -173,6 +175,30 @@ export const MediasTable = () => {
   return (
     <>
       <MediasProgress />
+      <Toolbar>
+        <Button
+          icon={<FolderPlus />}
+          {...tooltip('Créer un nouveau dossier')}
+          onClick={() => {
+            const name = prompt('Nom du dossier:');
+            if (name) {
+              syncMedias.create({
+                title: name,
+                mime: 'application/folder',
+                type: 'folder',
+                desc: '',
+                bytes: 0,
+                width: 0,
+                height: 0,
+                seconds: 0,
+              });
+            }
+          }}
+        >
+          Nouveau dossier
+        </Button>
+        <SearchField />
+      </Toolbar>
       <Table>
         <TableHead>
           <Row>
