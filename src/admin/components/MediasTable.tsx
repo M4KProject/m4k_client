@@ -1,8 +1,17 @@
 import { Css, flexColumn, flexRow } from '@common/ui';
 import { byId, isEmpty, isPositive, round, sort } from '@common/utils';
 import { addTranslates, useCss, useMsg } from '@common/hooks';
-import { isAdvanced$ } from '../messages';
-import { FolderOpen, FileImage, Video, FileText, Square, Trash2, FolderPlus } from 'lucide-react';
+import { isAdvanced$, selectedById$ } from '../messages';
+import {
+  FolderOpen,
+  FileImage,
+  Video,
+  FileText,
+  Square,
+  Trash2,
+  FolderPlus,
+  FolderInput,
+} from 'lucide-react';
 import { FAILED, PENDING, PROCESSING, SUCCESS, UPLOADING, uploadItems$ } from '@common/api/medias';
 import {
   tooltip,
@@ -27,6 +36,8 @@ import { JobsTable } from './JobsTable';
 import { useSyncColl } from '@common/hooks/useSyncColl';
 import { SearchField } from './SearchField';
 import { needAuthId, needGroupId } from '@common/api/messages';
+import { SelectedField } from './SelectedField';
+import { MediaPreview } from './MediaPreview';
 
 addTranslates({
   [PENDING]: 'en attente',
@@ -45,27 +56,6 @@ const css: Css = {
   },
   '&Icon span': {
     ml: 0.5,
-  },
-
-  '&Preview': {
-    position: 'absolute',
-    xy: '50%',
-    wh: '100%',
-    translate: '-50%, -50%',
-    bgMode: 'contain',
-    transition: 0.2,
-    userSelect: 'none',
-    pointerEvents: 'none',
-  },
-  '&PreviewCell:hover &Preview': {
-    xy: '50%',
-    wh: 15,
-    zIndex: 1,
-    translate: '-50%, -50%',
-    // bg: 'primary',
-    // border: 'primary',
-    // borderWidth: '0.5em',
-    rounded: 1,
   },
 
   [`&-${PENDING}`]: {},
@@ -173,6 +163,9 @@ export const MediasTable = () => {
 
   const sortedMedias = sort(medias, (m) => m.order);
 
+  const selectedById = useMsg(selectedById$);
+  const selectedIds = Object.keys(selectedById).filter(id => mediaById[id]);
+
   return (
     <>
       <MediasProgress />
@@ -211,7 +204,7 @@ export const MediasTable = () => {
           {sortedMedias.map((m) => (
             <Row key={m.id}>
               <Cell variant="check">
-                <Field type="check" />
+                <SelectedField id={m.id} />
               </Cell>
               <Cell variant="row">
                 <Div cls={``} style={{ width: 2 * (m.paths.length - 1) + 'em' }} />
@@ -225,20 +218,25 @@ export const MediasTable = () => {
               <Cell>
                 <Field value={m.desc} onValue={(desc) => syncMedias.update(m.id, { desc })} />
               </Cell>
-              <Cell cls={`${c}PreviewCell`}>
-                <Div
-                  cls={`${c}Preview`}
-                  style={{
-                    backgroundImage: `url("${collMedias.getThumbUrl(m.id, m.source, [300, 300])}")`,
-                  }}
-                />
+              <Cell>
+                <MediaPreview media={m} />
               </Cell>
               <Cell>{sizeFormat(m.bytes)}</Cell>
-              <Cell>
-                {(m.width||m.height)?(m.width||0)+'x'+(m.height||0):''}
-              </Cell>
+              <Cell>{m.width || m.height ? (m.width || 0) + 'x' + (m.height || 0) : ''}</Cell>
               <Cell>{secondsFormat(m.seconds)}</Cell>
               <Cell variant="around">
+                {m.type === 'folder' && selectedIds.length > 0 && (
+                  <Button
+                    icon={<FolderInput />}
+                    {...tooltip(`Ajouter ${selectedIds.length} élément(s) au dossier`)}
+                    onClick={async () => {
+                      for (const id of selectedIds) {
+                        selectedById$.setItem(id, undefined);
+                        await collMedias.update(id, { parent: m.id });
+                      }
+                    }}
+                  />
+                )}
                 <Button
                   icon={<Trash2 />}
                   color="error"
