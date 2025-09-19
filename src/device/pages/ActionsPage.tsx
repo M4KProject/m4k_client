@@ -64,7 +64,7 @@ const css: Css = {
 const installApk = async (fileName: string) => {
   const prog = newProgressDialog('Installer AutoStart');
 
-  const downloadUrl = `https://k.m4k.fr/${fileName}`;
+  const downloadUrl = `https://i.m4k.fr/${fileName}`;
   const downloadPath = `@cache/${fileName}`;
   prog(0.1, 'info', `Télécharger : "${downloadUrl}" -> "${downloadPath}"`);
 
@@ -139,7 +139,7 @@ export const ActionsPage = () => {
       </Div>
 
       <Div cls={`${c}Buttons`}>
-        <Button color="primary" onClick={() => installApk('M4Kiosk.apk')}>
+        <Button color="primary" onClick={() => installApk('m4k.apk')}>
           Installer la derniére version du Kiosk
         </Button>
         <Button color="secondary" onClick={clearCacheAndReload}>
