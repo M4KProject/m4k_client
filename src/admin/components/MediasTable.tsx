@@ -164,7 +164,7 @@ export const MediasTable = () => {
   const sortedMedias = sort(medias, (m) => m.order);
 
   const selectedById = useMsg(selectedById$);
-  const selectedIds = Object.keys(selectedById).filter(id => mediaById[id]);
+  const selectedIds = Object.keys(selectedById).filter((id) => mediaById[id]);
 
   return (
     <>
