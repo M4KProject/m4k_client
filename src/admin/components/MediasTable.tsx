@@ -180,19 +180,11 @@ export const MediasTable = () => {
           icon={<FolderPlus />}
           {...tooltip('Créer un nouveau dossier')}
           onClick={() => {
-            const name = prompt('Nom du dossier:');
-            if (name) {
-              syncMedias.create({
-                title: name,
-                mime: 'application/folder',
-                type: 'folder',
-                desc: '',
-                bytes: 0,
-                width: 0,
-                height: 0,
-                seconds: 0,
-              });
-            }
+            syncMedias.create({
+              title: 'Nouveau Dossier',
+              mime: 'application/folder',
+              type: 'folder',
+            });
           }}
         >
           Nouveau dossier
@@ -213,7 +205,7 @@ export const MediasTable = () => {
         </TableHead>
         <TableBody>
           {sortedMedias.map((m) => (
-            <Row key={m.id}>
+            <Row key={m.id} draggable>
               <Cell variant="row">
                 <Div cls={``} style={{ width: 2 * (m.paths.length - 1) + 'em' }} />
                 {getTypeIcon(c, m.type || '')}
