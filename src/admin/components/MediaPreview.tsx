@@ -1,13 +1,18 @@
 import { Css } from '@common/ui';
-import { useCss } from '@common/hooks';
+import { useCss, useMsg } from '@common/hooks';
 import { Div } from '@common/components';
 import { collMedias } from '@common/api/collMedias';
 import { FileInfo, MediaModel } from '@common/api/models';
-import { useState } from 'preact/hooks';
-import { isStrNotEmpty } from '@common/utils';
+import { isStrNotEmpty, Msg } from '@common/utils';
 
 const css: Css = {
   '&': {
+    position: 'relative',
+    xy: 0,
+    wh: '100%',
+    userSelect: 'none',
+  },
+  '& div': {
     position: 'absolute',
     xy: '50%',
     wh: '100%',
@@ -16,14 +21,11 @@ const css: Css = {
     transition: 0.2,
     userSelect: 'none',
   },
-  '&:hover': {
+  '&-over div': {
     xy: '50%',
     wh: 15,
     zIndex: 1,
     translate: '-50%, -50%',
-    // bg: 'primary',
-    // border: 'primary',
-    // borderWidth: '0.5em',
     rounded: 1,
   },
   '& video': {
@@ -57,6 +59,8 @@ const getVariants = (media?: MediaModel): Variant[] => {
 const getThumbUrl = (v?: Variant) => v && collMedias.getThumbUrl(v.media.id, v.file, [300, 300]) || '';
 const getUrl = (v?: Variant) => v && collMedias.getUrl(v.media.id, v.file) || '';
 
+const mediaOver$ = new Msg('');
+
 export const MediaPreview = ({ media }: { media: MediaModel }) => {
   const c = useCss('MediaPreview', css);
 
@@ -65,42 +69,34 @@ export const MediaPreview = ({ media }: { media: MediaModel }) => {
   const images = variants.filter(v => v.type === 'image');
   const videos = variants.filter(v => v.type === 'video');
 
-  const [isOver, setIsOver] = useState(false);
+  const isOver = useMsg(mediaOver$) === media.id;
   
   return (
     <Div
-      cls={c}
-      onMouseOver={() => {
-        console.debug('onMouseOver', media.id);
-        setIsOver(true);
-      }}
-      onMouseLeave={() => {
-        console.debug('onMouseLeave', media.id);
-        setIsOver(false);
-      }}
-      style={{
-        backgroundImage: `url("${getThumbUrl(images[0])}")`,
-      }}
+      cls={[c, isOver && `${c}-over`]}
+      onMouseOver={() => mediaOver$.set(media.id)}
+      onMouseLeave={() => mediaOver$.next(p => p === media.id ? '' : p)}
     >
-      {(isOver && videos.length) ? (
-        <video 
-          controls 
-          muted 
-          autoPlay 
-          loop
-          onLoadStart={(e) => {
-            // Start playing when video loads
-            e.currentTarget.currentTime = 0;
-          }}
-          onError={(e) => {
-            console.warn('Video preview error:', e);
-          }}
-        >
-          {videos.map((v, i) => (
-            <source key={i} type={v.mime} src={getUrl(v)} />
-          ))}
-        </video>
-      ) : null}
+      <Div style={{ backgroundImage: `url("${getThumbUrl(images[0])}")` }}>
+        {(isOver && videos.length) ? (
+          <video 
+            controls={false}
+            muted 
+            autoPlay 
+            loop
+            onLoadStart={(e) => {
+              e.currentTarget.currentTime = 0;
+            }}
+            onError={(e) => {
+              console.warn('Video preview error:', e);
+            }}
+          >
+            {videos.map((v, i) => (
+              <source key={i} type={v.mime} src={getUrl(v)} />
+            ))}
+          </video>
+        ) : null}
+      </Div>
     </Div>
   );
 };

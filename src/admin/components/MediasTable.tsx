@@ -11,6 +11,7 @@ import {
   Trash2,
   FolderPlus,
   FolderInput,
+  MapPlus
 } from 'lucide-react';
 import { FAILED, PENDING, PROCESSING, SUCCESS, UPLOADING, uploadItems$ } from '@common/api/medias';
 import {
@@ -38,6 +39,7 @@ import { SearchField } from './SearchField';
 import { needAuthId, needGroupId } from '@common/api/messages';
 import { SelectedField } from './SelectedField';
 import { MediaPreview } from './MediaPreview';
+import { MediaModel } from '@common/api/models';
 
 addTranslates({
   [PENDING]: 'en attente',
@@ -139,6 +141,16 @@ export const MediasProgress = () => {
   );
 };
 
+export const getNextTitle = (medias: MediaModel[], start: string) => {
+  let i = 1;
+  let title = start;
+  while (true) {
+    if (!medias.find(m => m.title===title)) break;
+    title = start + (++i);
+  }
+  return title;
+}
+
 export const MediasTable = () => {
   const c = useCss('Media', css);
   const isAdvanced = useMsg(isAdvanced$);
@@ -175,7 +187,7 @@ export const MediasTable = () => {
           {...tooltip('Créer un nouveau dossier')}
           onClick={() => {
             collMedias.create({
-              title: 'Nouveau Dossier',
+              title: getNextTitle(medias, 'Dossier'),
               mime: 'application/folder',
               type: 'folder',
               user: needAuthId(),
@@ -184,6 +196,21 @@ export const MediasTable = () => {
           }}
         >
           Nouveau dossier
+        </Button>
+        <Button
+          icon={<MapPlus />}
+          {...tooltip('Créer une playlist')}
+          onClick={() => {
+            collMedias.create({
+              title: getNextTitle(medias, 'Playlist'),
+              mime: 'application/playlist',
+              type: 'playlist',
+              user: needAuthId(),
+              group: needGroupId(),
+            });
+          }}
+        >
+          Ajouter Playlist
         </Button>
         <SearchField />
       </Toolbar>
