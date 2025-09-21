@@ -1,10 +1,10 @@
 import { Css } from '@common/ui';
 import { repeat } from '@common/utils';
-import { useCss } from '@common/hooks';
+
 import { Div } from '@common/components';
 import { openCodePinDialog } from './CodePinView';
 
-const css: Css = {
+const css = Css('Corner', {
   '&': {
     position: 'absolute',
     zIndex: 9999,
@@ -22,8 +22,6 @@ let count = 0;
 let last = 0;
 
 export const Corners = () => {
-  const c = useCss('Corner', css);
-
   const handle = () => {
     if (last + 500 < Date.now()) count = 0;
     last = Date.now();
@@ -40,7 +38,7 @@ export const Corners = () => {
       {repeat(4, (i) => (
         <Div
           key={i}
-          cls={[c, `${c}-${i}`]}
+          cls={[css(), css(`-${i}`)]}
           style={{
             [i < 2 ? 'top' : 'bottom']: 0,
             [i % 2 === 0 ? 'left' : 'right']: 0,

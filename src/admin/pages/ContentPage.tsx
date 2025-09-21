@@ -1,5 +1,5 @@
 import { Css } from '@common/ui';
-import { useCss } from '@common/hooks';
+
 import { Button } from '@common/components';
 import { RefreshCw } from 'lucide-react';
 import { Page, PageHeader, PageBody } from '@common/components';
@@ -15,7 +15,7 @@ import { EmptyContent } from './Content/EmptyContent';
 import { HiboutikContent } from './Content/HiboutikContent';
 import { coll, ContentModel } from '@common/api';
 
-const css: Css = {};
+const css = Css('ContentPage', {});
 
 export const contentByType: Record<string, [string, (props: ContentProps) => JSX.Element]> = {
   empty: ['', EmptyContent],
@@ -27,7 +27,6 @@ export const contentByType: Record<string, [string, (props: ContentProps) => JSX
 };
 
 export const ContentPage = () => {
-  const c = useCss('ContentPage', css);
   // const auth = useMsg(auth$);
   const content = null as any; // useMsg(content$);
 
@@ -50,7 +49,7 @@ export const ContentPage = () => {
   };
 
   return (
-    <Page cls={c}>
+    <Page  cls={css()}>
       <PageHeader title={`${label}: ${title}`}>
         <Button
           title="Rafraîchir"

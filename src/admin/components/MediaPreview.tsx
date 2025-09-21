@@ -1,10 +1,10 @@
 import { Css } from '@common/ui';
-import { useCss, useMsg } from '@common/hooks';
+import { useMsg } from '@common/hooks';
 import { Div } from '@common/components';
 import { FileInfo, MediaModel, getUrl } from '@common/api';
 import { isStrNotEmpty, Msg } from '@common/utils';
 
-const css: Css = {
+const css = Css('MediaPreview', {
   '&': {
     position: 'relative',
     xy: 0,
@@ -32,7 +32,7 @@ const css: Css = {
     objectFit: 'contain',
     cursor: 'pointer',
   },
-};
+});
 
 interface Variant extends FileInfo {
   media: MediaModel;
@@ -60,8 +60,6 @@ const getMediaUrl = (v?: Variant, thumb?: [number, number]) => v && getUrl('medi
 const mediaOver$ = new Msg('');
 
 export const MediaPreview = ({ media }: { media: MediaModel }) => {
-  const c = useCss('MediaPreview', css);
-
   const variants = getVariants(media);
 
   const images = variants.filter(v => v.type === 'image');
@@ -71,7 +69,7 @@ export const MediaPreview = ({ media }: { media: MediaModel }) => {
   
   return (
     <Div
-      cls={[c, isOver && `${c}-over`]}
+      cls={[css(), isOver && `${css()}-over`]}
       onMouseOver={() => mediaOver$.set(media.id)}
       onMouseLeave={() => mediaOver$.next(p => p === media.id ? '' : p)}
     >

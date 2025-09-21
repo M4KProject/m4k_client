@@ -1,14 +1,15 @@
 import { Css } from '@common/ui';
 import { Msg } from '@common/utils';
 import { useEffect, useState } from 'preact/hooks';
-import { useTimerMs, useMsg, useCss } from '@common/hooks';
+import { useTimerMs, useMsg } from '@common/hooks';
 import { page$ } from '../messages/page$';
-import { Button, ButtonRow, Div, Field, Form, showDialog } from '@common/components';
+import { Button, Div, Field, Form, showDialog } from '@common/components';
 import { Globe, Lock } from 'lucide-react';
 import { device$ } from '../services/device';
 import { codePin$, offlineMode$ } from '../messages';
+import { FlexRow } from '@common/components/Flex';
 
-const css: Css = {
+const css = Css('CodePinView', {
   '&': {
     zIndex: 99999,
   },
@@ -17,10 +18,9 @@ const css: Css = {
     fontSize: 2,
     textAlign: 'center',
   },
-};
+});
 
 export const CodePinView = ({ open$ }: { open$: Msg<boolean> }) => {
-  const c = useCss('m4kCodePinView', css);
   const [codePin, setCodePin] = useState('');
   const device = useMsg(device$);
   const [updated, setUpdated] = useState(0);
@@ -45,10 +45,10 @@ export const CodePinView = ({ open$ }: { open$: Msg<boolean> }) => {
   }, [codePin]);
 
   return (
-    <Form cls={c}>
-      <Div cls={`${c}Code`}>{device?.key}</Div>
+    <Form  cls={css()}>
+      <Div cls={css(`Code`)}>{device?.key}</Div>
       <Field type="password" label="Code PIN" value={codePin} onValue={setCodePin} />
-      <ButtonRow>
+      <FlexRow>
         <Button icon={<Lock />} onClick={handleClose}>
           Valider
         </Button>
@@ -60,7 +60,7 @@ export const CodePinView = ({ open$ }: { open$: Msg<boolean> }) => {
         >
           Online
         </Button>
-      </ButtonRow>
+      </FlexRow>
     </Form>
     // <>
     //     <Form

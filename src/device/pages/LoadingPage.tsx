@@ -1,17 +1,16 @@
 import { Css, flexCenter } from '@common/ui';
-import { useCss } from '@common/hooks';
+
 import { Loading, Page } from '@common/components';
 
-const css: Css = {
+const css = Css('LoadingPage', {
   '&': {
     ...flexCenter(),
   },
-};
+});
 
 export const LoadingPage = () => {
-  const c = useCss('LoadingPage', css);
   return (
-    <Page cls={c}>
+    <Page cls={css()}>
       <Loading />
     </Page>
   );

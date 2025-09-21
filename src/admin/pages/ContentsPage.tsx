@@ -1,6 +1,6 @@
 import { Css, clipboardCopy, clipboardPaste } from '@common/ui';
 import { isSearched, toErr, toBool } from '@common/utils';
-import { useAsync, useCss, useMsg } from '@common/hooks';
+import { useAsync, useMsg } from '@common/hooks';
 import { search$ } from '../messages/search$';
 import {
   Button,
@@ -21,7 +21,7 @@ import { SearchField } from '../components/SearchField';
 import { isAdvanced$ } from '../messages';
 import { auth$, groupId$, needGroupId, ContentModel, ModelUpdate, coll } from '@common/api';
 
-const css: Css = {};
+const css = Css('ContentsPage', {});
 
 const collContents = coll('contents');
 const collGroups = coll('groups');
@@ -49,7 +49,6 @@ const handlePaste = async (content: ContentModel) => {
 };
 
 export const ContentsPage = () => {
-  const c = useCss('ContentsPage', css);
   const search = useMsg(search$);
   const auth = useMsg(auth$);
   const groupId = useMsg(groupId$);
@@ -90,7 +89,7 @@ export const ContentsPage = () => {
   };
 
   return (
-    <Page cls={c}>
+    <Page  cls={css()}>
       <PageHeader title="Les contenus">
         <Button title="Ajouter un contenu" icon={<Plus />} color="primary" onClick={handleAdd} />
         <Button title="Rafraîchir" icon={<RefreshCw />} color="primary" onClick={contentsRefresh} />

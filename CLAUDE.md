@@ -134,7 +134,7 @@ message$.set(newValue); // Update from anywhere
 Components use the `useCss` hook with `Css` objects:
 
 ```typescript
-const css: Css = {
+const css = Css('', {
   '&': { /* component root styles */ },
   '&Container': { /* nested element styles */ },
   '&Title': { /* title styles */ }
@@ -142,7 +142,7 @@ const css: Css = {
 
 const Component = () => {
   const c = useCss('ComponentName', css);
-  return <Div cls={c}>Content</Div>;
+  return <Div  cls={css()}>Content</Div>;
 };
 ```
 
@@ -244,11 +244,11 @@ if (!auth) {
 ### Component Creation Pattern
 
 ```typescript
-import { useCss } from '@common/hooks';
+
 import { Css } from '@common/utils';
 import { Div, Button } from '@common/components';
 
-const css: Css = {
+const css = Css('', {
   '&': { /* component root */ },
   '&Item': { /* nested element */ }
 };
@@ -256,8 +256,8 @@ const css: Css = {
 export const MyComponent = ({ children }: { children?: any }) => {
   const c = useCss('MyComponent', css);
   return (
-    <Div cls={c}>
-      <Div cls={`${c}Item`}>
+    <Div  cls={css()}>
+      <Div cls={css(`Item`)}>
         {children}
       </Div>
     </Div>

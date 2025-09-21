@@ -1,10 +1,10 @@
-import { useCss } from '@common/hooks';
+
 import { Css, flexColumn, flexRow } from '@common/ui';
 import { Div, AuthForm, Button } from '@common/components';
 import logoUrl from '../assets/logo.svg';
 import loginUrl from '../assets/login.svg';
 
-const css: Css = {
+const css = Css('AuthPage', {
   '&': {
     ...flexRow({ align: 'stretch' }),
     position: 'fixed',
@@ -42,28 +42,26 @@ const css: Css = {
     left: 1,
     opacity: 0.7,
   },
-};
+});
 
 export const AuthPage = () => {
-  const c = useCss('AuthPage', css);
-
   const handleDeviceMode = () => {
     localStorage.setItem('isDevice', 'true');
     window.location.href = '/device/';
   };
 
   return (
-    <Div cls={`${c}`}>
-      <Div cls={`${c}Content`}>
-        <Div cls={`${c}Logo`} />
-        <Div cls={`${c}Title`}>
+    <Div  cls={css()}>
+      <Div cls={css(`Content`)}>
+        <Div cls={css(`Logo`)} />
+        <Div cls={css(`Title`)}>
           PLV DIGITALE - BORNES ET ECRANS INTERACTIFS - CONTENUS NUMERIQUES
         </Div>
-        <Div cls={`${c}Illu`} />
+        <Div cls={css(`Illu`)} />
       </Div>
       <AuthForm />
       <Button
-        cls={`${c}DeviceButton`}
+        cls={css(`DeviceButton`)}
         color="secondary"
         onClick={handleDeviceMode}
         title="Passer en mode device"
@@ -89,7 +87,7 @@ export const AuthPage = () => {
 //             <Button color="primary" onClick={() => signIn(email, password)}>
 //                 Sign in
 //             </Button>
-//             <Div cls={`${c}Links`}>
+//             <Div cls={css(`Links`)}>
 //                 <Button onClick={() => setPage('forgot-password')}>
 //                     Forgot your password?
 //                 </Button>
@@ -106,7 +104,7 @@ export const AuthPage = () => {
 //             <Button color="primary" onClick={() => signUp(email, password)}>
 //                 Sign up
 //             </Button>
-//             <Div cls={`${c}Links`}>
+//             <Div cls={css(`Links`)}>
 //                 <Button onClick={() => setPage('sign-in')}>
 //                     Already have an account? Sign in
 //                 </Button>
@@ -119,7 +117,7 @@ export const AuthPage = () => {
 //             <Button color="primary" onClick={() => resetPassword(email)}>
 //                 Send reset password instructions
 //             </Button>
-//             <Div cls={`${c}Links`}>
+//             <Div cls={css(`Links`)}>
 //                 <Button onClick={() => setPage('code')}>
 //                     Utiliser un code
 //                 </Button>
@@ -136,7 +134,7 @@ export const AuthPage = () => {
 //             <Button color="primary" onClick={() => signWithCode(email, password)}>
 //                 Connexion avec le CODE
 //             </Button>
-//             <Div cls={`${c}Links`}>
+//             <Div cls={css(`Links`)}>
 //                 <Button onClick={() => setPage('sign-in')}>
 //                     Already have an account? Sign in
 //                 </Button>

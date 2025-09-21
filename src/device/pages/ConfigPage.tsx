@@ -1,11 +1,11 @@
 import { Css, flexRow } from '@common/ui';
 import { Form, Field, Button } from '@common/components';
 import { m4k } from '@common/m4k';
-import { usePromise, useCss } from '@common/hooks';
+import { usePromise } from '@common/hooks';
 import { toNbr } from '@common/utils/cast';
 import { useState } from 'preact/hooks';
 
-const css: Css = {
+const css = Css('ConfigPage', {
   '&': {
     p: 1,
   },
@@ -20,8 +20,6 @@ const css: Css = {
 };
 
 const ConfigPage = () => {
-  const c = useCss('ConfigPage', css);
-
   // Base configuration state
   const [password, setPassword] = useState('');
   const [initBase] = usePromise(async () => {
@@ -106,7 +104,7 @@ const ConfigPage = () => {
   };
 
   return (
-    <div class={c}>
+    <div class={css()}>
       {initBase !== undefined ? (
         <Form title="Configuration Base" onSubmit={handleBaseSubmit}>
           <Field
@@ -117,7 +115,7 @@ const ConfigPage = () => {
             onValue={setPassword}
             required
           />
-          <div class={`${c}Actions`}>
+          <div class={css(`Actions`)}>
             <Button>Sauvegarder</Button>
           </div>
         </Form>
@@ -143,7 +141,7 @@ const ConfigPage = () => {
             value={backColor}
             onValue={setBackColor}
           />
-          <div class={`${c}Actions`}>
+          <div class={css(`Actions`)}>
             <Button>Sauvegarder</Button>
           </div>
         </Form>
@@ -203,7 +201,7 @@ const ConfigPage = () => {
               ['false', 'non'],
             ]}
           />
-          <div class={`${c}Actions`}>
+          <div class={css(`Actions`)}>
             <Button>Sauvegarder</Button>
           </div>
         </Form>

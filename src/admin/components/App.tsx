@@ -1,6 +1,6 @@
 import { SideBar } from './SideBar';
 import { Css, flexCenter, flexRow } from '@common/ui';
-import { useCss, useMsg } from '@common/hooks';
+import { useMsg } from '@common/hooks';
 import { Div } from '@common/components';
 import { usePWA } from '../../serviceWorker';
 import { JSX } from 'preact';
@@ -18,7 +18,7 @@ import { auth$ } from '@common/api';
 import { DevicePage } from '../pages/DevicePage';
 import { AdminPage, useAdminPage } from '../messages/adminPage$';
 
-const css: Css = {
+const css = Css('App', {
   '&': {
     ...flexRow({ align: 'stretch' }),
     position: 'fixed',
@@ -34,7 +34,7 @@ const css: Css = {
   '& .Button': {
     fontSize: 1.4,
   },
-};
+});
 
 const CompByPage: Record<AdminPage, () => JSX.Element> = {
   '': GroupsPage,
@@ -56,7 +56,6 @@ const AppRouter = () => {
 };
 
 const AppContent = () => {
-  const c = useCss('App', css);
   const auth = useMsg(auth$);
 
   // Initialize PWA
@@ -70,7 +69,7 @@ const AppContent = () => {
   // console.debug("Div", { c, auth });
 
   return (
-    <Div cls={c}>
+    <Div  cls={css()}>
       <SideBar />
       <AppRouter />
     </Div>

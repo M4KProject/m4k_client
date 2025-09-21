@@ -1,11 +1,12 @@
-import { useCss, useMsg } from '@common/hooks';
+import { useMsg } from '@common/hooks';
 import { Css, flexColumn } from '@common/ui';
-import { Button, ButtonRow, Div } from '@common/components';
+import { Button, Div } from '@common/components';
 import { device$ } from '../services/device';
 import { page$ } from '../messages/page$';
 import { offlineMode$ } from '../messages';
+import { FlexRow } from '@common/components/Flex';
 
-const css: Css = {
+const css = Css('PairingPage', {
   '&': {
     ...flexColumn({ align: 'center', justify: 'center' }),
     wh: '100%',
@@ -77,29 +78,28 @@ const css: Css = {
     fontFamily: 'monospace',
     wordBreak: 'break-all', // Permet de couper les longues clés si nécessaire
   },
-};
+});
 
 export const PairingPage = () => {
-  const c = useCss('PairingPage', css);
   const device = useMsg(device$);
   const pairingCode = device?.key || device?.id || 'Chargement...';
 
   return (
-    <Div cls={`${c}`}>
-      <Div cls={`${c}Container`}>
-        <Div cls={`${c}SpinnerContainer`}>
-          <Div cls={`${c}Spinner`} />
+    <Div cls={css()}>
+      <Div cls={css(`Container`)}>
+        <Div cls={css(`SpinnerContainer`)}>
+          <Div cls={css(`Spinner`)} />
         </Div>
 
-        <h1 className={`${c}Title`}>En attente de pairage</h1>
+        <h1 class={css(`Title`)}>En attente de pairage</h1>
 
-        <p className={`${c}Subtitle`}>Saisissez cette clé dans l'interface d'administration</p>
+        <p class={css(`Subtitle`)}>Saisissez cette clé dans l'interface d'administration</p>
 
-        <Div cls={`${c}CodeContainer`}>
-          <Div cls={`${c}Code`}>{pairingCode}</Div>
+        <Div cls={css(`CodeContainer`)}>
+          <Div cls={css(`Code`)}>{pairingCode}</Div>
         </Div>
 
-        <ButtonRow>
+        <FlexRow>
           <Button
             title="Mode Offline"
             color="secondary"
@@ -108,7 +108,7 @@ export const PairingPage = () => {
               page$.set('kiosk');
             }}
           />
-        </ButtonRow>
+        </FlexRow>
       </Div>
     </Div>
   );

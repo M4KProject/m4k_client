@@ -1,11 +1,11 @@
 import { ContentModel } from '@common/api';
 import { Css } from '@common/ui';
-import { useCss } from '@common/hooks';
+
 import { Div } from '@common/components';
 import { ContentProps } from './ContentProps';
 import { Field } from '@common/components';
 
-const css: Css = {};
+const css = Css('EmptyContent', {});
 
 const types: [string, string][] = [
   ['empty', ''],
@@ -15,9 +15,8 @@ const types: [string, string][] = [
 ];
 
 export const EmptyContent = ({ content, updateContent }: ContentProps<ContentModel>) => {
-  const c = useCss('EmptyContent', css);
   return (
-    <Div cls={c}>
+    <Div  cls={css()}>
       <Field
         label="Type de contenu"
         type="select"

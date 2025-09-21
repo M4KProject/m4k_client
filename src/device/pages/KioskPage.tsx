@@ -1,7 +1,7 @@
 import { flexColumn, flexCenter, Css } from '@common/ui';
 import { toNbr, toErr } from '@common/utils';
 import { Button, Div } from '@common/components';
-import { useCss, usePromise, useMsg } from '@common/hooks';
+import { usePromise, useMsg } from '@common/hooks';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { openCodePinDialog } from '../components/CodePinView';
 import { device$ } from '../services/device';
@@ -10,7 +10,7 @@ import { m4k } from '@common/m4k';
 
 type PlaylistItem = any;
 
-const css: Css = {
+const css = Css('Kiosk', {
   '&Container': {
     position: 'fixed',
     inset: 0,
@@ -70,7 +70,7 @@ const css: Css = {
     fg: 'warn',
     m: 1,
   },
-};
+});
 
 const KioskVideo = ({
   url,
@@ -139,7 +139,6 @@ const KioskItem = ({
   pos: 'hidden' | 'prev' | 'curr' | 'next';
   gotoNext: () => void;
 }) => {
-  const c = useCss('Kiosk', css);
   const ref = useRef(null);
   const [info] = usePromise(() => m4k.fileInfo(item.path), [item]);
 
@@ -171,7 +170,7 @@ const KioskItem = ({
 
   return (
     <Div
-      cls={[`${c}`, itemFit && `${c}-${itemFit}`, itemAnim && `${c}-${itemAnim}`, `${c}-${pos}`]}
+      cls={[css(), itemFit && css(`-${itemFit}`), itemAnim && css(`-${itemAnim}`), css(`-${pos}`)]}
     >
       {isVideo && isCurr && info && info.url ? (
         <KioskVideo url={info.url} gotoNext={gotoNext} hasVideoMuted={hasVideoMuted} />
@@ -187,7 +186,6 @@ const KioskItem = ({
 };
 
 export const KioskPage = () => {
-  const c = useCss('Kiosk', css);
   const device = useMsg(device$);
 
   const [open, setOpen] = useState(false);
@@ -218,7 +216,7 @@ export const KioskPage = () => {
   // Si un contenu est associé au device, l'afficher via ContentViewer
   if (device?.media) {
     return (
-      <Div cls={`${c}Container`}>
+      <Div cls={css(`Container`)}>
         {/* TODO media <ContentViewer contentKey={device?.media} /> */}
       </Div>
     );
@@ -234,7 +232,7 @@ export const KioskPage = () => {
 
   if (length === 0) {
     return (
-      <Div cls={`${c}Container ${c}Container-center`}>
+      <Div cls={`${css()}Container ${css()}Container-center`}>
         Aucun élément dans la playlist
         <Button color="primary" onClick={() => openCodePinDialog()}>
           Configurer
@@ -245,14 +243,14 @@ export const KioskPage = () => {
 
   if (url && open) {
     return (
-      <Div cls={`${c}Container`}>
+      <Div cls={css(`Container`)}>
         <iframe src={url.startsWith('http') ? url : `https://${url}`} />
       </Div>
     );
   }
 
   return (
-    <Div cls={`${c}Container`} onClick={() => setOpen(true)}>
+    <Div cls={css(`Container`)} onClick={() => setOpen(true)}>
       {items.map((item, index) => (
         <KioskItem
           key={`${item.path}-${index}`}

@@ -1,6 +1,6 @@
 import { Css } from '@common/ui';
 import { deepClone } from '@common/utils';
-import { useCss } from '@common/hooks';
+
 import { TableContentModel } from '@common/api';
 import { Button } from '@common/components';
 import { Copy, Trash2 } from 'lucide-react';
@@ -19,11 +19,10 @@ import { ContentProps } from './ContentProps';
 import { FieldsEdit } from './FieldsEdit';
 import { app } from '../../../app';
 
-const css: Css = {};
+const css = Css('TableContent', {});
 
 export const TableContent = (props: ContentProps<TableContentModel>) => {
   const { data, updateData } = props;
-  const c = useCss('TableContent', css);
   const fields = data.fields || [];
   const items = data.items || [];
 
@@ -31,7 +30,7 @@ export const TableContent = (props: ContentProps<TableContentModel>) => {
   app.updateData = updateData;
 
   return (
-    <Div cls={c}>
+    <Div cls={css()}>
       <FieldsEdit {...props} />
       <Table>
         <TableHead>

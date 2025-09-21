@@ -1,5 +1,5 @@
 import { useMsg } from '@common/hooks';
-import { useCss } from '@common/hooks';
+
 import { Css, flexColumn } from '@common/ui';
 import { Side, SideButton, SideSep } from '@common/components';
 import { Div } from '@common/components';
@@ -9,7 +9,7 @@ import { AdminPage, adminPage$ } from '../messages/adminPage$';
 import { useQuery } from '@common/hooks/useQuery';
 import { groupCtrl } from '../controllers';
 
-const css: Css = {
+const css = Css('SideBar', {
   '&': {
     position: 'relative',
     w: 13,
@@ -65,10 +65,9 @@ const css: Css = {
     borderRadius: '0 0.5em 0.5em 0',
   },
   '&-editor &Sep': { visibility: 'hidden' },
-};
+});
 
 export const SideBar = () => {
-  const c = useCss('SideBar', css);
   const isAdvanced = useMsg(isAdvanced$);
 
   const group = useMsg(group$);
@@ -85,7 +84,7 @@ export const SideBar = () => {
       <SideSep />
       {group || isAdvanced ? (
         <>
-          <Div cls={`${c}Sep ${c}Sep-group`}>{group?.name}</Div>
+          <Div cls={css(`Sep ${css()}Sep-group`)}>{group?.name}</Div>
           <SideButton title="Membres" icon={<Users />} page="members" onClick={go('members')} />
           <SideButton title="Appareils" icon={<Monitor />} page="devices" onClick={go('devices')} />
           <SideButton title="Médias" icon={<Image />} page="medias" onClick={go('medias')} />
@@ -93,7 +92,7 @@ export const SideBar = () => {
         </>
       ) : null}
       <SideSep />
-      <Div cls={`${c}Sep ${c}Sep-version`}>2.0.0</Div>
+      <Div cls={css(`Sep ${css()}Sep-version`)}>2.0.0</Div>
       <SideButton title="Mon Compte" icon={<User />} page="account" onClick={go('account')} />
     </Side>
   );

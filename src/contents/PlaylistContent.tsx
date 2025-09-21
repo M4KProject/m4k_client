@@ -1,4 +1,4 @@
-import { useCss, useMsg } from '@common/hooks';
+import { useMsg } from '@common/hooks';
 import { Css, flexColumn } from '@common/ui';
 import { dateToSeconds, Msg, uniq, toList } from '@common/utils';
 import { Div, Field, Flag } from '@common/components';
@@ -8,7 +8,7 @@ import { PlaylistContentModel, PlaylistEntry } from '@common/api';
 import { PDFViewer } from './PDFViewer';
 import { mediaCtrl } from '@/admin/controllers';
 
-const css: Css = {
+const css = Css('PlaylistContent', {
   '&': {
     ...flexColumn({ align: 'stretch' }),
     wMin: '100vw',
@@ -54,11 +54,10 @@ const css: Css = {
     fg: '#7a624a',
     bg: '#efefef',
   },
-};
+});
 
 // Observables globaux pour la sélection des time slots et langues
 export const PlaylistContent = ({ content, medias }: ContentProps<PlaylistContentModel>) => {
-  const c = useCss('PlaylistContent', css);
   console.debug('PlaylistContent', content, content.data.items);
 
   const selected$ = useMemo(() => new Msg<PlaylistEntry | null>(null), []);
@@ -113,15 +112,15 @@ export const PlaylistContent = ({ content, medias }: ContentProps<PlaylistConten
   console.debug('PlaylistContent visibility', { hasMedia });
 
   return (
-    <Div cls={`${c}`}>
-      <Div cls={`${c}ItemSelect ${hasMedia ? '' : 'autoHide'}`}>
+    <Div cls={css()}>
+      <Div cls={css(`ItemSelect ${hasMedia ? '' : 'autoHide'}`)}>
         <Field
           type="select"
           items={filteredItems.map((item) => [item, item.title])}
           msg={selected$}
         />
       </Div>
-      <Div cls={`${c}LanguageSelect ${hasMedia ? '' : 'autoHide'}`}>
+      <Div cls={css(`LanguageSelect ${hasMedia ? '' : 'autoHide'}`)}>
         <Field
           type="picker"
           items={languages.map((iso) => [iso, <Flag iso={iso} />])}
@@ -130,7 +129,7 @@ export const PlaylistContent = ({ content, medias }: ContentProps<PlaylistConten
       </Div>
 
       {mediaUrl && (
-        <Div cls={`${c}PDFContainer`}>
+        <Div cls={css(`PDFContainer`)}>
           <PDFViewer url={mediaUrl} />
         </Div>
       )}

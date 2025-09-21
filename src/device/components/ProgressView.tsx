@@ -1,11 +1,11 @@
 import { autoScrollEnd, Css, flexColumn } from '@common/ui';
 import { Msg } from '@common/utils';
 import { Div, Progress } from '@common/components';
-import { useCss, useMsg } from '@common/hooks';
+import { useMsg } from '@common/hooks';
 import { dialog$ } from '../messages/dialog$';
 import { useEffect, useRef } from 'preact/hooks';
 
-const css: Css = {
+const css = Css('ProgressView', {
   '&': {
     ...flexColumn({ align: 'stretch' }),
   },
@@ -23,7 +23,7 @@ const css: Css = {
   '& .m4kLog-info': { fg: 'info' },
   '& .m4kLog-warn': { fg: 'warn' },
   '& .m4kLog-error': { fg: 'error' },
-};
+});
 
 export interface ProgressData {
   id: string;
@@ -51,7 +51,6 @@ progress$.debounce(10000).on(() => {
 });
 
 const ProgressView = () => {
-  const c = useCss('ProgressView', css);
   const logsRef = useRef<HTMLDivElement>(null);
   const progress = useMsg(progress$);
   const value = progress?.value || 0;
@@ -61,9 +60,9 @@ const ProgressView = () => {
   useEffect(() => autoScrollEnd(logsRef.current), [logs]);
 
   return (
-    <Div cls={c}>
+    <Div  cls={css()}>
       <Progress progress={value * 100} step={step ? step[1] : ''} />
-      <Div ref={logsRef} cls={`${c}Logs`}>
+      <Div ref={logsRef} cls={css(`Logs`)}>
         {logs.map((log, i) => (
           <div key={i + log[1]} className={`m4kLog-${log[0]}`}>
             {log[1]}

@@ -1,18 +1,16 @@
 import { Css } from '@common/ui';
-import { useCss } from '@common/hooks';
+
 import { Page, PageHeader, PageBody } from '@common/components';
 import { JobsTable } from '../components/JobsTable';
 import { SearchField } from '../components/SearchField';
 
-const css: Css = {
+const css = Css('Jobs', {
   '&Page': {},
-};
+});
 
 export const JobsPage = () => {
-  const c = useCss('Jobs', css);
-
   return (
-    <Page cls={`${c}Page`}>
+    <Page cls={css(`Page`)}>
       <PageHeader title="Les jobs">
         <SearchField />
       </PageHeader>

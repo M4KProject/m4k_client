@@ -1,9 +1,9 @@
-import { useCss } from '@common/hooks';
+
 import { Css } from '@common/ui';
 import { Button, Div } from '@common/components';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-const css: Css = {
+const css = Css('PDFToolbar', {
   '&': {
     position: 'absolute',
     bottom: '20px',
@@ -37,7 +37,7 @@ const css: Css = {
   '& .Button-secondary .ButtonIcon': {
     fg: '#5a5a5a',
   },
-};
+});
 
 interface PDFToolbarProps {
   currentPage: number;
@@ -58,16 +58,14 @@ export const PDFToolbar = ({
   onZoomOut,
   onFitWidth,
 }: PDFToolbarProps) => {
-  const c = useCss('PDFToolbar', css);
-
   return (
-    <Div cls={`${c}`}>
+    <Div  cls={css()}>
       <Button
         icon={<ChevronLeft />}
         color={currentPage <= 1 ? 'secondary' : 'primary'}
         onClick={currentPage <= 1 ? undefined : onPreviousPage}
       />
-      <Div cls={`${c}PageInfo`}>
+      <Div cls={css(`PageInfo`)}>
         {currentPage} / {totalPages}
       </Div>
       <Button

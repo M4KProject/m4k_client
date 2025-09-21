@@ -1,6 +1,6 @@
 import { Css } from '@common/ui';
 import { randKey, ReqError } from '@common/utils';
-import { useCss } from '@common/hooks';
+
 import { Field, Button, Page, PageHeader, PageBody, showDialog, Form } from '@common/components';
 import { Plus } from 'lucide-react';
 import { useState } from 'preact/hooks';
@@ -9,7 +9,7 @@ import { SearchField } from '../components/SearchField';
 import { Role, needGroupId } from '@common/api';
 import { memberCtrl, userCtrl } from '../controllers';
 
-const css: Css = {};
+const css = Css('MembersPage', {});
 
 const CreateMemberForm = ({ onClose }: { onClose: () => void }) => {
   const [email, setEmail] = useState('');
@@ -60,8 +60,6 @@ const CreateMemberForm = ({ onClose }: { onClose: () => void }) => {
 };
 
 export const MembersPage = () => {
-  const c = useCss('MembersPage', css);
-
   const handleCreate = () => {
     showDialog('Ajouter un membre', (open$) => (
       <CreateMemberForm onClose={() => open$.set(false)} />
@@ -69,7 +67,7 @@ export const MembersPage = () => {
   };
 
   return (
-    <Page cls={c}>
+    <Page  cls={css()}>
       <PageHeader title="Les membres">
         <Button title="Ajouter un membre" icon={<Plus />} color="primary" onClick={handleCreate} />
         <SearchField />

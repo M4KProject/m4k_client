@@ -1,10 +1,10 @@
 import { Css, flexRow } from '@common/ui';
-import { addTranslates, useCss } from '@common/hooks';
+import { addTranslates } from '@common/hooks';
 import { Div, Tr, Progress } from '@common/components';
 import { JobModel } from '@common/api';
 import { Play, Square, AlertCircle, CheckCircle, Clock } from 'lucide-react';
 
-const css: Css = {
+const css = Css('JobStatus', {
   '&': {
     ...flexRow({ align: 'center', gap: 0.5 }),
   },
@@ -17,7 +17,7 @@ const css: Css = {
   '&-finished': { fg: 'success' },
   '&-failed': { fg: 'error' },
   '&-deleted': { fg: 'muted' },
-};
+});
 
 addTranslates({
   pending: 'En attente',
@@ -41,12 +41,11 @@ interface JobStatusProps {
 
 export const JobStatus = ({ job }: JobStatusProps) => {
   const { status } = job;
-  const c = useCss('JobStatus', css);
   const Icon = statusIcons[status] || Square;
 
   if (status === 'processing') {
     return (
-      <Div cls={`${c} ${c}-processing`}>
+      <Div cls={css(` ${css()}-processing`)}>
         <Progress progress={job.progress || 0} />
       </Div>
     );
@@ -54,14 +53,14 @@ export const JobStatus = ({ job }: JobStatusProps) => {
 
   if (status === 'failed') {
     return (
-      <Div cls={`${c} ${c}-failed`}>
+      <Div cls={css(` ${css()}-failed`)}>
         <Tr>{job.error || ''}</Tr>
       </Div>
     );
   }
 
   return (
-    <Div cls={`${c} ${c}-${status}`}>
+    <Div cls={css(` ${css()}-${status}`)}>
       <Icon size={16} />
       <Tr>{status}</Tr>
     </Div>

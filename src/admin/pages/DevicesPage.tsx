@@ -1,6 +1,6 @@
 import { Css } from '@common/ui';
 import { formatDate, formatDateTime, stringify, toDate, toErr, toTime } from '@common/utils';
-import { useCss, useMsg } from '@common/hooks';
+import { useMsg } from '@common/hooks';
 import {
   Button,
   Field,
@@ -25,7 +25,7 @@ import { SearchField } from '../components/SearchField';
 import { useGroupQuery } from '@common/hooks/useQuery';
 import { deviceCtrl, mediaCtrl } from '../controllers';
 
-const css: Css = {};
+const css = Css('DevicesPage', {});
 
 export const PairingForm = ({ onClose }: { onClose: () => void }) => {
   const [key, setKey] = useState('');
@@ -55,7 +55,6 @@ export const PairingForm = ({ onClose }: { onClose: () => void }) => {
 };
 
 export const DevicesPage = () => {
-  const c = useCss('DevicesPage', css);
   const isAdvanced = useMsg(isAdvanced$);
 
   const medias = useGroupQuery(mediaCtrl);
@@ -87,7 +86,7 @@ export const DevicesPage = () => {
   // };
 
   return (
-    <Page cls={c}>
+    <Page  cls={css()}>
       <PageHeader title="Les écrans">
         <Button icon={<Plus />} color="primary" onClick={handleAdd}>
           Ajouter

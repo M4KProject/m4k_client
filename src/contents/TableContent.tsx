@@ -1,9 +1,9 @@
-import { useCss } from '@common/hooks';
+
 import { Css, flexColumn } from '@common/ui';
 import { Div } from '@common/components';
 import type { ContentProps } from './ContentViewer';
 
-const css: Css = {
+const css = Css('TableContent', {
   '&': {
     ...flexColumn({ align: 'center', justify: 'center' }),
     minHeight: '100vh',
@@ -14,14 +14,12 @@ const css: Css = {
     color: '#666',
     textAlign: 'center',
   },
-};
+});
 
 export const TableContent = ({ content }: ContentProps) => {
-  const c = useCss('TableContent', css);
-
   return (
-    <Div cls={`${c}`}>
-      <Div cls={`${c}Message`}>
+    <Div  cls={css()}>
+      <Div cls={css(`Message`)}>
         <h2>Tableau: {content.title}</h2>
         <p>Affichage des tableaux en cours de développement</p>
       </Div>

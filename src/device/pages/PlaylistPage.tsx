@@ -15,11 +15,11 @@ import {
 } from '@common/components';
 import { Css } from '@common/ui';
 import { round } from '@common/utils';
-import { useCss, useMsg } from '@common/hooks';
+import { useMsg } from '@common/hooks';
 import { ArrowUp, ArrowDown, Copy, Trash2 } from 'lucide-react';
 import { playlist$ } from '../messages';
 
-const css: Css = {
+const css = Css('Playlist', {
   '&Preview': {
     position: 'absolute',
     xy: '50%',
@@ -37,7 +37,7 @@ const css: Css = {
     translate: '-50%, -50%',
     rounded: 1,
   },
-};
+});
 
 const sizeFormat = (size?: number) => {
   if (!size) return '';
@@ -56,7 +56,6 @@ const getFileName = (path?: string) => {
 };
 
 export const PlaylistPage = () => {
-  const c = useCss('Playlist', css);
   const playlist = useMsg(playlist$);
 
   const handleDurationUpdate = (index: number, newDuration: number) => {
@@ -164,10 +163,10 @@ export const PlaylistPage = () => {
             {(playlist?.items || []).map((item, i) => (
               <Row key={i}>
                 <Cell>{item.mimeType}</Cell>
-                <Cell cls={`${c}PreviewCell`}>
+                <Cell cls={css(`PreviewCell`)}>
                   {item.mimeType?.startsWith('image/') && (
                     <Div
-                      cls={`${c}Preview`}
+                      cls={css(`Preview`)}
                       style={{
                         backgroundImage: `url("${item.path}")`,
                       }}

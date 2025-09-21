@@ -1,5 +1,5 @@
 import { Css, flexRow } from '@common/ui';
-import { useCss, useMsg } from '@common/hooks';
+import { useMsg } from '@common/hooks';
 import { FormContentModel, TableContentModel } from '@common/api';
 import {
   Div,
@@ -19,15 +19,14 @@ import { ContentProps } from './ContentProps';
 import { ComponentChildren } from 'preact';
 import { Trash2 } from 'lucide-react';
 
-const css: Css = {
+const css = Css('TableContent', {
   '&Actions': { ...flexRow({ align: 'center' }) },
-};
+});
 
 export const FieldsEdit = ({
   data,
   updateData,
 }: ContentProps<TableContentModel> | ContentProps<FormContentModel>) => {
-  const c = useCss('TableContent', css);
   const isAdvanced = useMsg(isAdvanced$);
   const fields = data.fields || [];
 
@@ -47,8 +46,8 @@ export const FieldsEdit = ({
   };
 
   return (
-    <Div cls={c}>
-      <Div cls={`${c}Actions`}>
+    <Div  cls={css()}>
+      <Div cls={css(`Actions`)}>
         <Button onClick={() => isAdvanced$.next((v) => !v)}>Modifier les champs</Button>
         {isAdvanced && (
           <Button onClick={() => updateData({ fields: [...fields, {}] })}>Ajouter un champ</Button>

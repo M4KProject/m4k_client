@@ -1,14 +1,14 @@
 import { Css, flexRow } from '@common/ui';
 import { toErr } from '@common/utils';
 import { m4k } from '@common/m4k';
-import { useCss, usePromise } from '@common/hooks';
+import { usePromise } from '@common/hooks';
 import { Button, Div } from '@common/components';
 import copyPlaylist from '../copyPlaylist';
 import { newProgressDialog } from '../components/ProgressView';
 import { clearAllCache } from '../../serviceWorker';
 import { copyDir$, url$ } from '../messages';
 
-const css: Css = {
+const css = Css('Actions', {
   '&': {},
   '&Buttons': {
     ...flexRow({ justify: 'around', align: 'center', wrap: 'wrap' }),
@@ -25,7 +25,7 @@ const css: Css = {
   '& .m4kInfo div': {
     m: 0.5,
   },
-};
+});
 
 // const updateM4kioskApk = async () => {
 //     const prog = newProgressDialog("Mise à jour")
@@ -124,13 +124,11 @@ const clearCacheAndReload = async () => {
 };
 
 export const ActionsPage = () => {
-  const c = useCss('Actions', css);
-
   const [info] = usePromise(() => m4k.info(), []);
 
   return (
-    <Div cls={c}>
-      <Div cls={`${c}Info`}>
+    <Div  cls={css()}>
+      <Div cls={css(`Info`)}>
         {Object.entries(info || {}).map(([k, v], i) => (
           <Div key={i}>
             {k}: <b>{v}</b>
@@ -138,7 +136,7 @@ export const ActionsPage = () => {
         ))}
       </Div>
 
-      <Div cls={`${c}Buttons`}>
+      <Div cls={css(`Buttons`)}>
         <Button color="primary" onClick={() => installApk('m4k.apk')}>
           Installer la derniére version du Kiosk
         </Button>
@@ -156,7 +154,7 @@ export const ActionsPage = () => {
       </Div>
 
       <b>Installer :</b>
-      <Div cls={`${c}Buttons`}>
+      <Div cls={css(`Buttons`)}>
         <Button onClick={() => installApk('autostart22.apk')}>AutoStart</Button>
         <Button onClick={() => installApk('RawBT609.apk')}>RawBt Printer V6.0.9</Button>
         <Button onClick={() => installApk('RawBT703.apk')}>RawBt Printer V7.0.3</Button>
@@ -166,7 +164,7 @@ export const ActionsPage = () => {
       </Div>
 
       <b>Installer WebView :</b>
-      <Div cls={`${c}Buttons`}>
+      <Div cls={css(`Buttons`)}>
         {/* https://www.apkmirror.com/apk/google-inc/android-system-webview/ */}
         <Button onClick={() => installApk('webview134_arm64_a8.apk')}>
           WebView 134 ARM64 Android8+
@@ -174,7 +172,7 @@ export const ActionsPage = () => {
       </Div>
 
       <b>Ouvrir :</b>
-      <Div cls={`${c}Buttons`}>
+      <Div cls={css(`Buttons`)}>
         <Button onClick={testPrint}>Test Impression</Button>
         <Button
           onClick={() =>
@@ -219,7 +217,7 @@ export const ActionsPage = () => {
             </div> */}
 
       <b>Autre :</b>
-      <Div cls={`${c}Buttons`}>
+      <Div cls={css(`Buttons`)}>
         <Button
           onClick={async () => {
             url$.set('https://boardscreen.fr/');

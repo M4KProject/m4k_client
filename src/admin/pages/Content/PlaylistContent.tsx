@@ -8,7 +8,7 @@ import {
   secondsToTimeString,
   parseToSeconds,
 } from '@common/utils';
-import { useAsync, useCss } from '@common/hooks';
+import { useAsync } from '@common/hooks';
 import {
   Div,
   Table,
@@ -27,15 +27,13 @@ import { Plus, Trash2 } from 'lucide-react';
 import { useGroupQuery, useQuery } from '@common/hooks/useQuery';
 import { mediaCtrl } from '@/admin/controllers';
 
-const css: Css = {
+const css = Css('PlaylistContent', {
   '&': {
     ...flexColumn(),
   },
-};
+});
 
 export const PlaylistContent = ({ data, updateData }: ContentProps<PlaylistContentModel>) => {
-  const c = useCss('PlaylistContent', css);
-
   // Initialiser les données de la playlist si elles n'existent pas
   const items: PlaylistEntry[] = toList(data.items, []);
 
@@ -53,7 +51,7 @@ export const PlaylistContent = ({ data, updateData }: ContentProps<PlaylistConte
   const medias = useGroupQuery(mediaCtrl);
 
   return (
-    <Div cls={c}>
+    <Div  cls={css()}>
       <Table>
         <TableHead>
           <Row>

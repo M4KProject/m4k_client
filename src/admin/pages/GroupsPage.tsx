@@ -1,4 +1,4 @@
-import { useCss, useMsg } from '@common/hooks';
+import { useMsg } from '@common/hooks';
 import { Plus, Trash2 } from 'lucide-react';
 import {
   Field,
@@ -22,10 +22,9 @@ import { Role, auth$, collSync } from '@common/api';
 import { useQuery } from '@common/hooks/useQuery';
 import { groupCtrl, memberCtrl } from '../controllers';
 
-const css: Css = {};
+const css = Css('GroupsPage', {});
 
 export const GroupsPage = () => {
-  const c = useCss('GroupsPage', css);
   const auth = useMsg(auth$);
   const group = useGroup();
   const isAdvanced = useMsg(isAdvanced$);
@@ -40,10 +39,10 @@ export const GroupsPage = () => {
     }
   };
 
-  console.debug('GroupsPage', { c, auth, group, isAdvanced, groups });
+  console.debug('GroupsPage', { auth, group, isAdvanced, groups });
 
   return (
-    <Page cls={c}>
+    <Page  cls={css()}>
       <PageHeader title="Gestionnaire de groupes">
         <Button title="Ajouter" icon={<Plus />} color="primary" onClick={handleAdd} />
         <SearchField />

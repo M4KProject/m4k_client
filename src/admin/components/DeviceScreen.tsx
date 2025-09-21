@@ -1,8 +1,8 @@
 import { Css, flexCenter } from '@common/ui';
-import { useCss } from '@common/hooks';
+
 import { Div } from '@common/components';
 
-const css: Css = {
+const css = Css('DeviceScreen', {
   '&': {
     flex: 1,
     rounded: 2,
@@ -23,7 +23,7 @@ const css: Css = {
     fg: '#FFF',
     m: 1,
   },
-};
+});
 
 interface DeviceScreenProps {
   captureUrl: string;
@@ -32,19 +32,17 @@ interface DeviceScreenProps {
 }
 
 export const DeviceScreen = ({ captureUrl, deviceWidth, deviceHeight }: DeviceScreenProps) => {
-  const c = useCss('DeviceScreen', css);
-
   return (
     <Div
-      cls={c}
+       cls={css()}
       style={{
         backgroundImage: captureUrl,
       }}
     >
-      <Div cls={`${c}WH`}>
+      <Div cls={css(`WH`)}>
         {deviceWidth} × {deviceHeight}
       </Div>
-      {!captureUrl && <Div cls={`${c}NoCapture`}>Aucune capture disponible</Div>}
+      {!captureUrl && <Div cls={css(`NoCapture`)}>Aucune capture disponible</Div>}
     </Div>
   );
 };

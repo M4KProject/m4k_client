@@ -1,5 +1,5 @@
 import { Css } from '@common/ui';
-import { useCss } from '@common/hooks';
+
 import { RefreshCw } from 'lucide-react';
 import { Page, PageHeader, PageBody, PageActions } from '@common/components';
 import { Button } from '@common/components';
@@ -12,10 +12,9 @@ import { LoadingPage } from './LoadingPage';
 import { isAdvanced$ } from '../messages';
 import { logout, auth$, coll } from '@common/api';
 
-const css: Css = {};
+const css = Css('AccountPage', {});
 
 export const AccountPage = () => {
-  const c = useCss('AccountPage', css);
   const auth = useMsg(auth$);
   const [passwordError, setPasswordError] = useState('');
   const [password, setPassword] = useState('');
@@ -35,7 +34,7 @@ export const AccountPage = () => {
   };
 
   return (
-    <Page cls={c}>
+    <Page  cls={css()}>
       <PageHeader title="Mon compte">
         <Button title="Rafraîchir" icon={<RefreshCw />} color="primary" onClick={() => {}} />
       </PageHeader>

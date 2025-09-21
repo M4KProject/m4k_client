@@ -1,9 +1,9 @@
 import { Css, flexCenter, flexColumn } from '@common/ui';
-import { useCss, useMsg } from '@common/hooks';
+import { useMsg } from '@common/hooks';
 import { Div } from '@common/components';
 import { dialog$ } from '../messages/dialog$';
 
-const css: Css = {
+const css = Css('DialogContainer', {
   '&': {
     position: 'fixed',
     inset: 0,
@@ -36,16 +36,15 @@ const css: Css = {
 };
 
 export const DialogContainer = () => {
-  const c = useCss('DialogContainer', css);
   const dialog = useMsg(dialog$);
 
   if (!dialog) return null;
 
   return (
-    <Div cls={c} onClick={() => dialog.onClose?.()}>
-      <Div cls={`${c}Window`} onClick={(e) => e.stopPropagation()}>
-        <Div cls={`${c}Header`}>{dialog.title}</Div>
-        <Div cls={`${c}Content`}>
+    <Div  cls={css()} onClick={() => dialog.onClose?.()}>
+      <Div cls={css(`Window`)} onClick={(e) => e.stopPropagation()}>
+        <Div cls={css(`Header`)}>{dialog.title}</Div>
+        <Div cls={css(`Content`)}>
           <dialog.content />
         </Div>
       </Div>

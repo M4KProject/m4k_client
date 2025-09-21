@@ -1,11 +1,11 @@
 import { Css, flexRow, flexColumn } from '@common/ui';
-import { useCss } from '@common/hooks';
+
 import { Div, Button, Field } from '@common/components';
 import { DeviceModel } from '@common/api';
 import { useState } from 'preact/hooks';
 import { Send, RefreshCw, FileJson } from 'lucide-react';
 
-const css: Css = {
+const css = Css('DeviceConsole', {
   '&': {
     ...flexColumn({ align: 'stretch' }),
     w: '300px',
@@ -30,7 +30,7 @@ const css: Css = {
     gap: 1,
     p: 0.5,
   },
-};
+});
 
 interface DeviceConsoleProps {
   device: DeviceModel;
@@ -39,13 +39,12 @@ interface DeviceConsoleProps {
 }
 
 export const DeviceConsole = ({ consoleOutput, onExecuteAction }: DeviceConsoleProps) => {
-  const c = useCss('DeviceConsole', css);
   const [command, setCommand] = useState('');
 
   return (
-    <Div cls={c}>
-      <Div cls={`${c}Logs`}>{consoleOutput}</Div>
-      <Div cls={`${c}Actions`}>
+    <Div  cls={css()}>
+      <Div cls={css(`Logs`)}>{consoleOutput}</Div>
+      <Div cls={css(`Actions`)}>
         <Field type="text" value={command} onValue={setCommand} />
         <Button
           icon={<Send />}

@@ -2,7 +2,7 @@
 // import { autoScrollEnd, Css, flexRow, stringify } from '@common/utils';
 // import { Button, Div } from '@common/components';
 // import { m4k, M4kLog } from '@common/m4k';
-// import { useCss } from '@common/hooks';
+// 
 
 // const showValue = (value: any) => {
 //     const type = typeof value;
@@ -15,7 +15,7 @@
 //     return `${value}(${type})`;
 // }
 
-// const css: Css = {
+// const css = Css('', {
 //     '&Container': {
 //         flex: 1,
 //     },
@@ -44,7 +44,7 @@
 
 // const Log = ({ log, c } : { log: M4kLog, c: string }) => {
 //     return (
-//         <Div cls={`${c} ${c}-${(log.level||'info').toLowerCase()}`}>
+//         <Div cls={css(` ${c}-${(log.level||'info').toLowerCase()}`)}>
 //             <span>{log.level}</span>
 //             <pre>{log.message}</pre>
 //             <pre>{showValue(log)}</pre>

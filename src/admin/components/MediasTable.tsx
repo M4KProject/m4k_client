@@ -1,6 +1,6 @@
 import { Css, flexColumn, flexRow } from '@common/ui';
 import { byId, isEmpty, isPositive, round, sort } from '@common/utils';
-import { addTranslates, useCss, useMsg } from '@common/hooks';
+import { addTranslates, useMsg } from '@common/hooks';
 import { isAdvanced$, selectedById$ } from '../messages';
 import {
   FolderOpen,
@@ -45,7 +45,7 @@ addTranslates({
   [SUCCESS]: 'succès',
 });
 
-const css: Css = {
+const css = Css('Media', {
   '&Page': {},
 
   '&Icon': {
@@ -70,7 +70,7 @@ const css: Css = {
     w: 40,
     bg: '#f5f5f5',
   },
-};
+});
 
 const infoByType: Record<string, [string, typeof FolderOpen]> = {
   folder: ['Dossier', FolderOpen],
@@ -104,7 +104,6 @@ const sizeFormat = (size?: number) => {
 const secondsFormat = (s?: number) => (isPositive(s) ? round(s) + 's' : '');
 
 export const MediasProgress = () => {
-  const c = useCss('Media', css);
   const items = Object.values(useMsg(uploadItems$));
 
   if (items.length === 0) {
@@ -124,7 +123,7 @@ export const MediasProgress = () => {
         {items.map((m) => (
           <Row key={m.id}>
             <Cell>{m.name}</Cell>
-            <Cell cls={`${c}-${m.status}`}>
+            <Cell cls={css(`-${m.status}`)}>
               <Tr>{m.status}</Tr>
             </Cell>
             <Cell>
@@ -148,7 +147,6 @@ export const getNextTitle = (medias: MediaModel[], start: string) => {
 }
 
 export const MediasTable = () => {
-  const c = useCss('Media', css);
   const isAdvanced = useMsg(isAdvanced$);
   const medias = useGroupQuery(mediaCtrl);
   const jobs = useGroupQuery(jobCtrl);
@@ -230,7 +228,7 @@ export const MediasTable = () => {
               </Cell>
               <Cell variant="row">
                 <Div cls={``} style={{ width: 2 * (m.paths.length - 1) + 'em' }} />
-                {getTypeIcon(c, m.type || '')}
+                {getTypeIcon(css(), m.type || '')}
                 <Field
                   {...(isAdvanced ? tooltip(m.order) : {})}
                   value={m.title}
@@ -269,7 +267,7 @@ export const MediasTable = () => {
             </Row>
           ))}
           {!isEmpty(jobs.filter((job) => job.status !== 'finished' && !!job.media)) && (
-            <Div cls={`${c}Jobs`}>
+            <Div cls={css(`Jobs`)}>
               <PageHeader title="Les jobs" />
               <JobsTable filter={(job) => job.status !== 'finished' && !!job.media} />
             </Div>
