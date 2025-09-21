@@ -1,9 +1,9 @@
 import { Css } from '@common/ui';
 import { useCss, useMsg } from '@common/hooks';
 import { Div } from '@common/components';
-import { collMedias } from '@common/api/collMedias';
 import { FileInfo, MediaModel } from '@common/api/models';
 import { isStrNotEmpty, Msg } from '@common/utils';
+import { getUrl } from '@common/api/getUrl';
 
 const css: Css = {
   '&': {
@@ -56,8 +56,7 @@ const getVariants = (media?: MediaModel): Variant[] => {
   return results;
 }
 
-const getThumbUrl = (v?: Variant) => v && collMedias.getThumbUrl(v.media.id, v.file, [300, 300]) || '';
-const getUrl = (v?: Variant) => v && collMedias.getUrl(v.media.id, v.file) || '';
+const getMediaUrl = (v?: Variant, thumb?: [number, number]) => v && getUrl('medias', v.media.id, v.file) || '';
 
 const mediaOver$ = new Msg('');
 
@@ -77,7 +76,7 @@ export const MediaPreview = ({ media }: { media: MediaModel }) => {
       onMouseOver={() => mediaOver$.set(media.id)}
       onMouseLeave={() => mediaOver$.next(p => p === media.id ? '' : p)}
     >
-      <Div style={{ backgroundImage: `url("${getThumbUrl(images[0])}")` }}>
+      <Div style={{ backgroundImage: `url("${getMediaUrl(images[0], [300,300])}")` }}>
         {(isOver && videos.length) ? (
           <video 
             controls={false}
@@ -92,7 +91,7 @@ export const MediaPreview = ({ media }: { media: MediaModel }) => {
             }}
           >
             {videos.map((v, i) => (
-              <source key={i} type={v.mime} src={getUrl(v)} />
+              <source key={i} type={v.mime} src={getMediaUrl(v)} />
             ))}
           </video>
         ) : null}
