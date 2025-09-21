@@ -1,7 +1,6 @@
 import { SideBar } from './SideBar';
 import { Css, flexCenter, flexRow } from '@common/ui';
 import { useMsg } from '@common/hooks';
-import { Div } from '@common/components';
 import { usePWA } from '../../serviceWorker';
 import { JSX } from 'preact';
 import { LoadingPage } from '../pages/LoadingPage';
@@ -18,7 +17,7 @@ import { auth$ } from '@common/api';
 import { DevicePage } from '../pages/DevicePage';
 import { AdminPage, useAdminPage } from '../messages/adminPage$';
 
-const css = Css('App', {
+const c = Css('App', {
   '&': {
     ...flexRow({ align: 'stretch' }),
     position: 'fixed',
@@ -69,10 +68,10 @@ const AppContent = () => {
   // console.debug("Div", { c, auth });
 
   return (
-    <Div  cls={css()}>
+    <div  class={c()}>
       <SideBar />
       <AppRouter />
-    </Div>
+    </div>
   );
 };
 

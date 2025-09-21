@@ -21,7 +21,7 @@ import { SearchField } from '../components/SearchField';
 import { isAdvanced$ } from '../messages';
 import { auth$, groupId$, needGroupId, ContentModel, ModelUpdate, coll } from '@common/api';
 
-const css = Css('ContentsPage', {});
+const c = Css('ContentsPage', {});
 
 const collContents = coll('contents');
 const collGroups = coll('groups');
@@ -89,7 +89,7 @@ export const ContentsPage = () => {
   };
 
   return (
-    <Page  cls={css()}>
+    <Page  class={c()}>
       <PageHeader title="Les contenus">
         <Button title="Ajouter un contenu" icon={<Plus />} color="primary" onClick={handleAdd} />
         <Button title="Rafraîchir" icon={<RefreshCw />} color="primary" onClick={contentsRefresh} />

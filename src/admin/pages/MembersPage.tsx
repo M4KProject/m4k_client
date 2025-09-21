@@ -9,7 +9,7 @@ import { SearchField } from '../components/SearchField';
 import { Role, needGroupId } from '@common/api';
 import { memberCtrl, userCtrl } from '../controllers';
 
-const css = Css('MembersPage', {});
+const c = Css('MembersPage', {});
 
 const CreateMemberForm = ({ onClose }: { onClose: () => void }) => {
   const [email, setEmail] = useState('');
@@ -67,7 +67,7 @@ export const MembersPage = () => {
   };
 
   return (
-    <Page  cls={css()}>
+    <Page  class={c()}>
       <PageHeader title="Les membres">
         <Button title="Ajouter un membre" icon={<Plus />} color="primary" onClick={handleCreate} />
         <SearchField />

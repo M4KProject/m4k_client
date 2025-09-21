@@ -1,10 +1,9 @@
 import { Css } from '@common/ui';
 import { useMsg } from '@common/hooks';
-import { Div } from '@common/components';
 import { FileInfo, MediaModel, getUrl } from '@common/api';
 import { isStrNotEmpty, Msg } from '@common/utils';
 
-const css = Css('MediaPreview', {
+const c = Css('MediaPreview', {
   '&': {
     position: 'relative',
     xy: 0,
@@ -68,12 +67,12 @@ export const MediaPreview = ({ media }: { media: MediaModel }) => {
   const isOver = useMsg(mediaOver$) === media.id;
   
   return (
-    <Div
-      cls={[css(), isOver && `${css()}-over`]}
+    <div
+      class={c('', isOver && `-over`)}
       onMouseOver={() => mediaOver$.set(media.id)}
       onMouseLeave={() => mediaOver$.next(p => p === media.id ? '' : p)}
     >
-      <Div style={{ backgroundImage: `url("${getMediaUrl(images[0], [300,300])}")` }}>
+      <div style={{ backgroundImage: `url("${getMediaUrl(images[0], [300,300])}")` }}>
         {(isOver && videos.length) ? (
           <video 
             controls={false}
@@ -92,7 +91,7 @@ export const MediaPreview = ({ media }: { media: MediaModel }) => {
             ))}
           </video>
         ) : null}
-      </Div>
-    </Div>
+      </div>
+    </div>
   );
 };

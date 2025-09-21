@@ -1,11 +1,11 @@
 import { autoScrollEnd, Css, flexColumn } from '@common/ui';
 import { Msg } from '@common/utils';
-import { Div, Progress } from '@common/components';
+import { Progress } from '@common/components';
 import { useMsg } from '@common/hooks';
 import { dialog$ } from '../messages/dialog$';
 import { useEffect, useRef } from 'preact/hooks';
 
-const css = Css('ProgressView', {
+const c = Css('ProgressView', {
   '&': {
     ...flexColumn({ align: 'stretch' }),
   },
@@ -60,16 +60,16 @@ const ProgressView = () => {
   useEffect(() => autoScrollEnd(logsRef.current), [logs]);
 
   return (
-    <Div  cls={css()}>
+    <div  class={c()}>
       <Progress progress={value * 100} step={step ? step[1] : ''} />
-      <Div ref={logsRef} cls={css(`Logs`)}>
+      <div ref={logsRef} class={c('Logs')}>
         {logs.map((log, i) => (
           <div key={i + log[1]} className={`m4kLog-${log[0]}`}>
             {log[1]}
           </div>
         ))}
-      </Div>
-    </Div>
+      </div>
+    </div>
   );
 };
 

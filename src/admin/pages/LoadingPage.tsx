@@ -1,8 +1,8 @@
 import { Css, flexCenter } from '@common/ui';
 
-import { Div, Loading } from '@common/components';
+import { Loading } from '@common/components';
 
-const css = Css('LoadingPage', {
+const c = Css('LoadingPage', {
   '&': {
     ...flexCenter(),
   },
@@ -10,8 +10,8 @@ const css = Css('LoadingPage', {
 
 export const LoadingPage = () => {
   return (
-    <Div  cls={css()}>
+    <div  class={c()}>
       <Loading />
-    </Div>
+    </div>
   );
 };

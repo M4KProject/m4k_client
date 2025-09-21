@@ -27,7 +27,7 @@ import { Plus, Trash2 } from 'lucide-react';
 import { useGroupQuery, useQuery } from '@common/hooks/useQuery';
 import { mediaCtrl } from '@/admin/controllers';
 
-const css = Css('PlaylistContent', {
+const c = Css('PlaylistContent', {
   '&': {
     ...flexColumn(),
   },
@@ -51,7 +51,7 @@ export const PlaylistContent = ({ data, updateData }: ContentProps<PlaylistConte
   const medias = useGroupQuery(mediaCtrl);
 
   return (
-    <Div  cls={css()}>
+    <div  class={c()}>
       <Table>
         <TableHead>
           <Row>
@@ -135,6 +135,6 @@ export const PlaylistContent = ({ data, updateData }: ContentProps<PlaylistConte
         </TableBody>
       </Table>
       <Button title="Ajouter une entrée" icon={<Plus />} color="primary" onClick={handleAdd} />
-    </Div>
+    </div>
   );
 };

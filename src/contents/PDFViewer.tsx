@@ -1,11 +1,11 @@
 import { useAsyncEffect } from '@common/hooks';
 import { addJsFileAsync, Css, flexColumn } from '@common/ui';
 import { global } from '@common/utils';
-import { Div } from '@common/components';
+
 import { useRef, useState, useEffect } from 'preact/hooks';
 import { PDFToolbar } from './PDFToolbar';
 
-const css = Css('PDFViewer', {
+const c = Css('PDFViewer', {
   '&': {
     ...flexColumn({ align: 'stretch' }),
     justifyItems: 'stretch',
@@ -229,8 +229,8 @@ export const PDFViewer = ({ url }: { url: string }) => {
   console.debug('PDFViewer', { url });
 
   return (
-    <Div  cls={css()}>
-      <div class={css(`Container`)} ref={containerRef} />
+    <div  class={c()}>
+      <div class={c('Container')} ref={containerRef} />
 
       <PDFToolbar
         currentPage={currentPage}
@@ -241,6 +241,6 @@ export const PDFViewer = ({ url }: { url: string }) => {
         onZoomOut={handleZoomOut}
         onFitWidth={handleFitWidth}
       />
-    </Div>
+    </div>
   );
 };

@@ -1,6 +1,6 @@
 import { flexColumn, flexCenter, Css } from '@common/ui';
 import { toNbr, toErr } from '@common/utils';
-import { Button, Div } from '@common/components';
+import { Button } from '@common/components';
 import { usePromise, useMsg } from '@common/hooks';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { openCodePinDialog } from '../components/CodePinView';
@@ -10,7 +10,7 @@ import { m4k } from '@common/m4k';
 
 type PlaylistItem = any;
 
-const css = Css('Kiosk', {
+const c = Css('Kiosk', {
   '&Container': {
     position: 'fixed',
     inset: 0,
@@ -169,8 +169,8 @@ const KioskItem = ({
   }, [isCurr, isVideo, isImage, duration, gotoNext]);
 
   return (
-    <Div
-      cls={[css(), itemFit && css(`-${itemFit}`), itemAnim && css(`-${itemAnim}`), css(`-${pos}`)]}
+    <div
+      class={c('', itemFit && `-${itemFit}`, itemAnim && `-${itemAnim}`, `-${pos}`)}
     >
       {isVideo && isCurr && info && info.url ? (
         <KioskVideo url={info.url} gotoNext={gotoNext} hasVideoMuted={hasVideoMuted} />
@@ -181,7 +181,7 @@ const KioskItem = ({
           Fichier: {item.path} Type: {info?.type}
         </span>
       )}
-    </Div>
+    </div>
   );
 };
 
@@ -216,9 +216,9 @@ export const KioskPage = () => {
   // Si un contenu est associé au device, l'afficher via ContentViewer
   if (device?.media) {
     return (
-      <Div cls={css(`Container`)}>
+      <div class={c('Container')}>
         {/* TODO media <ContentViewer contentKey={device?.media} /> */}
-      </Div>
+      </div>
     );
   }
 
@@ -232,25 +232,25 @@ export const KioskPage = () => {
 
   if (length === 0) {
     return (
-      <Div cls={`${css()}Container ${css()}Container-center`}>
+      <div class={c('Container', 'Container-center')}>
         Aucun élément dans la playlist
         <Button color="primary" onClick={() => openCodePinDialog()}>
           Configurer
         </Button>
-      </Div>
+      </div>
     );
   }
 
   if (url && open) {
     return (
-      <Div cls={css(`Container`)}>
+      <div class={c('Container')}>
         <iframe src={url.startsWith('http') ? url : `https://${url}`} />
-      </Div>
+      </div>
     );
   }
 
   return (
-    <Div cls={css(`Container`)} onClick={() => setOpen(true)}>
+    <div class={c('Container')} onClick={() => setOpen(true)}>
       {items.map((item, index) => (
         <KioskItem
           key={`${item.path}-${index}`}
@@ -263,6 +263,6 @@ export const KioskPage = () => {
           pos={item === curr ? 'curr' : item === next ? 'next' : item === prev ? 'prev' : 'hidden'}
         />
       ))}
-    </Div>
+    </div>
   );
 };

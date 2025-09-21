@@ -19,7 +19,7 @@ import { ContentProps } from './ContentProps';
 import { FieldsEdit } from './FieldsEdit';
 import { app } from '../../../app';
 
-const css = Css('TableContent', {});
+const c = Css('TableContent', {});
 
 export const TableContent = (props: ContentProps<TableContentModel>) => {
   const { data, updateData } = props;
@@ -30,7 +30,7 @@ export const TableContent = (props: ContentProps<TableContentModel>) => {
   app.updateData = updateData;
 
   return (
-    <Div cls={css()}>
+    <div class={c()}>
       <FieldsEdit {...props} />
       <Table>
         <TableHead>
@@ -94,7 +94,7 @@ export const TableContent = (props: ContentProps<TableContentModel>) => {
         </TableBody>
       </Table>
       <Button onClick={() => updateData({ items: [...items, {}] })}>Ajouter une ligne</Button>
-    </Div>
+    </div>
   );
 };
 

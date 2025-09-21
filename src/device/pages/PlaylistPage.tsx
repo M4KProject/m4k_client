@@ -2,7 +2,6 @@ import {
   Button,
   Cell,
   CellHeader,
-  Div,
   Field,
   Page,
   PageBody,
@@ -19,7 +18,7 @@ import { useMsg } from '@common/hooks';
 import { ArrowUp, ArrowDown, Copy, Trash2 } from 'lucide-react';
 import { playlist$ } from '../messages';
 
-const css = Css('Playlist', {
+const c = Css('Playlist', {
   '&Preview': {
     position: 'absolute',
     xy: '50%',
@@ -163,10 +162,10 @@ export const PlaylistPage = () => {
             {(playlist?.items || []).map((item, i) => (
               <Row key={i}>
                 <Cell>{item.mimeType}</Cell>
-                <Cell cls={css(`PreviewCell`)}>
+                <Cell class={c('PreviewCell')}>
                   {item.mimeType?.startsWith('image/') && (
-                    <Div
-                      cls={css(`Preview`)}
+                    <div
+                      class={c('Preview')}
                       style={{
                         backgroundImage: `url("${item.path}")`,
                       }}

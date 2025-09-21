@@ -1,9 +1,9 @@
 
 import { Css, flexColumn } from '@common/ui';
-import { Div } from '@common/components';
+
 import type { ContentProps } from './ContentViewer';
 
-const css = Css('TableContent', {
+const c = Css('TableContent', {
   '&': {
     ...flexColumn({ align: 'center', justify: 'center' }),
     minHeight: '100vh',
@@ -18,11 +18,11 @@ const css = Css('TableContent', {
 
 export const TableContent = ({ content }: ContentProps) => {
   return (
-    <Div  cls={css()}>
-      <Div cls={css(`Message`)}>
+    <div  class={c()}>
+      <div class={c('Message')}>
         <h2>Tableau: {content.title}</h2>
         <p>Affichage des tableaux en cours de développement</p>
-      </Div>
-    </Div>
+      </div>
+    </div>
   );
 };

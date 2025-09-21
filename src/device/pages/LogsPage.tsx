@@ -15,7 +15,7 @@
 //     return `${value}(${type})`;
 // }
 
-// const css = Css('', {
+// const c = Css('', {
 //     '&Container': {
 //         flex: 1,
 //     },
@@ -44,11 +44,11 @@
 
 // const Log = ({ log, c } : { log: M4kLog, c: string }) => {
 //     return (
-//         <Div cls={css(` ${c}-${(log.level||'info').toLowerCase()}`)}>
+//         <div class={c(' ${c}-${(log.level||'info').toLowerCase()}')}>
 //             <span>{log.level}</span>
 //             <pre>{log.message}</pre>
 //             <pre>{showValue(log)}</pre>
-//         </Div>
+//         </div>
 //     )
 // }
 

@@ -2,14 +2,14 @@ import { useMsg } from '@common/hooks';
 
 import { Css, flexColumn } from '@common/ui';
 import { Side, SideButton, SideSep } from '@common/components';
-import { Div } from '@common/components';
+
 import { Home, Users, Monitor, Image, User, Zap } from 'lucide-react';
 import { group$, isAdvanced$ } from '../messages';
 import { AdminPage, adminPage$ } from '../messages/adminPage$';
 import { useQuery } from '@common/hooks/useQuery';
 import { groupCtrl } from '../controllers';
 
-const css = Css('SideBar', {
+const c = Css('SideBar', {
   '&': {
     position: 'relative',
     w: 13,
@@ -84,7 +84,7 @@ export const SideBar = () => {
       <SideSep />
       {group || isAdvanced ? (
         <>
-          <Div cls={css(`Sep ${css()}Sep-group`)}>{group?.name}</Div>
+          <div class={c('Sep ${c()}Sep-group')}>{group?.name}</div>
           <SideButton title="Membres" icon={<Users />} page="members" onClick={go('members')} />
           <SideButton title="Appareils" icon={<Monitor />} page="devices" onClick={go('devices')} />
           <SideButton title="Médias" icon={<Image />} page="medias" onClick={go('medias')} />
@@ -92,7 +92,7 @@ export const SideBar = () => {
         </>
       ) : null}
       <SideSep />
-      <Div cls={css(`Sep ${css()}Sep-version`)}>2.0.0</Div>
+      <div class={c('Sep ${c()}Sep-version')}>2.0.0</div>
       <SideButton title="Mon Compte" icon={<User />} page="account" onClick={go('account')} />
     </Side>
   );

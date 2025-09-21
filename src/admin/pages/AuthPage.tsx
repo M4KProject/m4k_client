@@ -1,10 +1,10 @@
 
 import { Css, flexColumn, flexRow } from '@common/ui';
-import { Div, AuthForm, Button } from '@common/components';
+import { AuthForm, Button } from '@common/components';
 import logoUrl from '../assets/logo.svg';
 import loginUrl from '../assets/login.svg';
 
-const css = Css('AuthPage', {
+const c = Css('AuthPage', {
   '&': {
     ...flexRow({ align: 'stretch' }),
     position: 'fixed',
@@ -51,22 +51,22 @@ export const AuthPage = () => {
   };
 
   return (
-    <Div  cls={css()}>
-      <Div cls={css(`Content`)}>
-        <Div cls={css(`Logo`)} />
-        <Div cls={css(`Title`)}>
+    <div  class={c()}>
+      <div class={c('Content')}>
+        <div class={c('Logo')} />
+        <div class={c('Title')}>
           PLV DIGITALE - BORNES ET ECRANS INTERACTIFS - CONTENUS NUMERIQUES
-        </Div>
-        <Div cls={css(`Illu`)} />
-      </Div>
+        </div>
+        <div class={c('Illu')} />
+      </div>
       <AuthForm />
       <Button
-        cls={css(`DeviceButton`)}
+        class={c('DeviceButton')}
         color="secondary"
         onClick={handleDeviceMode}
         title="Passer en mode device"
       />
-    </Div>
+    </div>
   );
 };
 
@@ -87,14 +87,14 @@ export const AuthPage = () => {
 //             <Button color="primary" onClick={() => signIn(email, password)}>
 //                 Sign in
 //             </Button>
-//             <Div cls={css(`Links`)}>
+//             <div class={c('Links')}>
 //                 <Button onClick={() => setPage('forgot-password')}>
 //                     Forgot your password?
 //                 </Button>
 //                 <Button onClick={() => setPage('sign-up')}>
 //                     Don't have an account? Sign up
 //                 </Button>
-//             </Div>
+//             </div>
 //         </>
 //     ) :
 //     page === 'sign-up' ? (
@@ -104,11 +104,11 @@ export const AuthPage = () => {
 //             <Button color="primary" onClick={() => signUp(email, password)}>
 //                 Sign up
 //             </Button>
-//             <Div cls={css(`Links`)}>
+//             <div class={c('Links')}>
 //                 <Button onClick={() => setPage('sign-in')}>
 //                     Already have an account? Sign in
 //                 </Button>
-//             </Div>
+//             </div>
 //         </>
 //     ) :
 //     page === 'forgot-password' ? (
@@ -117,14 +117,14 @@ export const AuthPage = () => {
 //             <Button color="primary" onClick={() => resetPassword(email)}>
 //                 Send reset password instructions
 //             </Button>
-//             <Div cls={css(`Links`)}>
+//             <div class={c('Links')}>
 //                 <Button onClick={() => setPage('code')}>
 //                     Utiliser un code
 //                 </Button>
 //                 <Button onClick={() => setPage('sign-in')}>
 //                     Already have an account? Sign in
 //                 </Button>
-//             </Div>
+//             </div>
 //         </>
 //     ) :
 //     page === 'code' ? (
@@ -134,11 +134,11 @@ export const AuthPage = () => {
 //             <Button color="primary" onClick={() => signWithCode(email, password)}>
 //                 Connexion avec le CODE
 //             </Button>
-//             <Div cls={css(`Links`)}>
+//             <div class={c('Links')}>
 //                 <Button onClick={() => setPage('sign-in')}>
 //                     Already have an account? Sign in
 //                 </Button>
-//             </Div>
+//             </div>
 //         </>
 //     ) : page
 // )} */}

@@ -16,7 +16,6 @@ import {
 import { FAILED, PENDING, PROCESSING, SUCCESS, UPLOADING, uploadItems$, groupId$, needAuthId, needGroupId, MediaModel, collSync } from '@common/api';
 import {
   tooltip,
-  Div,
   Button,
   Table,
   Row,
@@ -45,7 +44,7 @@ addTranslates({
   [SUCCESS]: 'succès',
 });
 
-const css = Css('Media', {
+const c = Css('Media', {
   '&Page': {},
 
   '&Icon': {
@@ -83,11 +82,11 @@ const infoByType: Record<string, [string, typeof FolderOpen]> = {
   webm: ['Video WEBM', Video],
 };
 
-const getTypeIcon = (c: string, type: string) => {
+const getTypeIcon = (type: string) => {
   const parts = type.split(/\W/);
   const info = infoByType[type] || infoByType[parts[1]] || [type, Square];
   const [title, Icon] = info;
-  return <Icon class={`${c}Icon`} {...tooltip(title)} />;
+  return <Icon class={c(`Icon`)} {...tooltip(title)} />;
 };
 
 const sizeFormat = (size?: number) => {
@@ -123,7 +122,7 @@ export const MediasProgress = () => {
         {items.map((m) => (
           <Row key={m.id}>
             <Cell>{m.name}</Cell>
-            <Cell cls={css(`-${m.status}`)}>
+            <Cell class={c('-${m.status}')}>
               <Tr>{m.status}</Tr>
             </Cell>
             <Cell>
@@ -227,8 +226,8 @@ export const MediasTable = () => {
                 <SelectedField id={m.id} />
               </Cell>
               <Cell variant="row">
-                <Div cls={``} style={{ width: 2 * (m.paths.length - 1) + 'em' }} />
-                {getTypeIcon(css(), m.type || '')}
+                <div style={{ width: 2 * (m.paths.length - 1) + 'em' }} />
+                {getTypeIcon(m.type || '')}
                 <Field
                   {...(isAdvanced ? tooltip(m.order) : {})}
                   value={m.title}
@@ -267,10 +266,10 @@ export const MediasTable = () => {
             </Row>
           ))}
           {!isEmpty(jobs.filter((job) => job.status !== 'finished' && !!job.media)) && (
-            <Div cls={css(`Jobs`)}>
+            <div class={c('Jobs')}>
               <PageHeader title="Les jobs" />
               <JobsTable filter={(job) => job.status !== 'finished' && !!job.media} />
-            </Div>
+            </div>
           )}
         </TableBody>
       </Table>

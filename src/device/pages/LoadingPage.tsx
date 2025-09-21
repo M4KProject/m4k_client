@@ -2,7 +2,7 @@ import { Css, flexCenter } from '@common/ui';
 
 import { Loading, Page } from '@common/components';
 
-const css = Css('LoadingPage', {
+const c = Css('LoadingPage', {
   '&': {
     ...flexCenter(),
   },
@@ -10,7 +10,7 @@ const css = Css('LoadingPage', {
 
 export const LoadingPage = () => {
   return (
-    <Page cls={css()}>
+    <Page class={c()}>
       <Loading />
     </Page>
   );

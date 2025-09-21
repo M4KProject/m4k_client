@@ -1,10 +1,10 @@
 import { Css, flexRow } from '@common/ui';
 import { addTranslates } from '@common/hooks';
-import { Div, Tr, Progress } from '@common/components';
+import { Tr, Progress } from '@common/components';
 import { JobModel } from '@common/api';
 import { Play, Square, AlertCircle, CheckCircle, Clock } from 'lucide-react';
 
-const css = Css('JobStatus', {
+const c = Css('JobStatus', {
   '&': {
     ...flexRow({ align: 'center', gap: 0.5 }),
   },
@@ -45,24 +45,24 @@ export const JobStatus = ({ job }: JobStatusProps) => {
 
   if (status === 'processing') {
     return (
-      <Div cls={css(` ${css()}-processing`)}>
+      <div class={c(' ${c()}-processing')}>
         <Progress progress={job.progress || 0} />
-      </Div>
+      </div>
     );
   }
 
   if (status === 'failed') {
     return (
-      <Div cls={css(` ${css()}-failed`)}>
+      <div class={c(' ${c()}-failed')}>
         <Tr>{job.error || ''}</Tr>
-      </Div>
+      </div>
     );
   }
 
   return (
-    <Div cls={css(` ${css()}-${status}`)}>
+    <div class={c(' ${c()}-${status}')}>
       <Icon size={16} />
       <Tr>{status}</Tr>
-    </Div>
+    </div>
   );
 };

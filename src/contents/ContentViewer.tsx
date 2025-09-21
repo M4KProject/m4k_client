@@ -1,6 +1,6 @@
 import { useAsync, useMsg } from '@common/hooks';
 import { Css, flexColumn } from '@common/ui';
-import { Div } from '@common/components';
+
 import { ContentModel, MediaModel } from '@common/api/models';
 import { FormContent } from './FormContent';
 import { TableContent } from './TableContent';
@@ -10,7 +10,7 @@ import { JSX } from 'preact';
 import { auth$ } from '@common/api/messages';
 import { contentCtrl, mediaCtrl } from '@/admin/controllers';
 
-const css = Css('ContentViewer', {
+const c = Css('ContentViewer', {
   '&': {
     ...flexColumn({ align: 'stretch' }),
     minHeight: '100vh',
@@ -50,10 +50,10 @@ export const ContentViewer = ({ contentKey }: ContentViewerProps) => {
 
   if (!content) {
     return (
-      <Div cls={css(`Error`)}>
+      <div class={c('Error')}>
         <h2>Contenu introuvable</h2>
         <p>Le contenu "{contentKey}" n'a pas été trouvé.</p>
-      </Div>
+      </div>
     );
   }
 
@@ -61,12 +61,12 @@ export const ContentViewer = ({ contentKey }: ContentViewerProps) => {
 
   if (!content.data || !ContentComponent) {
     return (
-      <Div cls={css(`Error`)}>
+      <div class={c('Error')}>
         <h2>Contenu vide</h2>
         <p>
           Le contenu "{contentKey}" de type "{content.type}" est vide.
         </p>
-      </Div>
+      </div>
     );
   }
 

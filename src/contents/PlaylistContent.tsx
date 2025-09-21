@@ -1,14 +1,14 @@
 import { useMsg } from '@common/hooks';
 import { Css, flexColumn } from '@common/ui';
 import { dateToSeconds, Msg, uniq, toList } from '@common/utils';
-import { Div, Field, Flag } from '@common/components';
+import { Field, Flag } from '@common/components';
 import { useEffect, useMemo } from 'preact/hooks';
 import type { ContentProps } from './ContentViewer';
 import { PlaylistContentModel, PlaylistEntry } from '@common/api';
 import { PDFViewer } from './PDFViewer';
 import { mediaCtrl } from '@/admin/controllers';
 
-const css = Css('PlaylistContent', {
+const c = Css('PlaylistContent', {
   '&': {
     ...flexColumn({ align: 'stretch' }),
     wMin: '100vw',
@@ -112,27 +112,27 @@ export const PlaylistContent = ({ content, medias }: ContentProps<PlaylistConten
   console.debug('PlaylistContent visibility', { hasMedia });
 
   return (
-    <Div cls={css()}>
-      <Div cls={css(`ItemSelect ${hasMedia ? '' : 'autoHide'}`)}>
+    <div class={c()}>
+      <div class={c('ItemSelect ${hasMedia ? '' : 'autoHide'}')}>
         <Field
           type="select"
           items={filteredItems.map((item) => [item, item.title])}
           msg={selected$}
         />
-      </Div>
-      <Div cls={css(`LanguageSelect ${hasMedia ? '' : 'autoHide'}`)}>
+      </div>
+      <div class={c('LanguageSelect ${hasMedia ? '' : 'autoHide'}')}>
         <Field
           type="picker"
           items={languages.map((iso) => [iso, <Flag iso={iso} />])}
           msg={language$}
         />
-      </Div>
+      </div>
 
       {mediaUrl && (
-        <Div cls={css(`PDFContainer`)}>
+        <div class={c('PDFContainer')}>
           <PDFViewer url={mediaUrl} />
-        </Div>
+        </div>
       )}
-    </Div>
+    </div>
   );
 };

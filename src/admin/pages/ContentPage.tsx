@@ -15,7 +15,7 @@ import { EmptyContent } from './Content/EmptyContent';
 import { HiboutikContent } from './Content/HiboutikContent';
 import { coll, ContentModel } from '@common/api';
 
-const css = Css('ContentPage', {});
+const c = Css('ContentPage', {});
 
 export const contentByType: Record<string, [string, (props: ContentProps) => JSX.Element]> = {
   empty: ['', EmptyContent],
@@ -49,7 +49,7 @@ export const ContentPage = () => {
   };
 
   return (
-    <Page  cls={css()}>
+    <Page  class={c()}>
       <PageHeader title={`${label}: ${title}`}>
         <Button
           title="Rafraîchir"

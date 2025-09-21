@@ -1,10 +1,10 @@
 
 import { Css } from '@common/ui';
-import { Div } from '@common/components';
+
 import type { ContentProps } from './ContentViewer';
 import { HtmlContentModel } from '@common/api';
 
-const css = Css('HtmlContent', {
+const c = Css('HtmlContent', {
   '&': {
     minHeight: '100vh',
     overflow: 'auto',
@@ -18,5 +18,5 @@ const css = Css('HtmlContent', {
 export const HtmlContent = ({ content }: ContentProps<HtmlContentModel>) => {
   const htmlContent = content.data.html || '<p>Aucun contenu HTML défini</p>';
 
-  return <Div  cls={css()} dangerouslySetInnerHTML={{ __html: htmlContent }} />;
+  return <div  class={c()} dangerouslySetInnerHTML={{ __html: htmlContent }} />;
 };

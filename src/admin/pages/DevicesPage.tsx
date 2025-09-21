@@ -25,7 +25,7 @@ import { SearchField } from '../components/SearchField';
 import { useGroupQuery } from '@common/hooks/useQuery';
 import { deviceCtrl, mediaCtrl } from '../controllers';
 
-const css = Css('DevicesPage', {});
+const c = Css('DevicesPage', {});
 
 export const PairingForm = ({ onClose }: { onClose: () => void }) => {
   const [key, setKey] = useState('');
@@ -86,7 +86,7 @@ export const DevicesPage = () => {
   // };
 
   return (
-    <Page  cls={css()}>
+    <Page  class={c()}>
       <PageHeader title="Les écrans">
         <Button icon={<Plus />} color="primary" onClick={handleAdd}>
           Ajouter

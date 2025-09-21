@@ -15,13 +15,13 @@ import {
 import { Trash2 } from 'lucide-react';
 import { memberCtrl } from '../controllers';
 
-const css = Css('MemberTable', {});
+const c = Css('MemberTable', {});
 
 export const MemberTable = () => {
   const members = useGroupQuery(memberCtrl);
 
   return (
-    <Table  cls={css()}>
+    <Table  class={c()}>
       <TableHead>
         <Row>
           <CellHeader>Appareil</CellHeader>

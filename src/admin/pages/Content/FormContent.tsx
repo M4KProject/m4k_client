@@ -1,19 +1,19 @@
 import { FormContentModel } from '@common/api';
 import { Css } from '@common/ui';
 
-import { Div, Form, Field } from '@common/components';
+import { Form, Field } from '@common/components';
 import { ContentProps } from './ContentProps';
 import { FieldsEdit } from './FieldsEdit';
 import { JSX } from 'preact';
 
-const css = Css('FormContent', {});
+const c = Css('FormContent', {});
 
 export const FormContent = (props: ContentProps<FormContentModel> & { edit?: JSX.Element }) => {
   const { edit, data, updateData } = props;
   const fields = data.fields || [];
   const values = data.values || {};
   return (
-    <Div  cls={css()}>
+    <div  class={c()}>
       {edit || <FieldsEdit {...props} />}
       <Form>
         {fields.map((field) => {
@@ -30,6 +30,6 @@ export const FormContent = (props: ContentProps<FormContentModel> & { edit?: JSX
           );
         })}
       </Form>
-    </Div>
+    </div>
   );
 };

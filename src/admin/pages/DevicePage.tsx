@@ -1,6 +1,6 @@
 import { Css, flexRow, flexColumn } from '@common/ui';
 
-import { Page, PageHeader, PageBody, Div, Button, tooltip } from '@common/components';
+import { Page, PageHeader, PageBody, Button, tooltip } from '@common/components';
 import { useEffect, useState } from 'preact/hooks';
 import { RefreshCw, Power, LogOut } from 'lucide-react';
 import { DeviceScreen } from '../components/DeviceScreen';
@@ -10,7 +10,7 @@ import { stringify } from '@common/utils';
 import { useDevice } from '../messages/device$';
 import { deviceCtrl } from '../controllers';
 
-const css = Css('DevicePage', {
+const c = Css('DevicePage', {
   '&Body': {
     ...flexColumn({ align: 'stretch' }),
     p: 0.5,
@@ -43,7 +43,7 @@ export const DevicePage = () => {
 
   if (!device) {
     return (
-      <Page  cls={css()}>
+      <Page  class={c()}>
         <PageHeader title="Mode Remote"></PageHeader>
         <PageBody>
           <div>Device non trouvé</div>
@@ -71,7 +71,7 @@ export const DevicePage = () => {
   const captureUrl = device.capture ? getUrl('devices', device.id, device.capture) : '';
 
   return (
-    <Page  cls={css()}>
+    <Page  class={c()}>
       <PageHeader title={device.name || device.key}>
         <Button
           icon={<RefreshCw />}
@@ -89,8 +89,8 @@ export const DevicePage = () => {
           onClick={() => executeAction('exit')}
         />
       </PageHeader>
-      <PageBody cls={css(`Body`)}>
-        <Div cls={css(`Screen`)}>
+      <PageBody class={c('Body')}>
+        <div class={c('Screen')}>
           <DeviceScreen
             captureUrl={captureUrl}
             deviceWidth={deviceWidth}
@@ -101,7 +101,7 @@ export const DevicePage = () => {
             consoleOutput={consoleOutput}
             onExecuteAction={executeAction}
           />
-        </Div>
+        </div>
       </PageBody>
     </Page>
   );

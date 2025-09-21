@@ -19,7 +19,7 @@ import { ContentProps } from './ContentProps';
 import { ComponentChildren } from 'preact';
 import { Trash2 } from 'lucide-react';
 
-const css = Css('TableContent', {
+const c = Css('TableContent', {
   '&Actions': { ...flexRow({ align: 'center' }) },
 });
 
@@ -46,13 +46,13 @@ export const FieldsEdit = ({
   };
 
   return (
-    <Div  cls={css()}>
-      <Div cls={css(`Actions`)}>
+    <div  class={c()}>
+      <div class={c('Actions')}>
         <Button onClick={() => isAdvanced$.next((v) => !v)}>Modifier les champs</Button>
         {isAdvanced && (
           <Button onClick={() => updateData({ fields: [...fields, {}] })}>Ajouter un champ</Button>
         )}
-      </Div>
+      </div>
       {isAdvanced && (
         <Table>
           <TableHead>
@@ -113,6 +113,6 @@ export const FieldsEdit = ({
           </TableBody>
         </Table>
       )}
-    </Div>
+    </div>
   );
 };

@@ -5,7 +5,7 @@ import { stringify } from '@common/utils';
 import { m4k, M4kSignalEvent } from '@common/m4k';
 import { useEffect, useState } from 'preact/hooks';
 
-const css = Css('EventsPage', {
+const c = Css('EventsPage', {
   '&': {
     // flex: 1,
     // position: 'absolute',
@@ -18,7 +18,7 @@ const css = Css('EventsPage', {
     m: 0.2,
     fontSize: 0.8,
   },
-};
+});
 
 export const EventsPage = () => {
   const [events, setEvents] = useState<M4kSignalEvent[]>([]);
@@ -35,7 +35,7 @@ export const EventsPage = () => {
   }, [m4k]);
 
   return (
-    <Page cls={css()}>
+    <Page class={c()}>
       <PageHeader title="Liste des événements" />
       <PageBody>
         {events.map((e, i) => (

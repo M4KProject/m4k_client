@@ -1,12 +1,12 @@
 import { useMsg } from '@common/hooks';
 import { Css, flexColumn } from '@common/ui';
-import { Button, Div } from '@common/components';
+import { Button } from '@common/components';
 import { device$ } from '../services/device';
 import { page$ } from '../messages/page$';
 import { offlineMode$ } from '../messages';
 import { FlexRow } from '@common/components/Flex';
 
-const css = Css('PairingPage', {
+const c = Css('PairingPage', {
   '&': {
     ...flexColumn({ align: 'center', justify: 'center' }),
     wh: '100%',
@@ -85,19 +85,19 @@ export const PairingPage = () => {
   const pairingCode = device?.key || device?.id || 'Chargement...';
 
   return (
-    <Div cls={css()}>
-      <Div cls={css(`Container`)}>
-        <Div cls={css(`SpinnerContainer`)}>
-          <Div cls={css(`Spinner`)} />
-        </Div>
+    <div class={c()}>
+      <div class={c('Container')}>
+        <div class={c('SpinnerContainer')}>
+          <div class={c('Spinner')} />
+        </div>
 
-        <h1 class={css(`Title`)}>En attente de pairage</h1>
+        <h1 class={c('Title')}>En attente de pairage</h1>
 
-        <p class={css(`Subtitle`)}>Saisissez cette clé dans l'interface d'administration</p>
+        <p class={c('Subtitle')}>Saisissez cette clé dans l'interface d'administration</p>
 
-        <Div cls={css(`CodeContainer`)}>
-          <Div cls={css(`Code`)}>{pairingCode}</Div>
-        </Div>
+        <div class={c('CodeContainer')}>
+          <div class={c('Code')}>{pairingCode}</div>
+        </div>
 
         <FlexRow>
           <Button
@@ -109,7 +109,7 @@ export const PairingPage = () => {
             }}
           />
         </FlexRow>
-      </Div>
-    </Div>
+      </div>
+    </div>
   );
 };

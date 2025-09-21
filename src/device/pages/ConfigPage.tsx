@@ -5,7 +5,7 @@ import { usePromise } from '@common/hooks';
 import { toNbr } from '@common/utils/cast';
 import { useState } from 'preact/hooks';
 
-const css = Css('ConfigPage', {
+const c = Css('ConfigPage', {
   '&': {
     p: 1,
   },
@@ -104,7 +104,7 @@ const ConfigPage = () => {
   };
 
   return (
-    <div class={css()}>
+    <div class={c()}>
       {initBase !== undefined ? (
         <Form title="Configuration Base" onSubmit={handleBaseSubmit}>
           <Field
@@ -115,7 +115,7 @@ const ConfigPage = () => {
             onValue={setPassword}
             required
           />
-          <div class={css(`Actions`)}>
+          <div class={c('Actions')}>
             <Button>Sauvegarder</Button>
           </div>
         </Form>
@@ -141,7 +141,7 @@ const ConfigPage = () => {
             value={backColor}
             onValue={setBackColor}
           />
-          <div class={css(`Actions`)}>
+          <div class={c('Actions')}>
             <Button>Sauvegarder</Button>
           </div>
         </Form>
@@ -201,7 +201,7 @@ const ConfigPage = () => {
               ['false', 'non'],
             ]}
           />
-          <div class={css(`Actions`)}>
+          <div class={c('Actions')}>
             <Button>Sauvegarder</Button>
           </div>
         </Form>

@@ -12,7 +12,7 @@ import { LoadingPage } from './LoadingPage';
 import { isAdvanced$ } from '../messages';
 import { logout, auth$, coll } from '@common/api';
 
-const css = Css('AccountPage', {});
+const c = Css('AccountPage', {});
 
 export const AccountPage = () => {
   const auth = useMsg(auth$);
@@ -34,7 +34,7 @@ export const AccountPage = () => {
   };
 
   return (
-    <Page  cls={css()}>
+    <Page  class={c()}>
       <PageHeader title="Mon compte">
         <Button title="Rafraîchir" icon={<RefreshCw />} color="primary" onClick={() => {}} />
       </PageHeader>

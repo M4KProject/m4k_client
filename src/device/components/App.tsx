@@ -2,7 +2,7 @@ import { Css, flexCenter, flexRow } from '@common/ui';
 import { useMsg } from '@common/hooks';
 import { device$ } from '../services/device';
 import { usePWA } from '../../serviceWorker';
-import { Div, Side, SideButton, SideSep } from '@common/components';
+import { Side, SideButton, SideSep } from '@common/components';
 import { JSX } from 'preact';
 import { page$, PageName } from '../messages/page$';
 import { LoadingPage } from '../pages/LoadingPage';
@@ -21,7 +21,7 @@ import { useEffect } from 'preact/hooks';
 import { offlineMode$ } from '../messages';
 import { DialogContainer } from './DialogContainer';
 
-const css = Css('App', {
+const c = Css('App', {
   '&': {
     ...flexRow({ align: 'stretch' }),
     position: 'fixed',
@@ -77,7 +77,7 @@ const AppContent = () => {
   }, [device]);
 
   return (
-    <Div  cls={css()}>
+    <div  class={c()}>
       {page !== 'kiosk' && page !== 'codePin' && page !== 'pairing' && (
         <Side page$={page$}>
           <SideSep />
@@ -100,7 +100,7 @@ const AppContent = () => {
       <Corners />
       <AppRouter />
       <DialogContainer />
-    </Div>
+    </div>
   );
 };
 

@@ -8,7 +8,7 @@ import { newProgressDialog } from '../components/ProgressView';
 import { clearAllCache } from '../../serviceWorker';
 import { copyDir$, url$ } from '../messages';
 
-const css = Css('Actions', {
+const c = Css('Actions', {
   '&': {},
   '&Buttons': {
     ...flexRow({ justify: 'around', align: 'center', wrap: 'wrap' }),
@@ -127,16 +127,16 @@ export const ActionsPage = () => {
   const [info] = usePromise(() => m4k.info(), []);
 
   return (
-    <Div  cls={css()}>
-      <Div cls={css(`Info`)}>
+    <div  class={c()}>
+      <div class={c('Info')}>
         {Object.entries(info || {}).map(([k, v], i) => (
-          <Div key={i}>
+          <div key={i}>
             {k}: <b>{v}</b>
-          </Div>
+          </div>
         ))}
-      </Div>
+      </div>
 
-      <Div cls={css(`Buttons`)}>
+      <div class={c('Buttons')}>
         <Button color="primary" onClick={() => installApk('m4k.apk')}>
           Installer la derniére version du Kiosk
         </Button>
@@ -151,28 +151,28 @@ export const ActionsPage = () => {
           Copier la playlist locale
         </Button>
         <Button onClick={() => m4k.exit()}>Quitter</Button>
-      </Div>
+      </div>
 
       <b>Installer :</b>
-      <Div cls={css(`Buttons`)}>
+      <div class={c('Buttons')}>
         <Button onClick={() => installApk('autostart22.apk')}>AutoStart</Button>
         <Button onClick={() => installApk('RawBT609.apk')}>RawBt Printer V6.0.9</Button>
         <Button onClick={() => installApk('RawBT703.apk')}>RawBt Printer V7.0.3</Button>
         <Button onClick={() => installApk('TeamViewerHost.apk')}>TeamViewer Host</Button>
         <Button onClick={() => installApk('TeamViewerQS.apk')}>TeamViewer QuickSupport</Button>
         <Button onClick={() => installApk('WebView132.apk')}>WebView 132</Button>
-      </Div>
+      </div>
 
       <b>Installer WebView :</b>
-      <Div cls={css(`Buttons`)}>
+      <div class={c('Buttons')}>
         {/* https://www.apkmirror.com/apk/google-inc/android-system-webview/ */}
         <Button onClick={() => installApk('webview134_arm64_a8.apk')}>
           WebView 134 ARM64 Android8+
         </Button>
-      </Div>
+      </div>
 
       <b>Ouvrir :</b>
-      <Div cls={css(`Buttons`)}>
+      <div class={c('Buttons')}>
         <Button onClick={testPrint}>Test Impression</Button>
         <Button
           onClick={() =>
@@ -206,7 +206,7 @@ export const ActionsPage = () => {
           TeamViewer QuickSupport
         </Button>
         <Button onClick={() => m4k.openAutoStart()}>AutoStart</Button>
-      </Div>
+      </div>
 
       {/* <b>Rotation :</b>
             <div className="m4kActions">
@@ -217,7 +217,7 @@ export const ActionsPage = () => {
             </div> */}
 
       <b>Autre :</b>
-      <Div cls={css(`Buttons`)}>
+      <div class={c('Buttons')}>
         <Button
           onClick={async () => {
             url$.set('https://boardscreen.fr/');
@@ -226,7 +226,7 @@ export const ActionsPage = () => {
         >
           Boardscreen
         </Button>
-      </Div>
-    </Div>
+      </div>
+    </div>
   );
 };

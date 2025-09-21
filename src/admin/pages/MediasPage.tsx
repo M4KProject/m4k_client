@@ -6,13 +6,13 @@ import { tooltip, Page, PageHeader, PageBody, UploadButton } from '@common/compo
 import { SearchField } from '../components/SearchField';
 import { MediasTable } from '../components/MediasTable';
 
-const css = Css('MediasPage', {
+const c = Css('MediasPage', {
   '&': {},
 });
 
 export const MediasPage = () => {
   return (
-    <Page cls={css(`Page`)}>
+    <Page class={c('Page')}>
       <PageHeader title="Les medias">
         <UploadButton
           title="Téléverser"

@@ -3,13 +3,13 @@ import { Msg } from '@common/utils';
 import { useEffect, useState } from 'preact/hooks';
 import { useTimerMs, useMsg } from '@common/hooks';
 import { page$ } from '../messages/page$';
-import { Button, Div, Field, Form, showDialog } from '@common/components';
+import { Button, Field, Form, showDialog } from '@common/components';
 import { Globe, Lock } from 'lucide-react';
 import { device$ } from '../services/device';
 import { codePin$, offlineMode$ } from '../messages';
 import { FlexRow } from '@common/components/Flex';
 
-const css = Css('CodePinView', {
+const c = Css('CodePinView', {
   '&': {
     zIndex: 99999,
   },
@@ -45,8 +45,8 @@ export const CodePinView = ({ open$ }: { open$: Msg<boolean> }) => {
   }, [codePin]);
 
   return (
-    <Form  cls={css()}>
-      <Div cls={css(`Code`)}>{device?.key}</Div>
+    <Form  class={c()}>
+      <div class={c('Code')}>{device?.key}</div>
       <Field type="password" label="Code PIN" value={codePin} onValue={setCodePin} />
       <FlexRow>
         <Button icon={<Lock />} onClick={handleClose}>

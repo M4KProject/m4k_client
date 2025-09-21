@@ -22,7 +22,7 @@ import { Role, auth$, collSync } from '@common/api';
 import { useQuery } from '@common/hooks/useQuery';
 import { groupCtrl, memberCtrl } from '../controllers';
 
-const css = Css('GroupsPage', {});
+const c = Css('GroupsPage', {});
 
 export const GroupsPage = () => {
   const auth = useMsg(auth$);
@@ -42,7 +42,7 @@ export const GroupsPage = () => {
   console.debug('GroupsPage', { auth, group, isAdvanced, groups });
 
   return (
-    <Page  cls={css()}>
+    <Page  class={c()}>
       <PageHeader title="Gestionnaire de groupes">
         <Button title="Ajouter" icon={<Plus />} color="primary" onClick={handleAdd} />
         <SearchField />
