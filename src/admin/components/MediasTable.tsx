@@ -11,9 +11,21 @@ import {
   Trash2,
   FolderPlus,
   FolderInput,
-  MapPlus
+  MapPlus,
 } from 'lucide-react';
-import { FAILED, PENDING, PROCESSING, SUCCESS, UPLOADING, uploadItems$, groupId$, needAuthId, needGroupId, MediaModel, collSync } from '@common/api';
+import {
+  FAILED,
+  PENDING,
+  PROCESSING,
+  SUCCESS,
+  UPLOADING,
+  uploadItems$,
+  groupId$,
+  needAuthId,
+  needGroupId,
+  MediaModel,
+  collSync,
+} from '@common/api';
 import {
   tooltip,
   Button,
@@ -139,11 +151,11 @@ export const getNextTitle = (medias: MediaModel[], start: string) => {
   let i = 1;
   let title = start;
   while (true) {
-    if (!medias.find(m => m.title===title)) break;
-    title = start + (++i);
+    if (!medias.find((m) => m.title === title)) break;
+    title = start + ++i;
   }
   return title;
-}
+};
 
 export const MediasTable = () => {
   const isAdvanced = useMsg(isAdvanced$);

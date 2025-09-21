@@ -77,7 +77,7 @@ const AppContent = () => {
   }, [device]);
 
   return (
-    <div  class={c()}>
+    <div class={c()}>
       {page !== 'kiosk' && page !== 'codePin' && page !== 'pairing' && (
         <Side page$={page$}>
           <SideSep />

@@ -127,7 +127,7 @@ export const ActionsPage = () => {
   const [info] = usePromise(() => m4k.info(), []);
 
   return (
-    <div  class={c()}>
+    <div class={c()}>
       <div class={c('Info')}>
         {Object.entries(info || {}).map(([k, v], i) => (
           <div key={i}>

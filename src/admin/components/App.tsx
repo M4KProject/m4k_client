@@ -68,7 +68,7 @@ const AppContent = () => {
   // console.debug("Div", { c, auth });
 
   return (
-    <div  class={c()}>
+    <div class={c()}>
       <SideBar />
       <AppRouter />
     </div>

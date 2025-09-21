@@ -1,7 +1,6 @@
 import { Css } from '@common/ui';
 import { repeat } from '@common/utils';
 
-
 import { openCodePinDialog } from './CodePinView';
 
 const c = Css('Corner', {
@@ -16,7 +15,7 @@ const c = Css('Corner', {
     transform: 'rotate(45deg)',
     pointerEvents: 'auto',
   },
-};
+});
 
 let count = 0;
 let last = 0;

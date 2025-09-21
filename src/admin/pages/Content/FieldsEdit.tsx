@@ -46,7 +46,7 @@ export const FieldsEdit = ({
   };
 
   return (
-    <div  class={c()}>
+    <div class={c()}>
       <div class={c('Actions')}>
         <Button onClick={() => isAdvanced$.next((v) => !v)}>Modifier les champs</Button>
         {isAdvanced && (

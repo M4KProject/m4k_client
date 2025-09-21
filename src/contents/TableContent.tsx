@@ -1,4 +1,3 @@
-
 import { Css, flexColumn } from '@common/ui';
 
 import type { ContentProps } from './ContentViewer';
@@ -18,7 +17,7 @@ const c = Css('TableContent', {
 
 export const TableContent = ({ content }: ContentProps) => {
   return (
-    <div  class={c()}>
+    <div class={c()}>
       <div class={c('Message')}>
         <h2>Tableau: {content.title}</h2>
         <p>Affichage des tableaux en cours de développement</p>

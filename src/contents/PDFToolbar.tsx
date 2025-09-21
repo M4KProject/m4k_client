@@ -1,4 +1,3 @@
-
 import { Css } from '@common/ui';
 import { Button, Div } from '@common/components';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
@@ -59,7 +58,7 @@ export const PDFToolbar = ({
   onFitWidth,
 }: PDFToolbarProps) => {
   return (
-    <div  class={c()}>
+    <div class={c()}>
       <Button
         icon={<ChevronLeft />}
         color={currentPage <= 1 ? 'secondary' : 'primary'}

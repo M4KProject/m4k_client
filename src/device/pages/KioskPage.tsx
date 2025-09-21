@@ -169,9 +169,7 @@ const KioskItem = ({
   }, [isCurr, isVideo, isImage, duration, gotoNext]);
 
   return (
-    <div
-      class={c('', itemFit && `-${itemFit}`, itemAnim && `-${itemAnim}`, `-${pos}`)}
-    >
+    <div class={c('', itemFit && `-${itemFit}`, itemAnim && `-${itemAnim}`, `-${pos}`)}>
       {isVideo && isCurr && info && info.url ? (
         <KioskVideo url={info.url} gotoNext={gotoNext} hasVideoMuted={hasVideoMuted} />
       ) : isImage ? (

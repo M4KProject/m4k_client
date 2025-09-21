@@ -17,7 +17,7 @@ export const SearchField = () => {
   const search = useMsg(search$);
 
   return (
-    <div  class={c()}>
+    <div class={c()}>
       <Field name="search" value={search} onValue={search$.setter()} />
       <Button icon={<Search />} color="primary" onClick={() => search$.signal()} />
     </div>

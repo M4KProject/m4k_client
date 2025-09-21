@@ -42,7 +42,7 @@ export const GroupsPage = () => {
   console.debug('GroupsPage', { auth, group, isAdvanced, groups });
 
   return (
-    <Page  class={c()}>
+    <Page class={c()}>
       <PageHeader title="Gestionnaire de groupes">
         <Button title="Ajouter" icon={<Plus />} color="primary" onClick={handleAdd} />
         <SearchField />

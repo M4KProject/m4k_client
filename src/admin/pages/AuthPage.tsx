@@ -1,4 +1,3 @@
-
 import { Css, flexColumn, flexRow } from '@common/ui';
 import { AuthForm, Button } from '@common/components';
 import logoUrl from '../assets/logo.svg';
@@ -51,7 +50,7 @@ export const AuthPage = () => {
   };
 
   return (
-    <div  class={c()}>
+    <div class={c()}>
       <div class={c('Content')}>
         <div class={c('Logo')} />
         <div class={c('Title')}>

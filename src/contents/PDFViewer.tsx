@@ -229,7 +229,7 @@ export const PDFViewer = ({ url }: { url: string }) => {
   console.debug('PDFViewer', { url });
 
   return (
-    <div  class={c()}>
+    <div class={c()}>
       <div class={c('Container')} ref={containerRef} />
 
       <PDFToolbar

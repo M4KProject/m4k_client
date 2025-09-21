@@ -21,7 +21,7 @@ export const MemberTable = () => {
   const members = useGroupQuery(memberCtrl);
 
   return (
-    <Table  class={c()}>
+    <Table class={c()}>
       <TableHead>
         <Row>
           <CellHeader>Appareil</CellHeader>

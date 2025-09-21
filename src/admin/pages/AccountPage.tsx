@@ -34,7 +34,7 @@ export const AccountPage = () => {
   };
 
   return (
-    <Page  class={c()}>
+    <Page class={c()}>
       <PageHeader title="Mon compte">
         <Button title="Rafraîchir" icon={<RefreshCw />} color="primary" onClick={() => {}} />
       </PageHeader>

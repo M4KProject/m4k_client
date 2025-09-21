@@ -32,7 +32,7 @@ interface DeviceScreenProps {
 export const DeviceScreen = ({ captureUrl, deviceWidth, deviceHeight }: DeviceScreenProps) => {
   return (
     <div
-       class={c()}
+      class={c()}
       style={{
         backgroundImage: captureUrl,
       }}

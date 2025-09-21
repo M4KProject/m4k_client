@@ -42,7 +42,7 @@ export const DeviceConsole = ({ consoleOutput, onExecuteAction }: DeviceConsoleP
   const [command, setCommand] = useState('');
 
   return (
-    <div  class={c()}>
+    <div class={c()}>
       <div class={c('Logs')}>{consoleOutput}</div>
       <div class={c('Actions')}>
         <Field type="text" value={command} onValue={setCommand} />

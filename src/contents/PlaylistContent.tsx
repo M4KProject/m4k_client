@@ -113,14 +113,14 @@ export const PlaylistContent = ({ content, medias }: ContentProps<PlaylistConten
 
   return (
     <div class={c()}>
-      <div class={c('ItemSelect ${hasMedia ? '' : 'autoHide'}')}>
+      <div class={c('ItemSelect', !hasMedia && 'autoHide')}>
         <Field
           type="select"
           items={filteredItems.map((item) => [item, item.title])}
           msg={selected$}
         />
       </div>
-      <div class={c('LanguageSelect ${hasMedia ? '' : 'autoHide'}')}>
+      <div class={c('LanguageSelect', !hasMedia && 'autoHide')}>
         <Field
           type="picker"
           items={languages.map((iso) => [iso, <Flag iso={iso} />])}

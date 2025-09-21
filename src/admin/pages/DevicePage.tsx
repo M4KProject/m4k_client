@@ -43,7 +43,7 @@ export const DevicePage = () => {
 
   if (!device) {
     return (
-      <Page  class={c()}>
+      <Page class={c()}>
         <PageHeader title="Mode Remote"></PageHeader>
         <PageBody>
           <div>Device non trouvé</div>
@@ -71,7 +71,7 @@ export const DevicePage = () => {
   const captureUrl = device.capture ? getUrl('devices', device.id, device.capture) : '';
 
   return (
-    <Page  class={c()}>
+    <Page class={c()}>
       <PageHeader title={device.name || device.key}>
         <Button
           icon={<RefreshCw />}

@@ -89,7 +89,7 @@ export const ContentsPage = () => {
   };
 
   return (
-    <Page  class={c()}>
+    <Page class={c()}>
       <PageHeader title="Les contenus">
         <Button title="Ajouter un contenu" icon={<Plus />} color="primary" onClick={handleAdd} />
         <Button title="Rafraîchir" icon={<RefreshCw />} color="primary" onClick={contentsRefresh} />

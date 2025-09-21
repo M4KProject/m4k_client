@@ -86,7 +86,7 @@ export const DevicesPage = () => {
   // };
 
   return (
-    <Page  class={c()}>
+    <Page class={c()}>
       <PageHeader title="Les écrans">
         <Button icon={<Plus />} color="primary" onClick={handleAdd}>
           Ajouter

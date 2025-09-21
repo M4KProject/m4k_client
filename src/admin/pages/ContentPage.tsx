@@ -49,7 +49,7 @@ export const ContentPage = () => {
   };
 
   return (
-    <Page  class={c()}>
+    <Page class={c()}>
       <PageHeader title={`${label}: ${title}`}>
         <Button
           title="Rafraîchir"

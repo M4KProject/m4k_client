@@ -33,7 +33,7 @@ const c = Css('DialogContainer', {
     ...flexColumn(),
     p: 1,
   },
-};
+});
 
 export const DialogContainer = () => {
   const dialog = useMsg(dialog$);
@@ -41,7 +41,7 @@ export const DialogContainer = () => {
   if (!dialog) return null;
 
   return (
-    <div  class={c()} onClick={() => dialog.onClose?.()}>
+    <div class={c()} onClick={() => dialog.onClose?.()}>
       <div class={c('Window')} onClick={(e) => e.stopPropagation()}>
         <div class={c('Header')}>{dialog.title}</div>
         <div class={c('Content')}>

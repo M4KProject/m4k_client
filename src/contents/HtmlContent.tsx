@@ -1,4 +1,3 @@
-
 import { Css } from '@common/ui';
 
 import type { ContentProps } from './ContentViewer';
@@ -18,5 +17,5 @@ const c = Css('HtmlContent', {
 export const HtmlContent = ({ content }: ContentProps<HtmlContentModel>) => {
   const htmlContent = content.data.html || '<p>Aucun contenu HTML défini</p>';
 
-  return <div  class={c()} dangerouslySetInnerHTML={{ __html: htmlContent }} />;
+  return <div class={c()} dangerouslySetInnerHTML={{ __html: htmlContent }} />;
 };

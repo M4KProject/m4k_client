@@ -6,9 +6,4 @@ import * as api from '@common/api';
 
 export const app = global._app || (global._app = {});
 
-Object.assign(
-  app,
-  utils,
-  ui,
-  api,
-);
+Object.assign(app, utils, ui, api);

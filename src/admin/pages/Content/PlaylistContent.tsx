@@ -51,7 +51,7 @@ export const PlaylistContent = ({ data, updateData }: ContentProps<PlaylistConte
   const medias = useGroupQuery(mediaCtrl);
 
   return (
-    <div  class={c()}>
+    <div class={c()}>
       <Table>
         <TableHead>
           <Row>

@@ -1,5 +1,5 @@
-import { apiError$, collSync } from "@common/api";
-import { showError } from "@common/components";
+import { apiError$, collSync } from '@common/api';
+import { showError } from '@common/components';
 
 export const contentCtrl = collSync('contents');
 export const deviceCtrl = collSync('devices');

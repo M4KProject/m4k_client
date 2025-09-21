@@ -52,32 +52,33 @@ const getVariants = (media?: MediaModel): Variant[] => {
     results.push({ ...media, file, media });
   }
   return results;
-}
+};
 
-const getMediaUrl = (v?: Variant, thumb?: [number, number]) => v && getUrl('medias', v.media.id, v.file) || '';
+const getMediaUrl = (v?: Variant, thumb?: [number, number]) =>
+  (v && getUrl('medias', v.media.id, v.file)) || '';
 
 const mediaOver$ = new Msg('');
 
 export const MediaPreview = ({ media }: { media: MediaModel }) => {
   const variants = getVariants(media);
 
-  const images = variants.filter(v => v.type === 'image');
-  const videos = variants.filter(v => v.type === 'video');
+  const images = variants.filter((v) => v.type === 'image');
+  const videos = variants.filter((v) => v.type === 'video');
 
   const isOver = useMsg(mediaOver$) === media.id;
-  
+
   return (
     <div
       class={c('', isOver && `-over`)}
       onMouseOver={() => mediaOver$.set(media.id)}
-      onMouseLeave={() => mediaOver$.next(p => p === media.id ? '' : p)}
+      onMouseLeave={() => mediaOver$.next((p) => (p === media.id ? '' : p))}
     >
-      <div style={{ backgroundImage: `url("${getMediaUrl(images[0], [300,300])}")` }}>
-        {(isOver && videos.length) ? (
-          <video 
+      <div style={{ backgroundImage: `url("${getMediaUrl(images[0], [300, 300])}")` }}>
+        {isOver && videos.length ? (
+          <video
             controls={false}
-            muted 
-            autoPlay 
+            muted
+            autoPlay
             loop
             onLoadStart={(e) => {
               e.currentTarget.currentTime = 0;

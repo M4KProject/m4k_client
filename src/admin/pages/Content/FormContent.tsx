@@ -13,7 +13,7 @@ export const FormContent = (props: ContentProps<FormContentModel> & { edit?: JSX
   const fields = data.fields || [];
   const values = data.values || {};
   return (
-    <div  class={c()}>
+    <div class={c()}>
       {edit || <FieldsEdit {...props} />}
       <Form>
         {fields.map((field) => {

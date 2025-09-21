@@ -1,7 +1,6 @@
 import { ContentModel } from '@common/api';
 import { Css } from '@common/ui';
 
-
 import { ContentProps } from './ContentProps';
 import { Field } from '@common/components';
 
@@ -16,7 +15,7 @@ const types: [string, string][] = [
 
 export const EmptyContent = ({ content, updateContent }: ContentProps<ContentModel>) => {
   return (
-    <div  class={c()}>
+    <div class={c()}>
       <Field
         label="Type de contenu"
         type="select"

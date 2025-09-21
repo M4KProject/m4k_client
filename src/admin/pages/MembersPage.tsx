@@ -67,7 +67,7 @@ export const MembersPage = () => {
   };
 
   return (
-    <Page  class={c()}>
+    <Page class={c()}>
       <PageHeader title="Les membres">
         <Button title="Ajouter un membre" icon={<Plus />} color="primary" onClick={handleCreate} />
         <SearchField />

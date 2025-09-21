@@ -17,7 +17,7 @@ const c = Css('ConfigPage', {
   '&Actions .Button': {
     flex: 1,
   },
-};
+});
 
 const ConfigPage = () => {
   // Base configuration state

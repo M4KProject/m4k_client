@@ -45,7 +45,7 @@ export const CodePinView = ({ open$ }: { open$: Msg<boolean> }) => {
   }, [codePin]);
 
   return (
-    <Form  class={c()}>
+    <Form class={c()}>
       <div class={c('Code')}>{device?.key}</div>
       <Field type="password" label="Code PIN" value={codePin} onValue={setCodePin} />
       <FlexRow>

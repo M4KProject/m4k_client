@@ -60,7 +60,7 @@ const ProgressView = () => {
   useEffect(() => autoScrollEnd(logsRef.current), [logs]);
 
   return (
-    <div  class={c()}>
+    <div class={c()}>
       <Progress progress={value * 100} step={step ? step[1] : ''} />
       <div ref={logsRef} class={c('Logs')}>
         {logs.map((log, i) => (
