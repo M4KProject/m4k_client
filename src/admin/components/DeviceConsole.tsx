@@ -1,7 +1,7 @@
 import { Css, flexRow, flexColumn } from '@common/ui';
 import { useCss } from '@common/hooks';
 import { Div, Button, Field } from '@common/components';
-import { DeviceModel } from '@common/api/models';
+import { DeviceModel } from '@common/api';
 import { useState } from 'preact/hooks';
 import { Send, RefreshCw, FileJson } from 'lucide-react';
 

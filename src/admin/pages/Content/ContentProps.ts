@@ -1,4 +1,4 @@
-import { ContentModel } from '@common/api/models';
+import { ContentModel } from '@common/api';
 
 export interface ContentProps<T extends ContentModel = any> {
   content: T;

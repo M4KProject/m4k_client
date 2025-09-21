@@ -13,7 +13,7 @@ import {
   FolderInput,
   MapPlus
 } from 'lucide-react';
-import { FAILED, PENDING, PROCESSING, SUCCESS, UPLOADING, uploadItems$ } from '@common/api/medias';
+import { FAILED, PENDING, PROCESSING, SUCCESS, UPLOADING, uploadItems$, groupId$, needAuthId, needGroupId, MediaModel, collSync } from '@common/api';
 import {
   tooltip,
   Div,
@@ -30,16 +30,12 @@ import {
   PageHeader,
   Toolbar,
 } from '@common/components';
-import { collMedias } from '@common/api/collMedias';
-import { syncJobs } from '@common/api/syncJobs';
-import { syncMedias } from '@common/api/syncMedias';
 import { JobsTable } from './JobsTable';
-import { useSyncColl } from '@common/hooks/useSyncColl';
 import { SearchField } from './SearchField';
-import { needAuthId, needGroupId } from '@common/api/messages';
 import { SelectedField } from './SelectedField';
 import { MediaPreview } from './MediaPreview';
-import { MediaModel } from '@common/api/models';
+import { useGroupQuery } from '@common/hooks/useQuery';
+import { jobCtrl, mediaCtrl } from '../controllers';
 
 addTranslates({
   [PENDING]: 'en attente',
@@ -154,9 +150,8 @@ export const getNextTitle = (medias: MediaModel[], start: string) => {
 export const MediasTable = () => {
   const c = useCss('Media', css);
   const isAdvanced = useMsg(isAdvanced$);
-
-  const medias = useSyncColl(syncMedias);
-  const jobs = useSyncColl(syncJobs);
+  const medias = useGroupQuery(mediaCtrl);
+  const jobs = useGroupQuery(jobCtrl);
 
   const mediaById = byId(medias);
 
@@ -186,7 +181,7 @@ export const MediasTable = () => {
           icon={<FolderPlus />}
           {...tooltip('Créer un nouveau dossier')}
           onClick={() => {
-            collMedias.create({
+            mediaCtrl.create({
               title: getNextTitle(medias, 'Dossier'),
               mime: 'application/folder',
               type: 'folder',
@@ -201,7 +196,7 @@ export const MediasTable = () => {
           icon={<MapPlus />}
           {...tooltip('Créer une playlist')}
           onClick={() => {
-            collMedias.create({
+            mediaCtrl.create({
               title: getNextTitle(medias, 'Playlist'),
               mime: 'application/playlist',
               type: 'playlist',
@@ -239,11 +234,11 @@ export const MediasTable = () => {
                 <Field
                   {...(isAdvanced ? tooltip(m.order) : {})}
                   value={m.title}
-                  onValue={(title) => syncMedias.update(m.id, { title })}
+                  onValue={(title) => mediaCtrl.update(m.id, { title })}
                 />
               </Cell>
               <Cell>
-                <Field value={m.desc} onValue={(desc) => syncMedias.update(m.id, { desc })} />
+                <Field value={m.desc} onValue={(desc) => mediaCtrl.update(m.id, { desc })} />
               </Cell>
               <Cell>
                 <MediaPreview media={m} />
@@ -259,7 +254,7 @@ export const MediasTable = () => {
                     onClick={async () => {
                       for (const id of selectedIds) {
                         selectedById$.setItem(id, undefined);
-                        await collMedias.update(id, { parent: m.id });
+                        await mediaCtrl.update(id, { parent: m.id });
                       }
                     }}
                   />
@@ -268,7 +263,7 @@ export const MediasTable = () => {
                   icon={<Trash2 />}
                   color="error"
                   {...tooltip('Supprimer')}
-                  onClick={() => syncMedias.delete(m.id)}
+                  onClick={() => mediaCtrl.delete(m.id)}
                 />
               </Cell>
             </Row>

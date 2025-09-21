@@ -2,7 +2,7 @@ import { useCss } from '@common/hooks';
 import { Css } from '@common/ui';
 import { Div } from '@common/components';
 import type { ContentProps } from './ContentViewer';
-import { HtmlContentModel } from '@common/api/models';
+import { HtmlContentModel } from '@common/api';
 
 const css: Css = {
   '&': {

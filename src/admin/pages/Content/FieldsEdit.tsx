@@ -1,6 +1,6 @@
 import { Css, flexRow } from '@common/ui';
 import { useCss, useMsg } from '@common/hooks';
-import { FormContentModel, TableContentModel } from '@common/api/models';
+import { FormContentModel, TableContentModel } from '@common/api';
 import {
   Div,
   Button,

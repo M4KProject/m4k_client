@@ -1,4 +1,4 @@
-import { PlaylistContentModel, PlaylistEntry } from '@common/api/models';
+import { PlaylistContentModel, PlaylistEntry } from '@common/api';
 import { Css, flexColumn } from '@common/ui';
 import {
   addItem,
@@ -24,7 +24,8 @@ import {
 } from '@common/components';
 import { ContentProps } from './ContentProps';
 import { Plus, Trash2 } from 'lucide-react';
-import { collMedias } from '@common/api/collMedias';
+import { useGroupQuery, useQuery } from '@common/hooks/useQuery';
+import { mediaCtrl } from '@/admin/controllers';
 
 const css: Css = {
   '&': {
@@ -49,7 +50,7 @@ export const PlaylistContent = ({ data, updateData }: ContentProps<PlaylistConte
 
   const handleDelete = (index: number) => setItems(removeIndex(items, index));
 
-  const [medias] = useAsync([], () => collMedias.find({}));
+  const medias = useGroupQuery(mediaCtrl);
 
   return (
     <Div cls={c}>

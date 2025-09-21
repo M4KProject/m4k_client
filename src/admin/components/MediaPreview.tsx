@@ -1,9 +1,8 @@
 import { Css } from '@common/ui';
 import { useCss, useMsg } from '@common/hooks';
 import { Div } from '@common/components';
-import { FileInfo, MediaModel } from '@common/api/models';
+import { FileInfo, MediaModel, getUrl } from '@common/api';
 import { isStrNotEmpty, Msg } from '@common/utils';
-import { getUrl } from '@common/api/getUrl';
 
 const css: Css = {
   '&': {

@@ -10,13 +10,13 @@ import {
 } from '@common/components';
 import { Trash2 } from 'lucide-react';
 import { JobStatus } from './JobStatus';
-import { syncJobs } from '@common/api/syncJobs';
 import { sort } from '@common/utils/list';
-import { useSyncColl } from '@common/hooks/useSyncColl';
-import { JobModel } from '@common/api/models';
+import { JobModel } from '@common/api';
+import { useGroupQuery } from '@common/hooks/useQuery';
+import { jobCtrl } from '../controllers';
 
 export const JobsTable = ({ filter }: { filter?: (job: JobModel) => boolean }) => {
-  const jobs = useSyncColl(syncJobs);
+  const jobs = useGroupQuery(jobCtrl);
   const filteredJobs = filter ? jobs.filter(filter) : jobs;
   const sortedJobs = sort(filteredJobs, (j) => -new Date(j.updated).getTime());
   console.debug('jobs', sortedJobs);
@@ -44,7 +44,7 @@ export const JobsTable = ({ filter }: { filter?: (job: JobModel) => boolean }) =
                 icon={<Trash2 />}
                 color="error"
                 {...tooltip('Supprimer')}
-                onClick={() => syncJobs.delete(job.id)}
+                onClick={() => jobCtrl.delete(job.id)}
               />
             </Cell>
           </Row>

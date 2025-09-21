@@ -5,9 +5,10 @@ import { useEffect, useState } from 'preact/hooks';
 import { RefreshCw, Power, LogOut } from 'lucide-react';
 import { DeviceScreen } from '../components/DeviceScreen';
 import { DeviceConsole } from '../components/DeviceConsole';
-import { collDevices } from '@common/api/collDevices';
+import { collSync, getUrl } from '@common/api';
 import { stringify } from '@common/utils';
 import { useDevice } from '../messages/device$';
+import { deviceCtrl } from '../controllers';
 
 const css: Css = {
   '&Body': {
@@ -35,7 +36,7 @@ export const DevicePage = () => {
   const executeAction = async (action: string, input?: any) => {
     if (!device) return;
     try {
-      await collDevices.update(device.id, { action: action as any, input });
+      await deviceCtrl.update(device.id, { action: action as any, input });
       setConsoleOutput((p) => p + `> Action: ${action}\n`);
     } catch (error) {
       setConsoleOutput((p) => p + `> Error: ${error}\n`);
@@ -69,7 +70,7 @@ export const DevicePage = () => {
     displayWidth = displayHeight * aspectRatio;
   }
 
-  const captureUrl = device.capture ? collDevices.getUrl(device.id, device.capture) : '';
+  const captureUrl = device.capture ? getUrl('devices', device.id, device.capture) : '';
 
   return (
     <Page cls={c}>

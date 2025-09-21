@@ -1,7 +1,6 @@
 import { Css } from '@common/ui';
-import { randKey, ReqError, toNbr, toStr } from '@common/utils';
-import { useCss } from '@common/hooks';
-import { Role } from '@common/api/models';
+import { toNbr, toStr } from '@common/utils';
+import { useCss, useGroupQuery } from '@common/hooks';
 import {
   Field,
   Button,
@@ -12,70 +11,15 @@ import {
   Row,
   TableBody,
   TableHead,
-  Form,
 } from '@common/components';
 import { Trash2 } from 'lucide-react';
-import { useState } from 'preact/hooks';
-import { needGroupId } from '@common/api/messages';
-import { collUsers } from '@common/api/collUsers';
-import { collMembers } from '@common/api/collMembers';
-import { syncMembers } from '@common/api/syncMembers';
-import { useSyncColl } from '@common/hooks/useSyncColl';
+import { memberCtrl } from '../controllers';
 
 const css: Css = {};
 
-export const CreateMemberForm = ({ onClose }: { onClose: () => void }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [isNew, setIsNewField] = useState(false);
-  const [error, setError] = useState('');
-
-  const handle = async () => {
-    if (!email) {
-      setError('Email requis');
-      return;
-    }
-    if (isNew && !password) {
-      setError('Mot de passe requis');
-      return;
-    }
-    setError('');
-    try {
-      if (isNew) {
-        await collUsers.create({ email, password, passwordConfirm: password });
-        await collMembers.create({ email, group: needGroupId(), role: Role.editor });
-      } else {
-        await collMembers.create({ email, group: needGroupId(), role: Role.editor });
-      }
-      onClose();
-    } catch (e) {
-      console.warn('create member', e);
-      if (e instanceof ReqError) {
-        if (e.status === 404 && !isNew) {
-          setIsNewField(true);
-          setPassword(randKey(10));
-          return;
-        }
-      }
-      setError(String(e));
-    }
-  };
-
-  return (
-    <Form onSubmit={handle}>
-      <Field label="Email" type="email" value={email} onValue={setEmail} error={error} />
-      {isNew && (
-        <Field label="Mot de passe" type="password" value={password} onValue={setPassword} />
-      )}
-      <Button type="submit" title="Ajouter" />
-    </Form>
-  );
-};
-
 export const MemberTable = () => {
   const c = useCss('MemberTable', css);
-
-  const members = useSyncColl(syncMembers);
+  const members = useGroupQuery(memberCtrl);
 
   return (
     <Table cls={c}>
@@ -104,14 +48,14 @@ export const MemberTable = () => {
                   ['30', 'Administrateur'],
                 ]}
                 value={toStr(m.role)}
-                onValue={(role) => syncMembers.update(m, { role: toNbr(role) })}
+                onValue={(role) => memberCtrl.update(m.id, { role: toNbr(role) })}
               />
             </Cell>
             <Cell>
               <Field
                 type="text"
                 value={m.desc}
-                onValue={(desc) => syncMembers.update(m, { desc })}
+                onValue={(desc) => memberCtrl.update(m.id, { desc })}
               />
             </Cell>
             <Cell variant="around">
@@ -119,7 +63,7 @@ export const MemberTable = () => {
                 icon={<Trash2 />}
                 color="error"
                 {...tooltip('Supprimer')}
-                onClick={() => syncMembers.delete(m)}
+                onClick={() => memberCtrl.delete(m.id)}
               />
             </Cell>
           </Row>

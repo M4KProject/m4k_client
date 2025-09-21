@@ -6,13 +6,11 @@ import { Button } from '@common/components';
 import { Form } from '@common/components';
 import { Field } from '@common/components';
 import { useMsg } from '@common/hooks';
-import { logout } from '@common/api/auth';
 import { LogOut, KeyRound } from 'lucide-react';
 import { useState } from 'preact/hooks';
 import { LoadingPage } from './LoadingPage';
 import { isAdvanced$ } from '../messages';
-import { auth$ } from '@common/api/messages';
-import { collUsers } from '@common/api/collUsers';
+import { logout, auth$, coll } from '@common/api';
 
 const css: Css = {};
 
@@ -28,7 +26,7 @@ export const AccountPage = () => {
 
   const handleUpdatePassword = async () => {
     try {
-      await collUsers.update(auth.id, { oldPassword, password, passwordConfirm: password });
+      await coll('users').update(auth.id, { oldPassword, password, passwordConfirm: password });
       setPasswordError('');
       setPassword('');
     } catch (_error) {

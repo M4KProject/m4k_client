@@ -1,19 +1,17 @@
 import { Css } from '@common/ui';
 import { randKey, ReqError } from '@common/utils';
 import { useCss } from '@common/hooks';
-import { Role } from '@common/api/models';
 import { Field, Button, Page, PageHeader, PageBody, showDialog, Form } from '@common/components';
 import { Plus } from 'lucide-react';
 import { useState } from 'preact/hooks';
-import { needGroupId } from '@common/api/messages';
-import { collUsers } from '@common/api/collUsers';
-import { collMembers } from '@common/api/collMembers';
 import { MemberTable } from '../components/MembersTable';
 import { SearchField } from '../components/SearchField';
+import { Role, needGroupId } from '@common/api';
+import { memberCtrl, userCtrl } from '../controllers';
 
 const css: Css = {};
 
-export const CreateMemberForm = ({ onClose }: { onClose: () => void }) => {
+const CreateMemberForm = ({ onClose }: { onClose: () => void }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isNew, setIsNewField] = useState(false);
@@ -31,10 +29,10 @@ export const CreateMemberForm = ({ onClose }: { onClose: () => void }) => {
     setError('');
     try {
       if (isNew) {
-        await collUsers.create({ email, password, passwordConfirm: password });
-        await collMembers.create({ email, group: needGroupId(), role: Role.editor });
+        await userCtrl.create({ email, password, passwordConfirm: password });
+        await memberCtrl.create({ email, group: needGroupId(), role: Role.editor });
       } else {
-        await collMembers.create({ email, group: needGroupId(), role: Role.editor });
+        await memberCtrl.create({ email, group: needGroupId(), role: Role.editor });
       }
       onClose();
     } catch (e) {

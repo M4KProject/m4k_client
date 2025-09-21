@@ -1,7 +1,6 @@
 import { Css } from '@common/ui';
 import { formatDate, formatDateTime, stringify, toDate, toErr, toTime } from '@common/utils';
 import { useCss, useMsg } from '@common/hooks';
-import { groupId$ } from '@common/api/messages';
 import {
   Button,
   Field,
@@ -20,15 +19,11 @@ import {
 } from '@common/components';
 import { RefreshCw, Trash2, Settings, Plus, Power } from 'lucide-react';
 import { adminPage$, device$, isAdvanced$ } from '../messages';
-import { useEffect, useState } from 'preact/hooks';
-import { apiGet } from '@common/api/call';
-import { serverTime } from '@common/api/serverTime';
-import { DeviceModel, Role } from '@common/api/models';
-import { collMembers } from '@common/api/collMembers';
-import { syncMedias } from '@common/api/syncMedias';
-import { syncDevices } from '@common/api/syncDevices';
-import { useSyncColl } from '@common/hooks/useSyncColl';
+import { useState } from 'preact/hooks';
+import { apiGet, serverTime, DeviceModel, groupId$ } from '@common/api';
 import { SearchField } from '../components/SearchField';
+import { useGroupQuery } from '@common/hooks/useQuery';
+import { deviceCtrl, mediaCtrl } from '../controllers';
 
 const css: Css = {};
 
@@ -61,11 +56,10 @@ export const PairingForm = ({ onClose }: { onClose: () => void }) => {
 
 export const DevicesPage = () => {
   const c = useCss('DevicesPage', css);
-  const groupId = useMsg(groupId$);
   const isAdvanced = useMsg(isAdvanced$);
 
-  const medias = useSyncColl(syncMedias);
-  const devices = useSyncColl(syncDevices);
+  const medias = useGroupQuery(mediaCtrl);
+  const devices = useGroupQuery(deviceCtrl);
 
   // search ? devices.filter((d) => isSearched(d.name, search)) : devices;
 
@@ -122,7 +116,7 @@ export const DevicesPage = () => {
                     <Field
                       {...tooltip(d.id)}
                       value={d.key}
-                      onValue={(key) => syncDevices.update(d, { key })}
+                      onValue={(key) => deviceCtrl.update(d.id, { key })}
                     />
                   </Cell>
                 )}
@@ -136,7 +130,7 @@ export const DevicesPage = () => {
                   </Cell>
                 )}
                 <Cell>
-                  <Field value={d.name} onValue={(name) => syncDevices.update(d, { name })} />
+                  <Field value={d.name} onValue={(name) => deviceCtrl.update(d.id, { name })} />
                 </Cell>
                 <Cell>{`${d.info?.width || 0}x${d.info?.height || 0}`}</Cell>
                 <Cell>
@@ -154,7 +148,7 @@ export const DevicesPage = () => {
                     type="select"
                     items={medias.map((c) => [c.id, c.title || c.key || c.id])}
                     value={d.media}
-                    onValue={(media) => syncDevices.update(d, { media })}
+                    onValue={(media) => deviceCtrl.update(d.id, { media })}
                   />
                 </Cell>
                 <Cell variant="around">
@@ -162,13 +156,13 @@ export const DevicesPage = () => {
                     icon={<RefreshCw />}
                     color="primary"
                     {...tooltip('Rafraîchir')}
-                    onClick={() => syncDevices.update(d, { action: 'reload' })}
+                    onClick={() => deviceCtrl.update(d.id, { action: 'reload' })}
                   />
                   <Button
                     icon={<Power />}
                     color="primary"
                     {...tooltip('Redémarrer')}
-                    onClick={() => syncDevices.update(d, { action: 'reboot' })}
+                    onClick={() => deviceCtrl.update(d.id, { action: 'reboot' })}
                   />
                   {isAdvanced && (
                     <Button
@@ -182,7 +176,7 @@ export const DevicesPage = () => {
                       icon={<Trash2 />}
                       color="error"
                       {...tooltip('Supprimer')}
-                      onClick={() => syncDevices.delete(d)}
+                      onClick={() => deviceCtrl.delete(d.id)}
                     />
                   )}
                 </Cell>

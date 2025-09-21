@@ -2,7 +2,6 @@ import { Css, clipboardCopy, clipboardPaste } from '@common/ui';
 import { isSearched, toErr, toBool } from '@common/utils';
 import { useAsync, useCss, useMsg } from '@common/hooks';
 import { search$ } from '../messages/search$';
-import { ContentModel, ModelUpdate } from '@common/api/models';
 import {
   Button,
   Field,
@@ -20,11 +19,12 @@ import {
 import { Plus, RefreshCw, Copy, Clipboard, Edit, Trash2 } from 'lucide-react';
 import { SearchField } from '../components/SearchField';
 import { isAdvanced$ } from '../messages';
-import { collContents } from '@common/api/collContents';
-import { auth$, groupId$, needGroupId } from '@common/api/messages';
-import { collGroups } from '@common/api/collGroups';
+import { auth$, groupId$, needGroupId, ContentModel, ModelUpdate, coll } from '@common/api';
 
 const css: Css = {};
+
+const collContents = coll('contents');
+const collGroups = coll('groups');
 
 const handleCopy = async (content: ContentModel) => {
   console.debug('handleCopy', content);

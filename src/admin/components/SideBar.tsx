@@ -4,9 +4,10 @@ import { Css, flexColumn } from '@common/ui';
 import { Side, SideButton, SideSep } from '@common/components';
 import { Div } from '@common/components';
 import { Home, Users, Monitor, Image, User, Zap } from 'lucide-react';
-import { group$, isAdvanced$, useGroupKey } from '../messages';
+import { group$, isAdvanced$ } from '../messages';
 import { AdminPage, adminPage$ } from '../messages/adminPage$';
-import { syncGroups } from '@common/api/syncGroups';
+import { useQuery } from '@common/hooks/useQuery';
+import { groupCtrl } from '../controllers';
 
 const css: Css = {
   '&': {
@@ -71,8 +72,8 @@ export const SideBar = () => {
   const isAdvanced = useMsg(isAdvanced$);
 
   const group = useMsg(group$);
-  const groupById = useMsg(syncGroups.byId$);
-  const groups = Object.values(groupById);
+
+  const groups = useQuery(groupCtrl);
   if (groups.length === 1) group$.set(groups[0]);
 
   const go = (value: AdminPage) => () => adminPage$.set(value);

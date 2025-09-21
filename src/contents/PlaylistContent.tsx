@@ -4,9 +4,9 @@ import { dateToSeconds, Msg, uniq, toList } from '@common/utils';
 import { Div, Field, Flag } from '@common/components';
 import { useEffect, useMemo } from 'preact/hooks';
 import type { ContentProps } from './ContentViewer';
-import { PlaylistContentModel, PlaylistEntry } from '@common/api/models';
+import { PlaylistContentModel, PlaylistEntry } from '@common/api';
 import { PDFViewer } from './PDFViewer';
-import { collMedias } from '@common/api/collMedias';
+import { mediaCtrl } from '@/admin/controllers';
 
 const css: Css = {
   '&': {
@@ -101,7 +101,7 @@ export const PlaylistContent = ({ content, medias }: ContentProps<PlaylistConten
 
   const mediaId = selected?.media;
   const media = mediaId ? toList(medias).find((m) => m.id === mediaId) : null;
-  const mediaUrl = media ? collMedias.getUrl(mediaId, media.source) : null;
+  const mediaUrl = media ? mediaCtrl.getUrl(mediaId, media.source) : null;
 
   console.debug('PlaylistContent media', { mediaId, medias, media, mediaUrl });
 

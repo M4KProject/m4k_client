@@ -17,13 +17,10 @@ import {
 } from '@common/components';
 import { Css } from '@common/ui';
 import { SearchField } from '../components/SearchField';
-import { Role } from '@common/api/models';
 import { group$, isAdvanced$, useGroup } from '../messages';
-import { auth$ } from '@common/api/messages';
-import { collGroups } from '@common/api/collGroups';
-import { collMembers } from '@common/api/collMembers';
-import { useSyncColl } from '@common/hooks/useSyncColl';
-import { syncGroups } from '@common/api/syncGroups';
+import { Role, auth$, collSync } from '@common/api';
+import { useQuery } from '@common/hooks/useQuery';
+import { groupCtrl, memberCtrl } from '../controllers';
 
 const css: Css = {};
 
@@ -32,21 +29,14 @@ export const GroupsPage = () => {
   const auth = useMsg(auth$);
   const group = useGroup();
   const isAdvanced = useMsg(isAdvanced$);
-  const groups = useSyncColl(syncGroups);
+  const groups = useQuery(groupCtrl);
 
   const handleAdd = async () => {
     if (!auth) return;
-    const group = await collGroups
-      .create({ name: 'Nouveau Groupe', user: auth.id })
-      .catch(showError);
+    const group = await groupCtrl.create({ name: 'Nouveau Groupe', user: auth.id });
     if (group) {
-      await collMembers
-        .create({
-          user: auth.id,
-          group: group.id,
-          role: Role.viewer,
-        })
-        .catch(showError);
+      const role = Role.viewer;
+      await memberCtrl.create({ user: auth.id, group: group.id, role });
     }
   };
 
@@ -84,19 +74,19 @@ export const GroupsPage = () => {
                     <Field
                       {...tooltip(g.id)}
                       value={g.key}
-                      onValue={(key) => syncGroups.update(g, { key })}
+                      onValue={(key) => groupCtrl.update(g, { key })}
                     />
                   </Cell>
                 )}
                 <Cell>
-                  <Field value={g.name} onValue={(name) => syncGroups.update(g, { name })} />
+                  <Field value={g.name} onValue={(name) => groupCtrl.update(g.id, { name })} />
                 </Cell>
                 <Cell variant="row">
                   <Button
                     icon={<Trash2 />}
                     color="error"
                     {...tooltip('Supprimer')}
-                    onClick={() => syncGroups.delete(g)}
+                    onClick={() => groupCtrl.delete(g.id)}
                   />
                 </Cell>
               </Row>

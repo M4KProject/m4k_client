@@ -1,7 +1,7 @@
 import { render } from 'preact';
 import { App } from './components/App';
 import { addFont, setTheme, addEl, addResponsiveListener, setCss } from '@common/ui';
-import { authRefresh } from '@common/api/auth';
+import { authRefresh } from '@common/api';
 import { app } from '../app';
 import * as messages from './messages';
 

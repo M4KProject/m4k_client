@@ -13,8 +13,7 @@ import { Loading } from '@common/components';
 import { PlaylistContent } from './Content/PlaylistContent';
 import { EmptyContent } from './Content/EmptyContent';
 import { HiboutikContent } from './Content/HiboutikContent';
-import { collContents } from '@common/api/collContents';
-import { ContentModel } from '@common/api/models';
+import { coll, ContentModel } from '@common/api';
 
 const css: Css = {};
 
@@ -42,7 +41,7 @@ export const ContentPage = () => {
   const [label, Content] = contentByType[type] || contentByType.empty;
 
   const updateContent = async (changes: Partial<ContentModel>) => {
-    const contentUpdated = await collContents.update(id, changes);
+    const contentUpdated = await coll('contents').update(id, changes);
     // content$.set(contentUpdated);
   };
 

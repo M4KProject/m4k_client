@@ -1,7 +1,7 @@
 import { Css, flexRow } from '@common/ui';
 import { addTranslates, useCss } from '@common/hooks';
 import { Div, Tr, Progress } from '@common/components';
-import { JobModel } from '@common/api/models';
+import { JobModel } from '@common/api';
 import { Play, Square, AlertCircle, CheckCircle, Clock } from 'lucide-react';
 
 const css: Css = {
