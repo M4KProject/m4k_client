@@ -1,5 +1,5 @@
 import { PlaylistContentModel, PlaylistEntry } from '@common/api';
-import { Css, flexColumn } from '@common/ui';
+import { Css } from '@common/ui';
 import {
   addItem,
   removeIndex,
@@ -27,7 +27,7 @@ import { mediaCtrl } from '@/admin/controllers';
 
 const c = Css('PlaylistContent', {
   '': {
-    ...flexColumn(),
+    fCol: 1,
   },
 });
 

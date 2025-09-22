@@ -1,5 +1,5 @@
 // import { useEffect, useRef, useState } from 'react';
-// import { autoScrollEnd, Css, flexRow, stringify } from '@common/utils';
+// import { autoScrollEnd, Css,  stringify } from '@common/utils';
 // import { Button, Div } from '@common/components';
 // import { m4k, M4kLog } from '@common/m4k';
 //
@@ -19,7 +19,7 @@
 //     'Container': {
 //         flex: 1,
 //     },
-//     'Container .Actions': { ...flexRow({ align: 'center', justify: 'around' }), p: 0.5 },
+//     'Container .Actions': { fRow: ['center', 'around'], p: 0.5 },
 //     'Container .Button': { flex: 1, m: 0.5 },
 //     'Container .LoadBtn': { position: 'fixed', bottom: "1em", right: "1em" },
 //     'Logs': {
@@ -28,7 +28,7 @@
 //         overflow: 'auto',
 //     },
 //     '': {
-//         ...flexRow({ align: 'center' }),
+//         fRow: 1,
 //         minHeight: "1em",
 //         fontSize: "0.5em",
 //         my: 0.1,

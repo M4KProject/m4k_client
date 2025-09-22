@@ -1,7 +1,7 @@
 import { Css } from '@common/ui';
 import { randKey, ReqError } from '@common/utils';
 
-import { Field, Button, Page, PageHeader, PageBody, showDialog, Form } from '@common/components';
+import { Field, Button, Page, Toolbar, PageBody, showDialog, Form } from '@common/components';
 import { Plus } from 'lucide-react';
 import { useState } from 'preact/hooks';
 import { MemberTable } from '../components/MembersTable';
@@ -68,10 +68,10 @@ export const MembersPage = () => {
 
   return (
     <Page class={c()}>
-      <PageHeader title="Les membres">
+      <Toolbar title="Les membres">
         <Button title="Ajouter un membre" icon={<Plus />} color="primary" onClick={handleCreate} />
         <SearchField />
-      </PageHeader>
+      </Toolbar>
       <PageBody>
         <MemberTable />
       </PageBody>

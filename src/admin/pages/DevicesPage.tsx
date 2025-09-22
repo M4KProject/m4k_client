@@ -5,7 +5,7 @@ import {
   Button,
   Field,
   Page,
-  PageHeader,
+  Toolbar,
   PageBody,
   Table,
   Cell,
@@ -87,12 +87,12 @@ export const DevicesPage = () => {
 
   return (
     <Page class={c()}>
-      <PageHeader title="Les écrans">
+      <Toolbar title="Les écrans">
         <Button icon={<Plus />} color="primary" onClick={handleAdd}>
           Ajouter
         </Button>
         <SearchField />
-      </PageHeader>
+      </Toolbar>
       <PageBody>
         <Table>
           <TableHead>

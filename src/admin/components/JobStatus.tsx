@@ -1,4 +1,4 @@
-import { Css, flexRow } from '@common/ui';
+import { Css } from '@common/ui';
 import { addTr } from '@common/hooks';
 import { Tr, Progress } from '@common/components';
 import { JobModel } from '@common/api';
@@ -6,12 +6,12 @@ import { Play, Square, AlertCircle, CheckCircle, Clock } from 'lucide-react';
 
 const c = Css('JobStatus', {
   '': {
-    ...flexRow({ align: 'center', gap: 0.5 }),
+    fRow: 1,
+    gap: 0.5,
   },
   ' svg': {
     m: 0.5,
   },
-
   '-pending': { fg: 'secondary' },
   '-processing': { fg: 'primary' },
   '-finished': { fg: 'success' },

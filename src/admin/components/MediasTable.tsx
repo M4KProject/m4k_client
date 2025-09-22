@@ -1,4 +1,4 @@
-import { Css, flexColumn, flexRow } from '@common/ui';
+import { Css } from '@common/ui';
 import { byId, isEmpty, isPositive, round, sort } from '@common/utils';
 import { addTr, useMsg } from '@common/hooks';
 import { isAdvanced$, selectedById$ } from '../messages';
@@ -26,7 +26,6 @@ import {
   Field,
   Tr,
   Progress,
-  PageHeader,
   Toolbar,
 } from '@common/components';
 import { JobsTable } from './JobsTable';
@@ -48,7 +47,7 @@ const c = Css('Media', {
   Page: {},
 
   Icon: {
-    ...flexRow({ align: 'center', justify: 'start' }),
+    fRow: ['center', 'start'],
     w: '100%',
   },
   'Icon span': {
@@ -62,7 +61,7 @@ const c = Css('Media', {
   '-success': { fg: 'success' },
 
   Jobs: {
-    ...flexColumn({ align: 'stretch' }),
+    fRow: ['stretch'],
     position: 'absolute',
     r: 0,
     b: 0,
@@ -173,7 +172,7 @@ export const MediasTable = () => {
   return (
     <>
       <MediasProgress />
-      <Toolbar>
+      <Toolbar title="Medias">
         <Button
           icon={<FolderPlus />}
           {...tooltip('Créer un nouveau dossier')}
@@ -267,7 +266,7 @@ export const MediasTable = () => {
           ))}
           {!isEmpty(jobs.filter((job) => job.status !== 'finished' && !!job.media)) && (
             <div class={c('Jobs')}>
-              <PageHeader title="Les jobs" />
+              <Toolbar title="Les jobs" />
               <JobsTable filter={(job) => job.status !== 'finished' && !!job.media} />
             </div>
           )}

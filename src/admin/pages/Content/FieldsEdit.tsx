@@ -1,4 +1,4 @@
-import { Css, flexRow } from '@common/ui';
+import { Css } from '@common/ui';
 import { useMsg } from '@common/hooks';
 import { FormContentModel, TableContentModel } from '@common/api';
 import {
@@ -19,7 +19,7 @@ import { ComponentChildren } from 'preact';
 import { Trash2 } from 'lucide-react';
 
 const c = Css('TableContent', {
-  Actions: { ...flexRow({ align: 'center' }) },
+  Actions: { fRow: 'center' },
 });
 
 export const FieldsEdit = ({

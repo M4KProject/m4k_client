@@ -1,10 +1,10 @@
-import { Css, flexColumn } from '@common/ui';
+import { Css } from '@common/ui';
 
 import type { ContentProps } from './ContentViewer';
 
 const c = Css('FormContent', {
   '': {
-    ...flexColumn({ align: 'center', justify: 'center' }),
+    fCenter: 1,
     minHeight: '100vh',
     p: 2,
   },

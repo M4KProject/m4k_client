@@ -1,7 +1,6 @@
 import { Css } from '@common/ui';
-
 import { RefreshCw } from 'lucide-react';
-import { Page, PageHeader, PageBody, PageActions } from '@common/components';
+import { Page, PageBody, PageActions, Toolbar } from '@common/components';
 import { Button } from '@common/components';
 import { Form } from '@common/components';
 import { Field } from '@common/components';
@@ -35,9 +34,9 @@ export const AccountPage = () => {
 
   return (
     <Page class={c()}>
-      <PageHeader title="Mon compte">
+      <Toolbar title="Account">
         <Button title="Rafraîchir" icon={<RefreshCw />} color="primary" onClick={() => {}} />
-      </PageHeader>
+      </Toolbar>
       <PageBody>
         <Form title="Mon compte">
           <Field label="ID de l'utilisateur" name="user_id" value={auth.id} readonly />

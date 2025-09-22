@@ -1,4 +1,4 @@
-import { Field, Form, Page, PageBody, PageHeader } from '@common/components';
+import { Field, Form, Page, PageBody, Toolbar } from '@common/components';
 import { codePin$ } from '../messages';
 import { useEffect, useState } from 'preact/hooks';
 import { page$ } from '../messages/page$';
@@ -14,7 +14,7 @@ export const CodePinPage = () => {
 
   return (
     <Page>
-      <PageHeader title="Mot de passe du Kiosk" />
+      <Toolbar title="Mot de passe du Kiosk" />
       <PageBody>
         <Form>
           <Field type="password" label="Mot de passe" value={pin} onValue={setPin} />

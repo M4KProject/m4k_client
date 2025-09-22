@@ -1,5 +1,5 @@
 import { SideBar } from './SideBar';
-import { Css, flexCenter, flexRow } from '@common/ui';
+import { Css } from '@common/ui';
 import { useMsg } from '@common/hooks';
 import { usePWA } from '../../serviceWorker';
 import { JSX } from 'preact';
@@ -19,7 +19,7 @@ import { AdminPage, useAdminPage } from '../messages/adminPage$';
 
 const c = Css('App', {
   '': {
-    ...flexRow({ align: 'stretch' }),
+    fRow: 'stretch',
     position: 'fixed',
     overflow: 'auto',
     inset: 0,
@@ -28,7 +28,7 @@ const c = Css('App', {
     fontFamily: 'Roboto',
   },
   '-loading': {
-    ...flexCenter(),
+    fCenter: 1,
   },
   ' .Button': {
     fontSize: 1.4,

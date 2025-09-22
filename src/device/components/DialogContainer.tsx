@@ -1,6 +1,5 @@
-import { Css, flexCenter, flexColumn } from '@common/ui';
+import { Css } from '@common/ui';
 import { useMsg } from '@common/hooks';
-
 import { dialog$ } from '../messages/dialog$';
 
 const c = Css('DialogContainer', {
@@ -8,11 +7,11 @@ const c = Css('DialogContainer', {
     position: 'fixed',
     inset: 0,
     bg: '#000000AA',
-    ...flexCenter(),
+    fCenter: 1,
     zIndex: 10000,
   },
   Window: {
-    ...flexColumn(),
+    fCol: 1,
     elevation: 3,
     rounded: 2,
     maxWidth: '90%',
@@ -21,7 +20,7 @@ const c = Css('DialogContainer', {
     bg: 'bg',
   },
   Header: {
-    ...flexCenter(),
+    fCenter: 1,
     textAlign: 'center',
     fontSize: 1.2,
     fontWeight: 'bold',
@@ -30,7 +29,7 @@ const c = Css('DialogContainer', {
     fg: 'headerTitle',
   },
   Content: {
-    ...flexColumn(),
+    fCol: 1,
     p: 1,
   },
 });

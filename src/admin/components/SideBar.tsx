@@ -1,6 +1,6 @@
-import { useMsg } from '@common/hooks';
+import { addTr, useMsg } from '@common/hooks';
 
-import { Css, flexColumn } from '@common/ui';
+import { Css } from '@common/ui';
 import { Side, SideButton, SideSep } from '@common/components';
 
 import { Home, Users, Monitor, Image, User, Zap } from 'lucide-react';
@@ -27,7 +27,7 @@ const c = Css('SideBar', {
     transition: 0.2,
   },
   Content: {
-    ...flexColumn({ align: 'stretch' }),
+    fCol: ['stretch'],
     position: 'absolute',
     color: '#ffffff',
     fg: 'sideFg',
@@ -37,7 +37,7 @@ const c = Css('SideBar', {
   },
 
   Sep: {
-    ...flexColumn({ align: 'start', justify: 'end' }),
+    fCol: ['start', 'end'],
     pl: 1,
     flex: 1,
     color: '#0a536f',
@@ -67,9 +67,17 @@ const c = Css('SideBar', {
   '-editor &Sep': { visibility: 'hidden' },
 });
 
+addTr({
+  Groups: 'Groupes',
+  Members: 'Membres',
+  Devices: 'Appareils',
+  Medias: 'Médias',
+  Jobs: 'Jobs',
+  Account: 'Mon Compte',
+})
+
 export const SideBar = () => {
   const isAdvanced = useMsg(isAdvanced$);
-
   const group = useMsg(group$);
 
   const groups = useQuery(groupCtrl);
@@ -80,20 +88,20 @@ export const SideBar = () => {
   return (
     <Side page$={adminPage$}>
       <SideSep />
-      <SideButton title="Groupes" icon={<Home />} page="groups" onClick={go('groups')} />
+      <SideButton title="Groups" icon={<Home />} page="groups" onClick={go('groups')} />
       <SideSep />
       {group || isAdvanced ? (
         <>
           <div class={c('Sep ${c()}Sep-group')}>{group?.name}</div>
-          <SideButton title="Membres" icon={<Users />} page="members" onClick={go('members')} />
-          <SideButton title="Appareils" icon={<Monitor />} page="devices" onClick={go('devices')} />
-          <SideButton title="Médias" icon={<Image />} page="medias" onClick={go('medias')} />
+          <SideButton title="Members" icon={<Users />} page="members" onClick={go('members')} />
+          <SideButton title="Devices" icon={<Monitor />} page="devices" onClick={go('devices')} />
+          <SideButton title="Medias" icon={<Image />} page="medias" onClick={go('medias')} />
           <SideButton title="Jobs" icon={<Zap />} page="jobs" onClick={go('jobs')} />
         </>
       ) : null}
       <SideSep />
       <div class={c('Sep ${c()}Sep-version')}>2.0.0</div>
-      <SideButton title="Mon Compte" icon={<User />} page="account" onClick={go('account')} />
+      <SideButton title="Account" icon={<User />} page="account" onClick={go('account')} />
     </Side>
   );
 };

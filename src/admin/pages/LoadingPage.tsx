@@ -1,10 +1,9 @@
-import { Css, flexCenter } from '@common/ui';
-
+import { Css } from '@common/ui';
 import { Loading } from '@common/components';
 
 const c = Css('LoadingPage', {
   '': {
-    ...flexCenter(),
+    fCenter: 1,
   },
 });
 

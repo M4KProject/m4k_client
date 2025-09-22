@@ -5,7 +5,7 @@ import {
   Field,
   Page,
   PageBody,
-  PageHeader,
+  Toolbar,
   Row,
   Table,
   TableBody,
@@ -144,7 +144,7 @@ export const PlaylistPage = () => {
   };
   return (
     <Page>
-      <PageHeader title="Élément dans la playlist" />
+      <Toolbar title="Élément dans la playlist" />
       <PageBody>
         <Table>
           <TableHead>

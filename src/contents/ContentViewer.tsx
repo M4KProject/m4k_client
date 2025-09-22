@@ -1,5 +1,5 @@
 import { useAsync, useMsg } from '@common/hooks';
-import { Css, flexColumn } from '@common/ui';
+import { Css } from '@common/ui';
 
 import { ContentModel, MediaModel } from '@common/api/models';
 import { FormContent } from './FormContent';
@@ -12,7 +12,7 @@ import { contentCtrl, mediaCtrl } from '@/admin/controllers';
 
 const c = Css('ContentViewer', {
   '': {
-    ...flexColumn({ align: 'stretch' }),
+    fRow: ['stretch'],
     minHeight: '100vh',
     backgroundColor: '#f5f5f5',
     fontFamily: 'Roboto, sans-serif',

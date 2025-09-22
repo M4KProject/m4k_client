@@ -1,5 +1,5 @@
 import { useMsg } from '@common/hooks';
-import { Css, flexColumn } from '@common/ui';
+import { Css } from '@common/ui';
 import { dateToSeconds, Msg, uniq, toList } from '@common/utils';
 import { Field, Flag } from '@common/components';
 import { useEffect, useMemo } from 'preact/hooks';
@@ -10,7 +10,7 @@ import { mediaCtrl } from '@/admin/controllers';
 
 const c = Css('PlaylistContent', {
   '': {
-    ...flexColumn({ align: 'stretch' }),
+    fRow: ['stretch'],
     wMin: '100vw',
     hMin: '100vh',
     position: 'relative',

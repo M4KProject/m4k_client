@@ -1,18 +1,18 @@
-import { Css, flexColumn, flexRow } from '@common/ui';
+import { Css } from '@common/ui';
 import { AuthForm, Button } from '@common/components';
 import logoUrl from '../assets/logo.svg';
 import loginUrl from '../assets/login.svg';
 
 const c = Css('AuthPage', {
   '': {
-    ...flexRow({ align: 'stretch' }),
+    fRow: 'stretch',
     position: 'fixed',
     overflow: 'auto',
     background: '#eaf3fa',
     inset: 0,
   },
   Content: {
-    ...flexColumn({ align: 'center', justify: 'around' }),
+    fCol: ['center', 'space-around'],
     flex: 1,
     textAlign: 'center',
   },

@@ -1,4 +1,4 @@
-import { flexColumn, flexCenter, Css } from '@common/ui';
+import { Css } from '@common/ui';
 import { toNbr, toErr } from '@common/utils';
 import { Button } from '@common/components';
 import { usePromise, useMsg } from '@common/hooks';
@@ -18,7 +18,7 @@ const c = Css('Kiosk', {
     bg: '#000',
   },
   'Container-center': {
-    ...flexColumn({ align: 'center', justify: 'center' }),
+    fCenter: 1,
   },
   'Container iframe': {
     position: 'fixed',
@@ -31,7 +31,7 @@ const c = Css('Kiosk', {
   },
 
   '': {
-    ...flexCenter(),
+    fCenter: 1,
     position: 'absolute',
     overflow: 'hidden',
     inset: 0,
@@ -63,7 +63,7 @@ const c = Css('Kiosk', {
   '-cover video': { itemFit: 'cover' },
 
   ' span': {
-    ...flexCenter(),
+    fCenter: 1,
     position: 'absolute',
     inset: 0,
     zIndex: 20,

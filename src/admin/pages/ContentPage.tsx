@@ -1,8 +1,7 @@
 import { Css } from '@common/ui';
-
-import { Button } from '@common/components';
+import { Button, Toolbar } from '@common/components';
 import { RefreshCw } from 'lucide-react';
-import { Page, PageHeader, PageBody } from '@common/components';
+import { Page, PageBody } from '@common/components';
 import { SearchField } from '../components/SearchField';
 import { FormContent } from './Content/FormContent';
 import { TableContent } from './Content/TableContent';
@@ -50,7 +49,7 @@ export const ContentPage = () => {
 
   return (
     <Page class={c()}>
-      <PageHeader title={`${label}: ${title}`}>
+      <Toolbar title={`${label}: ${title}`}>
         <Button
           title="Rafraîchir"
           icon={<RefreshCw />}
@@ -60,7 +59,7 @@ export const ContentPage = () => {
           }}
         />
         <SearchField />
-      </PageHeader>
+      </Toolbar>
       <PageBody>
         <Content
           content={content}

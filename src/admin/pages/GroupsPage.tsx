@@ -10,15 +10,14 @@ import {
   TableBody,
   TableHead,
   Page,
-  PageHeader,
+  Toolbar,
   PageBody,
   tooltip,
-  showError,
 } from '@common/components';
 import { Css } from '@common/ui';
 import { SearchField } from '../components/SearchField';
 import { group$, isAdvanced$, useGroup } from '../messages';
-import { Role, auth$, collSync } from '@common/api';
+import { Role, auth$ } from '@common/api';
 import { useQuery } from '@common/hooks/useQuery';
 import { groupCtrl, memberCtrl } from '../controllers';
 
@@ -43,10 +42,10 @@ export const GroupsPage = () => {
 
   return (
     <Page class={c()}>
-      <PageHeader title="Gestionnaire de groupes">
+      <Toolbar title="Gestionnaire de groupes">
         <Button title="Ajouter" icon={<Plus />} color="primary" onClick={handleAdd} />
         <SearchField />
-      </PageHeader>
+      </Toolbar>
       <PageBody>
         <Table>
           <TableHead>

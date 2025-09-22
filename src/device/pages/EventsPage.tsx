@@ -1,4 +1,4 @@
-import { Page, PageHeader, PageBody } from '@common/components';
+import { Page, Toolbar, PageBody } from '@common/components';
 import { Css } from '@common/ui';
 import { stringify } from '@common/utils';
 import { m4k, M4kSignalEvent } from '@common/m4k';
@@ -35,7 +35,7 @@ export const EventsPage = () => {
 
   return (
     <Page class={c()}>
-      <PageHeader title="Liste des événements" />
+      <Toolbar title="Liste des événements" />
       <PageBody>
         {events.map((e, i) => (
           <pre key={i}>{stringify(e)}</pre>

@@ -1,4 +1,4 @@
-import { Css, flexRow } from '@common/ui';
+import { Css } from '@common/ui';
 import { toErr } from '@common/utils';
 import { m4k } from '@common/m4k';
 import { usePromise } from '@common/hooks';
@@ -11,7 +11,8 @@ import { copyDir$, url$ } from '../messages';
 const c = Css('Actions', {
   '': {},
   Buttons: {
-    ...flexRow({ justify: 'around', align: 'center', wrap: 'wrap' }),
+    fRow: ['center', 'space-around'],
+    flexWrap: 'wrap',
   },
   ' .m4kButton': {
     flex: 1,
@@ -19,7 +20,8 @@ const c = Css('Actions', {
     m: '0.5em',
   },
   Info: {
-    ...flexRow({ justify: 'around', align: 'center', wrap: 'wrap' }),
+    fRow: ['center', 'space-around'],
+    flexWrap: 'wrap',
     p: 0.5,
   },
   ' .m4kInfo div': {

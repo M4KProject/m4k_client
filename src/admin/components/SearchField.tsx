@@ -2,14 +2,14 @@ import { Field } from '@common/components';
 import { useMsg } from '@common/hooks';
 
 import { Search } from 'lucide-react';
-import { flexRow, Css } from '@common/ui';
+import { Css } from '@common/ui';
 
 import { Button } from '@common/components';
 import { search$ } from '../messages/search$';
 
 const c = Css('SearchField', {
   '': {
-    ...flexRow({ align: 'center' }),
+    fRow: 1,
   },
 });
 

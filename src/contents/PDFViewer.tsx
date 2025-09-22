@@ -1,5 +1,5 @@
 import { useAsyncEffect } from '@common/hooks';
-import { addJsFileAsync, Css, flexColumn } from '@common/ui';
+import { addJsFileAsync, Css } from '@common/ui';
 import { global } from '@common/utils';
 
 import { useRef, useState, useEffect } from 'preact/hooks';
@@ -7,7 +7,7 @@ import { PDFToolbar } from './PDFToolbar';
 
 const c = Css('PDFViewer', {
   '': {
-    ...flexColumn({ align: 'stretch' }),
+    fRow: ['stretch'],
     justifyItems: 'stretch',
     width: '100%',
     height: '100%',

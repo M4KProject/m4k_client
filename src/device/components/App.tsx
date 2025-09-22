@@ -1,4 +1,4 @@
-import { Css, flexCenter, flexRow } from '@common/ui';
+import { Css } from '@common/ui';
 import { useMsg } from '@common/hooks';
 import { device$ } from '../services/device';
 import { usePWA } from '../../serviceWorker';
@@ -23,7 +23,7 @@ import { DialogContainer } from './DialogContainer';
 
 const c = Css('App', {
   '': {
-    ...flexRow({ align: 'stretch' }),
+    fRow: 'stretch',
     position: 'fixed',
     overflow: 'hidden',
     inset: 0,
@@ -32,7 +32,7 @@ const c = Css('App', {
     fontFamily: 'Roboto',
   },
   '-loading': {
-    ...flexCenter(),
+    fCenter: 1,
   },
   ' .Button': {
     fontSize: 1.4,

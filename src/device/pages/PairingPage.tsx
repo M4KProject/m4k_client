@@ -1,5 +1,5 @@
 import { useMsg } from '@common/hooks';
-import { Css, flexColumn } from '@common/ui';
+import { Css } from '@common/ui';
 import { Button } from '@common/components';
 import { device$ } from '../services/device';
 import { page$ } from '../messages/page$';
@@ -8,7 +8,7 @@ import { FlexRow } from '@common/components/Flex';
 
 const c = Css('PairingPage', {
   '': {
-    ...flexColumn({ align: 'center', justify: 'center' }),
+    fCenter: 1,
     wh: '100%',
     backgroundColor: '#f5f5f5',
     fontFamily: 'Roboto, sans-serif',

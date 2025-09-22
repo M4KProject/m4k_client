@@ -1,4 +1,4 @@
-import { Css, flexRow } from '@common/ui';
+import { Css } from '@common/ui';
 import { Form, Field, Button } from '@common/components';
 import { m4k } from '@common/m4k';
 import { usePromise } from '@common/hooks';
@@ -10,7 +10,7 @@ const c = Css('ConfigPage', {
     p: 1,
   },
   Actions: {
-    ...flexRow({ align: 'center' }),
+    fRow: 1,
     p: 0.5,
     gap: 0.5,
   },

@@ -1,22 +1,21 @@
-import { Css, flexRow, flexColumn } from '@common/ui';
-
-import { Page, PageHeader, PageBody, Button, tooltip } from '@common/components';
+import { Css } from '@common/ui';
+import { Page, PageBody, Button, tooltip, Toolbar } from '@common/components';
 import { useEffect, useState } from 'preact/hooks';
 import { RefreshCw, Power, LogOut } from 'lucide-react';
 import { DeviceScreen } from '../components/DeviceScreen';
 import { DeviceConsole } from '../components/DeviceConsole';
-import { collSync, getUrl } from '@common/api';
+import { getUrl } from '@common/api';
 import { stringify } from '@common/utils';
 import { useDevice } from '../messages/device$';
 import { deviceCtrl } from '../controllers';
 
 const c = Css('DevicePage', {
   Body: {
-    ...flexColumn({ align: 'stretch' }),
+    fRow: ['stretch'],
     p: 0.5,
   },
   Screen: {
-    ...flexRow({ align: 'stretch' }),
+    fRow: 'stretch',
     flex: 1,
     gap: 2,
   },
@@ -44,7 +43,7 @@ export const DevicePage = () => {
   if (!device) {
     return (
       <Page class={c()}>
-        <PageHeader title="Mode Remote"></PageHeader>
+        <Toolbar title="Mode Remote"></Toolbar>
         <PageBody>
           <div>Device non trouvé</div>
         </PageBody>
@@ -72,7 +71,7 @@ export const DevicePage = () => {
 
   return (
     <Page class={c()}>
-      <PageHeader title={device.name || device.key}>
+      <Toolbar title={device.name || device.key}>
         <Button
           icon={<RefreshCw />}
           {...tooltip('Rafraîchir')}
@@ -88,7 +87,7 @@ export const DevicePage = () => {
           {...tooltip('Fermer le Kiosk')}
           onClick={() => executeAction('exit')}
         />
-      </PageHeader>
+      </Toolbar>
       <PageBody class={c('Body')}>
         <div class={c('Screen')}>
           <DeviceScreen

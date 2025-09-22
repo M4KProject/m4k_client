@@ -1,4 +1,4 @@
-import { Css, flexCenter } from '@common/ui';
+import { Css } from '@common/ui';
 
 const c = Css('DeviceScreen', {
   '': {
@@ -10,7 +10,7 @@ const c = Css('DeviceScreen', {
     bgMode: 'contain',
   },
   NoCapture: {
-    ...flexCenter(),
+    fCenter: 1,
     bg: '#FFF',
     fg: '#000',
     p: 1,

@@ -6,7 +6,6 @@ import {
   Button,
   Field,
   Page,
-  PageHeader,
   PageBody,
   Table,
   Cell,
@@ -15,6 +14,7 @@ import {
   TableBody,
   TableHead,
   tooltip,
+  Toolbar,
 } from '@common/components';
 import { Plus, RefreshCw, Copy, Clipboard, Edit, Trash2 } from 'lucide-react';
 import { SearchField } from '../components/SearchField';
@@ -90,11 +90,11 @@ export const ContentsPage = () => {
 
   return (
     <Page class={c()}>
-      <PageHeader title="Les contenus">
+      <Toolbar title="Les contenus">
         <Button title="Ajouter un contenu" icon={<Plus />} color="primary" onClick={handleAdd} />
         <Button title="Rafraîchir" icon={<RefreshCw />} color="primary" onClick={contentsRefresh} />
         <SearchField />
-      </PageHeader>
+      </Toolbar>
       <PageBody>
         <Table>
           <TableHead>

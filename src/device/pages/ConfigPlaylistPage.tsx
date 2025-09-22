@@ -1,4 +1,4 @@
-import { Field, Form, Page, PageBody, PageHeader } from '@common/components';
+import { Field, Form, Page, PageBody, Toolbar } from '@common/components';
 import { useMsgState } from '@common/hooks';
 import {
   copyDir$,
@@ -20,7 +20,7 @@ export const ConfigPlaylistPage = () => {
 
   return (
     <Page>
-      <PageHeader title="Configuration" />
+      <Toolbar title="Configuration" />
       <PageBody>
         <Form>
           <Field label="Copier le dossier" value={copyDir} onValue={setCopyDir} />

@@ -1,4 +1,4 @@
-import { autoScrollEnd, Css, flexColumn } from '@common/ui';
+import { autoScrollEnd, Css } from '@common/ui';
 import { Msg } from '@common/utils';
 import { Progress } from '@common/components';
 import { useMsg } from '@common/hooks';
@@ -7,10 +7,10 @@ import { useEffect, useRef } from 'preact/hooks';
 
 const c = Css('ProgressView', {
   '': {
-    ...flexColumn({ align: 'stretch' }),
+    fRow: ['stretch'],
   },
   Logs: {
-    ...flexColumn(),
+    fCol: 1,
     overflow: 'auto',
     minHeight: '7em',
     maxHeight: '7em',

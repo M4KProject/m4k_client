@@ -9,7 +9,7 @@ import {
   Form,
   Page,
   PageBody,
-  PageHeader,
+  Toolbar,
   Row,
   Table,
   TableBody,
@@ -233,7 +233,7 @@ export const TestPage = () => {
 
   return (
     <Page>
-      <PageHeader title="Test des fonctions" />
+      <Toolbar title="Test des fonctions" />
       <PageBody>
         <Form>
           <Field label="Script" required type="multiline" value={script} onValue={setScript} />
