@@ -1,6 +1,6 @@
 import { Css } from '@common/ui';
 import { useMsg } from '@common/hooks';
-import { FileInfo, MediaModel, getUrl } from '@common/api';
+import { FileInfo, MediaModel, VideoData, getUrl } from '@common/api';
 import { isStrNotEmpty, Msg } from '@common/utils';
 
 const c = Css('MediaPreview', {
@@ -41,7 +41,7 @@ interface Variant extends FileInfo {
 const getVariants = (media?: MediaModel): Variant[] => {
   if (!media || !media.data) return [];
   const results = [];
-  media.data.variants.forEach((info, i) => {
+  media.data?.variants?.forEach((info, i) => {
     const file = media.variants[i];
     if (isStrNotEmpty(file)) {
       results.push({ ...info, file, media });

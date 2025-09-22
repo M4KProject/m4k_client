@@ -1,9 +1,10 @@
 import { render } from 'preact';
 import { App } from './components/App';
 import { addFont, setTheme, addEl, addResponsiveListener, setCss } from '@common/ui';
-import { authRefresh } from '@common/api';
+import { apiError$, authRefresh } from '@common/api';
 import { app } from '../app';
 import * as messages from './messages';
+import { showError } from '@common/components';
 
 console.debug('loaded');
 
@@ -13,6 +14,12 @@ Object.assign(app, messages);
 
 export const mount = () => {
   console.debug('admin mount');
+
+  apiError$.on((error) => {
+    if (!error) return;
+    console.error('apiError', error);
+    showError(error);
+  });
 
   addResponsiveListener();
   addFont('Roboto');

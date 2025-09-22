@@ -12,8 +12,16 @@ import {
   FolderPlus,
   FolderInput,
   MapPlus,
+  PlusSquare,
 } from 'lucide-react';
-import { uploadItems$, needAuthId, needGroupId, MediaModel } from '@common/api';
+import {
+  uploadItems$,
+  needAuthId,
+  needGroupId,
+  MediaModel,
+  PlaylistData,
+  PlaylistModel,
+} from '@common/api';
 import {
   tooltip,
   Button,
@@ -33,7 +41,7 @@ import { SearchField } from './SearchField';
 import { SelectedField } from './SelectedField';
 import { MediaPreview } from './MediaPreview';
 import { useGroupQuery } from '@common/hooks/useQuery';
-import { jobCtrl, mediaCtrl } from '../controllers';
+import { jobCtrl, mediaCtrl, updatePlaylist } from '../controllers';
 
 addTr({
   pending: 'en attente',
@@ -252,6 +260,22 @@ export const MediasTable = () => {
                         selectedById$.setItem(id, undefined);
                         await mediaCtrl.update(id, { parent: m.id });
                       }
+                    }}
+                  />
+                )}
+                {m.type === 'playlist' && selectedIds.length > 0 && (
+                  <Button
+                    icon={<PlusSquare />}
+                    {...tooltip(`Ajouter ${selectedIds.length} élément(s) à la playlist`)}
+                    onClick={async () => {
+                      updatePlaylist(m.id, (playlist) => {
+                        playlist.data.items = [
+                          ...playlist.data.items,
+                          ...selectedIds.map((id) => ({
+                            media: id,
+                          })),
+                        ];
+                      });
                     }}
                   />
                 )}
