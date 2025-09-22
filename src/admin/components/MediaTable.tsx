@@ -3,7 +3,7 @@ import { byId, firstUpper, groupBy, isEmpty } from '@common/utils';
 import { addTr, useMsg } from '@common/hooks';
 import { isAdvanced$, selectedById$ } from '../messages';
 import { FolderPlus, MapPlus, Upload } from 'lucide-react';
-import { uploadItems$, needAuthId, needGroupId, MediaModel, upload } from '@common/api';
+import { uploadJobs$, needAuthId, needGroupId, MediaModel, upload } from '@common/api';
 import {
   tooltip,
   Button,
@@ -12,9 +12,6 @@ import {
   CellHeader,
   TableHead,
   TableBody,
-  Cell,
-  Tr,
-  Progress,
   Toolbar,
   UploadButton,
 } from '@common/components';
@@ -41,47 +38,45 @@ const c = Css('Media', {
   '-success': { fg: 'success' },
 
   Jobs: {
-    fRow: ['stretch'],
     position: 'absolute',
-    r: 0,
-    b: 0,
+    r: 1,
+    b: 1,
     w: 40,
-    bg: '#f5f5f5',
   },
 });
 
-export const MediasProgress = () => {
-  const items = Object.values(useMsg(uploadItems$));
+// export const MediasProgress = () => {
+//   const items = Object.values(useMsg(uploadItems$));
 
-  if (items.length === 0) {
-    return null;
-  }
+//   if (items.length === 0) {
+//     return null;
+//   }
 
-  return (
-    <Table>
-      <TableHead>
-        <Row>
-          <CellHeader>Nom</CellHeader>
-          <CellHeader>Etat</CellHeader>
-          <CellHeader>Progression</CellHeader>
-        </Row>
-      </TableHead>
-      <TableBody>
-        {items.map((m) => (
-          <Row key={m.id}>
-            <Cell>{m.name}</Cell>
-            <Cell class={c('-${m.status}')}>
-              <Tr>{m.status}</Tr>
-            </Cell>
-            <Cell>
-              <Progress progress={m.progress} />
-            </Cell>
-          </Row>
-        ))}
-      </TableBody>
-    </Table>
-  );
-};
+//   return (
+//     <Table>
+//       <TableHead>
+//         <Row>
+//           <CellHeader>Nom</CellHeader>
+//           <CellHeader>Etat</CellHeader>
+//           <CellHeader>Progression</CellHeader>
+//         </Row>
+//       </TableHead>
+//       <TableBody>
+//         {items.map((m) => (
+//           <Row key={m.id}>
+//             <Cell>{m.name}</Cell>
+//             <Cell class={c('-${m.status}')}>
+//               <Tr>{m.status}</Tr>
+//             </Cell>
+//             <Cell>
+//               <Progress progress={m.progress} />
+//             </Cell>
+//           </Row>
+//         ))}
+//       </TableBody>
+//     </Table>
+//   );
+// };
 
 export const getNextTitle = (medias: MediaModel[], start: string) => {
   let i = 1;
@@ -115,7 +110,6 @@ export const MediaTable = ({ type }: { type?: MediaModel['type'] }) => {
 
   return (
     <>
-      <MediasProgress />
       <Toolbar title={firstUpper(type ? type : 'media') + 's'}>
         {!type && (
           <Button
@@ -177,10 +171,7 @@ export const MediaTable = ({ type }: { type?: MediaModel['type'] }) => {
             <MediaRow key={m.id} m={m} tab={0} ctx={ctx} />
           ))}
           {!isEmpty(jobs.filter((job) => job.status !== 'finished' && !!job.media)) && (
-            <div class={c('Jobs')}>
-              <Toolbar title="Les jobs" />
-              <JobsTable filter={(job) => job.status !== 'finished' && !!job.media} />
-            </div>
+            <JobsTable class={c('Jobs')} filter={(job) => job.status !== 'finished' && !!job.media} />
           )}
         </TableBody>
       </Table>

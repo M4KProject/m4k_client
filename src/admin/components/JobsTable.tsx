@@ -11,18 +11,32 @@ import {
 import { Trash2 } from 'lucide-react';
 import { JobStatus } from './JobStatus';
 import { sort } from '@common/utils/list';
-import { JobModel } from '@common/api';
+import { JobModel, uploadJobs$ } from '@common/api';
 import { useGroupQuery } from '@common/hooks/useQuery';
 import { jobCtrl } from '../controllers';
+import { useMsg } from '@common/hooks';
+import { Css } from '@common/ui';
 
-export const JobsTable = ({ filter }: { filter?: (job: JobModel) => boolean }) => {
+const c = Css('JobsTable', {});
+
+export interface JobsTableProps {
+  class?: string;
+  filter?: (job: JobModel) => boolean;
+  hideEmpty?: boolean;
+}
+export const JobsTable = ({ filter, hideEmpty, ...props }: JobsTableProps) => {
   const jobs = useGroupQuery(jobCtrl);
-  const filteredJobs = filter ? jobs.filter(filter) : jobs;
+  const uploadJobs = useMsg(uploadJobs$);
+  const allJobs = [...jobs, ...Object.values(uploadJobs)];
+  const filteredJobs = filter ? allJobs.filter(filter) : allJobs;
   const sortedJobs = sort(filteredJobs, (j) => -new Date(j.updated).getTime());
+
   console.debug('jobs', sortedJobs);
 
+  if (hideEmpty && sortedJobs.length === 0) return null;
+
   return (
-    <Table>
+    <Table class={c('', props)}>
       <TableHead>
         <Row>
           <CellHeader>Action</CellHeader>
