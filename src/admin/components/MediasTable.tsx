@@ -234,7 +234,9 @@ const MediasRow = ({ m, ctx, tab }: { m: MediaModel; ctx: MediaCtx; tab: number 
         </Cell>
         <Cell variant="row">
           <div style={{ width: 2 * tab + 'em' }} />
-          <div onClick={() => setIsOpen((o) => !o)}>{getTypeIcon(m, isOpen, (deps.length + children.length) > 0)}</div>
+          <div onClick={() => setIsOpen((o) => !o)}>
+            {getTypeIcon(m, isOpen, deps.length + children.length > 0)}
+          </div>
           <Field
             {...(isAdvanced ? tooltip(m.order) : {})}
             value={m.title}
@@ -289,17 +291,17 @@ const MediasRow = ({ m, ctx, tab }: { m: MediaModel; ctx: MediaCtx; tab: number 
             </>
           )}
           (
-            <Button
-              icon={<Trash2 />}
-              color="error"
-              {...tooltip('Supprimer')}
-              onClick={async () => {
-                for (const c of children) {
-                  mediaCtrl.update(c.id, { parent: null });
-                }
-                mediaCtrl.delete(m.id);
-              }}
-            />
+          <Button
+            icon={<Trash2 />}
+            color="error"
+            {...tooltip('Supprimer')}
+            onClick={async () => {
+              for (const c of children) {
+                mediaCtrl.update(c.id, { parent: null });
+              }
+              mediaCtrl.delete(m.id);
+            }}
+          />
           )
         </Cell>
       </Row>
