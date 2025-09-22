@@ -74,7 +74,7 @@ addTr({
   Medias: 'Médias',
   Jobs: 'Jobs',
   Account: 'Mon Compte',
-})
+});
 
 export const SideBar = () => {
   const isAdvanced = useMsg(isAdvanced$);
