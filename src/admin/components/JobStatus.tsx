@@ -1,5 +1,5 @@
 import { Css, flexRow } from '@common/ui';
-import { addTranslates } from '@common/hooks';
+import { addTr } from '@common/hooks';
 import { Tr, Progress } from '@common/components';
 import { JobModel } from '@common/api';
 import { Play, Square, AlertCircle, CheckCircle, Clock } from 'lucide-react';
@@ -19,7 +19,7 @@ const c = Css('JobStatus', {
   '&-deleted': { fg: 'muted' },
 });
 
-addTranslates({
+addTr({
   pending: 'En attente',
   processing: 'En cours',
   finished: 'Terminé',

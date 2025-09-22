@@ -1,6 +1,6 @@
 import { Css, flexColumn, flexRow } from '@common/ui';
 import { byId, isEmpty, isPositive, round, sort } from '@common/utils';
-import { addTranslates, useMsg } from '@common/hooks';
+import { addTr, useMsg } from '@common/hooks';
 import { isAdvanced$, selectedById$ } from '../messages';
 import {
   FolderOpen,
@@ -14,17 +14,10 @@ import {
   MapPlus,
 } from 'lucide-react';
 import {
-  FAILED,
-  PENDING,
-  PROCESSING,
-  SUCCESS,
-  UPLOADING,
   uploadItems$,
-  groupId$,
   needAuthId,
   needGroupId,
   MediaModel,
-  collSync,
 } from '@common/api';
 import {
   tooltip,
@@ -48,12 +41,12 @@ import { MediaPreview } from './MediaPreview';
 import { useGroupQuery } from '@common/hooks/useQuery';
 import { jobCtrl, mediaCtrl } from '../controllers';
 
-addTranslates({
-  [PENDING]: 'en attente',
-  [UPLOADING]: 'téléchargement',
-  [PROCESSING]: 'traitement',
-  [FAILED]: 'échec',
-  [SUCCESS]: 'succès',
+addTr({
+  pending: 'en attente',
+  uploading: 'téléchargement',
+  processing: 'traitement',
+  failed: 'échec',
+  success: 'succès',
 });
 
 const c = Css('Media', {
@@ -67,13 +60,13 @@ const c = Css('Media', {
     ml: 0.5,
   },
 
-  [`&-${PENDING}`]: {},
-  [`&-${UPLOADING}`]: { fg: 'primary' },
-  [`&-${PROCESSING}`]: { fg: 'secondary' },
-  [`&-${FAILED}`]: { fg: 'error' },
-  [`&-${SUCCESS}`]: { fg: 'success' },
+  '&-pending': {},
+  '&-uploading': { fg: 'primary' },
+  '&-processing': { fg: 'secondary' },
+  '&-failed': { fg: 'error' },
+  '&-success': { fg: 'success' },
 
-  ['&Jobs']: {
+  '&Jobs': {
     ...flexColumn({ align: 'stretch' }),
     position: 'absolute',
     r: 0,
