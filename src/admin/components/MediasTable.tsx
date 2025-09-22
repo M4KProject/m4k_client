@@ -215,7 +215,7 @@ export const MediasTable = () => {
             <CellHeader>Poids</CellHeader>
             <CellHeader>Résolution</CellHeader>
             <CellHeader>Durée</CellHeader>
-            <CellHeader>Actions</CellHeader>
+            <CellHeader />
           </Row>
         </TableHead>
         <TableBody>
@@ -242,7 +242,7 @@ export const MediasTable = () => {
               <Cell>{sizeFormat(m.bytes)}</Cell>
               <Cell>{m.width || m.height ? (m.width || 0) + 'x' + (m.height || 0) : ''}</Cell>
               <Cell>{secondsFormat(m.seconds)}</Cell>
-              <Cell variant="around">
+              <Cell variant="actions">
                 {m.type === 'folder' && selectedIds.length > 0 && (
                   <Button
                     icon={<FolderInput />}
