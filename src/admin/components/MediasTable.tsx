@@ -4,18 +4,23 @@ import { addTr, useMsg } from '@common/hooks';
 import { isAdvanced$, selectedById$ } from '../messages';
 import {
   FolderOpen,
+  Folder,
   FileImage,
   Video,
   FileText,
-  Square,
   Trash2,
   FolderPlus,
   FolderInput,
   MapPlus,
   PlusSquare,
   Settings,
+  List,
+  ListX,
+  HelpCircle,
+  ChevronDown,
+  ChevronRight,
 } from 'lucide-react';
-import { uploadItems$, needAuthId, needGroupId, MediaModel } from '@common/api';
+import { uploadItems$, needAuthId, needGroupId, MediaModel, MediaType } from '@common/api';
 import {
   tooltip,
   Button,
@@ -73,22 +78,50 @@ const c = Css('Media', {
   },
 });
 
-const infoByType: Record<string, [string, typeof FolderOpen]> = {
-  folder: ['Dossier', FolderOpen],
+const infoByType: Record<MediaType, [string, typeof FolderOpen]> = {
+  playlist: ['Playlist', List],
+  folder: ['Dossier', Folder],
+  image: ['Image', FileImage],
   pdf: ['PDF', FileText],
-  site: ['Site', FileImage],
-  svg: ['Image SVG', FileImage],
-  jpeg: ['Image JPG', FileImage],
-  png: ['Image PNG', FileImage],
-  mp4: ['Video MP4', Video],
-  webm: ['Video WEBM', Video],
+  video: ['Video', Video],
+  unknown: ['Inconnu', HelpCircle],
+  '': ['Inconnu', HelpCircle],
 };
 
-const getTypeIcon = (type: string) => {
-  const parts = type.split(/\W/);
-  const info = infoByType[type] || infoByType[parts[1]] || [type, Square];
-  const [title, Icon] = info;
-  return <Icon class={c(`Icon`)} {...tooltip(title)} />;
+const getTypeIcon = (media: MediaModel, isOpen: boolean, hasChildren: boolean) => {
+  const type = media.type || 'unknown';
+  let Icon = infoByType[type]?.[1] || HelpCircle;
+  let title = infoByType[type]?.[0] || 'Inconnu';
+
+  // Pour les dossiers et playlists, on gère l'état ouvert/fermé et vide/plein
+  if (type === 'folder') {
+    const isEmpty = !hasChildren;
+    if (isEmpty) {
+      Icon = Folder;
+      title = 'Dossier vide';
+    } else {
+      Icon = isOpen ? FolderOpen : Folder;
+      title = isOpen ? 'Dossier ouvert' : 'Dossier fermé';
+    }
+  } else if (type === 'playlist') {
+    const isEmpty = !hasChildren;
+    if (isEmpty) {
+      Icon = ListX;
+      title = 'Playlist vide';
+    } else {
+      Icon = isOpen ? List : List;
+      title = isOpen ? 'Playlist ouverte' : 'Playlist fermée';
+    }
+  }
+
+  return (
+    <div class={c('Icon')}>
+      <Icon {...tooltip(title)} />
+      {(type === 'folder' || type === 'playlist') && hasChildren && (
+        <span>{isOpen ? <ChevronDown size={12} /> : <ChevronRight size={12} />}</span>
+      )}
+    </div>
+  );
 };
 
 const sizeFormat = (size?: number) => {
@@ -199,7 +232,7 @@ const MediasRow = ({ m, ctx, tab }: { m: MediaModel; ctx: MediaCtx; tab: number 
         </Cell>
         <Cell variant="row">
           <div style={{ width: 2 * tab + 'em' }} />
-          <div onClick={() => setIsOpen((o) => !o)}>{getTypeIcon(m.type || '')}</div>
+          <div onClick={() => setIsOpen((o) => !o)}>{getTypeIcon(m, isOpen, (deps.length + children.length) > 0)}</div>
           <Field
             {...(isAdvanced ? tooltip(m.order) : {})}
             value={m.title}
