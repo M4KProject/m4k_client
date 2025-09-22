@@ -6,7 +6,7 @@ import { Play, Square, AlertCircle, CheckCircle, Clock } from 'lucide-react';
 
 const c = Css('JobStatus', {
   '': {
-    fRow: 1,
+    fRow: ['center', 'start'],
     gap: 0.5,
   },
   ' svg': {
@@ -40,12 +40,12 @@ interface JobStatusProps {
 }
 
 export const JobStatus = ({ job }: JobStatusProps) => {
-  const { status } = job;
-  const Icon = statusIcons[status] || Square;
+  const status = job.status || 'pending';
+  const Icon = statusIcons[status] || statusIcons.pending;
 
   if (status === 'processing') {
     return (
-      <div class={c(' ${c()}-processing')}>
+      <div class={c(' &-processing')}>
         <Progress progress={job.progress || 0} />
       </div>
     );
@@ -53,14 +53,14 @@ export const JobStatus = ({ job }: JobStatusProps) => {
 
   if (status === 'failed') {
     return (
-      <div class={c(' ${c()}-failed')}>
+      <div class={c(' &-failed')}>
         <Tr>{job.error || ''}</Tr>
       </div>
     );
   }
 
   return (
-    <div class={c(' ${c()}-${status}')}>
+    <div class={c(` &-${status}`)}>
       <Icon size={16} />
       <Tr>{status}</Tr>
     </div>
