@@ -66,9 +66,6 @@ export const MediaRow = ({ m, ctx, tab }: { m: MediaModel; ctx: MediaCtx; tab: n
           />
         </Cell>
         <Cell>
-          <Field value={m.desc} onValue={(desc) => mediaCtrl.update(m.id, { desc })} />
-        </Cell>
-        <Cell>
           <MediaPreview media={m} />
         </Cell>
         <Cell>{sizeFormat(m.bytes)}</Cell>

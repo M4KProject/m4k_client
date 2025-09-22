@@ -93,28 +93,6 @@ export const getNextTitle = (medias: MediaModel[], start: string) => {
   return title;
 };
 
-// const getMediaCtx = (medias: MediaModel[]) => {
-
-//   // // Get Media PATH
-//   // for (const media of medias) {
-//   //   const paths: string[] = [];
-//   //   let curr = media;
-//   //   while (curr) {
-//   //     paths.push(curr.title);
-//   //     curr = curr.parent ? mediaById[curr.parent] : null;
-//   //   }
-//   //   paths.reverse();
-//   //   media.paths = paths;
-//   //   media.order = paths.join('/');
-//   // }
-//   // const sortedMedias = sort(medias, (m) => m.order);
-
-//   return {
-//     mediaById,
-//     mediasByParent,
-//   }
-// }
-
 export const MediaTable = ({ type }: { type?: MediaModel['type'] }) => {
   const medias = useGroupQuery(mediaCtrl);
   const jobs = useGroupQuery(jobCtrl);
@@ -187,7 +165,6 @@ export const MediaTable = ({ type }: { type?: MediaModel['type'] }) => {
           <Row>
             <CellHeader />
             <CellHeader>Titre</CellHeader>
-            <CellHeader>Description</CellHeader>
             <CellHeader>Aperçu</CellHeader>
             <CellHeader>Poids</CellHeader>
             <CellHeader>Résolution</CellHeader>
