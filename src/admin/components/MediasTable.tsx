@@ -1,5 +1,5 @@
 import { Css } from '@common/ui';
-import { byId, isEmpty, isPositive, round, sort } from '@common/utils';
+import { byId, Dict, groupBy, isEmpty, isPositive, round } from '@common/utils';
 import { addTr, useMsg } from '@common/hooks';
 import { isAdvanced$, selectedById$ } from '../messages';
 import {
@@ -13,15 +13,9 @@ import {
   FolderInput,
   MapPlus,
   PlusSquare,
+  Settings,
 } from 'lucide-react';
-import {
-  uploadItems$,
-  needAuthId,
-  needGroupId,
-  MediaModel,
-  PlaylistData,
-  PlaylistModel,
-} from '@common/api';
+import { uploadItems$, needAuthId, needGroupId, MediaModel } from '@common/api';
 import {
   tooltip,
   Button,
@@ -42,6 +36,7 @@ import { SelectedField } from './SelectedField';
 import { MediaPreview } from './MediaPreview';
 import { useGroupQuery } from '@common/hooks/useQuery';
 import { jobCtrl, mediaCtrl, updatePlaylist } from '../controllers';
+import { useState } from 'preact/hooks';
 
 addTr({
   pending: 'en attente',
@@ -152,30 +147,145 @@ export const getNextTitle = (medias: MediaModel[], start: string) => {
   return title;
 };
 
+interface MediaCtx {
+  mediaById: Dict<MediaModel>;
+  mediasByParent: Dict<MediaModel[]>;
+  isAdvanced: boolean;
+  selectedIds: string[];
+}
+
+// const getMediaCtx = (medias: MediaModel[]) => {
+
+//   // // Get Media PATH
+//   // for (const media of medias) {
+//   //   const paths: string[] = [];
+//   //   let curr = media;
+//   //   while (curr) {
+//   //     paths.push(curr.title);
+//   //     curr = curr.parent ? mediaById[curr.parent] : null;
+//   //   }
+//   //   paths.reverse();
+//   //   media.paths = paths;
+//   //   media.order = paths.join('/');
+//   // }
+//   // const sortedMedias = sort(medias, (m) => m.order);
+
+//   return {
+//     mediaById,
+//     mediasByParent,
+//   }
+// }
+
+const MediasRow = ({ m, ctx, tab }: { m: MediaModel; ctx: MediaCtx; tab: number }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const { isAdvanced, selectedIds, mediaById, mediasByParent } = ctx;
+
+  const children = mediasByParent[m.id] || [];
+  const deps = m.deps?.map((id) => mediaById[id]).filter(Boolean) || [];
+
+  console.debug('MediasRow', {
+    m,
+    tab,
+    children,
+    deps,
+  });
+
+  return (
+    <>
+      <Row key={m.id}>
+        <Cell variant="check">
+          <SelectedField id={m.id} />
+        </Cell>
+        <Cell variant="row">
+          <div style={{ width: 2 * tab + 'em' }} />
+          <div onClick={() => setIsOpen((o) => !o)}>{getTypeIcon(m.type || '')}</div>
+          <Field
+            {...(isAdvanced ? tooltip(m.order) : {})}
+            value={m.title}
+            onValue={(title) => mediaCtrl.update(m.id, { title })}
+          />
+        </Cell>
+        <Cell>
+          <Field value={m.desc} onValue={(desc) => mediaCtrl.update(m.id, { desc })} />
+        </Cell>
+        <Cell>
+          <MediaPreview media={m} />
+        </Cell>
+        <Cell>{sizeFormat(m.bytes)}</Cell>
+        <Cell>{m.width || m.height ? (m.width || 0) + 'x' + (m.height || 0) : ''}</Cell>
+        <Cell>{secondsFormat(m.seconds)}</Cell>
+        <Cell variant="actions">
+          {m.type === 'folder' && selectedIds.length > 0 && (
+            <Button
+              icon={<FolderInput />}
+              {...tooltip(`Ajouter ${selectedIds.length} élément(s) au dossier`)}
+              onClick={async () => {
+                for (const id of selectedIds) {
+                  selectedById$.setItem(id, undefined);
+                  await mediaCtrl.update(id, { parent: m.id });
+                }
+              }}
+            />
+          )}
+          {m.type === 'playlist' && (
+            <>
+              <Button
+                icon={<Settings />}
+                {...tooltip(`Configurer la playlist`)}
+                onClick={async () => {}}
+              />
+              {selectedIds.length > 0 && (
+                <Button
+                  icon={<PlusSquare />}
+                  {...tooltip(`Ajouter ${selectedIds.length} élément(s) à la playlist`)}
+                  onClick={async () => {
+                    updatePlaylist(m.id, (playlist) => {
+                      playlist.data.items = [
+                        ...playlist.data.items,
+                        ...selectedIds.map((id) => ({
+                          media: id,
+                        })),
+                      ];
+                    });
+                  }}
+                />
+              )}
+            </>
+          )}
+          <Button
+            icon={<Trash2 />}
+            color="error"
+            {...tooltip('Supprimer')}
+            onClick={() => mediaCtrl.delete(m.id)}
+          />
+        </Cell>
+      </Row>
+      {isOpen &&
+        children.map((child) => <MediasRow key={child.id} m={child} ctx={ctx} tab={tab + 1} />)}
+      {isOpen &&
+        deps.map((child) => <MediasRow key={child.id} m={child} ctx={ctx} tab={tab + 1} />)}
+    </>
+  );
+};
+
 export const MediasTable = () => {
-  const isAdvanced = useMsg(isAdvanced$);
   const medias = useGroupQuery(mediaCtrl);
   const jobs = useGroupQuery(jobCtrl);
-
+  const isAdvanced = useMsg(isAdvanced$);
+  const allSelectedById = useMsg(selectedById$);
   const mediaById = byId(medias);
+  const mediasByParent = groupBy(medias, (m) => mediaById[m.parent]?.id || '');
+  const selectedIds = Object.keys(allSelectedById).filter((id) => mediaById[id]);
 
-  // Get Media PATH
-  for (const media of medias) {
-    const paths: string[] = [];
-    let curr = media;
-    while (curr) {
-      paths.push(curr.title);
-      curr = curr.parent ? mediaById[curr.parent] : null;
-    }
-    paths.reverse();
-    media.paths = paths;
-    media.order = paths.join('/');
-  }
+  const ctx: MediaCtx = {
+    mediaById,
+    mediasByParent,
+    isAdvanced,
+    selectedIds,
+  };
 
-  const sortedMedias = sort(medias, (m) => m.order);
-
-  const selectedById = useMsg(selectedById$);
-  const selectedIds = Object.keys(selectedById).filter((id) => mediaById[id]);
+  console.debug('MediasTable', ctx);
 
   return (
     <>
@@ -227,66 +337,8 @@ export const MediasTable = () => {
           </Row>
         </TableHead>
         <TableBody>
-          {sortedMedias.map((m) => (
-            <Row key={m.id}>
-              <Cell variant="check">
-                <SelectedField id={m.id} />
-              </Cell>
-              <Cell variant="row">
-                <div style={{ width: 2 * (m.paths.length - 1) + 'em' }} />
-                {getTypeIcon(m.type || '')}
-                <Field
-                  {...(isAdvanced ? tooltip(m.order) : {})}
-                  value={m.title}
-                  onValue={(title) => mediaCtrl.update(m.id, { title })}
-                />
-              </Cell>
-              <Cell>
-                <Field value={m.desc} onValue={(desc) => mediaCtrl.update(m.id, { desc })} />
-              </Cell>
-              <Cell>
-                <MediaPreview media={m} />
-              </Cell>
-              <Cell>{sizeFormat(m.bytes)}</Cell>
-              <Cell>{m.width || m.height ? (m.width || 0) + 'x' + (m.height || 0) : ''}</Cell>
-              <Cell>{secondsFormat(m.seconds)}</Cell>
-              <Cell variant="actions">
-                {m.type === 'folder' && selectedIds.length > 0 && (
-                  <Button
-                    icon={<FolderInput />}
-                    {...tooltip(`Ajouter ${selectedIds.length} élément(s) au dossier`)}
-                    onClick={async () => {
-                      for (const id of selectedIds) {
-                        selectedById$.setItem(id, undefined);
-                        await mediaCtrl.update(id, { parent: m.id });
-                      }
-                    }}
-                  />
-                )}
-                {m.type === 'playlist' && selectedIds.length > 0 && (
-                  <Button
-                    icon={<PlusSquare />}
-                    {...tooltip(`Ajouter ${selectedIds.length} élément(s) à la playlist`)}
-                    onClick={async () => {
-                      updatePlaylist(m.id, (playlist) => {
-                        playlist.data.items = [
-                          ...playlist.data.items,
-                          ...selectedIds.map((id) => ({
-                            media: id,
-                          })),
-                        ];
-                      });
-                    }}
-                  />
-                )}
-                <Button
-                  icon={<Trash2 />}
-                  color="error"
-                  {...tooltip('Supprimer')}
-                  onClick={() => mediaCtrl.delete(m.id)}
-                />
-              </Cell>
-            </Row>
+          {mediasByParent['']?.map((m) => (
+            <MediasRow key={m.id} m={m} tab={0} ctx={ctx} />
           ))}
           {!isEmpty(jobs.filter((job) => job.status !== 'finished' && !!job.media)) && (
             <div class={c('Jobs')}>
