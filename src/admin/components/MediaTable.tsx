@@ -38,7 +38,7 @@ const c = Css('Media', {
   '-success': { fg: 'success' },
 
   Jobs: {
-    position: 'absolute',
+    position: 'fixed',
     r: 1,
     b: 1,
     w: 40,
@@ -170,14 +170,14 @@ export const MediaTable = ({ type }: { type?: MediaModel['type'] }) => {
           {topMedias.map((m) => (
             <MediaRow key={m.id} m={m} tab={0} ctx={ctx} />
           ))}
-          {!isEmpty(jobs.filter((job) => job.status !== 'finished' && !!job.media)) && (
-            <JobsTable
-              class={c('Jobs')}
-              filter={(job) => job.status !== 'finished' && !!job.media}
-            />
-          )}
         </TableBody>
       </Table>
+      {!isEmpty(jobs.filter((job) => job.status !== 'finished' && !!job.media)) && (
+        <JobsTable
+          class={c('Jobs')}
+          filter={(job) => job.status !== 'finished' && !!job.media}
+        />
+      )}
     </>
   );
 };
