@@ -11,7 +11,7 @@ export const mount = () => {
 
   addResponsiveListener();
   addFont('Roboto');
-  setTheme('#28A8D9');
+  setTheme();
 
   const contentKey = null; // router.current.params.contentKey;
 

@@ -15,7 +15,7 @@ export const mount = () => {
   addResponsiveListener();
   addAutoHideListener();
   addFont('Roboto');
-  setTheme('#28A8D9');
+  setTheme();
 
   _rootEl = addEl('div', { id: 'm4kDevice', parent: 'body' });
   render(<App />, _rootEl);

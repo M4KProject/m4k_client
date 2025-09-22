@@ -15,7 +15,7 @@ const c = Css('PairingPage', {
     p: 1.25,
   },
   Container: {
-    bg: 'white',
+    bg: 'bg',
     p: 2.5,
     rounded: 6,
     elevation: 4,

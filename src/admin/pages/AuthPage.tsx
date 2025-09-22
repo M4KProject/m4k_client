@@ -37,8 +37,8 @@ const c = Css('AuthPage', {
   },
   ' &DeviceButton': {
     position: 'fixed',
-    bottom: 1,
-    left: 1,
+    b: 1,
+    l: 1,
     opacity: 0.7,
   },
 });
