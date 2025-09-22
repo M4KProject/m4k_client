@@ -29,10 +29,8 @@ const c = Css('SideBar', {
   Content: {
     fCol: ['stretch'],
     position: 'absolute',
-    color: '#ffffff',
-    fg: 'sideFg',
     xy: 0,
-    wMinMax: 13,
+    wMin: 13,
     h: '100%',
   },
 
@@ -92,7 +90,7 @@ export const SideBar = () => {
       <SideSep />
       {group || isAdvanced ? (
         <>
-          <div class={c('Sep ${c()}Sep-group')}>{group?.name}</div>
+          <div class={c('Sep', 'Sep-group')}>{group?.name}</div>
           <SideButton title="Members" icon={<Users />} page="members" onClick={go('members')} />
           <SideButton title="Devices" icon={<Monitor />} page="devices" onClick={go('devices')} />
           <SideButton title="Medias" icon={<Image />} page="medias" onClick={go('medias')} />
@@ -100,7 +98,7 @@ export const SideBar = () => {
         </>
       ) : null}
       <SideSep />
-      <div class={c('Sep ${c()}Sep-version')}>2.0.0</div>
+      <div class={c('Sep', 'Sep-version')}>2.0.0</div>
       <SideButton title="Account" icon={<User />} page="account" onClick={go('account')} />
     </Side>
   );
