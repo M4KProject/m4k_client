@@ -19,8 +19,9 @@ import {
   HelpCircle,
   ChevronDown,
   ChevronRight,
+  Upload,
 } from 'lucide-react';
-import { uploadItems$, needAuthId, needGroupId, MediaModel, MediaType } from '@common/api';
+import { uploadItems$, needAuthId, needGroupId, MediaModel, MediaType, upload } from '@common/api';
 import {
   tooltip,
   Button,
@@ -34,6 +35,7 @@ import {
   Tr,
   Progress,
   Toolbar,
+  UploadButton,
 } from '@common/components';
 import { JobsTable } from './JobsTable';
 import { SearchField } from './SearchField';
@@ -354,6 +356,13 @@ export const MediasTable = () => {
         >
           Ajouter Playlist
         </Button>
+        <UploadButton
+          title="Téléverser"
+          {...tooltip('Téléverser des medias')}
+          icon={<Upload />}
+          color="primary"
+          onFiles={upload}
+        />
         <SearchField />
       </Toolbar>
       <Table>
