@@ -10,6 +10,9 @@ export type AdminPage =
   | 'device'
   | 'contents'
   | 'medias'
+  | 'playlists'
+  | 'videos'
+  | 'images'
   | 'jobs'
   | 'content';
 

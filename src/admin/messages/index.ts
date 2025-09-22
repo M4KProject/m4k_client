@@ -1,4 +1,4 @@
-import { MsgDict } from '@common/utils';
+import { Msg, MsgDict } from '@common/utils';
 
 export * from './adminPage$';
 export * from './device$';
@@ -8,3 +8,5 @@ export * from './isAdvanced$';
 export * from './search$';
 
 export const selectedById$ = new MsgDict<boolean>({});
+
+export const mediaId$ = new Msg('');

@@ -2,15 +2,15 @@ import { Css } from '@common/ui';
 import { Page, PageBody } from '@common/components';
 import { MediaTable } from '../components/MediaTable';
 
-const c = Css('MediasPage', {
+const c = Css('PlaylistsPage', {
   '': {},
 });
 
-export const MediasPage = () => {
+export const PlaylistsPage = () => {
   return (
     <Page class={c('Page')}>
       <PageBody>
-        <MediaTable />
+        <MediaTable type="playlist" />
       </PageBody>
     </Page>
   );

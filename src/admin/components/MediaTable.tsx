@@ -1,0 +1,212 @@
+import { Css } from '@common/ui';
+import { byId, firstUpper, groupBy, isEmpty } from '@common/utils';
+import { addTr, useMsg } from '@common/hooks';
+import { isAdvanced$, selectedById$ } from '../messages';
+import { FolderPlus, MapPlus, Upload } from 'lucide-react';
+import { uploadItems$, needAuthId, needGroupId, MediaModel, upload } from '@common/api';
+import {
+  tooltip,
+  Button,
+  Table,
+  Row,
+  CellHeader,
+  TableHead,
+  TableBody,
+  Cell,
+  Tr,
+  Progress,
+  Toolbar,
+  UploadButton,
+} from '@common/components';
+import { JobsTable } from './JobsTable';
+import { SearchField } from './SearchField';
+import { useGroupQuery } from '@common/hooks/useQuery';
+import { jobCtrl, mediaCtrl } from '../controllers';
+import { MediaCtx, MediaRow } from './MediaRow';
+
+addTr({
+  pending: 'en attente',
+  uploading: 'téléchargement',
+  processing: 'traitement',
+  failed: 'échec',
+  success: 'succès',
+});
+
+const c = Css('Media', {
+  Page: {},
+  '-pending': {},
+  '-uploading': { fg: 'primary' },
+  '-processing': { fg: 'secondary' },
+  '-failed': { fg: 'error' },
+  '-success': { fg: 'success' },
+
+  Jobs: {
+    fRow: ['stretch'],
+    position: 'absolute',
+    r: 0,
+    b: 0,
+    w: 40,
+    bg: '#f5f5f5',
+  },
+});
+
+export const MediasProgress = () => {
+  const items = Object.values(useMsg(uploadItems$));
+
+  if (items.length === 0) {
+    return null;
+  }
+
+  return (
+    <Table>
+      <TableHead>
+        <Row>
+          <CellHeader>Nom</CellHeader>
+          <CellHeader>Etat</CellHeader>
+          <CellHeader>Progression</CellHeader>
+        </Row>
+      </TableHead>
+      <TableBody>
+        {items.map((m) => (
+          <Row key={m.id}>
+            <Cell>{m.name}</Cell>
+            <Cell class={c('-${m.status}')}>
+              <Tr>{m.status}</Tr>
+            </Cell>
+            <Cell>
+              <Progress progress={m.progress} />
+            </Cell>
+          </Row>
+        ))}
+      </TableBody>
+    </Table>
+  );
+};
+
+export const getNextTitle = (medias: MediaModel[], start: string) => {
+  let i = 1;
+  let title = start;
+  while (true) {
+    if (!medias.find((m) => m.title === title)) break;
+    title = start + ++i;
+  }
+  return title;
+};
+
+// const getMediaCtx = (medias: MediaModel[]) => {
+
+//   // // Get Media PATH
+//   // for (const media of medias) {
+//   //   const paths: string[] = [];
+//   //   let curr = media;
+//   //   while (curr) {
+//   //     paths.push(curr.title);
+//   //     curr = curr.parent ? mediaById[curr.parent] : null;
+//   //   }
+//   //   paths.reverse();
+//   //   media.paths = paths;
+//   //   media.order = paths.join('/');
+//   // }
+//   // const sortedMedias = sort(medias, (m) => m.order);
+
+//   return {
+//     mediaById,
+//     mediasByParent,
+//   }
+// }
+
+export const MediaTable = ({ type }: { type?: MediaModel['type'] }) => {
+  const medias = useGroupQuery(mediaCtrl);
+  const jobs = useGroupQuery(jobCtrl);
+  const isAdvanced = useMsg(isAdvanced$);
+  const allSelectedById = useMsg(selectedById$);
+  const mediaById = byId(medias);
+  const mediasByParent = groupBy(medias, (m) => mediaById[m.parent]?.id || '');
+  const selectedIds = Object.keys(allSelectedById).filter((id) => mediaById[id]);
+
+  const ctx: MediaCtx = {
+    mediaById,
+    mediasByParent,
+    isAdvanced,
+    selectedIds,
+  };
+
+  const topMedias = (type ? medias.filter((m) => m.type === type) : mediasByParent['']) || [];
+
+  console.debug('MediaTable', ctx, topMedias);
+
+  return (
+    <>
+      <MediasProgress />
+      <Toolbar title={firstUpper(type ? type : 'media') + 's'}>
+        {!type && (
+          <Button
+            icon={<FolderPlus />}
+            {...tooltip('Créer un nouveau dossier')}
+            onClick={() => {
+              mediaCtrl.create({
+                title: getNextTitle(medias, 'Dossier'),
+                mime: 'application/folder',
+                type: 'folder',
+                user: needAuthId(),
+                group: needGroupId(),
+              });
+            }}
+          >
+            Nouveau dossier
+          </Button>
+        )}
+        {type === 'playlist' && (
+          <Button
+            icon={<MapPlus />}
+            {...tooltip('Créer une playlist')}
+            onClick={() => {
+              mediaCtrl.create({
+                title: getNextTitle(medias, 'Playlist'),
+                mime: 'application/playlist',
+                type: 'playlist',
+                user: needAuthId(),
+                group: needGroupId(),
+              });
+            }}
+          >
+            Ajouter Playlist
+          </Button>
+        )}
+        <UploadButton
+          title="Téléverser"
+          {...tooltip('Téléverser des medias')}
+          icon={<Upload />}
+          color="primary"
+          onFiles={upload}
+        />
+        <SearchField />
+      </Toolbar>
+      <Table>
+        <TableHead>
+          <Row>
+            <CellHeader />
+            <CellHeader>Titre</CellHeader>
+            <CellHeader>Description</CellHeader>
+            <CellHeader>Aperçu</CellHeader>
+            <CellHeader>Poids</CellHeader>
+            <CellHeader>Résolution</CellHeader>
+            <CellHeader>Durée</CellHeader>
+            <CellHeader />
+          </Row>
+        </TableHead>
+        <TableBody>
+          {topMedias.map((m) => (
+            <MediaRow key={m.id} m={m} tab={0} ctx={ctx} />
+          ))}
+          {!isEmpty(jobs.filter((job) => job.status !== 'finished' && !!job.media)) && (
+            <div class={c('Jobs')}>
+              <Toolbar title="Les jobs" />
+              <JobsTable filter={(job) => job.status !== 'finished' && !!job.media} />
+            </div>
+          )}
+        </TableBody>
+      </Table>
+    </>
+  );
+};

@@ -16,6 +16,9 @@ import { ContentPage } from '../pages/ContentPage';
 import { auth$ } from '@common/api';
 import { DevicePage } from '../pages/DevicePage';
 import { AdminPage, useAdminPage } from '../messages/adminPage$';
+import { PlaylistsPage } from '../pages/PlaylistsPage';
+import { ImagesPage } from '../pages/ImagesPage';
+import { VideosPage } from '../pages/VideosPage';
 
 const c = Css('App', {
   '': {
@@ -41,6 +44,9 @@ const CompByPage: Record<AdminPage, () => JSX.Element> = {
   members: MembersPage,
   contents: ContentsPage,
   medias: MediasPage,
+  playlists: PlaylistsPage,
+  videos: VideosPage,
+  images: ImagesPage,
   jobs: JobsPage,
   devices: DevicesPage,
   device: DevicePage,
