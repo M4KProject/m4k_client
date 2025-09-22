@@ -20,7 +20,7 @@ const c = Css('SideBar', {
     pl: 0.7,
   },
   Tab: {
-    ml: 1.5
+    ml: 1.5,
   },
 });
 
@@ -48,7 +48,12 @@ export const SideBar = () => {
   return (
     <Side page$={adminPage$}>
       <SideSep />
-      <SideButton title={group?.name || 'Groups'} icon={<Home />} page="groups" onClick={go('groups')} />
+      <SideButton
+        title={group?.name || 'Groups'}
+        icon={<Home />}
+        page="groups"
+        onClick={go('groups')}
+      />
       <SideSep />
       {group || isAdvanced ? (
         <>
