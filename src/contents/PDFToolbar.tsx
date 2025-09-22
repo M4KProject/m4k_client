@@ -1,9 +1,9 @@
 import { Css } from '@common/ui';
-import { Button, Div } from '@common/components';
+import { Button } from '@common/components';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const c = Css('PDFToolbar', {
-  '&': {
+  '': {
     position: 'absolute',
     bottom: '20px',
     left: '50%',
@@ -17,23 +17,23 @@ const c = Css('PDFToolbar', {
     borderRadius: '8px',
     boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
   },
-  '&PageInfo': {
+  PageInfo: {
     fontSize: '14px',
     fontWeight: 'bold',
     color: '#333',
     padding: '0 10px',
     whiteSpace: 'nowrap',
   },
-  '& .Button-primary': {
+  ' .Button-primary': {
     bg: '#7a624a',
   },
-  '& .Button-primary .ButtonIcon': {
+  ' .Button-primary .ButtonIcon': {
     fg: '#7a624a',
   },
-  '& .Button-secondary': {
+  ' .Button-secondary': {
     bg: '#5a5a5a',
   },
-  '& .Button-secondary .ButtonIcon': {
+  ' .Button-secondary .ButtonIcon': {
     fg: '#5a5a5a',
   },
 });

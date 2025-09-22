@@ -9,48 +9,48 @@ import { PDFViewer } from './PDFViewer';
 import { mediaCtrl } from '@/admin/controllers';
 
 const c = Css('PlaylistContent', {
-  '&': {
+  '': {
     ...flexColumn({ align: 'stretch' }),
     wMin: '100vw',
     hMin: '100vh',
     position: 'relative',
   },
-  '&ItemSelect': {
+  ItemSelect: {
     position: 'absolute',
     t: 1,
     l: 1,
     zIndex: 10,
   },
-  '&LanguageSelect': {
+  LanguageSelect: {
     position: 'absolute',
     t: 1,
     r: 1,
     zIndex: 10,
   },
-  '&LanguageSelect .Button': {
+  'LanguageSelect .Button': {
     fontSize: '3rem',
   },
-  '&PDFContainer': {
+  PDFContainer: {
     flex: 1,
     position: 'relative',
     height: '100vh',
   },
-  '& .Button-secondary': {
+  ' .Button-secondary': {
     bg: '#7a624a',
   },
-  '& .Button-primary': {
+  ' .Button-primary': {
     bg: '#7a624a',
   },
-  '& .SelectDropdown': {
+  ' .SelectDropdown': {
     bg: '#ffffff80',
   },
-  '& .Button-secondary:hover .ButtonIcon': {
+  ' .Button-secondary:hover .ButtonIcon': {
     bg: '#ffffffaa',
   },
-  '& .Button-primary:hover .ButtonIcon': {
+  ' .Button-primary:hover .ButtonIcon': {
     bg: '#ffffffaa',
   },
-  '& .SelectOption-selected': {
+  ' .SelectOption-selected': {
     fg: '#7a624a',
     bg: '#efefef',
   },

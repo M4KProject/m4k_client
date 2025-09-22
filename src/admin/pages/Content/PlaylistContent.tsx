@@ -8,9 +8,7 @@ import {
   secondsToTimeString,
   parseToSeconds,
 } from '@common/utils';
-import { useAsync } from '@common/hooks';
 import {
-  Div,
   Table,
   TableHead,
   TableBody,
@@ -24,11 +22,11 @@ import {
 } from '@common/components';
 import { ContentProps } from './ContentProps';
 import { Plus, Trash2 } from 'lucide-react';
-import { useGroupQuery, useQuery } from '@common/hooks/useQuery';
+import { useGroupQuery } from '@common/hooks/useQuery';
 import { mediaCtrl } from '@/admin/controllers';
 
 const c = Css('PlaylistContent', {
-  '&': {
+  '': {
     ...flexColumn(),
   },
 });

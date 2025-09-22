@@ -135,9 +135,9 @@ Components use the `useCss` hook with `Css` objects:
 
 ```typescript
 const c = Css('', {
-  '&': { /* component root styles */ },
-  '&Container': { /* nested element styles */ },
-  '&Title': { /* title styles */ }
+  '': { /* component root styles */ },
+  'Container': { /* nested element styles */ },
+  'Title': { /* title styles */ }
 };
 
 const Component = () => {
@@ -249,8 +249,8 @@ import { Css } from '@common/utils';
 import { Button } from '@common/components';
 
 const c = Css('', {
-  '&': { /* component root */ },
-  '&Item': { /* nested element */ }
+  '': { /* component root */ },
+  'Item': { /* nested element */ }
 };
 
 export const MyComponent = ({ children }: { children?: any }) => {

@@ -6,10 +6,10 @@ import { dialog$ } from '../messages/dialog$';
 import { useEffect, useRef } from 'preact/hooks';
 
 const c = Css('ProgressView', {
-  '&': {
+  '': {
     ...flexColumn({ align: 'stretch' }),
   },
-  '&Logs': {
+  Logs: {
     ...flexColumn(),
     overflow: 'auto',
     minHeight: '7em',
@@ -19,10 +19,10 @@ const c = Css('ProgressView', {
     p: 0.5,
     rounded: 1,
   },
-  '& .m4kLog-debug': { fg: 'default' },
-  '& .m4kLog-info': { fg: 'info' },
-  '& .m4kLog-warn': { fg: 'warn' },
-  '& .m4kLog-error': { fg: 'error' },
+  ' .m4kLog-debug': { fg: 'default' },
+  ' .m4kLog-info': { fg: 'info' },
+  ' .m4kLog-warn': { fg: 'warn' },
+  ' .m4kLog-error': { fg: 'error' },
 });
 
 export interface ProgressData {

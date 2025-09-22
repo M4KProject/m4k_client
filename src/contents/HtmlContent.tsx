@@ -4,11 +4,11 @@ import type { ContentProps } from './ContentViewer';
 import { HtmlContentModel } from '@common/api';
 
 const c = Css('HtmlContent', {
-  '&': {
+  '': {
     minHeight: '100vh',
     overflow: 'auto',
   },
-  '&Container': {
+  Container: {
     w: '100%',
     h: '100%',
   },

@@ -2,27 +2,27 @@ import { Css, flexRow } from '@common/ui';
 import { toErr } from '@common/utils';
 import { m4k } from '@common/m4k';
 import { usePromise } from '@common/hooks';
-import { Button, Div } from '@common/components';
+import { Button } from '@common/components';
 import copyPlaylist from '../copyPlaylist';
 import { newProgressDialog } from '../components/ProgressView';
 import { clearAllCache } from '../../serviceWorker';
 import { copyDir$, url$ } from '../messages';
 
 const c = Css('Actions', {
-  '&': {},
-  '&Buttons': {
+  '': {},
+  Buttons: {
     ...flexRow({ justify: 'around', align: 'center', wrap: 'wrap' }),
   },
-  '& .m4kButton': {
+  ' .m4kButton': {
     flex: 1,
     minWidth: '10em',
     m: '0.5em',
   },
-  '&Info': {
+  Info: {
     ...flexRow({ justify: 'around', align: 'center', wrap: 'wrap' }),
     p: 0.5,
   },
-  '& .m4kInfo div': {
+  ' .m4kInfo div': {
     m: 0.5,
   },
 });

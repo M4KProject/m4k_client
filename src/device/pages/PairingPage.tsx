@@ -7,14 +7,14 @@ import { offlineMode$ } from '../messages';
 import { FlexRow } from '@common/components/Flex';
 
 const c = Css('PairingPage', {
-  '&': {
+  '': {
     ...flexColumn({ align: 'center', justify: 'center' }),
     wh: '100%',
     backgroundColor: '#f5f5f5',
     fontFamily: 'Roboto, sans-serif',
     p: 1.25,
   },
-  '&Container': {
+  Container: {
     bg: 'white',
     p: 2.5,
     rounded: 6,
@@ -23,7 +23,7 @@ const c = Css('PairingPage', {
     wMax: 25,
     w: '100%',
   },
-  '&SpinnerContainer': {
+  SpinnerContainer: {
     w: 5,
     h: 5,
     bg: '#28A8D9',
@@ -33,7 +33,7 @@ const c = Css('PairingPage', {
     alignItems: 'center',
     justifyContent: 'center',
   },
-  '&Spinner': {
+  Spinner: {
     w: 2.5,
     h: 2.5,
     border: '3px solid white',
@@ -50,27 +50,27 @@ const c = Css('PairingPage', {
       },
     },
   },
-  '&Title': {
+  Title: {
     color: '#333',
     mb: 0.625,
     fontSize: 1.5,
     fontWeight: '300',
     m: '0 0 10px 0',
   },
-  '&Subtitle': {
+  Subtitle: {
     color: '#666',
     mb: 1.875,
     fontSize: 1,
     m: '0 0 30px 0',
   },
-  '&CodeContainer': {
+  CodeContainer: {
     bg: '#f8f9fa',
     border: '2px dashed #28A8D9',
     rounded: 4,
     p: 1.25,
     mb: 1.25,
   },
-  '&Code': {
+  Code: {
     fontSize: 1.5, // font-size: 24px (réduit pour s'adapter aux clés plus longues)
     fontWeight: 'bold',
     color: '#28A8D9',

@@ -1,10 +1,9 @@
 import { Css } from '@common/ui';
 import { repeat } from '@common/utils';
-
 import { openCodePinDialog } from './CodePinView';
 
 const c = Css('Corner', {
-  '&': {
+  '': {
     position: 'absolute',
     zIndex: 9999,
     w: 4,
@@ -37,7 +36,7 @@ export const Corners = () => {
       {repeat(4, (i) => (
         <div
           key={i}
-          class={[css(), css(`-${i}`)]}
+          class={c('', `-${i}`)}
           style={{
             [i < 2 ? 'top' : 'bottom']: 0,
             [i % 2 === 0 ? 'left' : 'right']: 0,

@@ -6,15 +6,15 @@ import { toNbr } from '@common/utils/cast';
 import { useState } from 'preact/hooks';
 
 const c = Css('ConfigPage', {
-  '&': {
+  '': {
     p: 1,
   },
-  '&Actions': {
+  Actions: {
     ...flexRow({ align: 'center' }),
     p: 0.5,
     gap: 0.5,
   },
-  '&Actions .Button': {
+  'Actions .Button': {
     flex: 1,
   },
 });

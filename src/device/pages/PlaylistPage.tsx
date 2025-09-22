@@ -19,7 +19,7 @@ import { ArrowUp, ArrowDown, Copy, Trash2 } from 'lucide-react';
 import { playlist$ } from '../messages';
 
 const c = Css('Playlist', {
-  '&Preview': {
+  Preview: {
     position: 'absolute',
     xy: '50%',
     wh: '100%',
@@ -29,7 +29,7 @@ const c = Css('Playlist', {
     userSelect: 'none',
     pointerEvents: 'none',
   },
-  '&PreviewCell:hover &Preview': {
+  'PreviewCell:hover &Preview': {
     xy: '50%',
     wh: 15,
     zIndex: 1,

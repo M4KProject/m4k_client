@@ -11,16 +11,16 @@ import { m4k } from '@common/m4k';
 type PlaylistItem = any;
 
 const c = Css('Kiosk', {
-  '&Container': {
+  Container: {
     position: 'fixed',
     inset: 0,
     overflow: 'hidden',
     bg: '#000',
   },
-  '&Container-center': {
+  'Container-center': {
     ...flexColumn({ align: 'center', justify: 'center' }),
   },
-  '&Container iframe': {
+  'Container iframe': {
     position: 'fixed',
     overflow: 'hidden',
     inset: 0,
@@ -30,7 +30,7 @@ const c = Css('Kiosk', {
     bg: '#fff',
   },
 
-  '&': {
+  '': {
     ...flexCenter(),
     position: 'absolute',
     overflow: 'hidden',
@@ -41,28 +41,28 @@ const c = Css('Kiosk', {
     bg: '#000',
     // bg: '#f00',
   },
-  '&-hidden': { visibility: 'hidden', opacity: 0 },
-  '&-prev': { zIndex: 3, opacity: 0 },
-  '&-next': { zIndex: 2, opacity: 0 },
-  '&-curr': { zIndex: 4, opacity: 1 },
+  '-hidden': { visibility: 'hidden', opacity: 0 },
+  '-prev': { zIndex: 3, opacity: 0 },
+  '-next': { zIndex: 2, opacity: 0 },
+  '-curr': { zIndex: 4, opacity: 1 },
 
-  '&-rightToLeft&-hidden, &-rightToLeft&-prev': { transform: 'translateX(-100%)' },
-  '&-rightToLeft&-next': { transform: 'translateX(+100%)' },
+  '-rightToLeft&-hidden, &-rightToLeft&-prev': { transform: 'translateX(-100%)' },
+  '-rightToLeft&-next': { transform: 'translateX(+100%)' },
 
-  '&-topToBottom&-hidden, &-topToBottom&-prev': { transform: 'translateY(+100%)' },
-  '&-topToBottom&-next': { transform: 'translateY(-100%)' },
+  '-topToBottom&-hidden, &-topToBottom&-prev': { transform: 'translateY(+100%)' },
+  '-topToBottom&-next': { transform: 'translateY(-100%)' },
 
-  '&-zoom&-hidden, &-zoom&-prev, &-zoom&-next': { transform: 'scale(0)' },
+  '-zoom&-hidden, &-zoom&-prev, &-zoom&-next': { transform: 'scale(0)' },
 
-  '& div': { width: '100%', height: '100%', bgMode: 'fill' },
-  '&-contain div': { bgMode: 'contain' },
-  '&-cover div': { bgMode: 'cover' },
+  ' div': { width: '100%', height: '100%', bgMode: 'fill' },
+  '-contain div': { bgMode: 'contain' },
+  '-cover div': { bgMode: 'cover' },
 
-  '& video': { itemFit: 'fill' },
-  '&-contain video': { itemFit: 'contain' },
-  '&-cover video': { itemFit: 'cover' },
+  ' video': { itemFit: 'fill' },
+  '-contain video': { itemFit: 'contain' },
+  '-cover video': { itemFit: 'cover' },
 
-  '& span': {
+  ' span': {
     ...flexCenter(),
     position: 'absolute',
     inset: 0,

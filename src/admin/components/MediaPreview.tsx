@@ -4,13 +4,13 @@ import { FileInfo, MediaModel, getUrl } from '@common/api';
 import { isStrNotEmpty, Msg } from '@common/utils';
 
 const c = Css('MediaPreview', {
-  '&': {
+  '': {
     position: 'relative',
     xy: 0,
     wh: '100%',
     userSelect: 'none',
   },
-  '& div': {
+  ' div': {
     position: 'absolute',
     xy: '50%',
     wh: '100%',
@@ -19,14 +19,14 @@ const c = Css('MediaPreview', {
     transition: 0.2,
     userSelect: 'none',
   },
-  '&-over div': {
+  '-over div': {
     xy: '50%',
     wh: 15,
     zIndex: 1,
     translate: '-50%, -50%',
     rounded: 1,
   },
-  '& video': {
+  ' video': {
     wh: '100%',
     objectFit: 'contain',
     cursor: 'pointer',

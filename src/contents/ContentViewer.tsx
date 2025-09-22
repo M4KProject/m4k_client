@@ -11,7 +11,7 @@ import { auth$ } from '@common/api/messages';
 import { contentCtrl, mediaCtrl } from '@/admin/controllers';
 
 const c = Css('ContentViewer', {
-  '&': {
+  '': {
     ...flexColumn({ align: 'stretch' }),
     minHeight: '100vh',
     backgroundColor: '#f5f5f5',

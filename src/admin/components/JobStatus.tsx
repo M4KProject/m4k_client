@@ -5,18 +5,18 @@ import { JobModel } from '@common/api';
 import { Play, Square, AlertCircle, CheckCircle, Clock } from 'lucide-react';
 
 const c = Css('JobStatus', {
-  '&': {
+  '': {
     ...flexRow({ align: 'center', gap: 0.5 }),
   },
-  '& svg': {
+  ' svg': {
     m: 0.5,
   },
 
-  '&-pending': { fg: 'secondary' },
-  '&-processing': { fg: 'primary' },
-  '&-finished': { fg: 'success' },
-  '&-failed': { fg: 'error' },
-  '&-deleted': { fg: 'muted' },
+  '-pending': { fg: 'secondary' },
+  '-processing': { fg: 'primary' },
+  '-finished': { fg: 'success' },
+  '-failed': { fg: 'error' },
+  '-deleted': { fg: 'muted' },
 });
 
 addTr({

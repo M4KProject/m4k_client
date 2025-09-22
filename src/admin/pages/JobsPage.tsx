@@ -5,7 +5,7 @@ import { JobsTable } from '../components/JobsTable';
 import { SearchField } from '../components/SearchField';
 
 const c = Css('Jobs', {
-  '&Page': {},
+  Page: {},
 });
 
 export const JobsPage = () => {

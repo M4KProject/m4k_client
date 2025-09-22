@@ -6,7 +6,7 @@ import { useState } from 'preact/hooks';
 import { Send, RefreshCw, FileJson } from 'lucide-react';
 
 const c = Css('DeviceConsole', {
-  '&': {
+  '': {
     ...flexColumn({ align: 'stretch' }),
     w: '300px',
     bg: '#1e1e1e',
@@ -15,7 +15,7 @@ const c = Css('DeviceConsole', {
     overflow: 'hidden',
     m: 0.5,
   },
-  '&Logs': {
+  Logs: {
     flex: 1,
     p: 1,
     bg: '#000',
@@ -25,7 +25,7 @@ const c = Css('DeviceConsole', {
     overflow: 'auto',
     whiteSpace: 'pre-wrap',
   },
-  '&Actions': {
+  Actions: {
     ...flexRow({ justify: 'center', align: 'center' }),
     gap: 1,
     p: 0.5,

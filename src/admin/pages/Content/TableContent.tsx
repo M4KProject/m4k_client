@@ -1,11 +1,9 @@
 import { Css } from '@common/ui';
 import { deepClone } from '@common/utils';
-
 import { TableContentModel } from '@common/api';
 import { Button } from '@common/components';
 import { Copy, Trash2 } from 'lucide-react';
 import {
-  Div,
   Field,
   Table,
   Cell,

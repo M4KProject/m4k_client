@@ -10,12 +10,12 @@ import { useQuery } from '@common/hooks/useQuery';
 import { groupCtrl } from '../controllers';
 
 const c = Css('SideBar', {
-  '&': {
+  '': {
     position: 'relative',
     w: 13,
     transition: 0.2,
   },
-  '&Mask': {
+  Mask: {
     position: 'absolute',
     x: 0,
     y: '50%',
@@ -26,7 +26,7 @@ const c = Css('SideBar', {
     translateY: '-50%',
     transition: 0.2,
   },
-  '&Content': {
+  Content: {
     ...flexColumn({ align: 'stretch' }),
     position: 'absolute',
     color: '#ffffff',
@@ -36,7 +36,7 @@ const c = Css('SideBar', {
     h: '100%',
   },
 
-  '&Sep': {
+  Sep: {
     ...flexColumn({ align: 'start', justify: 'end' }),
     pl: 1,
     flex: 1,
@@ -44,27 +44,27 @@ const c = Css('SideBar', {
     fontWeight: 'bold',
     borderBottom: '1px solid #0a536f',
   },
-  '&Sep-version': {
+  'Sep-version': {
     fontSize: 0.7,
     opacity: 0.5,
     p: 0,
     pl: 0.7,
   },
-  '&Sep-group': {
+  'Sep-group': {
     fontSize: 1,
     p: 0,
     pl: 0.7,
   },
 
-  '&-editor': { w: 0 },
-  '&-editor &Mask': {
+  '-editor': { w: 0 },
+  '-editor &Mask': {
     w: 3,
     h: 18,
     bg: '#0090c87a',
     elevation: 1,
     borderRadius: '0 0.5em 0.5em 0',
   },
-  '&-editor &Sep': { visibility: 'hidden' },
+  '-editor &Sep': { visibility: 'hidden' },
 });
 
 export const SideBar = () => {

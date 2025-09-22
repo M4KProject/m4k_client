@@ -1,7 +1,7 @@
 import { Css, flexCenter } from '@common/ui';
 
 const c = Css('DeviceScreen', {
-  '&': {
+  '': {
     flex: 1,
     rounded: 2,
     bg: '#000',
@@ -9,13 +9,13 @@ const c = Css('DeviceScreen', {
     position: 'relative',
     bgMode: 'contain',
   },
-  '&NoCapture': {
+  NoCapture: {
     ...flexCenter(),
     bg: '#FFF',
     fg: '#000',
     p: 1,
   },
-  '&WH': {
+  WH: {
     position: 'absolute',
     xy: 0,
     fg: '#FFF',

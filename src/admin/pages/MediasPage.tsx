@@ -7,7 +7,7 @@ import { SearchField } from '../components/SearchField';
 import { MediasTable } from '../components/MediasTable';
 
 const c = Css('MediasPage', {
-  '&': {},
+  '': {},
 });
 
 export const MediasPage = () => {

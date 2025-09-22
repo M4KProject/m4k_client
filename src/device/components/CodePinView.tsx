@@ -10,10 +10,10 @@ import { codePin$, offlineMode$ } from '../messages';
 import { FlexRow } from '@common/components/Flex';
 
 const c = Css('CodePinView', {
-  '&': {
+  '': {
     zIndex: 99999,
   },
-  '&Code': {
+  Code: {
     w: '100%',
     fontSize: 2,
     textAlign: 'center',

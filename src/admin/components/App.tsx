@@ -18,7 +18,7 @@ import { DevicePage } from '../pages/DevicePage';
 import { AdminPage, useAdminPage } from '../messages/adminPage$';
 
 const c = Css('App', {
-  '&': {
+  '': {
     ...flexRow({ align: 'stretch' }),
     position: 'fixed',
     overflow: 'auto',
@@ -27,10 +27,10 @@ const c = Css('App', {
     fg: 'fg',
     fontFamily: 'Roboto',
   },
-  '&-loading': {
+  '-loading': {
     ...flexCenter(),
   },
-  '& .Button': {
+  ' .Button': {
     fontSize: 1.4,
   },
 });

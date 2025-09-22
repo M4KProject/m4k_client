@@ -13,12 +13,7 @@ import {
   FolderInput,
   MapPlus,
 } from 'lucide-react';
-import {
-  uploadItems$,
-  needAuthId,
-  needGroupId,
-  MediaModel,
-} from '@common/api';
+import { uploadItems$, needAuthId, needGroupId, MediaModel } from '@common/api';
 import {
   tooltip,
   Button,
@@ -50,23 +45,23 @@ addTr({
 });
 
 const c = Css('Media', {
-  '&Page': {},
+  Page: {},
 
-  '&Icon': {
+  Icon: {
     ...flexRow({ align: 'center', justify: 'start' }),
     w: '100%',
   },
-  '&Icon span': {
+  'Icon span': {
     ml: 0.5,
   },
 
-  '&-pending': {},
-  '&-uploading': { fg: 'primary' },
-  '&-processing': { fg: 'secondary' },
-  '&-failed': { fg: 'error' },
-  '&-success': { fg: 'success' },
+  '-pending': {},
+  '-uploading': { fg: 'primary' },
+  '-processing': { fg: 'secondary' },
+  '-failed': { fg: 'error' },
+  '-success': { fg: 'success' },
 
-  '&Jobs': {
+  Jobs: {
     ...flexColumn({ align: 'stretch' }),
     position: 'absolute',
     r: 0,

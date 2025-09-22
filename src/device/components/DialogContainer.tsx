@@ -4,14 +4,14 @@ import { useMsg } from '@common/hooks';
 import { dialog$ } from '../messages/dialog$';
 
 const c = Css('DialogContainer', {
-  '&': {
+  '': {
     position: 'fixed',
     inset: 0,
     bg: '#000000AA',
     ...flexCenter(),
     zIndex: 10000,
   },
-  '&Window': {
+  Window: {
     ...flexColumn(),
     elevation: 3,
     rounded: 2,
@@ -20,7 +20,7 @@ const c = Css('DialogContainer', {
     overflow: 'hidden',
     bg: 'bg',
   },
-  '&Header': {
+  Header: {
     ...flexCenter(),
     textAlign: 'center',
     fontSize: 1.2,
@@ -29,7 +29,7 @@ const c = Css('DialogContainer', {
     bg: 'header',
     fg: 'headerTitle',
   },
-  '&Content': {
+  Content: {
     ...flexColumn(),
     p: 1,
   },

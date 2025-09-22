@@ -11,11 +11,11 @@ import { useDevice } from '../messages/device$';
 import { deviceCtrl } from '../controllers';
 
 const c = Css('DevicePage', {
-  '&Body': {
+  Body: {
     ...flexColumn({ align: 'stretch' }),
     p: 0.5,
   },
-  '&Screen': {
+  Screen: {
     ...flexRow({ align: 'stretch' }),
     flex: 1,
     gap: 2,

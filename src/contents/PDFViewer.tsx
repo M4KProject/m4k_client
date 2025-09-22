@@ -6,7 +6,7 @@ import { useRef, useState, useEffect } from 'preact/hooks';
 import { PDFToolbar } from './PDFToolbar';
 
 const c = Css('PDFViewer', {
-  '&': {
+  '': {
     ...flexColumn({ align: 'stretch' }),
     justifyItems: 'stretch',
     width: '100%',
@@ -17,7 +17,7 @@ const c = Css('PDFViewer', {
     right: 0,
     bottom: 0,
   },
-  '&Container': {
+  Container: {
     flex: 1,
     overflow: 'auto',
     textAlign: 'center',

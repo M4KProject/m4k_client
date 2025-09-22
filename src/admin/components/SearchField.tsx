@@ -8,7 +8,7 @@ import { Button } from '@common/components';
 import { search$ } from '../messages/search$';
 
 const c = Css('SearchField', {
-  '&': {
+  '': {
     ...flexRow({ align: 'center' }),
   },
 });

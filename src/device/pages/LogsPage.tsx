@@ -16,18 +16,18 @@
 // }
 
 // const c = Css('', {
-//     '&Container': {
+//     'Container': {
 //         flex: 1,
 //     },
-//     '&Container .Actions': { ...flexRow({ align: 'center', justify: 'around' }), p: 0.5 },
-//     '&Container .Button': { flex: 1, m: 0.5 },
-//     '&Container .LoadBtn': { position: 'fixed', bottom: "1em", right: "1em" },
-//     '&Logs': {
+//     'Container .Actions': { ...flexRow({ align: 'center', justify: 'around' }), p: 0.5 },
+//     'Container .Button': { flex: 1, m: 0.5 },
+//     'Container .LoadBtn': { position: 'fixed', bottom: "1em", right: "1em" },
+//     'Logs': {
 //         position: 'absolute',
 //         inset: 0,
 //         overflow: 'auto',
 //     },
-//     '&': {
+//     '': {
 //         ...flexRow({ align: 'center' }),
 //         minHeight: "1em",
 //         fontSize: "0.5em",
@@ -35,11 +35,11 @@
 //         overflowX: 'auto',
 //         overflowY: 'hidden',
 //     },
-//     '&-info': { color: 'default' },
-//     '&-error': { color: 'error' },
-//     '&-warn': { color: 'warn' },
-//     '& span': { width: "5em", m: 0 },
-//     '& pre': { flex: 1, m: 0 },
+//     '-info': { color: 'default' },
+//     '-error': { color: 'error' },
+//     '-warn': { color: 'warn' },
+//     ' span': { width: "5em", m: 0 },
+//     ' pre': { flex: 1, m: 0 },
 // };
 
 // const Log = ({ log, c } : { log: M4kLog, c: string }) => {

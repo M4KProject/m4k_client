@@ -22,7 +22,7 @@ import { offlineMode$ } from '../messages';
 import { DialogContainer } from './DialogContainer';
 
 const c = Css('App', {
-  '&': {
+  '': {
     ...flexRow({ align: 'stretch' }),
     position: 'fixed',
     overflow: 'hidden',
@@ -31,10 +31,10 @@ const c = Css('App', {
     fg: 'fg',
     fontFamily: 'Roboto',
   },
-  '&-loading': {
+  '-loading': {
     ...flexCenter(),
   },
-  '& .Button': {
+  ' .Button': {
     fontSize: 1.4,
   },
 });

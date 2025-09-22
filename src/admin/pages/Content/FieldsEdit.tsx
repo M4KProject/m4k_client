@@ -2,7 +2,6 @@ import { Css, flexRow } from '@common/ui';
 import { useMsg } from '@common/hooks';
 import { FormContentModel, TableContentModel } from '@common/api';
 import {
-  Div,
   Button,
   Field,
   FieldInfo,
@@ -20,7 +19,7 @@ import { ComponentChildren } from 'preact';
 import { Trash2 } from 'lucide-react';
 
 const c = Css('TableContent', {
-  '&Actions': { ...flexRow({ align: 'center' }) },
+  Actions: { ...flexRow({ align: 'center' }) },
 });
 
 export const FieldsEdit = ({

@@ -4,38 +4,38 @@ import logoUrl from '../assets/logo.svg';
 import loginUrl from '../assets/login.svg';
 
 const c = Css('AuthPage', {
-  '&': {
+  '': {
     ...flexRow({ align: 'stretch' }),
     position: 'fixed',
     overflow: 'auto',
     background: '#eaf3fa',
     inset: 0,
   },
-  '&Content': {
+  Content: {
     ...flexColumn({ align: 'center', justify: 'around' }),
     flex: 1,
     textAlign: 'center',
   },
-  '&Logo': {
+  Logo: {
     bgUrl: logoUrl,
     bgMode: 'contain',
     w: 20,
     h: 5,
   },
-  '&Title': {
+  Title: {
     m: 0,
     p: 0,
     fontSize: 1,
     fontWeight: 500,
     color: '#24a6d8',
   },
-  '&Illu': {
+  Illu: {
     bgUrl: loginUrl,
     bgMode: 'contain',
     height: '15em',
     width: '30em',
   },
-  '& &DeviceButton': {
+  ' &DeviceButton': {
     position: 'fixed',
     bottom: 1,
     left: 1,
