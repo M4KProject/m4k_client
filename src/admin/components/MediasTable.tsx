@@ -288,12 +288,19 @@ const MediasRow = ({ m, ctx, tab }: { m: MediaModel; ctx: MediaCtx; tab: number 
               )}
             </>
           )}
-          <Button
-            icon={<Trash2 />}
-            color="error"
-            {...tooltip('Supprimer')}
-            onClick={() => mediaCtrl.delete(m.id)}
-          />
+          (
+            <Button
+              icon={<Trash2 />}
+              color="error"
+              {...tooltip('Supprimer')}
+              onClick={async () => {
+                for (const c of children) {
+                  mediaCtrl.update(c.id, { parent: null });
+                }
+                mediaCtrl.delete(m.id);
+              }}
+            />
+          )
         </Cell>
       </Row>
       {isOpen &&
