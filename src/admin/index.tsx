@@ -15,11 +15,7 @@ Object.assign(app, messages);
 export const mount = () => {
   console.debug('admin mount');
 
-  apiError$.on((error) => {
-    if (!error) return;
-    console.error('apiError', error);
-    showError(error);
-  });
+  apiError$.on(showError);
 
   addResponsiveListener();
   addFont('Roboto');

@@ -1,6 +1,14 @@
 import { PlaylistEntry, PlaylistModel, uploadJobs$ } from '@common/api';
 import { Css } from '@common/ui';
-import { addItem, removeIndex, secondsToTimeString, parseToSeconds, by, getChanges, isEmpty } from '@common/utils';
+import {
+  addItem,
+  removeIndex,
+  secondsToTimeString,
+  parseToSeconds,
+  by,
+  getChanges,
+  isEmpty,
+} from '@common/utils';
 import {
   Table,
   TableHead,
@@ -31,10 +39,8 @@ export const AddPlaylistItemButton = ({ playlist }: { playlist: PlaylistModel })
       addItem(data.items, { title: 'Nouvelle entrée' });
     });
   };
-  return (
-    <Button title="Ajouter une entrée" icon={<Plus />} color="primary" onClick={newItem} />
-  )
-}
+  return <Button title="Ajouter une entrée" icon={<Plus />} color="primary" onClick={newItem} />;
+};
 
 export const EditPlaylist = ({ playlist }: { playlist: PlaylistModel }) => {
   const medias = useGroupQuery(mediaCtrl);
@@ -52,7 +58,7 @@ export const EditPlaylist = ({ playlist }: { playlist: PlaylistModel }) => {
   };
 
   useAsyncEffect(async () => {
-    const itemIds = by(playlist.data.items.map(i => i.media));
+    const itemIds = by(playlist.data.items.map((i) => i.media));
     const depIds = by(playlist.deps);
     const changes = getChanges(itemIds, depIds);
     console.debug('EditPlaylist changes', changes);
