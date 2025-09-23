@@ -1,8 +1,8 @@
 import { FolderPlus } from 'lucide-react';
 import { needAuthId, needGroupId } from '@common/api';
 import { tooltip, Button } from '@common/components';
-import { mediaCtrl } from '../controllers';
-import { getNextTitle } from '../controllers/getNextTitle';
+import { mediaCtrl } from '../../controllers';
+import { getNextTitle } from '../../controllers/getNextTitle';
 
 export const NewFolderButton = () => (
   <Button

@@ -12,7 +12,7 @@ import { Trash2 } from 'lucide-react';
 import { JobStatus } from './JobStatus';
 import { JobModel, uploadJobs$ } from '@common/api';
 import { useGroupQuery } from '@common/hooks/useQuery';
-import { jobCtrl } from '../controllers';
+import { jobCtrl } from '../../controllers';
 import { useMsg } from '@common/hooks';
 import { Css } from '@common/ui';
 

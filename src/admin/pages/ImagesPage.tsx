@@ -1,7 +1,7 @@
 import { Css } from '@common/ui';
 import { Page, PageBody, Toolbar } from '@common/components';
-import { MediaTable } from '../components/MediaTable';
-import { UploadMediaButton } from '../components/UploadMediaButton';
+import { MediaTable } from '../components/medias/MediaTable';
+import { UploadMediaButton } from '../components/medias/UploadMediaButton';
 import { SearchField } from '../components/SearchField';
 
 const c = Css('ImagesPage', {});

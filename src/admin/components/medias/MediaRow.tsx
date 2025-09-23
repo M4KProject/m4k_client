@@ -1,11 +1,11 @@
 import { Dict, isPositive, round } from '@common/utils';
-import { mediaId$, adminPage$, selectedById$ } from '../messages';
+import { mediaId$, adminPage$, selectedById$ } from '../../messages';
 import { Trash2, FolderInput, PlusSquare, Settings } from 'lucide-react';
 import { MediaModel } from '@common/api';
 import { tooltip, Button, Row, Cell, Field } from '@common/components';
-import { SelectedField } from './SelectedField';
+import { SelectedField } from '../SelectedField';
 import { MediaPreview } from './MediaPreview';
-import { mediaCtrl, updatePlaylist } from '../controllers';
+import { mediaCtrl, updatePlaylist } from '../../controllers';
 import { useState } from 'preact/hooks';
 import { MediaIcon } from './MediaIcon';
 

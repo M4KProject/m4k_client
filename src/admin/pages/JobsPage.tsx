@@ -1,7 +1,7 @@
 import { Css } from '@common/ui';
 
 import { Page, Toolbar, PageBody } from '@common/components';
-import { JobsTable } from '../components/JobsTable';
+import { JobsTable } from '../components/jobs/JobsTable';
 import { SearchField } from '../components/SearchField';
 
 const c = Css('Jobs', {});

@@ -1,7 +1,7 @@
 import { Css } from '@common/ui';
 import { byId, firstUpper, groupBy } from '@common/utils';
 import { addTr, useMsg } from '@common/hooks';
-import { isAdvanced$, selectedById$ } from '../messages';
+import { isAdvanced$, selectedById$ } from '../../messages';
 import { FolderPlus, MapPlus, Upload } from 'lucide-react';
 import { needAuthId, needGroupId, MediaModel, upload } from '@common/api';
 import {
@@ -15,13 +15,13 @@ import {
   Toolbar,
   UploadButton,
 } from '@common/components';
-import { JobsTable } from './JobsTable';
-import { SearchField } from './SearchField';
+import { JobsTable } from '../jobs/JobsTable';
+import { SearchField } from '../SearchField';
 import { useGroupQuery } from '@common/hooks/useQuery';
-import { mediaCtrl } from '../controllers';
+import { mediaCtrl } from '../../controllers';
 import { MediaCtx, MediaRow } from './MediaRow';
 import { NewFolderButton } from './NewFolderButton';
-import { getNextTitle } from '../controllers/getNextTitle';
+import { getNextTitle } from '../../controllers/getNextTitle';
 import { NewPlaylistButton } from './NewPlaylistButton';
 import { UploadMediaButton } from './UploadMediaButton';
 

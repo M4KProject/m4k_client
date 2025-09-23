@@ -6,7 +6,7 @@ import { group$, isAdvanced$ } from '../messages';
 import { AdminPage, adminPage$ } from '../messages/adminPage$';
 import { useQuery } from '@common/hooks/useQuery';
 import { groupCtrl } from '../controllers';
-import { MediaIcon } from './MediaIcon';
+import { MediaIcon } from './medias/MediaIcon';
 
 const c = Css('SideBar', {
   Version: {

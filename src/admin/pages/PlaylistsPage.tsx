@@ -1,11 +1,11 @@
 import { Css } from '@common/ui';
 import { BackButton, Button, Page, PageBody, Toolbar } from '@common/components';
-import { MediaTable } from '../components/MediaTable';
+import { MediaTable } from '../components/medias/MediaTable';
 import { useMsg, useQueryOne } from '@common/hooks';
 import { mediaId$ } from '../messages';
 import { mediaCtrl } from '@/colls';
-import { NewPlaylistButton } from '../components/NewPlaylistButton';
-import { UploadMediaButton } from '../components/UploadMediaButton';
+import { NewPlaylistButton } from '../components/medias/NewPlaylistButton';
+import { UploadMediaButton } from '../components/medias/UploadMediaButton';
 import { SearchField } from '../components/SearchField';
 import { PlaylistModel } from '@common/api';
 
