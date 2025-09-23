@@ -90,7 +90,6 @@ export const getNextTitle = (medias: MediaModel[], start: string) => {
 
 export const MediaTable = ({ type }: { type?: MediaModel['type'] }) => {
   const medias = useGroupQuery(mediaCtrl);
-  const jobs = useGroupQuery(jobCtrl);
   const isAdvanced = useMsg(isAdvanced$);
   const allSelectedById = useMsg(selectedById$);
   const mediaById = byId(medias);
@@ -172,9 +171,7 @@ export const MediaTable = ({ type }: { type?: MediaModel['type'] }) => {
           ))}
         </TableBody>
       </Table>
-      {!isEmpty(jobs.filter((job) => job.status !== 'finished' && !!job.media)) && (
-        <JobsTable class={c('Jobs')} filter={(job) => job.status !== 'finished' && !!job.media} />
-      )}
+      <JobsTable class={c('Jobs')} filter={(job) => job.status !== 'finished'} hideEmpty />
     </>
   );
 };

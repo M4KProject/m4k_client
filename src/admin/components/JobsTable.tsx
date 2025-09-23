@@ -24,14 +24,15 @@ export interface JobsTableProps {
   filter?: (job: JobModel) => boolean;
   hideEmpty?: boolean;
 }
+
 export const JobsTable = ({ filter, hideEmpty, ...props }: JobsTableProps) => {
   const jobs = useGroupQuery(jobCtrl);
+
   const uploadJobs = useMsg(uploadJobs$);
+
   const allJobs = [...jobs, ...Object.values(uploadJobs)];
   const filteredJobs = filter ? allJobs.filter(filter) : allJobs;
   const sortedJobs = sort(filteredJobs, (j) => -new Date(j.updated).getTime());
-
-  console.debug('jobs', sortedJobs);
 
   if (hideEmpty && sortedJobs.length === 0) return null;
 
