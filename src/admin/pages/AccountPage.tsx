@@ -45,7 +45,13 @@ export const AccountPage = () => {
   return (
     <Page class={c()}>
       <Toolbar title="Account">
-        <Button title="Rafraîchir" icon={<RefreshCw />} color="primary" onClick={() => {}} />
+        <Button color="primary" title="Deconnexion" icon={<LogOut />} onClick={logout} />
+        <Button
+          color="primary"
+          title="Changer de mot de passe"
+          icon={<KeyRound />}
+          onClick={handleUpdatePassword}
+        />
       </Toolbar>
       <PageBody>
         <Form title="Mon compte">
@@ -157,14 +163,6 @@ export const AccountPage = () => {
           />
         </Form>
       </PageBody>
-      <PageActions>
-        <Button title="Deconnexion" icon={<LogOut />} onClick={logout} />
-        <Button
-          title="Changer de mot de passe"
-          icon={<KeyRound />}
-          onClick={handleUpdatePassword}
-        />
-      </PageActions>
     </Page>
   );
 };

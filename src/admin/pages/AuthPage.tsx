@@ -8,7 +8,8 @@ const c = Css('AuthPage', {
     fRow: 'stretch',
     position: 'fixed',
     overflow: 'auto',
-    background: '#eaf3fa',
+    fg: 'fg',
+    bg: 'side',
     inset: 0,
   },
   Content: {
@@ -26,13 +27,13 @@ const c = Css('AuthPage', {
     m: 0,
     p: 0,
     fontWeight: 500,
-    color: '#24a6d8',
+    fg: 'p50',
   },
   Illu: {
     bgUrl: loginUrl,
     bgMode: 'contain',
-    height: '15em',
-    width: '30em',
+    h: 15,
+    w: 30,
   },
   ' &DeviceButton': {
     position: 'fixed',
@@ -67,76 +68,3 @@ export const AuthPage = () => {
     </div>
   );
 };
-
-// const rootElement = addEl('div', { id: 'm4kAdmin', parent: 'body' })
-// createRoot(rootElement).render(<App />);
-// router.add('/auth', () => import('./routes/auth'));
-
-// {/* <Auth
-//     supabaseClient={supabase}
-//     appearance={{ theme: ThemeSupa }}
-//     providers={[]}
-// />
-// {(
-//     page === 'sign-in' ? (
-//         <>
-//             <Field type="email" value={email} onValue={setEmail} label="Your email address" />
-//             <Field type="password" value={password} onValue={setPassword} label="Your password" />
-//             <Button color="primary" onClick={() => signIn(email, password)}>
-//                 Sign in
-//             </Button>
-//             <div class={c('Links')}>
-//                 <Button onClick={() => setPage('forgot-password')}>
-//                     Forgot your password?
-//                 </Button>
-//                 <Button onClick={() => setPage('sign-up')}>
-//                     Don't have an account? Sign up
-//                 </Button>
-//             </div>
-//         </>
-//     ) :
-//     page === 'sign-up' ? (
-//         <>
-//             <Field type="email" value={email} onValue={setEmail} label="Your email address" />
-//             <Field type="password" value={password} onValue={setPassword} label="Create a Password" />
-//             <Button color="primary" onClick={() => signUp(email, password)}>
-//                 Sign up
-//             </Button>
-//             <div class={c('Links')}>
-//                 <Button onClick={() => setPage('sign-in')}>
-//                     Already have an account? Sign in
-//                 </Button>
-//             </div>
-//         </>
-//     ) :
-//     page === 'forgot-password' ? (
-//         <>
-//             <Field type="email" value={email} onValue={setEmail} label="Your email address" />
-//             <Button color="primary" onClick={() => resetPassword(email)}>
-//                 Send reset password instructions
-//             </Button>
-//             <div class={c('Links')}>
-//                 <Button onClick={() => setPage('code')}>
-//                     Utiliser un code
-//                 </Button>
-//                 <Button onClick={() => setPage('sign-in')}>
-//                     Already have an account? Sign in
-//                 </Button>
-//             </div>
-//         </>
-//     ) :
-//     page === 'code' ? (
-//         <>
-//             <Field type="email" value={email} onValue={setEmail} label="Your email address" />
-//             <Field type="password" value={password} onValue={setPassword} label="Code" />
-//             <Button color="primary" onClick={() => signWithCode(email, password)}>
-//                 Connexion avec le CODE
-//             </Button>
-//             <div class={c('Links')}>
-//                 <Button onClick={() => setPage('sign-in')}>
-//                     Already have an account? Sign in
-//                 </Button>
-//             </div>
-//         </>
-//     ) : page
-// )} */}
