@@ -1,6 +1,6 @@
 import { render } from 'preact';
 import { App } from './components/App';
-import { addFont, setTheme, addEl, addResponsiveListener, setCss } from '@common/ui';
+import { addFont, refreshTheme, addEl, addResponsiveListener, setCss } from '@common/ui';
 import { apiError$, authRefresh } from '@common/api';
 import { app } from '../app';
 import * as messages from './messages';
@@ -23,7 +23,7 @@ export const mount = () => {
 
   addResponsiveListener();
   addFont('Roboto');
-  setTheme();
+  refreshTheme();
 
   setCss('font', { 'html,body': { fontFamily: 'Roboto' } });
 

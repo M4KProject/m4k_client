@@ -1,4 +1,4 @@
-import { Css } from '@common/ui';
+import { Css, refreshTheme, setTheme, theme$ } from '@common/ui';
 import { RefreshCw } from 'lucide-react';
 import { Page, PageBody, PageActions, Toolbar } from '@common/components';
 import { Button } from '@common/components';
@@ -19,6 +19,7 @@ export const AccountPage = () => {
   const [password, setPassword] = useState('');
   const [oldPassword, setOldPassword] = useState('');
   const isAdvanced = useMsg(isAdvanced$);
+  const theme = useMsg(theme$);
 
   if (!auth) return <LoadingPage />;
 
@@ -54,6 +55,26 @@ export const AccountPage = () => {
             msg={isAdvanced$}
             value={isAdvanced}
             onValue={isAdvanced$.setter()}
+          />
+          <Field
+            type="switch"
+            label="Dark mode"
+            name="isDark"
+            value={theme.isDark}
+            onValue={isDark => {
+              setTheme({ isDark });
+              refreshTheme();
+            }}
+          />
+          <Field
+            type="color"
+            label="Couleur de l'interface"
+            name="primary"
+            value={theme.primary}
+            onValue={primary => {
+              setTheme({ primary })
+              refreshTheme();
+            }}
           />
           <Field
             label="Ancien mot de passe"

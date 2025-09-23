@@ -1,5 +1,5 @@
 import { render } from 'preact';
-import { addFont, setTheme, addEl, addResponsiveListener } from '@common/ui';
+import { addFont, refreshTheme, addEl, addResponsiveListener } from '@common/ui';
 import { ContentViewer } from './ContentViewer';
 
 console.debug('content loaded');
@@ -11,7 +11,7 @@ export const mount = () => {
 
   addResponsiveListener();
   addFont('Roboto');
-  setTheme();
+  refreshTheme();
 
   const contentKey = null; // router.current.params.contentKey;
 
