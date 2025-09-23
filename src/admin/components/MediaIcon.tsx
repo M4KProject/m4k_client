@@ -15,7 +15,7 @@ import { tooltip } from '@common/components';
 
 const c = Css('MediaIcon', {
   '': {
-    fRow: ['center', 'start'],
+    fCenter: 1,
     w: '100%',
   },
   ' span': {
