@@ -1,6 +1,6 @@
-import { PlaylistEntry, PlaylistModel } from '@common/api';
+import { PlaylistEntry, PlaylistModel, uploadJobs$ } from '@common/api';
 import { Css } from '@common/ui';
-import { addItem, removeIndex, secondsToTimeString, parseToSeconds } from '@common/utils';
+import { addItem, removeIndex, secondsToTimeString, parseToSeconds, by, getChanges, isEmpty } from '@common/utils';
 import {
   Table,
   TableHead,
@@ -16,12 +16,25 @@ import {
 import { Plus, Trash2 } from 'lucide-react';
 import { useGroupQuery } from '@common/hooks/useQuery';
 import { mediaCtrl, updatePlaylist } from '@/admin/controllers';
+import { useAsyncEffect, useMsg } from '@common/hooks';
+import { useEffect } from 'preact/hooks';
 
 const c = Css('EditPlaylist', {
   '': {
     fCol: 1,
   },
 });
+
+export const AddPlaylistItemButton = ({ playlist }: { playlist: PlaylistModel }) => {
+  const newItem = () => {
+    updatePlaylist(playlist.id, ({ data }) => {
+      addItem(data.items, { title: 'Nouvelle entrée' });
+    });
+  };
+  return (
+    <Button title="Ajouter une entrée" icon={<Plus />} color="primary" onClick={newItem} />
+  )
+}
 
 export const EditPlaylist = ({ playlist }: { playlist: PlaylistModel }) => {
   const medias = useGroupQuery(mediaCtrl);
@@ -38,11 +51,20 @@ export const EditPlaylist = ({ playlist }: { playlist: PlaylistModel }) => {
     });
   };
 
-  const newItem = () => {
-    updatePlaylist(playlist.id, ({ data }) => {
-      addItem(data.items, { title: 'Nouvelle entrée' });
-    });
-  };
+  useAsyncEffect(async () => {
+    const itemIds = by(playlist.data.items.map(i => i.media));
+    const depIds = by(playlist.deps);
+    const changes = getChanges(itemIds, depIds);
+    console.debug('EditPlaylist changes', changes);
+    if (!isEmpty(changes)) {
+      updatePlaylist(playlist.id, ({ data }) => {
+        for (const id in changes) {
+          const media = mediaCtrl.getCache(id);
+          addItem(data.items, { title: media.title, media: media.id });
+        }
+      });
+    }
+  }, [playlist]);
 
   return (
     <div class={c()}>
@@ -128,7 +150,6 @@ export const EditPlaylist = ({ playlist }: { playlist: PlaylistModel }) => {
           ))}
         </TableBody>
       </Table>
-      <Button title="Ajouter une entrée" icon={<Plus />} color="primary" onClick={newItem} />
     </div>
   );
 };
