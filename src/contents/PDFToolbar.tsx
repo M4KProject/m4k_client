@@ -18,7 +18,6 @@ const c = Css('PDFToolbar', {
     boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
   },
   PageInfo: {
-    fontSize: '14px',
     fontWeight: 'bold',
     color: '#333',
     padding: '0 10px',

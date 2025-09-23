@@ -10,7 +10,6 @@ import {
 } from '@common/components';
 import { Trash2 } from 'lucide-react';
 import { JobStatus } from './JobStatus';
-import { sort } from '@common/utils/list';
 import { JobModel, uploadJobs$ } from '@common/api';
 import { useGroupQuery } from '@common/hooks/useQuery';
 import { jobCtrl } from '../controllers';
@@ -32,9 +31,9 @@ export const JobsTable = ({ filter, hideEmpty, ...props }: JobsTableProps) => {
 
   const allJobs = [...jobs, ...Object.values(uploadJobs)];
   const filteredJobs = filter ? allJobs.filter(filter) : allJobs;
-  const sortedJobs = sort(filteredJobs, (j) => -new Date(j.updated).getTime());
+  // const sortedJobs = sort(filteredJobs, (j) => -new Date(j.updated).getTime());
 
-  if (hideEmpty && sortedJobs.length === 0) return null;
+  if (hideEmpty && filteredJobs.length === 0) return null;
 
   return (
     <Table class={c('', props)}>
@@ -47,7 +46,7 @@ export const JobsTable = ({ filter, hideEmpty, ...props }: JobsTableProps) => {
         </Row>
       </TableHead>
       <TableBody>
-        {sortedJobs.map((job) => (
+        {filteredJobs.map((job) => (
           <Row key={job.id}>
             <Cell>{job.action}</Cell>
             <Cell>

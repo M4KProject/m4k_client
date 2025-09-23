@@ -33,9 +33,6 @@ const c = Css('App', {
   '-loading': {
     fCenter: 1,
   },
-  ' .Button': {
-    fontSize: 1.4,
-  },
 });
 
 const CompByPage: Record<AdminPage, () => JSX.Element> = {

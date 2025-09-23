@@ -4,9 +4,7 @@ import { Page, Toolbar, PageBody } from '@common/components';
 import { JobsTable } from '../components/JobsTable';
 import { SearchField } from '../components/SearchField';
 
-const c = Css('Jobs', {
-  Page: {},
-});
+const c = Css('Jobs', {});
 
 export const JobsPage = () => {
   return (

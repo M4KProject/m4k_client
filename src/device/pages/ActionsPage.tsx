@@ -9,7 +9,6 @@ import { clearAllCache } from '../../serviceWorker';
 import { copyDir$, url$ } from '../messages';
 
 const c = Css('Actions', {
-  '': {},
   Buttons: {
     fRow: ['center', 'space-around'],
     flexWrap: 'wrap',

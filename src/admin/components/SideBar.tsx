@@ -9,12 +9,10 @@ import { groupCtrl } from '../controllers';
 import { MediaIcon } from './MediaIcon';
 
 const c = Css('SideBar', {
-  '': {},
   Version: {
     color: '#0a536f',
     fontWeight: 'bold',
     borderBottom: '1px solid #0a536f',
-    fontSize: 0.7,
     opacity: 0.5,
     p: 0,
     pl: 0.7,

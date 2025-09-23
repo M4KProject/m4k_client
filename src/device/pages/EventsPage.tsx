@@ -5,17 +5,9 @@ import { m4k, M4kSignalEvent } from '@common/m4k';
 import { useEffect, useState } from 'preact/hooks';
 
 const c = Css('EventsPage', {
-  '': {
-    // flex: 1,
-    // position: 'absolute',
-    // inset: 0,
-    // overflowX: 'auto',
-    // overflowY: 'auto',
-  },
   ' pre': {
     p: 0,
     m: 0.2,
-    fontSize: 0.8,
   },
 });
 

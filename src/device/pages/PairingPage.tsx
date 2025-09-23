@@ -53,14 +53,12 @@ const c = Css('PairingPage', {
   Title: {
     color: '#333',
     mb: 0.625,
-    fontSize: 1.5,
     fontWeight: '300',
     m: '0 0 10px 0',
   },
   Subtitle: {
     color: '#666',
     mb: 1.875,
-    fontSize: 1,
     m: '0 0 30px 0',
   },
   CodeContainer: {
@@ -71,7 +69,6 @@ const c = Css('PairingPage', {
     mb: 1.25,
   },
   Code: {
-    fontSize: 1.5, // font-size: 24px (réduit pour s'adapter aux clés plus longues)
     fontWeight: 'bold',
     color: '#28A8D9',
     letterSpacing: '2px', // Espacement réduit pour les clés plus longues

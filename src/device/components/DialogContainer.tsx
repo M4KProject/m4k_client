@@ -22,7 +22,6 @@ const c = Css('DialogContainer', {
   Header: {
     fCenter: 1,
     textAlign: 'center',
-    fontSize: 1.2,
     fontWeight: 'bold',
     p: 1,
     bg: 'header',

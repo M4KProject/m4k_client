@@ -20,7 +20,6 @@ const c = Css('DeviceConsole', {
     bg: '#000',
     fg: '#0f0',
     fontFamily: 'monospace',
-    fontSize: '12px',
     overflow: 'auto',
     whiteSpace: 'pre-wrap',
   },

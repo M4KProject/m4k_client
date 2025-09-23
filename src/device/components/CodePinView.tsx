@@ -15,7 +15,6 @@ const c = Css('CodePinView', {
   },
   Code: {
     w: '100%',
-    fontSize: 2,
     textAlign: 'center',
   },
 });

@@ -9,7 +9,6 @@ const c = Css('FormContent', {
     p: 2,
   },
   Message: {
-    fontSize: 1.2,
     color: '#666',
     textAlign: 'center',
   },

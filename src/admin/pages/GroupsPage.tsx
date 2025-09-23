@@ -72,7 +72,7 @@ export const GroupsPage = () => {
                     <Field
                       {...tooltip(g.id)}
                       value={g.key}
-                      onValue={(key) => groupCtrl.update(g, { key })}
+                      onValue={(key) => groupCtrl.update(g.id, { key })}
                     />
                   </Cell>
                 )}

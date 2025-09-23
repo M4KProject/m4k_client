@@ -25,7 +25,6 @@ const c = Css('AuthPage', {
   Title: {
     m: 0,
     p: 0,
-    fontSize: 1,
     fontWeight: 500,
     color: '#24a6d8',
   },

@@ -30,8 +30,6 @@ addTr({
 });
 
 const c = Css('Media', {
-  Page: {},
-  '-pending': {},
   '-uploading': { fg: 'primary' },
   '-processing': { fg: 'secondary' },
   '-failed': { fg: 'error' },
