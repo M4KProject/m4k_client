@@ -18,11 +18,9 @@ const c = Css('AccountPage', {
   },
 });
 
-export const Color = ({ color } : { color: string }) => {
-  return (
-    <div class={c('Color')} style={{ background: getColor(color) }} />
-  )
-}
+export const Color = ({ color }: { color: string }) => {
+  return <div class={c('Color')} style={{ background: getColor(color) }} />;
+};
 
 export const AccountPage = () => {
   const auth = useMsg(auth$);
@@ -72,7 +70,7 @@ export const AccountPage = () => {
             label="Dark mode"
             name="isDark"
             value={theme.isDark}
-            onValue={isDark => {
+            onValue={(isDark) => {
               setTheme({ isDark });
               refreshTheme();
             }}
@@ -83,8 +81,8 @@ export const AccountPage = () => {
               label="Couleur primaire"
               name="primary"
               value={theme.primary}
-              onValue={primary => {
-                setTheme({ primary })
+              onValue={(primary) => {
+                setTheme({ primary });
                 refreshTheme();
               }}
             />
@@ -105,8 +103,8 @@ export const AccountPage = () => {
               label="Couleur primaire"
               name="primary"
               value={theme.primary}
-              onValue={primary => {
-                setTheme({ primary })
+              onValue={(primary) => {
+                setTheme({ primary });
                 refreshTheme();
               }}
             />
@@ -127,8 +125,8 @@ export const AccountPage = () => {
               label="Couleur secondaire"
               name="primary"
               value={theme.secondary}
-              onValue={secondary => {
-                setTheme({ secondary })
+              onValue={(secondary) => {
+                setTheme({ secondary });
                 refreshTheme();
               }}
             />
