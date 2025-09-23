@@ -1,14 +1,6 @@
 import { PlaylistEntry, PlaylistModel } from '@common/api';
 import { Css } from '@common/ui';
-import {
-  addItem,
-  removeIndex,
-  toList,
-  updateIndex,
-  secondsToTimeString,
-  parseToSeconds,
-  removeItem,
-} from '@common/utils';
+import { addItem, removeIndex, secondsToTimeString, parseToSeconds } from '@common/utils';
 import {
   Table,
   TableHead,
@@ -23,7 +15,7 @@ import {
 } from '@common/components';
 import { Plus, Trash2 } from 'lucide-react';
 import { useGroupQuery } from '@common/hooks/useQuery';
-import { mediaCtrl, updateMedia, updatePlaylist } from '@/admin/controllers';
+import { mediaCtrl, updatePlaylist } from '@/admin/controllers';
 
 const c = Css('EditPlaylist', {
   '': {
@@ -32,39 +24,25 @@ const c = Css('EditPlaylist', {
 });
 
 export const EditPlaylist = ({ playlist }: { playlist: PlaylistModel }) => {
-  // Initialiser les données de la playlist si elles n'existent pas
-  // const items: PlaylistEntry[] = toList(data.items, []);
-
-  // const setItems = (items: PlaylistEntry[]) => updateData({ items });
-
-  // const handleAdd = () => {
-  //   setItems(addItem(items, { title: 'Nouvelle entrée' }));
-  // };
-
-  // const handleUpdate = (index: number, changes: Partial<PlaylistEntry>) =>
-  //   setItems(updateIndex(items, index, changes));
-
-  // const handleDelete = (index: number) => setItems(removeIndex(items, index));
-
   const medias = useGroupQuery(mediaCtrl);
 
   const updateItem = (index: number, changes: Partial<PlaylistEntry>) => {
-    updatePlaylist(playlist.id, ({data}) => {
+    updatePlaylist(playlist.id, ({ data }) => {
       Object.assign(data.items[index], changes);
-    })
-  }
+    });
+  };
 
   const deleteItem = (index: number) => {
-    updatePlaylist(playlist.id, ({data}) => {
+    updatePlaylist(playlist.id, ({ data }) => {
       removeIndex(data.items, index);
-    })
-  }
+    });
+  };
 
   const newItem = () => {
-    updatePlaylist(playlist.id, ({data}) => {
+    updatePlaylist(playlist.id, ({ data }) => {
       addItem(data.items, { title: 'Nouvelle entrée' });
-    })
-  }
+    });
+  };
 
   return (
     <div class={c()}>
@@ -84,10 +62,7 @@ export const EditPlaylist = ({ playlist }: { playlist: PlaylistModel }) => {
           {playlist.data?.items?.map((entry, index) => (
             <Row key={index}>
               <Cell>
-                <Field
-                  value={entry.title}
-                  onValue={(title) => updateItem(index, { title })}
-                />
+                <Field value={entry.title} onValue={(title) => updateItem(index, { title })} />
               </Cell>
               <Cell>
                 <Field
