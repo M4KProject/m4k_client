@@ -173,10 +173,7 @@ export const MediaTable = ({ type }: { type?: MediaModel['type'] }) => {
         </TableBody>
       </Table>
       {!isEmpty(jobs.filter((job) => job.status !== 'finished' && !!job.media)) && (
-        <JobsTable
-          class={c('Jobs')}
-          filter={(job) => job.status !== 'finished' && !!job.media}
-        />
+        <JobsTable class={c('Jobs')} filter={(job) => job.status !== 'finished' && !!job.media} />
       )}
     </>
   );

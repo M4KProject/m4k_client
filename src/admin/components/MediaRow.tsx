@@ -37,13 +37,6 @@ export const MediaRow = ({ m, ctx, tab }: { m: MediaModel; ctx: MediaCtx; tab: n
   const children = mediasByParent[m.id] || [];
   const deps = m.deps?.map((id) => mediaById[id]).filter(Boolean) || [];
 
-  console.debug('MediasRow', {
-    m,
-    tab,
-    children,
-    deps,
-  });
-
   return (
     <>
       <Row key={m.id}>
