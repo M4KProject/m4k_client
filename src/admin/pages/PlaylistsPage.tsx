@@ -8,6 +8,7 @@ import { NewPlaylistButton } from '../components/medias/NewPlaylistButton';
 import { UploadMediaButton } from '../components/medias/UploadMediaButton';
 import { SearchField } from '../components/SearchField';
 import { PlaylistModel } from '@common/api';
+import { EditPlaylist } from '../components/medias/EditPlaylist';
 
 const c = Css('PlaylistsPage', {});
 
@@ -26,7 +27,9 @@ export const PlaylistsPage = () => {
           <UploadMediaButton />
           <SearchField />
         </Toolbar>
-        <PageBody></PageBody>
+        <PageBody>
+          <EditPlaylist playlist={playlist} />
+        </PageBody>
       </Page>
     );
   }
