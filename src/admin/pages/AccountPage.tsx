@@ -67,7 +67,7 @@ export const AccountPage = () => {
           />
           <Field
             type="switch"
-            label="Dark mode"
+            label="Mode sombre"
             name="isDark"
             value={theme.mode === 'dark'}
             onValue={(isDark) => {

@@ -1,9 +1,9 @@
 import { Css } from '@common/ui';
-import { byId, firstUpper, groupBy, isEmpty } from '@common/utils';
+import { byId, firstUpper, groupBy } from '@common/utils';
 import { addTr, useMsg } from '@common/hooks';
 import { isAdvanced$, selectedById$ } from '../messages';
 import { FolderPlus, MapPlus, Upload } from 'lucide-react';
-import { uploadJobs$, needAuthId, needGroupId, MediaModel, upload } from '@common/api';
+import { needAuthId, needGroupId, MediaModel, upload } from '@common/api';
 import {
   tooltip,
   Button,
@@ -18,8 +18,12 @@ import {
 import { JobsTable } from './JobsTable';
 import { SearchField } from './SearchField';
 import { useGroupQuery } from '@common/hooks/useQuery';
-import { jobCtrl, mediaCtrl } from '../controllers';
+import { mediaCtrl } from '../controllers';
 import { MediaCtx, MediaRow } from './MediaRow';
+import { NewFolderButton } from './NewFolderButton';
+import { getNextTitle } from '../controllers/getNextTitle';
+import { NewPlaylistButton } from './NewPlaylistButton';
+import { UploadMediaButton } from './UploadMediaButton';
 
 addTr({
   pending: 'en attente',
@@ -76,16 +80,6 @@ const c = Css('Media', {
 //   );
 // };
 
-export const getNextTitle = (medias: MediaModel[], start: string) => {
-  let i = 1;
-  let title = start;
-  while (true) {
-    if (!medias.find((m) => m.title === title)) break;
-    title = start + ++i;
-  }
-  return title;
-};
-
 export const MediaTable = ({ type }: { type?: MediaModel['type'] }) => {
   const medias = useGroupQuery(mediaCtrl);
   const isAdvanced = useMsg(isAdvanced$);
@@ -107,50 +101,6 @@ export const MediaTable = ({ type }: { type?: MediaModel['type'] }) => {
 
   return (
     <>
-      <Toolbar title={firstUpper(type ? type : 'media') + 's'}>
-        {!type && (
-          <Button
-            icon={<FolderPlus />}
-            {...tooltip('Créer un nouveau dossier')}
-            onClick={() => {
-              mediaCtrl.create({
-                title: getNextTitle(medias, 'Dossier'),
-                mime: 'application/folder',
-                type: 'folder',
-                user: needAuthId(),
-                group: needGroupId(),
-              });
-            }}
-          >
-            Nouveau dossier
-          </Button>
-        )}
-        {type === 'playlist' && (
-          <Button
-            icon={<MapPlus />}
-            {...tooltip('Créer une playlist')}
-            onClick={() => {
-              mediaCtrl.create({
-                title: getNextTitle(medias, 'Playlist'),
-                mime: 'application/playlist',
-                type: 'playlist',
-                user: needAuthId(),
-                group: needGroupId(),
-              });
-            }}
-          >
-            Ajouter Playlist
-          </Button>
-        )}
-        <UploadButton
-          title="Téléverser"
-          {...tooltip('Téléverser des medias')}
-          icon={<Upload />}
-          color="primary"
-          onFiles={upload}
-        />
-        <SearchField />
-      </Toolbar>
       <Table>
         <TableHead>
           <Row>
