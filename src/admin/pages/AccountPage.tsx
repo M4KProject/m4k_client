@@ -1,6 +1,5 @@
 import { Css, getColor, refreshTheme, setTheme, theme$ } from '@common/ui';
-import { RefreshCw } from 'lucide-react';
-import { Page, PageBody, PageActions, Toolbar, FieldGroup } from '@common/components';
+import { Page, PageBody, Toolbar, FieldGroup } from '@common/components';
 import { Button } from '@common/components';
 import { Form } from '@common/components';
 import { Field } from '@common/components';
@@ -49,8 +48,8 @@ export const AccountPage = () => {
         <Button
           color="primary"
           title="Changer de mot de passe"
-          icon={<KeyRound />}
           onClick={handleUpdatePassword}
+          icon={<KeyRound />}
         />
       </Toolbar>
       <PageBody>

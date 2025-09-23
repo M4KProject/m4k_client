@@ -2,6 +2,7 @@ import { Css } from '@common/ui';
 import { AuthForm, Button } from '@common/components';
 import logoUrl from '../assets/logo.svg';
 import loginUrl from '../assets/login.svg';
+import { Settings } from 'lucide-react';
 
 const c = Css('AuthPage', {
   '': {
@@ -60,6 +61,7 @@ export const AuthPage = () => {
       </div>
       <AuthForm />
       <Button
+        icon={<Settings />}
         class={c('DeviceButton')}
         color="secondary"
         onClick={handleDeviceMode}
