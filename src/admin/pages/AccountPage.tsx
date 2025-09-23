@@ -69,33 +69,32 @@ export const AccountPage = () => {
             type="switch"
             label="Dark mode"
             name="isDark"
-            value={theme.isDark}
+            value={theme.mode === 'dark'}
             onValue={(isDark) => {
-              setTheme({ isDark });
+              setTheme({ mode: isDark ? 'dark' : 'light' });
               refreshTheme();
             }}
           />
           <FieldGroup>
             <Field
               type="color"
-              label="Couleur primaire"
-              name="primary"
-              value={theme.primary}
-              onValue={(primary) => {
-                setTheme({ primary });
+              label="Couleur gris"
+              name="grey"
+              value={theme.grey}
+              onValue={(grey) => {
+                setTheme({ grey });
                 refreshTheme();
               }}
             />
-            <Color color={'#1b1b1b'} />
-            <Color color={'#3b3b3b'} />
-            <Color color={'#5a5a5a'} />
-            <Color color={'#6d6d6d'} />
-            <Color color={'#969696'} />
-            <Color color={'#b6b6b6'} />
-            <Color color={'#d9d9d9'} />
-            <Color color={'#e9e9e9'} />
-            <Color color={'#f2f2f2'} />
-            <Color color={'#f9f9f9'} />
+            <Color color={'g90'} />
+            <Color color={'g80'} />
+            <Color color={'g70'} />
+            <Color color={'g60'} />
+            <Color color={'g50'} />
+            <Color color={'g40'} />
+            <Color color={'g30'} />
+            <Color color={'g20'} />
+            <Color color={'g10'} />
           </FieldGroup>
           <FieldGroup>
             <Field
@@ -117,7 +116,6 @@ export const AccountPage = () => {
             <Color color={'p30'} />
             <Color color={'p20'} />
             <Color color={'p10'} />
-            <Color color={'p5'} />
           </FieldGroup>
           <FieldGroup>
             <Field
@@ -139,7 +137,6 @@ export const AccountPage = () => {
             <Color color={'s30'} />
             <Color color={'s20'} />
             <Color color={'s10'} />
-            <Color color={'s5'} />
           </FieldGroup>
           <Field
             label="Ancien mot de passe"
