@@ -17,9 +17,6 @@ const c = Css('SideBar', {
     p: 0,
     pl: 0.7,
   },
-  Tab: {
-    ml: 1.5,
-  },
 });
 
 addTr({
@@ -64,21 +61,21 @@ export const SideBar = () => {
             onClick={go('medias')}
           />
           <SideButton
-            class={c('Tab')}
+            tab={true}
             title="Playlists"
             icon={<MediaIcon type="playlist" />}
             page="playlists"
             onClick={go('playlists')}
           />
           <SideButton
-            class={c('Tab')}
+            tab={true}
             title="Videos"
             icon={<MediaIcon type="video" />}
             page="videos"
             onClick={go('videos')}
           />
           <SideButton
-            class={c('Tab')}
+            tab={true}
             title="Images"
             icon={<MediaIcon type="image" />}
             page="images"
