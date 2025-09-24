@@ -1,6 +1,6 @@
 import { PlaylistEntry, PlaylistModel } from '@common/api';
 import { Css } from '@common/ui';
-import { addItem, removeIndex, secondsToTimeString, parseToSeconds } from '@common/utils';
+import { addItem, removeIndex, secondsToTimeString, parseToSeconds, deepClone } from '@common/utils';
 import {
   Table,
   TableHead,
@@ -13,7 +13,7 @@ import {
   tooltip,
   Flag,
 } from '@common/components';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, Copy } from 'lucide-react';
 import { useGroupQuery } from '@common/hooks/useQuery';
 import { mediaCtrl, updatePlaylist } from '@/admin/controllers';
 import { JobsTable } from '../jobs/JobsTable';
@@ -46,6 +46,13 @@ export const EditPlaylist = ({ playlist }: { playlist: PlaylistModel }) => {
   const deleteItem = (index: number) => {
     updatePlaylist(playlist.id, ({ data }) => {
       removeIndex(data.items, index);
+    });
+  };
+
+  const duplicateItem = (index: number) => {
+    updatePlaylist(playlist.id, ({ data: { items } }) => {
+      const copy = deepClone(items[index]);
+      addItem(items, copy, index+1);
     });
   };
 
@@ -126,6 +133,11 @@ export const EditPlaylist = ({ playlist }: { playlist: PlaylistModel }) => {
                 />
               </Cell>
               <Cell variant="around">
+                <Button
+                  icon={<Copy />}
+                  {...tooltip('Dupliquer')}
+                  onClick={() => duplicateItem(index)}
+                />
                 <Button
                   icon={<Trash2 />}
                   color="error"
