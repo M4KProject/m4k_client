@@ -31,11 +31,9 @@ const secondsFormat = (s?: number) => (isPositive(s) ? round(s) + 's' : '');
 
 export const MediaRow = ({ m, ctx, tab }: { m: MediaModel; ctx: MediaCtx; tab: number }) => {
   const [isOpen, setIsOpen] = useState(false);
-
-  const { isAdvanced, selectedIds, mediaById, mediasByParent } = ctx;
-
+  const { isAdvanced, selectedIds, mediasByParent } = ctx;
   const children = mediasByParent[m.id] || [];
-  const deps = m.deps?.map((id) => mediaById[id]).filter(Boolean) || [];
+  const hasChildren = m.type === 'folder' && children.length > 0;
 
   return (
     <>
@@ -46,11 +44,7 @@ export const MediaRow = ({ m, ctx, tab }: { m: MediaModel; ctx: MediaCtx; tab: n
         <Cell variant="row">
           <div style={{ width: 2 * tab + 'em' }} />
           <div onClick={() => setIsOpen((o) => !o)}>
-            <MediaIcon
-              type={m.type}
-              isOpen={isOpen}
-              hasChildren={deps.length > 0 || children.length > 0}
-            />
+            <MediaIcon type={m.type} isOpen={isOpen} hasChildren={hasChildren} />
           </div>
           <Field
             {...(isAdvanced ? tooltip(m.order) : {})}
@@ -118,9 +112,7 @@ export const MediaRow = ({ m, ctx, tab }: { m: MediaModel; ctx: MediaCtx; tab: n
           />
         </Cell>
       </Row>
-      {isOpen &&
-        children.map((child) => <MediaRow key={child.id} m={child} ctx={ctx} tab={tab + 1} />)}
-      {isOpen && deps.map((child) => <MediaRow key={child.id} m={child} ctx={ctx} tab={tab + 1} />)}
+      {isOpen && hasChildren && children.map((child) => <MediaRow key={child.id} m={child} ctx={ctx} tab={tab + 1} />)}
     </>
   );
 };
