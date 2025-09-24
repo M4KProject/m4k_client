@@ -61,47 +61,32 @@ interface PopoverProps {
 
 export const Popover = ({ id, children, class: className = '', title }: PopoverProps) => {
   const overId = useMemo(() => id || uuid(), [id]);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const isVisible = useMsg(over$) === overId;
-  const [position, setPosition] = useState({
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-  });
+  const floatRef = useRef<HTMLDivElement>(null);
+  const isOver = useMsg(over$) === overId;
 
   useEffect(() => {
-    if (isVisible && containerRef.current) {
-      const rect = containerRef.current.getBoundingClientRect();
-      const viewportHeight = window.innerHeight;
-      const previewSize = 15 * 16; // 15rem convertis en px (approximation)
-
-      let top = '50%';
-      let transform = 'translate(-50%, -50%)';
-
-      // Si trop près du haut
-      if (rect.top < previewSize / 2) {
-        top = '0%';
-        transform = 'translate(-50%, 0%)';
+    const el = floatRef.current;
+    if (el) {
+      if (isOver) {
+        const rect = el.getBoundingClientRect();
+        console.debug('Popover el', el, rect);
+        if (rect.y < 110) {
+          el.style.marginTop = '120px';
+        }
+      } else {
+        el.style.marginTop = '0';
       }
-      // Si trop près du bas
-      else if (rect.bottom + previewSize / 2 > viewportHeight) {
-        top = '100%';
-        transform = 'translate(-50%, -100%)';
-      }
-
-      setPosition({ top, left: '50%', transform });
     }
-  }, [isVisible]);
+
+  }, [isOver]);
 
   return (
     <div
-      ref={containerRef}
-      class={c('', isVisible && `-over`, className)}
+      class={c('', isOver && `-over`, className)}
       onMouseOver={() => setIsOver(overId, true)}
       onMouseLeave={() => setIsOver(overId, false)}
-      style={isVisible ? position : undefined}
     >
-      <div class={c('Float')}>
+      <div ref={floatRef} class={c('Float')}>
         {children}
         {title && <span class={c('Title')}>{title}</span>}
       </div>
