@@ -1,6 +1,6 @@
 import { MediaModel, PlaylistModel } from '@common/api';
 import { mediaCtrl } from '../../colls';
-import { by, deepClone, getChanges, groupBy, isEmpty, isItem, isList, sort, uniq } from '@common/utils';
+import { deepClone, getChanges, groupBy, isEmpty, isItem, isList, sort, uniq } from '@common/utils';
 
 export const updateMedia = async <T extends MediaModel>(id: string, apply: (next: T) => void) => {
   const prev = mediaCtrl.getCache(id);
@@ -24,19 +24,19 @@ const cleanPlaylist = (next: PlaylistModel) => {
   const items = data.items;
 
   const mediaById = mediaCtrl.cache.v;
-  const itemsByMediaId = groupBy(items, item => item.media||'');
+  const itemsByMediaId = groupBy(items, (item) => item.media || '');
   delete itemsByMediaId[''];
 
   Object.entries(itemsByMediaId).map(([mediaId, mediaItems]) => {
     const media = mediaById[mediaId];
     if (!media) {
-      mediaItems.forEach(item => item.media = '');
+      mediaItems.forEach((item) => (item.media = ''));
       delete itemsByMediaId[mediaId];
     }
   });
 
   next.deps = sort(Object.keys(itemsByMediaId));
-}
+};
 
 export const updatePlaylist = async (id: string, apply: (next: PlaylistModel) => void) =>
   updateMedia<PlaylistModel>(id, (next) => {

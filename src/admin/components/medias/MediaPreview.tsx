@@ -1,6 +1,6 @@
 import { Css } from '@common/ui';
 import { useMsg } from '@common/hooks';
-import { FileInfo, MediaModel, VideoData, getUrl } from '@common/api';
+import { FileInfo, MediaModel, Thumb, VideoData, getUrl } from '@common/api';
 import { isStrNotEmpty, Msg } from '@common/utils';
 
 const c = Css('MediaPreview', {
@@ -54,8 +54,8 @@ const getVariants = (media?: MediaModel): Variant[] => {
   return results;
 };
 
-const getMediaUrl = (v?: Variant, thumb?: [number, number]) =>
-  (v && getUrl('medias', v.media.id, v.file)) || '';
+const getMediaUrl = (v?: Variant, thumb?: Thumb) =>
+  (v && getUrl('medias', v.media.id, v.file, thumb)) || '';
 
 const mediaOver$ = new Msg('');
 
@@ -73,7 +73,7 @@ export const MediaPreview = ({ media }: { media: MediaModel }) => {
       onMouseOver={() => mediaOver$.set(media.id)}
       onMouseLeave={() => mediaOver$.next((p) => (p === media.id ? '' : p))}
     >
-      <div style={{ backgroundImage: `url("${getMediaUrl(images[0], [300, 300])}")` }}>
+      <div style={{ backgroundImage: `url("${getMediaUrl(images[0], 360)}")` }}>
         {isOver && videos.length ? (
           <video
             controls={false}
