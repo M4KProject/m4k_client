@@ -1,5 +1,5 @@
 import { Css } from '@common/ui';
-import { Page, PageBody, Toolbar } from '@common/components';
+import { Page, PageBody, PageSection, Toolbar } from '@common/components';
 import { MediaTable } from '../components/medias/MediaTable';
 import { NewFolderButton } from '../components/medias/NewFolderButton';
 import { UploadMediaButton } from '../components/medias/UploadMediaButton';

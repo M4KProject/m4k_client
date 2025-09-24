@@ -22,7 +22,7 @@ const c = Css('DialogContainer', {
   Header: {
     fCenter: 1,
     textAlign: 'center',
-    fontWeight: 'bold',
+    bold: 1,
     p: 1,
     bg: 'header',
     fg: 'headerTitle',

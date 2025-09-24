@@ -69,7 +69,7 @@ const c = Css('PairingPage', {
     mb: 1.25,
   },
   Code: {
-    fontWeight: 'bold',
+    bold: 1,
     color: '#28A8D9',
     letterSpacing: '2px', // Espacement réduit pour les clés plus longues
     fontFamily: 'monospace',

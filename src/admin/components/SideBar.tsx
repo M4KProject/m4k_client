@@ -11,7 +11,7 @@ import { MediaIcon } from './medias/MediaIcon';
 const c = Css('SideBar', {
   Version: {
     color: '#0a536f',
-    fontWeight: 'bold',
+    bold: 1,
     borderBottom: '1px solid #0a536f',
     opacity: 0.5,
     p: 0,

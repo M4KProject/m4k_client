@@ -112,7 +112,9 @@ export const MediaRow = ({ m, ctx, tab }: { m: MediaModel; ctx: MediaCtx; tab: n
           />
         </Cell>
       </Row>
-      {isOpen && hasChildren && children.map((child) => <MediaRow key={child.id} m={child} ctx={ctx} tab={tab + 1} />)}
+      {isOpen &&
+        hasChildren &&
+        children.map((child) => <MediaRow key={child.id} m={child} ctx={ctx} tab={tab + 1} />)}
     </>
   );
 };

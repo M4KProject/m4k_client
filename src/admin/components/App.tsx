@@ -26,8 +26,8 @@ const c = Css('App', {
     position: 'fixed',
     overflow: 'auto',
     inset: 0,
-    bg: 'bg',
-    fg: 'fg',
+    bg: 'b2',
+    fg: 't2',
     fontFamily: 'Roboto',
   },
   '-loading': {

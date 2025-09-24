@@ -1,5 +1,5 @@
 import { Css, getColor, refreshTheme, setTheme, theme$ } from '@common/ui';
-import { Page, PageBody, Toolbar, FieldGroup } from '@common/components';
+import { Page, PageBody, Toolbar, FieldGroup, tooltip } from '@common/components';
 import { Button } from '@common/components';
 import { Form } from '@common/components';
 import { Field } from '@common/components';
@@ -9,17 +9,19 @@ import { useState } from 'preact/hooks';
 import { LoadingPage } from './LoadingPage';
 import { isAdvanced$ } from '../messages';
 import { logout, auth$, coll } from '@common/api';
+import { repeat } from '@common/utils';
 
 const c = Css('AccountPage', {
   Color: {
-    wh: 2,
+    h: 1,
+    w: 1,
     bg: 'red',
   },
 });
 
-export const Color = ({ color }: { color: string }) => {
-  return <div class={c('Color')} style={{ background: getColor(color) }} />;
-};
+export const Color = ({ color }: { color: string }) => (
+  <div {...tooltip(color)} class={c('Color')} style={{ background: getColor(color) }} />
+);
 
 export const AccountPage = () => {
   const auth = useMsg(auth$);
@@ -91,15 +93,9 @@ export const AccountPage = () => {
                 refreshTheme();
               }}
             />
-            <Color color={'g90'} />
-            <Color color={'g80'} />
-            <Color color={'g70'} />
-            <Color color={'g60'} />
-            <Color color={'g50'} />
-            <Color color={'g40'} />
-            <Color color={'g30'} />
-            <Color color={'g20'} />
-            <Color color={'g10'} />
+            {[50,100,200,300,400,500,600,700,800,900,'a100','a200','a400','a700'].map((name) => (
+              <Color key={name} color={'g' + name} />
+            ))}
           </FieldGroup>
           <FieldGroup>
             <Field
@@ -112,15 +108,9 @@ export const AccountPage = () => {
                 refreshTheme();
               }}
             />
-            <Color color={'p90'} />
-            <Color color={'p80'} />
-            <Color color={'p70'} />
-            <Color color={'p60'} />
-            <Color color={'p50'} />
-            <Color color={'p40'} />
-            <Color color={'p30'} />
-            <Color color={'p20'} />
-            <Color color={'p10'} />
+            {[50,100,200,300,400,500,600,700,800,900,'a100','a200','a400','a700'].map((name) => (
+              <Color key={name} color={'p' + name} />
+            ))}
           </FieldGroup>
           <FieldGroup>
             <Field
@@ -133,15 +123,9 @@ export const AccountPage = () => {
                 refreshTheme();
               }}
             />
-            <Color color={'s90'} />
-            <Color color={'s80'} />
-            <Color color={'s70'} />
-            <Color color={'s60'} />
-            <Color color={'s50'} />
-            <Color color={'s40'} />
-            <Color color={'s30'} />
-            <Color color={'s20'} />
-            <Color color={'s10'} />
+            {[50,100,200,300,400,500,600,700,800,900,'a100','a200','a400','a700'].map((name) => (
+              <Color key={name} color={'s' + name} />
+            ))}
           </FieldGroup>
           <Field
             label="Ancien mot de passe"

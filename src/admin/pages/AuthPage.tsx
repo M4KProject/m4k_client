@@ -9,8 +9,8 @@ const c = Css('AuthPage', {
     fRow: 'stretch',
     position: 'fixed',
     overflow: 'auto',
-    fg: 'fg',
-    bg: 'side',
+    fg: 't2',
+    bg: 'b2',
     inset: 0,
   },
   Content: {

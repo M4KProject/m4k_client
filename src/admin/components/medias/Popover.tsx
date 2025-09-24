@@ -28,7 +28,6 @@ const c = Css('Popover', {
     opacity: 0,
     transition: 0.2,
     hMax: 0,
-    fontSize: 0.8,
   },
   '-over &Float': {
     xy: '50%',
