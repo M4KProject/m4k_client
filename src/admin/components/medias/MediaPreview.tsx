@@ -10,7 +10,7 @@ const c = Css('MediaPreview', {
     wh: '100%',
     userSelect: 'none',
   },
-  ' div': {
+  'Float': {
     position: 'absolute',
     xy: '50%',
     wh: '100%',
@@ -19,17 +19,31 @@ const c = Css('MediaPreview', {
     transition: 0.2,
     userSelect: 'none',
   },
-  '-over div': {
+  'Float-over': {
     xy: '50%',
     wh: 15,
     zIndex: 1,
     translate: '-50%, -50%',
     rounded: 1,
+    bg: 'bg',
+    bgMode: 'contain',
   },
-  ' video': {
+  'Float video': {
     wh: '100%',
     objectFit: 'contain',
     cursor: 'pointer',
+  },
+  'Float img': {
+    wh: '100%',
+    objectFit: 'contain',
+    cursor: 'pointer',
+  },
+  'Float span': {
+    opacity: 0,
+    transition: 0.2,
+  },
+  'Float-over span': {
+    opacity: 1,
   },
 });
 
@@ -59,13 +73,13 @@ const getMediaUrl = (v?: Variant, thumb?: Thumb) =>
 
 const mediaOver$ = new Msg('');
 
-export const MediaPreview = ({ media }: { media: MediaModel }) => {
+export const MediaPreview = ({ media }: { media?: MediaModel }) => {
   const variants = getVariants(media);
-
   const images = variants.filter((v) => v.type === 'image');
   const videos = variants.filter((v) => v.type === 'video');
-
   const isOver = useMsg(mediaOver$) === media.id;
+
+  if (!media) return null;
 
   return (
     <div
@@ -73,7 +87,7 @@ export const MediaPreview = ({ media }: { media: MediaModel }) => {
       onMouseOver={() => mediaOver$.set(media.id)}
       onMouseLeave={() => mediaOver$.next((p) => (p === media.id ? '' : p))}
     >
-      <div style={{ backgroundImage: `url("${getMediaUrl(images[0], 360)}")` }}>
+      <div class={c('Float', isOver && `Float-over`)}>
         {isOver && videos.length ? (
           <video
             controls={false}
@@ -91,7 +105,10 @@ export const MediaPreview = ({ media }: { media: MediaModel }) => {
               <source key={i} type={v.mime} src={getMediaUrl(v)} />
             ))}
           </video>
-        ) : null}
+        ) : (
+          <img src={getMediaUrl(images[0], 360)} />
+        )}
+        <span>{media.title}</span>
       </div>
     </div>
   );

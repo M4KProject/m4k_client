@@ -1,29 +1,13 @@
 import { Css } from '@common/ui';
-import { byId, firstUpper, groupBy } from '@common/utils';
+import { byId, groupBy } from '@common/utils';
 import { addTr, useMsg } from '@common/hooks';
 import { isAdvanced$, selectedById$ } from '../../messages';
-import { FolderPlus, MapPlus, Upload } from 'lucide-react';
-import { needAuthId, needGroupId, MediaModel, upload } from '@common/api';
-import {
-  tooltip,
-  Button,
-  Table,
-  Row,
-  CellHeader,
-  TableHead,
-  TableBody,
-  Toolbar,
-  UploadButton,
-} from '@common/components';
+import { MediaModel } from '@common/api';
+import { Table, Row, CellHeader, TableHead, TableBody } from '@common/components';
 import { JobsTable } from '../jobs/JobsTable';
-import { SearchField } from '../SearchField';
 import { useGroupQuery } from '@common/hooks/useQuery';
 import { mediaCtrl } from '../../controllers';
 import { MediaCtx, MediaRow } from './MediaRow';
-import { NewFolderButton } from './NewFolderButton';
-import { getNextTitle } from '../../controllers/getNextTitle';
-import { NewPlaylistButton } from './NewPlaylistButton';
-import { UploadMediaButton } from './UploadMediaButton';
 
 addTr({
   pending: 'en attente',
@@ -33,52 +17,7 @@ addTr({
   success: 'succès',
 });
 
-const c = Css('Media', {
-  '-uploading': { fg: 'primary' },
-  '-processing': { fg: 'secondary' },
-  '-failed': { fg: 'error' },
-  '-success': { fg: 'success' },
-
-  Jobs: {
-    position: 'fixed',
-    r: 1,
-    b: 1,
-    w: 40,
-  },
-});
-
-// export const MediasProgress = () => {
-//   const items = Object.values(useMsg(uploadItems$));
-
-//   if (items.length === 0) {
-//     return null;
-//   }
-
-//   return (
-//     <Table>
-//       <TableHead>
-//         <Row>
-//           <CellHeader>Nom</CellHeader>
-//           <CellHeader>Etat</CellHeader>
-//           <CellHeader>Progression</CellHeader>
-//         </Row>
-//       </TableHead>
-//       <TableBody>
-//         {items.map((m) => (
-//           <Row key={m.id}>
-//             <Cell>{m.name}</Cell>
-//             <Cell class={c('-${m.status}')}>
-//               <Tr>{m.status}</Tr>
-//             </Cell>
-//             <Cell>
-//               <Progress progress={m.progress} />
-//             </Cell>
-//           </Row>
-//         ))}
-//       </TableBody>
-//     </Table>
-//   );
-// };
+const c = Css('MediaTable', {});
 
 export const MediaTable = ({ type }: { type?: MediaModel['type'] }) => {
   const medias = useGroupQuery(mediaCtrl);
@@ -101,7 +40,7 @@ export const MediaTable = ({ type }: { type?: MediaModel['type'] }) => {
 
   return (
     <>
-      <Table>
+      <Table class={c()}>
         <TableHead>
           <Row>
             <CellHeader />
@@ -119,7 +58,7 @@ export const MediaTable = ({ type }: { type?: MediaModel['type'] }) => {
           ))}
         </TableBody>
       </Table>
-      <JobsTable class={c('Jobs')} filter={(job) => job.status !== 'finished'} hideEmpty />
+      <JobsTable filter={(job) => job.status !== 'finished'} panel={true} />
     </>
   );
 };

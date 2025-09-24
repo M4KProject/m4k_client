@@ -16,6 +16,7 @@ import {
 import { Plus, Trash2 } from 'lucide-react';
 import { useGroupQuery } from '@common/hooks/useQuery';
 import { mediaCtrl, updatePlaylist } from '@/admin/controllers';
+import { JobsTable } from '../jobs/JobsTable';
 
 const c = Css('EditPlaylist', {
   '': {
@@ -131,6 +132,7 @@ export const EditPlaylist = ({ playlist }: { playlist: PlaylistModel }) => {
           ))}
         </TableBody>
       </Table>
+      <JobsTable filter={(job) => job.status !== 'finished'} panel={true} />
     </div>
   );
 };
