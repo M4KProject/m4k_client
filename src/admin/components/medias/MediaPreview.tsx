@@ -1,7 +1,8 @@
 import { Css } from '@common/ui';
 import { useMsg } from '@common/hooks';
 import { FileInfo, MediaModel, Thumb, VideoData, getUrl } from '@common/api';
-import { isStrNotEmpty, Msg } from '@common/utils';
+import { isStrNotEmpty, Msg, uuid } from '@common/utils';
+import { useMemo, useState } from 'preact/hooks';
 
 const c = Css('MediaPreview', {
   '': {
@@ -12,38 +13,52 @@ const c = Css('MediaPreview', {
   },
   'Float': {
     position: 'absolute',
+    p: 0.2,
     xy: '50%',
     wh: '100%',
     translate: '-50%, -50%',
     bgMode: 'contain',
     transition: 0.2,
     userSelect: 'none',
+    fCol: ['center', 'space-around'],
   },
-  'Float-over': {
+  'Video': {
+    flex: 1,
+    w: '100%',
+    m: 0.2,
+  },
+  'Video video': {
+    wh: '100%',
+    flex: 1,
+    objectFit: 'contain',
+    cursor: 'pointer',
+  },
+  'Image': {
+    flex: 1,
+    w: '100%',
+    m: 0.2,
+    bgMode: 'contain',
+  },
+  'Title': {
+    opacity: 0,
+    transition: 0.2,
+    hMax: 0,
+    fontSize: 0.8,
+  },
+  '-over &Float': {
     xy: '50%',
     wh: 15,
-    zIndex: 1,
+    zIndex: 100,
     translate: '-50%, -50%',
     rounded: 1,
     bg: 'bg',
     bgMode: 'contain',
+    elevation: 2,
   },
-  'Float video': {
-    wh: '100%',
-    objectFit: 'contain',
-    cursor: 'pointer',
-  },
-  'Float img': {
-    wh: '100%',
-    objectFit: 'contain',
-    cursor: 'pointer',
-  },
-  'Float span': {
-    opacity: 0,
-    transition: 0.2,
-  },
-  'Float-over span': {
+  '-over &Title-over': {
     opacity: 1,
+    hMax: 3,
+    m: 0.2,
   },
 });
 
@@ -74,41 +89,46 @@ const getMediaUrl = (v?: Variant, thumb?: Thumb) =>
 const mediaOver$ = new Msg('');
 
 export const MediaPreview = ({ media }: { media?: MediaModel }) => {
+  const overId = useMemo(uuid, []);
   const variants = getVariants(media);
   const images = variants.filter((v) => v.type === 'image');
   const videos = variants.filter((v) => v.type === 'video');
-  const isOver = useMsg(mediaOver$) === media.id;
+  const isOver = useMsg(mediaOver$) === overId;
 
   if (!media) return null;
 
   return (
     <div
       class={c('', isOver && `-over`)}
-      onMouseOver={() => mediaOver$.set(media.id)}
-      onMouseLeave={() => mediaOver$.next((p) => (p === media.id ? '' : p))}
+      onMouseOver={() => mediaOver$.set(overId)}
+      onMouseLeave={() => mediaOver$.next((p) => (p === overId ? '' : p))}
     >
-      <div class={c('Float', isOver && `Float-over`)}>
+      <div class={c('Float')}>
         {isOver && videos.length ? (
-          <video
-            controls={false}
-            muted
-            autoPlay
-            loop
-            onLoadStart={(e) => {
-              e.currentTarget.currentTime = 0;
-            }}
-            onError={(e) => {
-              console.warn('Video preview error:', e);
-            }}
-          >
-            {videos.map((v, i) => (
-              <source key={i} type={v.mime} src={getMediaUrl(v)} />
-            ))}
-          </video>
-        ) : (
-          <img src={getMediaUrl(images[0], 360)} />
-        )}
-        <span>{media.title}</span>
+          <div class={c('Video')}>
+            <video
+              controls={false}
+              muted
+              autoPlay
+              loop
+              onLoadStart={(e) => {
+                e.currentTarget.currentTime = 0;
+              }}
+              onError={(e) => {
+                console.warn('Video preview error:', e);
+              }}
+            >
+              {videos.map((v, i) => (
+                <source key={i} type={v.mime} src={getMediaUrl(v)} />
+              ))}
+            </video>
+          </div>
+        ) : (images.length ? (
+          <div class={c('Image')} style={{
+            backgroundImage: `url('${getMediaUrl(images[0], 360)}')` }}
+          />
+        ) : null)}
+        <span class={c('Title')}>{media.title}</span>
       </div>
     </div>
   );
