@@ -77,7 +77,6 @@ export const Popover = ({ id, children, class: className = '', title }: PopoverP
         el.style.marginTop = '0';
       }
     }
-
   }, [isOver]);
 
   return (

@@ -1,6 +1,12 @@
 import { PlaylistEntry, PlaylistModel } from '@common/api';
 import { Css } from '@common/ui';
-import { addItem, removeIndex, secondsToTimeString, parseToSeconds, deepClone } from '@common/utils';
+import {
+  addItem,
+  removeIndex,
+  secondsToTimeString,
+  parseToSeconds,
+  deepClone,
+} from '@common/utils';
 import {
   Table,
   TableHead,
@@ -52,7 +58,7 @@ export const EditPlaylist = ({ playlist }: { playlist: PlaylistModel }) => {
   const duplicateItem = (index: number) => {
     updatePlaylist(playlist.id, ({ data: { items } }) => {
       const copy = deepClone(items[index]);
-      addItem(items, copy, index+1);
+      addItem(items, copy, index + 1);
     });
   };
 
@@ -122,7 +128,7 @@ export const EditPlaylist = ({ playlist }: { playlist: PlaylistModel }) => {
                 />
               </Cell>
               <Cell>
-                {entry.media && <MediaPreview media={medias.find(m => m.id === entry.media)} />}
+                {entry.media && <MediaPreview media={medias.find((m) => m.id === entry.media)} />}
               </Cell>
               <Cell>
                 <Field
