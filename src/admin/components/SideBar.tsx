@@ -10,10 +10,11 @@ import { MediaIcon } from './medias/MediaIcon';
 
 const c = Css('SideBar', {
   Version: {
-    color: '#0a536f',
+    color: 'p8',
     bold: 1,
-    borderBottom: '1px solid #0a536f',
-    opacity: 0.5,
+    borderBottom: '1px solid',
+    bColor: 'p8'
+,    opacity: 0.5,
     p: 0,
     pl: 0.7,
   },
@@ -85,7 +86,7 @@ export const SideBar = () => {
         </>
       ) : null}
       <SideSep />
-      <div class={c('Version')}>2.0.0</div>
+      <div class={c('Version')}>2.1.0</div>
       <SideButton title="Account" icon={<User />} page="account" onClick={go('account')} />
     </Side>
   );
