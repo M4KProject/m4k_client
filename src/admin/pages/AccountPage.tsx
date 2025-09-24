@@ -93,9 +93,11 @@ export const AccountPage = () => {
                 refreshTheme();
               }}
             />
-            {[50,100,200,300,400,500,600,700,800,900,'a100','a200','a400','a700'].map((name) => (
-              <Color key={name} color={'g' + name} />
-            ))}
+            {[50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 'a100', 'a200', 'a400', 'a700'].map(
+              (name) => (
+                <Color key={name} color={'g' + name} />
+              )
+            )}
           </FieldGroup>
           <FieldGroup>
             <Field
@@ -108,9 +110,11 @@ export const AccountPage = () => {
                 refreshTheme();
               }}
             />
-            {[50,100,200,300,400,500,600,700,800,900,'a100','a200','a400','a700'].map((name) => (
-              <Color key={name} color={'p' + name} />
-            ))}
+            {[50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 'a100', 'a200', 'a400', 'a700'].map(
+              (name) => (
+                <Color key={name} color={'p' + name} />
+              )
+            )}
           </FieldGroup>
           <FieldGroup>
             <Field
@@ -123,9 +127,11 @@ export const AccountPage = () => {
                 refreshTheme();
               }}
             />
-            {[50,100,200,300,400,500,600,700,800,900,'a100','a200','a400','a700'].map((name) => (
-              <Color key={name} color={'s' + name} />
-            ))}
+            {[50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 'a100', 'a200', 'a400', 'a700'].map(
+              (name) => (
+                <Color key={name} color={'s' + name} />
+              )
+            )}
           </FieldGroup>
           <Field
             label="Ancien mot de passe"
