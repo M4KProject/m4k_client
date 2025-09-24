@@ -1,6 +1,6 @@
 import { Dict, isPositive, round } from '@common/utils';
 import { mediaId$, adminPage$, selectedById$ } from '../../messages';
-import { Trash2, FolderInput, PlusSquare, Settings } from 'lucide-react';
+import { Trash2, FolderInput, PlusSquare, Edit } from 'lucide-react';
 import { MediaModel } from '@common/api';
 import { tooltip, Button, Row, Cell, Field } from '@common/components';
 import { SelectedField } from '../SelectedField';
@@ -80,7 +80,7 @@ export const MediaRow = ({ m, ctx, tab }: { m: MediaModel; ctx: MediaCtx; tab: n
           {m.type === 'playlist' && (
             <>
               <Button
-                icon={<Settings />}
+                icon={<Edit />}
                 {...tooltip(`Configurer la playlist`)}
                 onClick={() => {
                   mediaId$.set(m.id);
