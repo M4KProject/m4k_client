@@ -17,6 +17,7 @@ import { Plus, Trash2 } from 'lucide-react';
 import { useGroupQuery } from '@common/hooks/useQuery';
 import { mediaCtrl, updatePlaylist } from '@/admin/controllers';
 import { JobsTable } from '../jobs/JobsTable';
+import { MediaPreview } from './MediaPreview';
 
 const c = Css('EditPlaylist', {
   '': {
@@ -58,6 +59,7 @@ export const EditPlaylist = ({ playlist }: { playlist: PlaylistModel }) => {
             <CellHeader>Heure début</CellHeader>
             <CellHeader>Heure fin</CellHeader>
             <CellHeader>Langue</CellHeader>
+            <CellHeader>Aperçu</CellHeader>
             <CellHeader>Media</CellHeader>
             <CellHeader>Actions</CellHeader>
           </Row>
@@ -111,6 +113,9 @@ export const EditPlaylist = ({ playlist }: { playlist: PlaylistModel }) => {
                   ]}
                   onValue={(language) => updateItem(index, { language })}
                 />
+              </Cell>
+              <Cell>
+                {entry.media && <MediaPreview media={medias.find(m => m.id === entry.media)} />}
               </Cell>
               <Cell>
                 <Field
