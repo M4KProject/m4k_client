@@ -1,6 +1,6 @@
 import { MediaModel, PlaylistModel } from '@common/api';
 import { mediaCtrl } from '../../colls';
-import { deepClone, getChanges, isEmpty, isItem, isList, uniq } from '@common/utils';
+import { by, deepClone, getChanges, groupBy, isEmpty, isItem, isList, sort, uniq } from '@common/utils';
 
 export const updateMedia = async <T extends MediaModel>(id: string, apply: (next: T) => void) => {
   const prev = mediaCtrl.getCache(id);
@@ -15,6 +15,29 @@ export const updateMedia = async <T extends MediaModel>(id: string, apply: (next
   }
 };
 
+const cleanPlaylist = (next: PlaylistModel) => {
+  if (!isItem(next.data)) next.data = {};
+  const data = next.data;
+
+  if (!isList(data.items)) data.items = [];
+  data.items = data.items.filter(isItem);
+  const items = data.items;
+
+  const mediaById = mediaCtrl.cache.v;
+  const itemsByMediaId = groupBy(items, item => item.media||'');
+  delete itemsByMediaId[''];
+
+  Object.entries(itemsByMediaId).map(([mediaId, mediaItems]) => {
+    const media = mediaById[mediaId];
+    if (!media) {
+      mediaItems.forEach(item => item.media = '');
+      delete itemsByMediaId[mediaId];
+    }
+  });
+
+  next.deps = sort(Object.keys(itemsByMediaId));
+}
+
 export const updatePlaylist = async (id: string, apply: (next: PlaylistModel) => void) =>
   updateMedia<PlaylistModel>(id, (next) => {
     if (next.type !== 'playlist') {
@@ -22,12 +45,9 @@ export const updatePlaylist = async (id: string, apply: (next: PlaylistModel) =>
       return;
     }
 
-    const data = next.data;
+    cleanPlaylist(next);
 
-    if (!isList(data.items)) data.items = [];
-    data.items = data.items.filter(isItem);
+    apply(next);
 
-    apply(next as PlaylistModel);
-
-    next.deps = uniq(next.data.items.map((i) => i.media));
+    cleanPlaylist(next);
   });
