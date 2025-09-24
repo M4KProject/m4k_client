@@ -104,7 +104,7 @@ export const EditPlaylist = ({ playlist }: { playlist: PlaylistModel }) => {
               <Cell>
                 <Field
                   type="select"
-                  value={entry.language || ''}
+                  value={entry.language || 'fr'}
                   items={[
                     ['fr', <Flag iso="fr" />],
                     ['en', <Flag iso="en" />],
