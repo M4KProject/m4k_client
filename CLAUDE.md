@@ -20,6 +20,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Important:** Always run both linting and type checking after significant changes to ensure code quality.
 
+### Build Modes
+
+This application has a unique dual build system:
+
+- **PWA Mode** (default): Full Progressive Web App with service worker, caching, and installability
+- **APK Mode** (`pnpm build:apk`): Single-file HTML build optimized for Android APK packaging
+  - Uses `vite-plugin-singlefile` to bundle everything into one HTML file
+  - Disables PWA features for compatibility with APK environments
+  - Includes bundle analysis tools for optimization
+
 ## Architecture Overview
 
 This is a multi-interface content management system with three main applications: admin interface, device interface, and content viewer. Built with Preact and TypeScript.
@@ -131,19 +141,89 @@ message$.set(newValue); // Update from anywhere
 
 ### CSS-in-JS Pattern
 
-Components use the `useCss` hook with `Css` objects:
+This codebase uses a custom CSS-in-JS system with powerful utility functions:
 
 ```typescript
-const c = Css('', {
-  '': { /* component root styles */ },
-  'Container': { /* nested element styles */ },
-  'Title': { /* title styles */ }
-};
+const css = Css('ComponentName', {
+  '': { 
+    fCol: 1,           // display: flex; flex-direction: column
+    p: 2,              // padding: 2em
+    bg: 'primary'      // background-color: var(--primary-color)
+  },
+  'Container': { 
+    fRow: ['center', 'space-between'], // flex-row with alignment
+    w: 20,             // width: 20em
+    elevation: 2       // box-shadow with depth
+  }
+});
 
 const Component = () => {
   const c = useCss('ComponentName', css);
-  return <div  class={c()}>Content</div>;
+  return (
+    <div class={c()}>           {/* Root component class */}
+      <div class={c('Container')}>Content</div>  {/* Nested element */}
+    </div>
+  );
 };
+```
+
+#### Available CSS Utility Functions
+
+**Layout & Positioning:**
+- `x`, `y`, `xy` - left/top positioning (em units)
+- `l`, `t`, `r`, `b` - individual sides (em units) 
+- `inset` - all sides positioning
+- `w`, `h`, `wh` - width/height (em units)
+- `wMax`, `hMax`, `whMax` - max dimensions
+- `wMin`, `hMin`, `whMin` - min dimensions
+
+**Flexbox:**
+- `fRow: 1 | [] | [align] | [align, justify]` - flex-direction: row
+- `fCol: 1 | [] | [align] | [align, justify]` - flex-direction: column  
+- `fCenter: 1 | [] | [direction]` - centered flex container
+
+**Spacing:**
+- `m`, `mt`, `mb`, `ml`, `mr`, `mx`, `my` - margins (em units)
+- `p`, `pt`, `pb`, `pl`, `pr`, `px`, `py` - padding (em units)
+
+**Visual:**
+- `bg: 'colorKey'` - background color from theme
+- `fg: 'colorKey'` - text color from theme
+- `elevation: number` - box-shadow with depth (0-10)
+- `rounded: number` - border-radius (multiplied by 0.2em)
+- `fontSize: number` - font size (em units)
+- `bold: 1 | 0` - font-weight: bold
+
+**Transforms & Animation:**
+- `rotate`, `scale`, `scaleX`, `scaleY`, `translate`, `translateX`, `translateY`
+- `transition: number | string | boolean` - CSS transitions
+- `anim: AnimValue` - CSS animations with keyframes
+
+**Background & Images:**
+- `bgUrl: 'url'` - background-image
+- `bgMode: 'contain' | 'cover' | 'fill'` - background sizing
+- `itemFit: 'contain' | 'cover' | 'fill'` - object-fit for images/videos
+
+#### Usage Examples:
+
+```typescript
+// Simple flex layout
+const css = Css('MyComponent', {
+  '': { fCol: 1, p: 2, bg: 'background' },
+  'Header': { fRow: ['center', 'space-between'], pb: 1 },
+  'Content': { fCol: ['stretch'], flex: 1 }
+});
+
+// Responsive sizing with elevation
+const cardCss = Css('Card', {
+  '': { 
+    w: [20, 30],           // responsive width
+    elevation: 2,          // shadow depth
+    rounded: 3,            // border radius
+    p: [1, 2],            // responsive padding
+    transition: 0.2        // smooth transitions
+  }
+});
 ```
 
 ## PWA Configuration
@@ -284,3 +364,28 @@ export interface MyContentModel extends ContentModel {
 - **API errors**: Use `.catch(showError)` for user-friendly error display
 - **Form validation**: Integrated with `Field` component validation system
 - **Network resilience**: Automatic retry logic and offline queue management
+
+## Important Development Guidelines
+
+**Code Changes:**
+- Do what has been asked; nothing more, nothing less
+- NEVER create files unless absolutely necessary for achieving your goal
+- ALWAYS prefer editing existing files to creating new ones
+- NEVER proactively create documentation files (*.md) or README files unless explicitly requested
+
+**Code Quality:**
+- NEVER add comments unless specifically asked
+- Always run linting and type checking after significant changes
+- Follow existing code conventions and patterns in the codebase
+- Use TypeScript types consistently throughout the codebase
+
+**Component Patterns:**
+- Use `useCss('ComponentName', css)` hook for styling with `Css` objects
+- Follow the established message-based reactive state management pattern
+- Prefer `preact/hooks` imports over React equivalents due to compatibility layer
+- Use `class` prop instead of `className` for Preact compatibility
+
+**Utility Functions:**
+- The codebase uses custom utility functions in `common/utils/` 
+- List manipulation functions like `addItem`, `removeIndex`, `moveIndex`, `setItemIndex` support circular indexing
+- Use `normalizeIndex` for safe array index calculations with negative values and overflow handling
