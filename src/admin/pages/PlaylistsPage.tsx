@@ -1,5 +1,6 @@
 import { Css } from '@common/ui';
 import { BackButton, Button, Page, PageBody, Toolbar } from '@common/components';
+import { Play } from 'lucide-react';
 import { MediaTable } from '../components/medias/MediaTable';
 import { useMsg, useQueryOne } from '@common/hooks';
 import { mediaId$ } from '../messages';
@@ -23,6 +24,13 @@ export const PlaylistsPage = () => {
       <Page class={c('Page')}>
         <Toolbar title="Playlists">
           <BackButton onClick={() => mediaId$.set('')} />
+          <Button
+            icon={<Play />}
+            title="Afficher le media"
+            onClick={() => {
+              // TODO: Implémenter l'affichage du media
+            }}
+          />
           <AddPlaylistItemButton playlist={playlist} />
           <UploadMediaButton parent={playlist.id} />
           <SearchField />
