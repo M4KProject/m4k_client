@@ -65,7 +65,7 @@ export const GroupsPage = () => {
                   <Field
                     name={'C' + i}
                     type="switch"
-                    value={group?.id === g.id}
+                    value={g.key === groupKey || g.id === groupKey}
                     onValue={(v) => setGroupKey(v ? g.key : '')}
                   />
                 </Cell>

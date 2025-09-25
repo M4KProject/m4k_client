@@ -7,7 +7,7 @@ export type Page = '' | 'account' | 'groups' | 'members' | 'devices' | 'medias' 
 
 export interface Route {
   page?: Page;
-  edit?: boolean;
+  isEdit?: boolean;
   isAdmin?: boolean;
   isAdvanced?: boolean;
   mediaType?: '' | 'folder' | 'playlist' | 'pdf' | 'image' | 'video' | 'unknown';
@@ -17,10 +17,12 @@ export interface Route {
 }
 
 const route$ = new Msg<Route>({}, 'route$', true);
+console.debug('init route', route$.v);
+route$.on((route) => console.debug('on route', route));
 
 const cleanRoute = (route: Route): Route => ({
   page: toStr(route.page) as Page,
-  edit: toBool(route.edit),
+  isEdit: toBool(route.isEdit),
   isAdmin: toBool(route.isAdmin),
   isAdvanced: toBool(route.isAdvanced),
   mediaType: toStr(route.mediaType) as MediaType,
@@ -32,7 +34,7 @@ const cleanRoute = (route: Route): Route => ({
 const routeDebounced$ = route$.debounce(50);
 
 export const page$ = routeDebounced$.map((r) => r.page);
-export const edit$ = routeDebounced$.map((r) => r.edit);
+export const isEdit$ = routeDebounced$.map((r) => r.isEdit);
 export const isAdmin$ = routeDebounced$.map((r) => r.isAdmin);
 export const isAdvanced$ = routeDebounced$.map((r) => r.isAdvanced);
 export const mediaType$ = routeDebounced$.map((r) => r.mediaType);
@@ -43,7 +45,7 @@ export const deviceKey$ = routeDebounced$.map((r) => r.deviceKey);
 export const useRoute = () => useMsg(routeDebounced$);
 
 export const usePage = () => useMsg(page$);
-export const useEdit = () => useMsg(edit$);
+export const useIsEdit = () => useMsg(isEdit$);
 export const useIsAdmin = () => useMsg(isAdmin$);
 export const useIsAdvanced = () => useMsg(isAdvanced$);
 export const useMediaType = () => useMsg(mediaType$);
@@ -52,7 +54,7 @@ export const useGroupKey = () => useMsg(groupKey$);
 export const useDeviceKey = () => useMsg(deviceKey$);
 
 export const getRoute = () => route$.v;
-export const setRoute = (route: Route) => {
+const setRoute = (route: Route) => {
   const prev = getRoute();
   const next = cleanRoute(route);
   if (!isEq(prev, next)) route$.set(next);
@@ -65,7 +67,7 @@ const propGetter =
     getRoute()[prop];
 
 export const getPage = propGetter('page');
-export const getEdit = propGetter('edit');
+export const getIsEdit = propGetter('isEdit');
 export const getIsAdmin = propGetter('isAdmin');
 export const getIsAdvanced = propGetter('isAdvanced');
 export const getMediaType = propGetter('mediaType');
@@ -79,7 +81,7 @@ const propSetter =
     updateRoute({ [prop]: value });
 
 export const setPage = propSetter('page');
-export const setEdit = propSetter('edit');
+export const setIsEdit = propSetter('isEdit');
 export const setIsAdmin = propSetter('isAdmin');
 export const setIsAdvanced = propSetter('isAdvanced');
 export const setMediaType = propSetter('mediaType');
@@ -87,10 +89,8 @@ export const setMediaKey = propSetter('mediaKey');
 export const setGroupKey = propSetter('groupKey');
 export const setDeviceKey = propSetter('deviceKey');
 
-const q = getUrlQuery();
-updateRoute({
-  ...q,
-  mediaKey: q.mediaKey || q.media,
-  groupKey: q.groupKey || q.group,
-  deviceKey: q.deviceKey || q.device,
-});
+const q = { ...getUrlQuery() };
+if (q.media) q.mediaKey = q.media;
+if (q.group) q.groupKey = q.group;
+if (q.device) q.deviceKey = q.device;
+updateRoute(q as Partial<Route>);

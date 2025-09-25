@@ -23,14 +23,6 @@ export const PlaylistsPage = () => {
     return (
       <Page class={c('Page')}>
         <Toolbar title="Playlists">
-          <BackButton onClick={() => setMediaKey('')} />
-          <Button
-            icon={<Play />}
-            title="Afficher le media"
-            onClick={() => {
-              // TODO: Implémenter l'affichage du media
-            }}
-          />
           <AddPlaylistItemButton playlist={playlist} />
           <UploadMediaButton parent={playlist.id} />
           <SearchField />

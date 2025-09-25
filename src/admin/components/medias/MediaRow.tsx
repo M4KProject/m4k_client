@@ -7,7 +7,7 @@ import { MediaPreview } from './MediaPreview';
 import { mediaCtrl, updatePlaylist } from '../../controllers';
 import { useState } from 'preact/hooks';
 import { MediaIcon } from './MediaIcon';
-import { setRoute } from '@/admin/controllers/router';
+import { updateRoute } from '@/admin/controllers/router';
 import { selectedById$ } from '@/admin/controllers/selected';
 
 export interface MediaCtx {
@@ -78,10 +78,11 @@ export const MediaRow = ({ m, ctx, tab }: { m: MediaModel; ctx: MediaCtx; tab: n
                 icon={<Edit />}
                 {...tooltip(`Configurer la playlist`)}
                 onClick={() => {
-                  setRoute({
+                  updateRoute({
                     page: 'medias',
                     mediaType: 'playlist',
                     mediaKey: m.key,
+                    isEdit: true,
                   });
                 }}
               />

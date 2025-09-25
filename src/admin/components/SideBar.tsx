@@ -8,7 +8,6 @@ import {
   Page,
   setGroupKey,
   setPage,
-  setRoute,
   updateRoute,
   useGroupKey,
   useIsAdvanced,
