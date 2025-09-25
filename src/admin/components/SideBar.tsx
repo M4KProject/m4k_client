@@ -16,7 +16,7 @@ const c = Css('SideBar', {
     bColor: 'p8',
     opacity: 0.5,
     p: 0,
-    pl: 0.7,
+    pl: 0.4,
   },
 });
 
