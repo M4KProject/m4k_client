@@ -73,22 +73,24 @@ const AppContent = () => {
     }
   }, [device]);
 
+  const go = (page: PageName) => () => page$.set(page);
+
   return (
     <div class={c()}>
       {page !== 'kiosk' && page !== 'codePin' && page !== 'pairing' && (
-        <Side page$={page$}>
+        <Side>
           <SideSep />
-          <SideButton icon={<MonitorSpeaker />} page="kiosk" title="Kiosk" />
-          <SideButton icon={<Wrench />} page="actions" title="Actions" />
+          <SideButton curr={page} icon={<MonitorSpeaker />} page="kiosk" title="Kiosk" onClick={go('kiosk')} />
+          <SideButton curr={page} icon={<Wrench />} page="actions" title="Actions" onClick={go('actions')} />
           {/* <SideButton icon={<KeyRound />} page="password" title="Mot de passe" /> */}
-          <SideButton icon={<List />} page="playlist" title="Playlist" />
-          <SideButton icon={<Settings />} page="configPlaylist" title="Config" />
-          <SideButton icon={<Globe />} page="site" title="Site Web" />
+          <SideButton curr={page} icon={<List />} page="playlist" title="Playlist" onClick={go('playlist')} />
+          <SideButton curr={page} icon={<Settings />} page="configPlaylist" title="Config" onClick={go('configPlaylist')} />
+          <SideButton curr={page} icon={<Globe />} page="site" title="Site Web" onClick={go('site')} />
           {/* <SideButton icon={<MdWifi />} page="wifi" title="Wifi" /> */}
           <SideSep />
-          <SideButton icon={<Bug />} page="test" title="Test" />
+          <SideButton curr={page} icon={<Bug />} page="test" title="Test" onClick={go('test')} />
           {/* <SideButton icon={<MdListAlt />} page="logs" title="Logs" /> */}
-          <SideButton icon={<Calendar />} page="events" title="Events" />
+          <SideButton curr={page} icon={<Calendar />} page="events" title="Events" onClick={go('events')} />
           <SideSep />
           {/* <SideButton icon={<User />} page="account" title="Mon Compte" /> */}
           {/* <SideSep style={{ fontSize: 0.7, opacity: 0.5 }}>2.0.0</SideSep> */}

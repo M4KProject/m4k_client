@@ -1,5 +1,4 @@
 import { Dict, isPositive, round } from '@common/utils';
-import { mediaId$, adminPage$, selectedById$ } from '../../messages';
 import { Trash2, FolderInput, PlusSquare, Edit } from 'lucide-react';
 import { MediaModel } from '@common/api';
 import { tooltip, Button, Row, Cell, Field } from '@common/components';
@@ -8,6 +7,8 @@ import { MediaPreview } from './MediaPreview';
 import { mediaCtrl, updatePlaylist } from '../../controllers';
 import { useState } from 'preact/hooks';
 import { MediaIcon } from './MediaIcon';
+import { setRoute } from '@/admin/controllers/router';
+import { selectedById$ } from '@/admin/controllers/selected';
 
 export interface MediaCtx {
   mediaById: Dict<MediaModel>;
@@ -77,8 +78,11 @@ export const MediaRow = ({ m, ctx, tab }: { m: MediaModel; ctx: MediaCtx; tab: n
                 icon={<Edit />}
                 {...tooltip(`Configurer la playlist`)}
                 onClick={() => {
-                  mediaId$.set(m.id);
-                  adminPage$.set('playlists');
+                  setRoute({
+                    page: 'medias',
+                    mediaType: 'playlist',
+                    mediaKey: m.key,
+                  });
                 }}
               />
               {selectedIds.length > 0 && (

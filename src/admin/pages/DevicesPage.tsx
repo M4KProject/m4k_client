@@ -19,12 +19,12 @@ import {
   RowHead,
 } from '@common/components';
 import { RefreshCw, Trash2, Settings, Plus, Power } from 'lucide-react';
-import { adminPage$, device$, isAdvanced$ } from '../messages';
 import { useState } from 'preact/hooks';
 import { apiGet, serverTime, DeviceModel, groupId$ } from '@common/api';
 import { SearchField } from '../components/SearchField';
-import { useGroupQuery } from '@common/hooks/useQuery';
 import { deviceCtrl, mediaCtrl } from '../controllers';
+import { useGroupItems } from '../controllers/useItem';
+import { setDeviceKey, setPage, useIsAdvanced } from '../controllers/router';
 
 const c = Css('DevicesPage', {});
 
@@ -56,10 +56,9 @@ export const PairingForm = ({ onClose }: { onClose: () => void }) => {
 };
 
 export const DevicesPage = () => {
-  const isAdvanced = useMsg(isAdvanced$);
-
-  const medias = useGroupQuery(mediaCtrl);
-  const devices = useGroupQuery(deviceCtrl);
+  const isAdvanced = useIsAdvanced();
+  const medias = useGroupItems(mediaCtrl);
+  const devices = useGroupItems(deviceCtrl);
 
   // search ? devices.filter((d) => isSearched(d.name, search)) : devices;
 
@@ -72,8 +71,8 @@ export const DevicesPage = () => {
   };
 
   const handleRemote = (device: DeviceModel) => {
-    device$.set(device);
-    adminPage$.set('device');
+    setDeviceKey(device.key||device.id);
+    setPage('devices');
   };
 
   // const handleAddAsMember = async (device: DeviceModel) => {

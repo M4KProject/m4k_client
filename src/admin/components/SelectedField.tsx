@@ -1,6 +1,6 @@
 import { useMsgItem } from '@common/hooks/useMsg';
-import { selectedById$ } from '../messages';
 import { Field } from '@common/components';
+import { selectedById$ } from '../controllers/selected';
 
 export const SelectedField = ({ id }: { id: string }) => {
   const [selected, setSelected] = useMsgItem(selectedById$, id);

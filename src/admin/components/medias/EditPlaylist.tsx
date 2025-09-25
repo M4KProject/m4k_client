@@ -22,10 +22,10 @@ import {
   RowHead,
 } from '@common/components';
 import { Plus, Trash2, Copy, ArrowUp, ArrowDown } from 'lucide-react';
-import { useGroupQuery } from '@common/hooks/useQuery';
 import { mediaCtrl, updatePlaylist } from '@/admin/controllers';
 import { JobsTable } from '../jobs/JobsTable';
 import { MediaPreview } from './MediaPreview';
+import { useGroupItems } from '@/admin/controllers/useItem';
 
 const c = Css('EditPlaylist', {
   '': {
@@ -43,7 +43,7 @@ export const AddPlaylistItemButton = ({ playlist }: { playlist: PlaylistModel })
 };
 
 export const EditPlaylist = ({ playlist }: { playlist: PlaylistModel }) => {
-  const medias = useGroupQuery(mediaCtrl);
+  const medias = useGroupItems(mediaCtrl);
 
   const updateItem = (index: number, changes: Partial<PlaylistEntry>) => {
     updatePlaylist(playlist.id, ({ data }) => {

@@ -6,19 +6,19 @@ import { JSX } from 'preact';
 import { LoadingPage } from '../pages/LoadingPage';
 import { GroupsPage } from '../pages/GroupsPage';
 import { MembersPage } from '../pages/MembersPage';
-import { ContentsPage } from '../pages/ContentsPage';
+import { ContentsPage } from '../../../tmp/ContentsPage';
 import { MediasPage } from '../pages/MediasPage';
 import { JobsPage } from '../pages/JobsPage';
 import { DevicesPage } from '../pages/DevicesPage';
 import { AuthPage } from '../pages/AuthPage';
 import { AccountPage } from '../pages/AccountPage';
-import { ContentPage } from '../pages/ContentPage';
+import { ContentPage } from '../../../tmp/ContentPage';
 import { auth$ } from '@common/api';
 import { DevicePage } from '../pages/DevicePage';
-import { AdminPage, useAdminPage } from '../messages/adminPage$';
 import { PlaylistsPage } from '../pages/PlaylistsPage';
 import { ImagesPage } from '../pages/ImagesPage';
 import { VideosPage } from '../pages/VideosPage';
+import { Page, usePage } from '../controllers/router';
 
 const c = Css('App', {
   '': {
@@ -35,25 +35,25 @@ const c = Css('App', {
   },
 });
 
-const CompByPage: Record<AdminPage, () => JSX.Element> = {
+const CompByPage: Record<Page, () => JSX.Element> = {
   '': GroupsPage,
   groups: GroupsPage,
   members: MembersPage,
-  contents: ContentsPage,
   medias: MediasPage,
-  playlists: PlaylistsPage,
-  videos: VideosPage,
-  images: ImagesPage,
   jobs: JobsPage,
   devices: DevicesPage,
-  device: DevicePage,
   account: AccountPage,
-  content: ContentPage,
+  // contents: ContentsPage,
+  // playlists: PlaylistsPage,
+  // videos: VideosPage,
+  // images: ImagesPage,
+  // device: DevicePage,
+  // content: ContentPage,
 };
 
 const AppRouter = () => {
-  const adminPage = useAdminPage();
-  const Page = CompByPage[adminPage] || LoadingPage;
+  const page = usePage();
+  const Page = CompByPage[page] || GroupsPage;
   return <Page />;
 };
 

@@ -1,6 +1,5 @@
 import { Css } from '@common/ui';
 import { toNbr, toStr } from '@common/utils';
-import { useGroupQuery } from '@common/hooks';
 import {
   Field,
   Button,
@@ -15,11 +14,12 @@ import {
 } from '@common/components';
 import { Trash2 } from 'lucide-react';
 import { memberCtrl } from '../controllers';
+import { useGroupItems } from '../controllers/useItem';
 
 const c = Css('MemberTable', {});
 
 export const MemberTable = () => {
-  const members = useGroupQuery(memberCtrl);
+  const members = useGroupItems(memberCtrl);
 
   return (
     <Table class={c()}>

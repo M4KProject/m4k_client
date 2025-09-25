@@ -3,7 +3,7 @@ import { useMsg } from '@common/hooks';
 import { Search } from 'lucide-react';
 import { Css } from '@common/ui';
 import { Button } from '@common/components';
-import { search$ } from '../messages/search$';
+import { search$ } from '../controllers/search';
 import { Msg } from '@common/utils';
 
 const c = Css('SearchField', {

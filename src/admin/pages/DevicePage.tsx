@@ -6,7 +6,7 @@ import { DeviceScreen } from '../components/devices/DeviceScreen';
 import { DeviceConsole } from '../components/devices/DeviceConsole';
 import { getUrl } from '@common/api';
 import { stringify } from '@common/utils';
-import { useDevice } from '../messages/device$';
+import { useDevice } from '../controllers/device';
 import { deviceCtrl } from '../controllers';
 
 const c = Css('DevicePage', {

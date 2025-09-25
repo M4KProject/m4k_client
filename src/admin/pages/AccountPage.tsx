@@ -7,9 +7,9 @@ import { useMsg } from '@common/hooks';
 import { LogOut, KeyRound } from 'lucide-react';
 import { useState } from 'preact/hooks';
 import { LoadingPage } from './LoadingPage';
-import { isAdvanced$ } from '../messages';
 import { logout, auth$, coll } from '@common/api';
 import { repeat } from '@common/utils';
+import { setIsAdvanced, useIsAdvanced } from '../controllers/router';
 
 const c = Css('AccountPage', {
   Color: {
@@ -28,7 +28,7 @@ export const AccountPage = () => {
   const [passwordError, setPasswordError] = useState('');
   const [password, setPassword] = useState('');
   const [oldPassword, setOldPassword] = useState('');
-  const isAdvanced = useMsg(isAdvanced$);
+  const isAdvanced = useIsAdvanced();
   const theme = useMsg(theme$);
 
   if (!auth) return <LoadingPage />;
@@ -68,9 +68,8 @@ export const AccountPage = () => {
             type="switch"
             label="Mode avancé"
             name="advanced"
-            msg={isAdvanced$}
             value={isAdvanced}
-            onValue={isAdvanced$.setter()}
+            onValue={setIsAdvanced}
           />
           <Field
             type="switch"

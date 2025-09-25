@@ -1,9 +1,9 @@
-import { collSync } from '@common/api';
+import { sync } from '@common/api';
 
-export const contentCtrl = collSync('contents');
-export const deviceCtrl = collSync('devices');
-export const groupCtrl = collSync('groups');
-export const jobCtrl = collSync('jobs');
-export const mediaCtrl = collSync('medias');
-export const memberCtrl = collSync('members');
-export const userCtrl = collSync('users');
+export const contentCtrl = sync('contents');
+export const deviceCtrl = sync('devices');
+export const groupCtrl = sync('groups');
+export const jobCtrl = sync('jobs');
+export const mediaCtrl = sync('medias');
+export const memberCtrl = sync('members');
+export const userCtrl = sync('users');

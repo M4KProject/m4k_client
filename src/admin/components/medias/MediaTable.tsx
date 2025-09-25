@@ -1,13 +1,14 @@
 import { Css } from '@common/ui';
 import { byId, groupBy } from '@common/utils';
 import { addTr, useMsg } from '@common/hooks';
-import { isAdvanced$, selectedById$ } from '../../messages';
 import { MediaModel } from '@common/api';
-import { Table, Row, CellHead, TableHead, TableBody, RowHead } from '@common/components';
+import { Table, CellHead, TableHead, TableBody, RowHead } from '@common/components';
 import { JobsTable } from '../jobs/JobsTable';
-import { useGroupQuery } from '@common/hooks/useQuery';
 import { mediaCtrl } from '../../controllers';
 import { MediaCtx, MediaRow } from './MediaRow';
+import { useIsAdvanced } from '@/admin/controllers/router';
+import { selectedById$ } from '@/admin/controllers/selected';
+import { useGroupItems } from '@/admin/controllers/useItem';
 
 addTr({
   pending: 'en attente',
@@ -20,8 +21,8 @@ addTr({
 const c = Css('MediaTable', {});
 
 export const MediaTable = ({ type }: { type?: MediaModel['type'] }) => {
-  const medias = useGroupQuery(mediaCtrl);
-  const isAdvanced = useMsg(isAdvanced$);
+  const medias = useGroupItems(mediaCtrl);
+  const isAdvanced = useIsAdvanced();
   const allSelectedById = useMsg(selectedById$);
   const mediaById = byId(medias);
   const mediasByParent = groupBy(medias, (m) => mediaById[m.parent]?.id || '');

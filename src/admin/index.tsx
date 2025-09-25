@@ -3,14 +3,14 @@ import { App } from './components/App';
 import { addFont, refreshTheme, addEl, addResponsiveListener, setCss } from '@common/ui';
 import { apiError$, authRefresh } from '@common/api';
 import { app } from '../app';
-import * as messages from './messages';
+import * as controllers from './controllers';
 import { showError } from '@common/components';
 
 console.debug('loaded');
 
 let _rootEl: HTMLElement | null = null;
 
-Object.assign(app, messages);
+Object.assign(app, controllers);
 
 export const mount = () => {
   console.debug('admin mount');

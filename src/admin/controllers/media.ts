@@ -3,7 +3,7 @@ import { mediaCtrl } from '../../colls';
 import { deepClone, getChanges, groupBy, isEmpty, isItem, isList, sort, uniq } from '@common/utils';
 
 export const updateMedia = async <T extends MediaModel>(id: string, apply: (next: T) => void) => {
-  const prev = mediaCtrl.getCache(id);
+  const prev = mediaCtrl.get(id);
   if (!prev) return;
   const next = deepClone(prev);
   if (!isItem(next.data)) next.data = {};
@@ -23,7 +23,7 @@ const cleanPlaylist = (next: PlaylistModel) => {
   data.items = data.items.filter(isItem);
   const items = data.items;
 
-  const mediaById = mediaCtrl.cache.v;
+  const mediaById = mediaCtrl.byId();
   const itemsByMediaId = groupBy(items, (item) => item.media || '');
   delete itemsByMediaId[''];
 

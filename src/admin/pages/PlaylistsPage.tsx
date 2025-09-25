@@ -2,28 +2,28 @@ import { Css } from '@common/ui';
 import { BackButton, Button, Page, PageBody, Toolbar } from '@common/components';
 import { Play } from 'lucide-react';
 import { MediaTable } from '../components/medias/MediaTable';
-import { useMsg, useQueryOne } from '@common/hooks';
-import { mediaId$ } from '../messages';
 import { mediaCtrl } from '@/colls';
 import { NewPlaylistButton } from '../components/medias/NewPlaylistButton';
 import { UploadMediaButton } from '../components/medias/UploadMediaButton';
 import { SearchField } from '../components/SearchField';
 import { PlaylistModel } from '@common/api';
 import { AddPlaylistItemButton, EditPlaylist } from '../components/medias/EditPlaylist';
+import { setMediaKey, useMediaKey } from '../controllers/router';
+import { useItemKey } from '../controllers/useItem';
 
 const c = Css('PlaylistsPage', {});
 
 export const PlaylistsPage = () => {
-  const id = useMsg(mediaId$);
-  const playlist = useQueryOne(mediaCtrl, id) as PlaylistModel;
+  const mediaKey = useMediaKey();
+  const playlist = useItemKey(mediaCtrl, mediaKey) as PlaylistModel;
 
-  console.debug('PlaylistsPage', id, playlist);
+  console.debug('PlaylistsPage', mediaKey, playlist);
 
   if (playlist && playlist.type === 'playlist') {
     return (
       <Page class={c('Page')}>
         <Toolbar title="Playlists">
-          <BackButton onClick={() => mediaId$.set('')} />
+          <BackButton onClick={() => setMediaKey('')} />
           <Button
             icon={<Play />}
             title="Afficher le media"

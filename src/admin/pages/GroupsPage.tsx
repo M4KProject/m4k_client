@@ -17,18 +17,19 @@ import {
 } from '@common/components';
 import { Css } from '@common/ui';
 import { SearchField } from '../components/SearchField';
-import { group$, isAdvanced$, useGroup } from '../messages';
 import { Role, auth$ } from '@common/api';
-import { useQuery } from '@common/hooks/useQuery';
 import { groupCtrl, memberCtrl } from '../controllers';
+import { setGroupKey, useGroupKey, useIsAdvanced } from '../controllers/router';
+import { useItem, useItems } from '../controllers/useItem';
 
 const c = Css('GroupsPage', {});
 
 export const GroupsPage = () => {
   const auth = useMsg(auth$);
-  const group = useGroup();
-  const isAdvanced = useMsg(isAdvanced$);
-  const groups = useQuery(groupCtrl);
+  const groupKey = useGroupKey();
+  const group = useItem(groupCtrl, groupKey);
+  const isAdvanced = useIsAdvanced();
+  const groups = useItems(groupCtrl);
 
   const handleAdd = async () => {
     if (!auth) return;
@@ -65,7 +66,7 @@ export const GroupsPage = () => {
                     name={'C' + i}
                     type="switch"
                     value={group?.id === g.id}
-                    onValue={(v) => group$.set(v ? g : null)}
+                    onValue={(v) => setGroupKey(v ? g.key : '')}
                   />
                 </Cell>
                 {isAdvanced && (

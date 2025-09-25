@@ -19,5 +19,5 @@
       "@common/*": ["./common/*"]
     }
   },
-  "include": ["node_modules/vite/client.d", "vite.config", "common/**/*", "src/**/*"]
+  "include": ["node_modules/vite/client.d", "vite.config", "common/**/*", "src/**/*", "tmp/ContentPage.tsx", "tmp/ContentsPage.tsx"]
 }

@@ -1,7 +1,7 @@
 import { mediaCtrl } from '@/colls';
 
 export const getNextTitle = (start: string) => {
-  const medias = mediaCtrl.findCache();
+  const medias = mediaCtrl.filter();
   let i = 1;
   let title = start;
   while (true) {
