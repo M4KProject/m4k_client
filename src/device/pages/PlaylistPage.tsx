@@ -1,7 +1,7 @@
 import {
   Button,
   Cell,
-  CellHeader,
+  CellHead,
   Field,
   Page,
   PageBody,
@@ -11,6 +11,7 @@ import {
   TableBody,
   TableHead,
   tooltip,
+  RowHead,
 } from '@common/components';
 import { Css } from '@common/ui';
 import { round } from '@common/utils';
@@ -148,15 +149,15 @@ export const PlaylistPage = () => {
       <PageBody>
         <Table>
           <TableHead>
-            <Row>
-              <CellHeader>Type</CellHeader>
-              <CellHeader>Aperçu</CellHeader>
-              <CellHeader>Nom du fichier</CellHeader>
-              <CellHeader>Taille</CellHeader>
-              <CellHeader>Format</CellHeader>
-              <CellHeader>Durée (s)</CellHeader>
-              <CellHeader>Actions</CellHeader>
-            </Row>
+            <RowHead>
+              <CellHead>Type</CellHead>
+              <CellHead>Aperçu</CellHead>
+              <CellHead>Nom du fichier</CellHead>
+              <CellHead>Taille</CellHead>
+              <CellHead>Format</CellHead>
+              <CellHead>Durée (s)</CellHead>
+              <CellHead>Actions</CellHead>
+            </RowHead>
           </TableHead>
           <TableBody>
             {(playlist?.items || []).map((item, i) => (

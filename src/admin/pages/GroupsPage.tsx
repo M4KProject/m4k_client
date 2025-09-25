@@ -5,7 +5,7 @@ import {
   Button,
   Table,
   Cell,
-  CellHeader,
+  CellHead,
   Row,
   TableBody,
   TableHead,
@@ -13,6 +13,7 @@ import {
   Toolbar,
   PageBody,
   tooltip,
+  RowHead,
 } from '@common/components';
 import { Css } from '@common/ui';
 import { SearchField } from '../components/SearchField';
@@ -49,12 +50,12 @@ export const GroupsPage = () => {
       <PageBody>
         <Table>
           <TableHead>
-            <Row>
-              <CellHeader>Sélectionné</CellHeader>
-              {isAdvanced && <CellHeader>Clé</CellHeader>}
-              <CellHeader>Nom</CellHeader>
-              <CellHeader>Actions</CellHeader>
-            </Row>
+            <RowHead>
+              <CellHead>Sélectionné</CellHead>
+              {isAdvanced && <CellHead>Clé</CellHead>}
+              <CellHead>Nom</CellHead>
+              <CellHead>Actions</CellHead>
+            </RowHead>
           </TableHead>
           <TableBody>
             {groups.map((g, i) => (

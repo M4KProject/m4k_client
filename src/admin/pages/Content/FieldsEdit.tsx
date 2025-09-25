@@ -7,11 +7,12 @@ import {
   FieldInfo,
   Table,
   Cell,
-  CellHeader,
+  CellHead,
   Row,
   TableBody,
   TableHead,
   tooltip,
+  RowHead,
 } from '@common/components';
 import { isAdvanced$ } from '../../messages/isAdvanced$';
 import { ContentProps } from './ContentProps';
@@ -55,13 +56,13 @@ export const FieldsEdit = ({
       {isAdvanced && (
         <Table>
           <TableHead>
-            <Row>
-              <CellHeader>Nom</CellHeader>
-              <CellHeader>Label</CellHeader>
-              <CellHeader>Type</CellHeader>
-              <CellHeader>Valeurs</CellHeader>
-              <CellHeader>Actions</CellHeader>
-            </Row>
+            <RowHead>
+              <CellHead>Nom</CellHead>
+              <CellHead>Label</CellHead>
+              <CellHead>Type</CellHead>
+              <CellHead>Valeurs</CellHead>
+              <CellHead>Actions</CellHead>
+            </RowHead>
           </TableHead>
           <TableBody>
             {fields.map((field, i) => (

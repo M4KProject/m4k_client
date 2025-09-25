@@ -14,11 +14,12 @@ import {
   TableBody,
   Row,
   Cell,
-  CellHeader,
+  CellHead,
   Field,
   Button,
   tooltip,
   Flag,
+  RowHead,
 } from '@common/components';
 import { ContentProps } from './ContentProps';
 import { Plus, Trash2 } from 'lucide-react';
@@ -52,15 +53,15 @@ export const PlaylistContent = ({ data, updateData }: ContentProps<PlaylistConte
     <div class={c()}>
       <Table>
         <TableHead>
-          <Row>
-            <CellHeader>Titre</CellHeader>
-            <CellHeader>Durée (s)</CellHeader>
-            <CellHeader>Heure début</CellHeader>
-            <CellHeader>Heure fin</CellHeader>
-            <CellHeader>Langue</CellHeader>
-            <CellHeader>Media</CellHeader>
-            <CellHeader>Actions</CellHeader>
-          </Row>
+          <RowHead>
+            <CellHead>Titre</CellHead>
+            <CellHead>Durée (s)</CellHead>
+            <CellHead>Heure début</CellHead>
+            <CellHead>Heure fin</CellHead>
+            <CellHead>Langue</CellHead>
+            <CellHead>Media</CellHead>
+            <CellHead>Actions</CellHead>
+          </RowHead>
         </TableHead>
         <TableBody>
           {items.map((entry, index) => (

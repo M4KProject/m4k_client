@@ -9,7 +9,7 @@ import {
   PageBody,
   Table,
   Cell,
-  CellHeader,
+  CellHead,
   Row,
   TableBody,
   TableHead,
@@ -99,13 +99,13 @@ export const ContentsPage = () => {
         <Table>
           <TableHead>
             <Row>
-              {isAdvanced && <CellHeader>Groupe</CellHeader>}
-              {isAdvanced && <CellHeader>Clé</CellHeader>}
-              {isAdvanced && <CellHeader>Publique</CellHeader>}
-              <CellHeader>Type</CellHeader>
-              <CellHeader>Titre</CellHeader>
-              {/* <CellHeader>Aperçu</CellHeader> */}
-              <CellHeader>Actions</CellHeader>
+              {isAdvanced && <CellHead>Groupe</CellHead>}
+              {isAdvanced && <CellHead>Clé</CellHead>}
+              {isAdvanced && <CellHead>Publique</CellHead>}
+              <CellHead>Type</CellHead>
+              <CellHead>Titre</CellHead>
+              {/* <CellHead>Aperçu</CellHead> */}
+              <CellHead>Actions</CellHead>
             </Row>
           </TableHead>
           <TableBody>

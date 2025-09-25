@@ -6,6 +6,7 @@ import {
   secondsToTimeString,
   parseToSeconds,
   deepClone,
+  moveIndex,
 } from '@common/utils';
 import {
   Table,
@@ -13,13 +14,14 @@ import {
   TableBody,
   Row,
   Cell,
-  CellHeader,
+  CellHead,
   Field,
   Button,
   tooltip,
   Flag,
+  RowHead,
 } from '@common/components';
-import { Plus, Trash2, Copy } from 'lucide-react';
+import { Plus, Trash2, Copy, ArrowUp, ArrowDown } from 'lucide-react';
 import { useGroupQuery } from '@common/hooks/useQuery';
 import { mediaCtrl, updatePlaylist } from '@/admin/controllers';
 import { JobsTable } from '../jobs/JobsTable';
@@ -62,20 +64,26 @@ export const EditPlaylist = ({ playlist }: { playlist: PlaylistModel }) => {
     });
   };
 
+  const moveItemIndex = (from: number, to: number) => {
+    updatePlaylist(playlist.id, ({ data: { items } }) => {
+      moveIndex(items, from, to);
+    });
+  };
+
   return (
     <div class={c()}>
       <Table>
         <TableHead>
-          <Row>
-            <CellHeader>Titre</CellHeader>
-            <CellHeader>Durée (s)</CellHeader>
-            <CellHeader>Heure début</CellHeader>
-            <CellHeader>Heure fin</CellHeader>
-            <CellHeader>Langue</CellHeader>
-            <CellHeader>Aperçu</CellHeader>
-            <CellHeader>Media</CellHeader>
-            <CellHeader>Actions</CellHeader>
-          </Row>
+          <RowHead>
+            <CellHead>Titre</CellHead>
+            <CellHead>Durée (s)</CellHead>
+            <CellHead>Heure début</CellHead>
+            <CellHead>Heure fin</CellHead>
+            <CellHead>Langue</CellHead>
+            <CellHead>Aperçu</CellHead>
+            <CellHead>Media</CellHead>
+            <CellHead>Actions</CellHead>
+          </RowHead>
         </TableHead>
         <TableBody>
           {playlist.data?.items?.map((entry, index) => (
@@ -139,6 +147,16 @@ export const EditPlaylist = ({ playlist }: { playlist: PlaylistModel }) => {
                 />
               </Cell>
               <Cell variant="around">
+                <Button
+                  icon={<ArrowUp />}
+                  {...tooltip('Monter')}
+                  onClick={() => moveItemIndex(index, index - 1)}
+                />
+                <Button
+                  icon={<ArrowDown />}
+                  {...tooltip('Décendre')}
+                  onClick={() => moveItemIndex(index, index + 1)}
+                />
                 <Button
                   icon={<Copy />}
                   {...tooltip('Dupliquer')}

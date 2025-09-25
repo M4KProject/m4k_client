@@ -4,7 +4,7 @@ import { stringify, toErr, withTimeout } from '@common/utils';
 import {
   Button,
   Cell,
-  CellHeader,
+  CellHead,
   Field,
   Form,
   Page,
@@ -14,6 +14,7 @@ import {
   Table,
   TableBody,
   TableHead,
+  RowHead,
 } from '@common/components';
 
 interface TestResult {
@@ -262,13 +263,13 @@ export const TestPage = () => {
         </Form>
         <Table>
           <TableHead>
-            <Row>
-              <CellHeader>Nom</CellHeader>
-              <CellHeader>Durée</CellHeader>
-              <CellHeader>Valeur</CellHeader>
-              <CellHeader>Attendue</CellHeader>
-              <CellHeader>Erreur</CellHeader>
-            </Row>
+            <RowHead>
+              <CellHead>Nom</CellHead>
+              <CellHead>Durée</CellHead>
+              <CellHead>Valeur</CellHead>
+              <CellHead>Attendue</CellHead>
+              <CellHead>Erreur</CellHead>
+            </RowHead>
           </TableHead>
           <TableBody>
             {(tests || []).map((test, i) => (

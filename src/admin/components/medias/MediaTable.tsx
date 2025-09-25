@@ -3,7 +3,7 @@ import { byId, groupBy } from '@common/utils';
 import { addTr, useMsg } from '@common/hooks';
 import { isAdvanced$, selectedById$ } from '../../messages';
 import { MediaModel } from '@common/api';
-import { Table, Row, CellHeader, TableHead, TableBody, RowHeader } from '@common/components';
+import { Table, Row, CellHead, TableHead, TableBody, RowHead } from '@common/components';
 import { JobsTable } from '../jobs/JobsTable';
 import { useGroupQuery } from '@common/hooks/useQuery';
 import { mediaCtrl } from '../../controllers';
@@ -42,15 +42,15 @@ export const MediaTable = ({ type }: { type?: MediaModel['type'] }) => {
     <>
       <Table class={c()}>
         <TableHead>
-          <RowHeader>
-            <CellHeader />
-            <CellHeader>Titre</CellHeader>
-            <CellHeader>Aperçu</CellHeader>
-            <CellHeader>Poids</CellHeader>
-            <CellHeader>Résolution</CellHeader>
-            <CellHeader>Durée</CellHeader>
-            <CellHeader />
-          </RowHeader>
+          <RowHead>
+            <CellHead />
+            <CellHead>Titre</CellHead>
+            <CellHead>Aperçu</CellHead>
+            <CellHead>Poids</CellHead>
+            <CellHead>Résolution</CellHead>
+            <CellHead>Durée</CellHead>
+            <CellHead />
+          </RowHead>
         </TableHead>
         <TableBody>
           {topMedias.map((m) => (

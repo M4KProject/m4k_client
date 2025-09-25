@@ -7,10 +7,11 @@ import {
   tooltip,
   Table,
   Cell,
-  CellHeader,
+  CellHead,
   Row,
   TableBody,
   TableHead,
+  RowHead,
 } from '@common/components';
 import { Trash2 } from 'lucide-react';
 import { memberCtrl } from '../controllers';
@@ -23,13 +24,13 @@ export const MemberTable = () => {
   return (
     <Table class={c()}>
       <TableHead>
-        <Row>
-          <CellHeader>Appareil</CellHeader>
-          <CellHeader>Email</CellHeader>
-          <CellHeader>Droit</CellHeader>
-          <CellHeader>Description</CellHeader>
-          <CellHeader>Actions</CellHeader>
-        </Row>
+        <RowHead>
+          <CellHead>Appareil</CellHead>
+          <CellHead>Email</CellHead>
+          <CellHead>Droit</CellHead>
+          <CellHead>Description</CellHead>
+          <CellHead>Actions</CellHead>
+        </RowHead>
       </TableHead>
       <TableBody>
         {members.map((m) => (

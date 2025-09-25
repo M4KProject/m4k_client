@@ -9,13 +9,14 @@ import {
   PageBody,
   Table,
   Cell,
-  CellHeader,
+  CellHead,
   Row,
   TableBody,
   TableHead,
   tooltip,
   showDialog,
   Form,
+  RowHead,
 } from '@common/components';
 import { RefreshCw, Trash2, Settings, Plus, Power } from 'lucide-react';
 import { adminPage$, device$, isAdvanced$ } from '../messages';
@@ -96,16 +97,16 @@ export const DevicesPage = () => {
       <PageBody>
         <Table>
           <TableHead>
-            <Row>
-              {isAdvanced && <CellHeader>Clé</CellHeader>}
-              {isAdvanced && <CellHeader>Type</CellHeader>}
-              <CellHeader>Nom</CellHeader>
-              <CellHeader>Résolution</CellHeader>
-              <CellHeader>Online</CellHeader>
-              <CellHeader>Création</CellHeader>
-              <CellHeader>Média</CellHeader>
-              <CellHeader>Actions</CellHeader>
-            </Row>
+            <RowHead>
+              {isAdvanced && <CellHead>Clé</CellHead>}
+              {isAdvanced && <CellHead>Type</CellHead>}
+              <CellHead>Nom</CellHead>
+              <CellHead>Résolution</CellHead>
+              <CellHead>Online</CellHead>
+              <CellHead>Création</CellHead>
+              <CellHead>Média</CellHead>
+              <CellHead>Actions</CellHead>
+            </RowHead>
           </TableHead>
           <TableBody>
             {devices.map((d) => (

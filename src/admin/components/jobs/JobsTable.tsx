@@ -2,11 +2,12 @@ import {
   tooltip,
   Table,
   Row,
-  CellHeader,
+  CellHead,
   TableHead,
   TableBody,
   Cell,
   Button,
+  RowHead,
 } from '@common/components';
 import { Trash2 } from 'lucide-react';
 import { JobStatus } from './JobStatus';
@@ -48,12 +49,12 @@ export const JobsTable = ({ filter, panel, ...props }: JobsTableProps) => {
   return (
     <Table class={c('', panel && '-panel', props)}>
       <TableHead>
-        <Row>
-          <CellHeader>Action</CellHeader>
-          <CellHeader>Statut</CellHeader>
-          <CellHeader>Media</CellHeader>
-          <CellHeader>Actions</CellHeader>
-        </Row>
+        <RowHead>
+          <CellHead>Action</CellHead>
+          <CellHead>Statut</CellHead>
+          <CellHead>Media</CellHead>
+          <CellHead>Actions</CellHead>
+        </RowHead>
       </TableHead>
       <TableBody>
         {filteredJobs.map((job) => (
