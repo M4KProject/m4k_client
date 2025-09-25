@@ -80,17 +80,47 @@ const AppContent = () => {
       {page !== 'kiosk' && page !== 'codePin' && page !== 'pairing' && (
         <Side>
           <SideSep />
-          <SideButton curr={page} icon={<MonitorSpeaker />} page="kiosk" title="Kiosk" onClick={go('kiosk')} />
-          <SideButton curr={page} icon={<Wrench />} page="actions" title="Actions" onClick={go('actions')} />
+          <SideButton
+            selected={page === ''}
+            icon={<MonitorSpeaker />}
+            title="Kiosk"
+            onClick={go('kiosk')}
+          />
+          <SideButton
+            selected={page === 'actions'}
+            icon={<Wrench />}
+            title="Actions"
+            onClick={go('actions')}
+          />
           {/* <SideButton icon={<KeyRound />} page="password" title="Mot de passe" /> */}
-          <SideButton curr={page} icon={<List />} page="playlist" title="Playlist" onClick={go('playlist')} />
-          <SideButton curr={page} icon={<Settings />} page="configPlaylist" title="Config" onClick={go('configPlaylist')} />
-          <SideButton curr={page} icon={<Globe />} page="site" title="Site Web" onClick={go('site')} />
+          <SideButton
+            selected={page === 'playlist'}
+            icon={<List />}
+            title="Playlist"
+            onClick={go('playlist')}
+          />
+          <SideButton
+            selected={page === 'configPlaylist'}
+            icon={<Settings />}
+            title="Config"
+            onClick={go('configPlaylist')}
+          />
+          <SideButton
+            selected={page === 'site'}
+            icon={<Globe />}
+            title="Site Web"
+            onClick={go('site')}
+          />
           {/* <SideButton icon={<MdWifi />} page="wifi" title="Wifi" /> */}
           <SideSep />
-          <SideButton curr={page} icon={<Bug />} page="test" title="Test" onClick={go('test')} />
+          <SideButton selected={page === 'test'} icon={<Bug />} title="Test" onClick={go('test')} />
           {/* <SideButton icon={<MdListAlt />} page="logs" title="Logs" /> */}
-          <SideButton curr={page} icon={<Calendar />} page="events" title="Events" onClick={go('events')} />
+          <SideButton
+            selected={page === 'events'}
+            icon={<Calendar />}
+            title="Events"
+            onClick={go('events')}
+          />
           <SideSep />
           {/* <SideButton icon={<User />} page="account" title="Mon Compte" /> */}
           {/* <SideSep style={{ fontSize: 0.7, opacity: 0.5 }}>2.0.0</SideSep> */}

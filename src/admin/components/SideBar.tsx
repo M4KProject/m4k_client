@@ -4,7 +4,17 @@ import { Side, SideButton, SideSep } from '@common/components';
 import { Home, Users, Monitor, User, Zap } from 'lucide-react';
 import { groupCtrl } from '../controllers';
 import { MediaIcon } from './medias/MediaIcon';
-import { Page, setGroupKey, setPage, setRoute, useGroupKey, useIsAdvanced, usePage } from '../controllers/router';
+import {
+  Page,
+  setGroupKey,
+  setPage,
+  setRoute,
+  updateRoute,
+  useGroupKey,
+  useIsAdvanced,
+  useMediaType,
+  usePage,
+} from '../controllers/router';
 import { useItemKey, useItems } from '../controllers/useItem';
 import { MediaType } from '@common/api';
 
@@ -37,89 +47,75 @@ export const SideBar = () => {
   const groupKey = useGroupKey();
   const group = useItemKey(groupCtrl, groupKey);
   const page = usePage();
+  const mediaType = useMediaType();
 
   const groups = useItems(groupCtrl);
   if (groups.length === 1) setGroupKey(groups[0].key);
 
   const go = (page: Page) => () => setPage(page);
 
-  const goMedias = (mediaType: MediaType) =>
-    () => setRoute({ page: 'medias', mediaType });
+  const goMedias = (mediaType: MediaType) => () => updateRoute({ page: 'medias', mediaType });
 
   return (
     <Side>
       <SideSep />
       <SideButton
-        curr={page}
         title={group?.name || 'Groups'}
         icon={<Home />}
-        page="groups"
+        selected={page === 'groups'}
         onClick={go('groups')}
       />
       <SideSep />
       {group || isAdvanced ? (
         <>
           <SideButton
-            curr={page}
             title="Members"
             icon={<Users />}
-            page="members"
+            selected={page === 'members'}
             onClick={go('members')}
           />
           <SideButton
-            curr={page}
             title="Devices"
             icon={<Monitor />}
-            page="devices"
+            selected={page === 'devices'}
             onClick={go('devices')}
           />
           <SideButton
-            curr={page}
             title="Medias"
             icon={<MediaIcon type="folder" />}
-            page="medias"
-            onClick={goMedias('folder')}
+            selected={page === 'medias' && !mediaType}
+            onClick={goMedias('')}
           />
           <SideButton
-            curr={page}
             tab={true}
             title="Playlists"
             icon={<MediaIcon type="playlist" />}
-            page="playlists"
+            selected={page === 'medias' && mediaType === 'playlist'}
             onClick={goMedias('playlist')}
           />
           <SideButton
-            curr={page}
             tab={true}
             title="Videos"
             icon={<MediaIcon type="video" />}
-            page="videos"
+            selected={page === 'medias' && mediaType === 'video'}
             onClick={goMedias('video')}
           />
           <SideButton
-            curr={page}
             tab={true}
             title="Images"
             icon={<MediaIcon type="image" />}
-            page="images"
+            selected={page === 'medias' && mediaType === 'image'}
             onClick={goMedias('image')}
           />
-          <SideButton
-            curr={page}
-            title="Jobs"
-            icon={<Zap />}
-            page="jobs"
-            onClick={go('jobs')}
-          />
+          <SideButton title="Jobs" icon={<Zap />} selected={page === 'jobs'} onClick={go('jobs')} />
         </>
       ) : null}
       <SideSep />
       <div class={c('Version')}>2.1.0</div>
       <SideButton
-        curr={page}
         title="Account"
         icon={<User />}
-        page="account" 
+        selected={page === 'account'}
         onClick={go('account')}
       />
     </Side>

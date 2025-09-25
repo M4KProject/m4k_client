@@ -19,5 +19,15 @@
       "@common/*": ["./common/*"]
     }
   },
-  "include": ["node_modules/vite/client.d", "vite.config", "common/**/*", "src/**/*", "tmp/ContentPage.tsx", "tmp/ContentsPage.tsx"]
+  "include": [
+    "node_modules/vite/client.d",
+    "vite.config",
+    "common/**/*",
+    "src/**/*",
+    "tmp/ContentPage.tsx",
+    "tmp/ContentsPage.tsx",
+    "tmp/D.ts",
+    "tmp/cProps.ts",
+    "tmp/getCallCb.ts"
+  ]
 }

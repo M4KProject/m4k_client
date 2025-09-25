@@ -145,12 +145,12 @@ This codebase uses a custom CSS-in-JS system with powerful utility functions:
 
 ```typescript
 const css = Css('ComponentName', {
-  '': { 
+  '': {
     fCol: 1,           // display: flex; flex-direction: column
     p: 2,              // padding: 2em
     bg: 'primary'      // background-color: var(--primary-color)
   },
-  'Container': { 
+  'Container': {
     fRow: ['center', 'space-between'], // flex-row with alignment
     w: 20,             // width: 20em
     elevation: 2       // box-shadow with depth
@@ -170,23 +170,27 @@ const Component = () => {
 #### Available CSS Utility Functions
 
 **Layout & Positioning:**
+
 - `x`, `y`, `xy` - left/top positioning (em units)
-- `l`, `t`, `r`, `b` - individual sides (em units) 
+- `l`, `t`, `r`, `b` - individual sides (em units)
 - `inset` - all sides positioning
 - `w`, `h`, `wh` - width/height (em units)
 - `wMax`, `hMax`, `whMax` - max dimensions
 - `wMin`, `hMin`, `whMin` - min dimensions
 
 **Flexbox:**
+
 - `fRow: 1 | [] | [align] | [align, justify]` - flex-direction: row
-- `fCol: 1 | [] | [align] | [align, justify]` - flex-direction: column  
+- `fCol: 1 | [] | [align] | [align, justify]` - flex-direction: column
 - `fCenter: 1 | [] | [direction]` - centered flex container
 
 **Spacing:**
+
 - `m`, `mt`, `mb`, `ml`, `mr`, `mx`, `my` - margins (em units)
 - `p`, `pt`, `pb`, `pl`, `pr`, `px`, `py` - padding (em units)
 
 **Visual:**
+
 - `bg: 'colorKey'` - background color from theme
 - `fg: 'colorKey'` - text color from theme
 - `elevation: number` - box-shadow with depth (0-10)
@@ -195,11 +199,13 @@ const Component = () => {
 - `bold: 1 | 0` - font-weight: bold
 
 **Transforms & Animation:**
+
 - `rotate`, `scale`, `scaleX`, `scaleY`, `translate`, `translateX`, `translateY`
 - `transition: number | string | boolean` - CSS transitions
 - `anim: AnimValue` - CSS animations with keyframes
 
 **Background & Images:**
+
 - `bgUrl: 'url'` - background-image
 - `bgMode: 'contain' | 'cover' | 'fill'` - background sizing
 - `itemFit: 'contain' | 'cover' | 'fill'` - object-fit for images/videos
@@ -210,19 +216,19 @@ const Component = () => {
 // Simple flex layout
 const css = Css('MyComponent', {
   '': { fCol: 1, p: 2, bg: 'background' },
-  'Header': { fRow: ['center', 'space-between'], pb: 1 },
-  'Content': { fCol: ['stretch'], flex: 1 }
+  Header: { fRow: ['center', 'space-between'], pb: 1 },
+  Content: { fCol: ['stretch'], flex: 1 },
 });
 
 // Responsive sizing with elevation
 const cardCss = Css('Card', {
-  '': { 
-    w: [20, 30],           // responsive width
-    elevation: 2,          // shadow depth
-    rounded: 3,            // border radius
-    p: [1, 2],            // responsive padding
-    transition: 0.2        // smooth transitions
-  }
+  '': {
+    w: [20, 30], // responsive width
+    elevation: 2, // shadow depth
+    rounded: 3, // border radius
+    p: [1, 2], // responsive padding
+    transition: 0.2, // smooth transitions
+  },
 });
 ```
 
@@ -368,24 +374,28 @@ export interface MyContentModel extends ContentModel {
 ## Important Development Guidelines
 
 **Code Changes:**
+
 - Do what has been asked; nothing more, nothing less
 - NEVER create files unless absolutely necessary for achieving your goal
 - ALWAYS prefer editing existing files to creating new ones
-- NEVER proactively create documentation files (*.md) or README files unless explicitly requested
+- NEVER proactively create documentation files (\*.md) or README files unless explicitly requested
 
 **Code Quality:**
+
 - NEVER add comments unless specifically asked
 - Always run linting and type checking after significant changes
 - Follow existing code conventions and patterns in the codebase
 - Use TypeScript types consistently throughout the codebase
 
 **Component Patterns:**
+
 - Use `useCss('ComponentName', css)` hook for styling with `Css` objects
 - Follow the established message-based reactive state management pattern
 - Prefer `preact/hooks` imports over React equivalents due to compatibility layer
 - Use `class` prop instead of `className` for Preact compatibility
 
 **Utility Functions:**
-- The codebase uses custom utility functions in `common/utils/` 
+
+- The codebase uses custom utility functions in `common/utils/`
 - List manipulation functions like `addItem`, `removeIndex`, `moveIndex`, `setItemIndex` support circular indexing
 - Use `normalizeIndex` for safe array index calculations with negative values and overflow handling

@@ -71,7 +71,7 @@ export const DevicesPage = () => {
   };
 
   const handleRemote = (device: DeviceModel) => {
-    setDeviceKey(device.key||device.id);
+    setDeviceKey(device.key || device.id);
     setPage('devices');
   };
 
