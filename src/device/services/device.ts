@@ -11,14 +11,13 @@ import {
   ReqError,
   toVoid,
 } from '@common/utils';
-import { DeviceModel, UserModel } from '@common/api';
-import { login, signUp } from '@common/api/auth';
+import { ApiAuth, authLogin, authSignUp, DeviceModel, UserModel } from '@common/api';
 import { serverDate } from '@common/api/serverTime';
 import { deviceCtrl } from '@/device/controllers';
 
 export const deviceEmail$ = new Msg('', 'deviceEmail', true);
 export const devicePassword$ = new Msg('', 'devicePassword', true);
-export const deviceUser$ = new Msg<UserModel | null>(null, 'deviceUser', true);
+export const deviceAuth$ = new Msg<ApiAuth | null>(null, 'deviceUser', true);
 export const device$ = new Msg<DeviceModel | null>(null, 'device', true);
 export const deviceAction$ = new Msg<DeviceModel['action'] | null>(null, 'deviceAction', true);
 
@@ -27,12 +26,12 @@ const deviceLogin = async (): Promise<DeviceModel> => {
   let password = devicePassword$.v;
   console.debug('deviceLogin', email);
 
-  let user: UserModel | null = null;
+  let deviceAuth: ApiAuth | null = null;
 
   if (email && password) {
     try {
-      user = await login(email, password);
-      console.debug('deviceLogin login user', user);
+      deviceAuth = await authLogin(email, password);
+      console.debug('deviceLogin login deviceAuth', deviceAuth);
     } catch (error) {
       console.info('deviceLogin login error', error);
       if (!(error instanceof ReqError)) throw error;
@@ -40,32 +39,32 @@ const deviceLogin = async (): Promise<DeviceModel> => {
     }
   }
 
-  if (!user) {
+  if (!deviceAuth) {
     email = uuid() + '@m4k.fr';
     password = randKey(20);
 
     try {
-      user = await signUp(email, password);
-      console.debug('deviceLogin signUp user', user);
+      deviceAuth = await authSignUp(email, password);
+      console.debug('deviceLogin signUp user', deviceAuth);
     } catch (error) {
       console.info('deviceLogin signUp error', error);
       throw error;
     }
   }
 
-  if (!user) throw new Error('no user');
+  if (!deviceAuth) throw new Error('no user');
 
-  deviceUser$.set(user);
+  deviceAuth$.set(deviceAuth);
   deviceEmail$.set(email);
   devicePassword$.set(password);
 
   const info = await m4k.info();
   info.started = serverDate();
 
-  const device = await deviceCtrl.upsert(
-    { user: user.id },
+  const device = await deviceCtrl.coll.upsert(
+    { user: deviceAuth.id },
     {
-      user: user.id,
+      user: deviceAuth.id,
       online: serverDate(),
       info,
     }
@@ -85,14 +84,14 @@ const deviceStart = async () => {
   deviceUnsubscribe();
 
   console.debug('deviceStart subscribe', device.id);
-  deviceUnsubscribe = deviceCtrl.subscribe(device.id, (device, action) => {
+  deviceUnsubscribe = deviceCtrl.coll.on((device, action) => {
     console.debug('deviceStart subscribe', action, device);
     if (action === 'delete') {
       deviceLogin();
       return;
     }
     device$.set(device);
-  });
+  }, device.id);
 
   while (true) {
     await deviceLoop();
