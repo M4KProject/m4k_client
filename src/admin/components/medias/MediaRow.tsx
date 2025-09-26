@@ -36,6 +36,8 @@ export const MediaRow = ({ m, ctx, tab }: { m: MediaModel; ctx: MediaCtx; tab: n
   const children = mediasByParent[m.id] || [];
   const hasChildren = m.type === 'folder' && children.length > 0;
 
+  if (m.title.startsWith('.') && !isAdvanced) return null;
+
   return (
     <>
       <Row key={m.id}>
