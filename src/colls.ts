@@ -1,4 +1,4 @@
-import { sync } from '@common/api';
+import { sync } from '@common/api/Sync';
 
 export const contentCtrl = sync('contents');
 export const deviceCtrl = sync('devices');

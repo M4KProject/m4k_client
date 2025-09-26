@@ -1,4 +1,5 @@
-import { Sync, groupId$ } from '@common/api';
+import { Sync } from '@common/api/Sync';
+import { groupId$ } from '@common/api/messages';
 import { CollWhere } from '@common/api/Coll';
 import { Models } from '@common/api/models';
 import { useMsg } from '@common/hooks';

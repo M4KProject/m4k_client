@@ -7,7 +7,7 @@ import { useMsg } from '@common/hooks';
 import { LogOut, KeyRound } from 'lucide-react';
 import { useState } from 'preact/hooks';
 import { LoadingPage } from './LoadingPage';
-import { logout, auth$, coll } from '@common/api';
+import { apiAuth$, authLogout, coll } from '@common/api';
 import { setIsAdvanced, useIsAdvanced } from '../controllers/router';
 
 const c = Css('AccountPage', {
@@ -24,7 +24,7 @@ export const Color = ({ color }: { color: string }) => (
 
 export const AccountPage = () => {
   const theme = useMsg(theme$);
-  const auth = useMsg(auth$);
+  const auth = useMsg(apiAuth$);
   const [passwordError, setPasswordError] = useState('');
   const [password, setPassword] = useState('');
   const [oldPassword, setOldPassword] = useState('');
@@ -45,7 +45,7 @@ export const AccountPage = () => {
   return (
     <Page class={c()}>
       <Toolbar title="Account">
-        <Button color="primary" title="Deconnexion" icon={<LogOut />} onClick={logout} />
+        <Button color="primary" title="Deconnexion" icon={<LogOut />} onClick={authLogout} />
         <Button
           color="primary"
           title="Changer de mot de passe"

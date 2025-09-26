@@ -17,7 +17,7 @@ import {
 } from '@common/components';
 import { Css, getColor } from '@common/ui';
 import { SearchField } from '../components/SearchField';
-import { Role, auth$ } from '@common/api';
+import { Role, apiAuth$ } from '@common/api';
 import { groupCtrl, memberCtrl } from '../controllers';
 import { setGroupKey, useGroupKey, useIsAdvanced } from '../controllers/router';
 import { useItem, useItems } from '../controllers/useItem';
@@ -35,7 +35,7 @@ export const Color = ({ color }: { color: string }) => (
 );
 
 export const GroupsPage = () => {
-  const auth = useMsg(auth$);
+  const auth = useMsg(apiAuth$);
   const groupKey = useGroupKey();
   const group = useItem(groupCtrl, groupKey);
   const isAdvanced = useIsAdvanced();

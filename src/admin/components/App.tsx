@@ -10,10 +10,10 @@ import { JobsPage } from '../pages/JobsPage';
 import { DevicesPage } from '../pages/DevicesPage';
 import { AuthPage } from '../pages/AuthPage';
 import { AccountPage } from '../pages/AccountPage';
-import { auth$ } from '@common/api';
 import { Page, useGroupKey, usePage } from '../controllers/router';
 import { groupCtrl, useItemKey } from '../controllers';
 import { useEffect } from 'preact/hooks';
+import { apiAuth$ } from '@common/api';
 
 const c = Css('App', {
   '': {
@@ -53,7 +53,7 @@ const AppRouter = () => {
 };
 
 const AppContent = () => {
-  const auth = useMsg(auth$);
+  const auth = useMsg(apiAuth$);
 
   // Initialize PWA
   usePWA();
