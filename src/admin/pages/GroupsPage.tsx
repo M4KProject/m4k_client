@@ -15,14 +15,24 @@ import {
   tooltip,
   RowHead,
 } from '@common/components';
-import { Css } from '@common/ui';
+import { Css, getColor, updateTheme } from '@common/ui';
 import { SearchField } from '../components/SearchField';
 import { Role, auth$ } from '@common/api';
 import { groupCtrl, memberCtrl } from '../controllers';
 import { setGroupKey, useGroupKey, useIsAdvanced } from '../controllers/router';
 import { useItem, useItems } from '../controllers/useItem';
 
-const c = Css('GroupsPage', {});
+const c = Css('GroupsPage', {
+  Color: {
+    h: 1,
+    w: 1,
+    bg: 'red',
+  },
+});
+
+export const Color = ({ color }: { color: string }) => (
+  <div {...tooltip(color)} class={c('Color')} style={{ background: getColor(color) }} />
+);
 
 export const GroupsPage = () => {
   const auth = useMsg(auth$);
@@ -30,7 +40,7 @@ export const GroupsPage = () => {
   const group = useItem(groupCtrl, groupKey);
   const isAdvanced = useIsAdvanced();
   const groups = useItems(groupCtrl);
-
+  
   const handleAdd = async () => {
     if (!auth) return;
     const group = await groupCtrl.create({ name: 'Nouveau Groupe', user: auth.id });
@@ -55,6 +65,9 @@ export const GroupsPage = () => {
               <CellHead>Sélectionné</CellHead>
               {isAdvanced && <CellHead>Clé</CellHead>}
               <CellHead>Nom</CellHead>
+              <CellHead>Mode sombre</CellHead>
+              <CellHead>Couleur primaire</CellHead>
+              <CellHead>Couleur secondaire</CellHead>
               <CellHead>Actions</CellHead>
             </RowHead>
           </TableHead>
@@ -80,6 +93,39 @@ export const GroupsPage = () => {
                 )}
                 <Cell>
                   <Field value={g.name} onValue={(name) => groupCtrl.update(g.id, { name })} />
+                </Cell>
+                <Cell>
+                  <Field
+                    type="switch"
+                    value={g.data?.isDark}
+                    onValue={(isDark) => {
+                      groupCtrl.apply(g.id, prev => {
+                        prev.data = { ...prev.data, isDark };
+                      });
+                    }}
+                  />
+                </Cell>
+                <Cell>
+                  <Field
+                    type="color"
+                    value={g.data?.primary}
+                    onValue={(primary) => {
+                      groupCtrl.apply(g.id, prev => {
+                        prev.data = { ...prev.data, primary };
+                      });
+                    }}
+                  />
+                </Cell>
+                <Cell>
+                  <Field
+                    type="color"
+                    value={g.data?.secondary}
+                    onValue={(secondary) => {
+                      groupCtrl.apply(g.id, prev => {
+                        prev.data = { ...prev.data, secondary };
+                      });
+                    }}
+                  />
                 </Cell>
                 <Cell variant="row">
                   <Button

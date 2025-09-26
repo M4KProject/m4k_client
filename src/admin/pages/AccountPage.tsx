@@ -1,5 +1,5 @@
-import { Css, getColor, refreshTheme, setTheme, theme$ } from '@common/ui';
-import { Page, PageBody, Toolbar, FieldGroup, tooltip } from '@common/components';
+import { Css, getColor, updateTheme, theme$ } from '@common/ui';
+import { Page, PageBody, Toolbar, tooltip } from '@common/components';
 import { Button } from '@common/components';
 import { Form } from '@common/components';
 import { Field } from '@common/components';
@@ -8,7 +8,6 @@ import { LogOut, KeyRound } from 'lucide-react';
 import { useState } from 'preact/hooks';
 import { LoadingPage } from './LoadingPage';
 import { logout, auth$, coll } from '@common/api';
-import { repeat } from '@common/utils';
 import { setIsAdvanced, useIsAdvanced } from '../controllers/router';
 
 const c = Css('AccountPage', {
@@ -24,12 +23,12 @@ export const Color = ({ color }: { color: string }) => (
 );
 
 export const AccountPage = () => {
+  const theme = useMsg(theme$);
   const auth = useMsg(auth$);
   const [passwordError, setPasswordError] = useState('');
   const [password, setPassword] = useState('');
   const [oldPassword, setOldPassword] = useState('');
   const isAdvanced = useIsAdvanced();
-  const theme = useMsg(theme$);
 
   if (!auth) return <LoadingPage />;
 
@@ -75,13 +74,10 @@ export const AccountPage = () => {
             type="switch"
             label="Mode sombre"
             name="isDark"
-            value={theme.mode === 'dark'}
-            onValue={(isDark) => {
-              setTheme({ mode: isDark ? 'dark' : 'light' });
-              refreshTheme();
-            }}
+            value={theme.isUserDark}
+            onValue={isUserDark => updateTheme({ isUserDark })}
           />
-          <FieldGroup>
+          {/* <FieldGroup>
             <Field
               type="color"
               label="Couleur gris"
@@ -97,8 +93,8 @@ export const AccountPage = () => {
                 <Color key={name} color={'g' + name} />
               )
             )}
-          </FieldGroup>
-          <FieldGroup>
+          </FieldGroup> */}
+          {/* <FieldGroup>
             <Field
               type="color"
               label="Couleur primaire"
@@ -114,8 +110,8 @@ export const AccountPage = () => {
                 <Color key={name} color={'p' + name} />
               )
             )}
-          </FieldGroup>
-          <FieldGroup>
+          </FieldGroup> */}
+          {/* <FieldGroup>
             <Field
               type="color"
               label="Couleur secondaire"
@@ -131,7 +127,7 @@ export const AccountPage = () => {
                 <Color key={name} color={'s' + name} />
               )
             )}
-          </FieldGroup>
+          </FieldGroup> */}
           <Field
             label="Ancien mot de passe"
             name="current-password"

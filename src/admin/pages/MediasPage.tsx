@@ -1,23 +1,39 @@
 import { Css } from '@common/ui';
-import { BackButton, Button, Page, PageBody, Toolbar } from '@common/components';
+import { BackButton, Button, Page, PageBody, Toolbar, tooltip, UploadButton } from '@common/components';
 import { MediaTable } from '../components/medias/MediaTable';
-import { NewFolderButton } from '../components/medias/NewFolderButton';
-import { UploadMediaButton } from '../components/medias/UploadMediaButton';
 import { SearchField } from '../components/SearchField';
 import {
+  getNextTitle,
   mediaCtrl,
+  setIsEdit,
   setMediaKey,
+  setMediaType,
   useIsEdit,
   useItemKey,
   useMediaKey,
   useMediaType,
 } from '../controllers';
-import { NewPlaylistButton } from '../components/medias/NewPlaylistButton';
-import { EditPlaylist } from '../components/medias/EditPlaylist';
-import { PlaylistModel } from '@common/api';
-import { Edit, Play } from 'lucide-react';
+import { AddPlaylistItemButton, EditPlaylist } from '../components/medias/EditPlaylist';
+import { needAuthId, needGroupId, PlaylistModel, upload } from '@common/api';
+import { Edit, FolderPlus, MapPlus, Play, Upload } from 'lucide-react';
 
 const c = Css('MediasPage', {});
+
+const handleAddToPlaylist = async () => {
+  
+}
+
+const handleCreatePlaylist = async () => {
+  const playlist = await mediaCtrl.create({
+    title: getNextTitle('Playlist'),
+    mime: 'application/playlist',
+    type: 'playlist',
+    user: needAuthId(),
+    group: needGroupId(),
+  });
+  setMediaType('playlist');
+  setMediaKey(playlist.key);
+}
 
 export const MediasPage = () => {
   const type = useMediaType();
@@ -36,29 +52,77 @@ export const MediasPage = () => {
   return (
     <Page class={c('Page')}>
       <Toolbar title="Medias">
-        {mediaKey && <BackButton onClick={() => setMediaKey('')} />}
-        {mediaKey &&
-          (isEdit ? (
+
+        {media && (
+          <BackButton onClick={() => setMediaKey('')} />
+        )}
+
+        {media?.type === 'playlist' && (
+          <AddPlaylistItemButton playlist={media as PlaylistModel} />
+        )}
+
+        {media && (
+          isEdit ? (
             <Button
               icon={<Play />}
               title="Afficher le media"
-              onClick={() => {
-                // TODO: Implémenter l'affichage du media
-              }}
+              onClick={() => setIsEdit(false)}
             />
           ) : (
             <Button
               icon={<Edit />}
               title="Éditer le media"
-              onClick={() => {
-                // TODO: Implémenter l'affichage du media
-              }}
+              onClick={() => setIsEdit(true)}
             />
-          ))}
-        {type === 'playlist' || (type === '' && <NewPlaylistButton />)}
-        {type === '' && <NewFolderButton />}
-        <UploadMediaButton />
+          )
+        )}
+
+        {media?.type === 'playlist' ? (
+          <Button
+            icon={<MapPlus />}
+            {...tooltip('Ajouter à la playlist')}
+            onClick={handleAddToPlaylist}
+          >
+            Ajouter à la Playlist
+          </Button>
+        ) : (
+          <Button
+            icon={<MapPlus />}
+            {...tooltip('Créer une playlist')}
+            onClick={handleCreatePlaylist}
+          >
+            Crée une Playlist
+          </Button>
+        )}
+        
+        {type === '' && (
+          <Button
+            icon={<FolderPlus />}
+            {...tooltip('Créer un nouveau dossier')}
+            onClick={() => {
+              mediaCtrl.create({
+                title: getNextTitle('Dossier'),
+                mime: 'application/folder',
+                type: 'folder',
+                user: needAuthId(),
+                group: needGroupId(),
+              });
+            }}
+          >
+            Nouveau dossier
+          </Button>
+        )}
+
+        <UploadButton
+          title="Téléverser"
+          {...tooltip('Téléverser des medias')}
+          icon={<Upload />}
+          color="primary"
+          onFiles={(files) => upload(files, media?.id)}
+        />
+
         <SearchField />
+
       </Toolbar>
       <PageBody>{content}</PageBody>
     </Page>

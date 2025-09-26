@@ -1,24 +1,19 @@
 import { SideBar } from './SideBar';
-import { Css } from '@common/ui';
+import { Css, updateTheme } from '@common/ui';
 import { useMsg } from '@common/hooks';
 import { usePWA } from '../../serviceWorker';
 import { JSX } from 'preact';
-import { LoadingPage } from '../pages/LoadingPage';
 import { GroupsPage } from '../pages/GroupsPage';
 import { MembersPage } from '../pages/MembersPage';
-import { ContentsPage } from '../../../tmp/ContentsPage';
 import { MediasPage } from '../pages/MediasPage';
 import { JobsPage } from '../pages/JobsPage';
 import { DevicesPage } from '../pages/DevicesPage';
 import { AuthPage } from '../pages/AuthPage';
 import { AccountPage } from '../pages/AccountPage';
-import { ContentPage } from '../../../tmp/ContentPage';
 import { auth$ } from '@common/api';
-import { DevicePage } from '../pages/DevicePage';
-import { PlaylistsPage } from '../pages/PlaylistsPage';
-import { ImagesPage } from '../pages/ImagesPage';
-import { VideosPage } from '../pages/VideosPage';
-import { Page, usePage } from '../controllers/router';
+import { Page, useGroupKey, usePage } from '../controllers/router';
+import { groupCtrl, useItemKey } from '../controllers';
+import { useEffect } from 'preact/hooks';
 
 const c = Css('App', {
   '': {
@@ -79,5 +74,13 @@ const AppContent = () => {
 };
 
 export const App = () => {
+  const groupKey = useGroupKey();
+  const group = useItemKey(groupCtrl, groupKey);
+  const { isDark, primary, secondary } = group?.data || {};
+
+  useEffect(() => {
+    updateTheme({ isDark, primary, secondary });
+  }, [isDark, primary, secondary])
+  
   return <AppContent />;
 };

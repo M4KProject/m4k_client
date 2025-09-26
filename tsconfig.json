@@ -24,10 +24,5 @@
     "vite.config",
     "common/**/*",
     "src/**/*",
-    "tmp/ContentPage.tsx",
-    "tmp/ContentsPage.tsx",
-    "tmp/D.ts",
-    "tmp/cProps.ts",
-    "tmp/getCallCb.ts"
   ]
 }
