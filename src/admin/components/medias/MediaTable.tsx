@@ -1,5 +1,5 @@
 import { Css } from '@common/ui';
-import { byId, groupBy } from '@common/utils';
+import { byId, groupBy, sort } from '@common/utils';
 import { addTr, useMsg } from '@common/hooks';
 import { MediaModel } from '@common/api';
 import { Table, CellHead, TableHead, TableBody, RowHead } from '@common/components';
@@ -36,6 +36,7 @@ export const MediaTable = ({ type }: { type?: MediaModel['type'] }) => {
   };
 
   const topMedias = (type ? medias.filter((m) => m.type === type) : mediasByParent['']) || [];
+  sort(topMedias, (m) => m.title);
 
   console.debug('MediaTable', ctx, topMedias);
 
