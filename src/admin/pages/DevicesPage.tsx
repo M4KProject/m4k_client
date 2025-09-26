@@ -27,9 +27,9 @@ import { useGroupItems } from '../controllers/useItem';
 import { setDeviceKey, setPage, useIsAdvanced } from '../controllers/router';
 
 const c = Css('DevicesPage', {
-  'Buttons': {
+  Buttons: {
     fRow: ['center', 'space-around'],
-  }
+  },
 });
 
 export const PairingForm = ({ onClose }: { onClose: () => void }) => {
