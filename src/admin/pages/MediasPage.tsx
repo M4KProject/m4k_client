@@ -50,7 +50,7 @@ export const MediasPage = () => {
 
   let content = null;
 
-  if (type === 'playlist' && isEdit) {
+  if (type === 'playlist' && media?.type === 'playlist' && isEdit) {
     content = <EditPlaylist playlist={media as PlaylistModel} />;
   } else {
     content = <MediaTable type={type} />;

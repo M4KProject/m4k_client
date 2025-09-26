@@ -47,7 +47,7 @@ export const CodePinView = ({ open$ }: { open$: Msg<boolean> }) => {
     <Form class={c()}>
       <div class={c('Code')}>{device?.key}</div>
       <Field type="password" label="Code PIN" value={codePin} onValue={setCodePin} />
-      <FlexRow>
+      <div class={c('Buttons')}>
         <Button icon={<Lock />} onClick={handleClose}>
           Valider
         </Button>
@@ -59,7 +59,7 @@ export const CodePinView = ({ open$ }: { open$: Msg<boolean> }) => {
         >
           Online
         </Button>
-      </FlexRow>
+      </div>
     </Form>
     // <>
     //     <Form

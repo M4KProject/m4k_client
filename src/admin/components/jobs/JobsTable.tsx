@@ -20,11 +20,24 @@ import { byId } from '@common/utils/by';
 import { useGroupItems } from '@/admin/controllers/useItem';
 
 const c = Css('JobsTable', {
-  '-panel': {
+  Panel: {
     position: 'fixed',
     r: 1,
     b: 1,
     w: 40,
+    elevation: 3,
+    rounded: 2,
+    bg: 'b0',
+    fCol: 1,
+    transition: 1,
+    // hMin: 10,
+  },
+  'Panel-close': {
+    opacity: 0,
+    translateY: '+100%',
+  },
+  'Panel-open': {
+    opacity: 1,
   },
 });
 
@@ -44,10 +57,12 @@ export const JobsTable = ({ filter, panel, ...props }: JobsTableProps) => {
   const medias = useGroupItems(mediaCtrl);
   const mediaById = byId(medias);
 
-  if (panel && filteredJobs.length === 0) return null;
+  if (panel && filteredJobs.length === 0) {
+    return <div class={c('Panel', 'Panel-close', props)} />;
+  }
 
-  return (
-    <Table class={c('', panel && '-panel', props)}>
+  const table = (
+    <Table class={c('', props)}>
       <TableHead>
         <RowHead>
           <CellHead>Action</CellHead>
@@ -79,4 +94,10 @@ export const JobsTable = ({ filter, panel, ...props }: JobsTableProps) => {
       </TableBody>
     </Table>
   );
+
+  if (panel) {
+    return <div class={c('Panel', 'Panel-open', props)}>{table}</div>;
+  }
+
+  return table;
 };

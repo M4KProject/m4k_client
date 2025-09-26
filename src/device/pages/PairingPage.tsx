@@ -1,79 +1,52 @@
 import { useMsg } from '@common/hooks';
 import { Css } from '@common/ui';
-import { Button } from '@common/components';
+import { Button, LoadingSpinner } from '@common/components';
 import { device$ } from '../services/device';
 import { page$ } from '../messages/page$';
 import { offlineMode$ } from '../messages';
-import { FlexRow } from '@common/components/Flex';
 
 const c = Css('PairingPage', {
   '': {
     fCenter: 1,
     wh: '100%',
-    backgroundColor: '#f5f5f5',
-    fontFamily: 'Roboto, sans-serif',
-    p: 1.25,
+    bg: 'b3',
   },
   Container: {
-    bg: 'bg',
-    p: 2.5,
+    bg: 'b0',
+    p: 2,
     rounded: 6,
-    elevation: 4,
+    elevation: 3,
     textAlign: 'center',
-    wMax: 25,
-    w: '100%',
-  },
-  SpinnerContainer: {
-    w: 5,
-    h: 5,
-    bg: '#28A8D9',
-    rounded: 50,
-    m: '0 auto 20px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  Spinner: {
-    w: 2.5,
-    h: 2.5,
-    border: '3px solid white',
-    borderTop: '3px solid transparent',
-    rounded: 50,
-    anim: {
-      name: 'spin',
-      duration: '1s',
-      timing: 'linear',
-      count: 'infinite',
-      keyframes: {
-        '0%': { transform: { rotate: 0 } },
-        '100%': { transform: { rotate: 360 } },
-      },
-    },
+    w: 30,
   },
   Title: {
-    color: '#333',
-    mb: 0.625,
-    fontWeight: '300',
-    m: '0 0 10px 0',
+    fg: 't2',
+    m: 0.5,
+    mb: 0.2,
+    bold: 1,
+    fontSize: 2,
   },
   Subtitle: {
-    color: '#666',
-    mb: 1.875,
-    m: '0 0 30px 0',
-  },
-  CodeContainer: {
-    bg: '#f8f9fa',
-    border: '2px dashed #28A8D9',
-    rounded: 4,
-    p: 1.25,
-    mb: 1.25,
+    color: 't3',
+    m: 0.5,
+    mt: 0,
   },
   Code: {
+    bg: 'b1',
+    border: '2px dashed',
+    bColor: 'p5',
+    rounded: 4,
+    p: 1,
+    m: 1,
+  },
+  CodeText: {
+    fg: 'p5',
+    fontSize: 2,
+    letterSpacing: '0.2em',
     bold: 1,
-    color: '#28A8D9',
-    letterSpacing: '2px', // Espacement réduit pour les clés plus longues
-    fontFamily: 'monospace',
-    wordBreak: 'break-all', // Permet de couper les longues clés si nécessaire
+  },
+  Buttons: {
+    fRow: ['center', 'space-around'],
   },
 });
 
@@ -84,19 +57,13 @@ export const PairingPage = () => {
   return (
     <div class={c()}>
       <div class={c('Container')}>
-        <div class={c('SpinnerContainer')}>
-          <div class={c('Spinner')} />
+        <LoadingSpinner />
+        <div class={c('Title')}>En attente de pairage</div>
+        <div class={c('Subtitle')}>Saisissez cette clé dans l'interface d'administration</div>
+        <div class={c('Code')}>
+          <div class={c('CodeText')}>{pairingCode.toUpperCase()}</div>
         </div>
-
-        <h1 class={c('Title')}>En attente de pairage</h1>
-
-        <p class={c('Subtitle')}>Saisissez cette clé dans l'interface d'administration</p>
-
-        <div class={c('CodeContainer')}>
-          <div class={c('Code')}>{pairingCode}</div>
-        </div>
-
-        <FlexRow>
+        <div class={c('Buttons')}>
           <Button
             title="Mode Offline"
             color="secondary"
@@ -105,7 +72,7 @@ export const PairingPage = () => {
               page$.set('kiosk');
             }}
           />
-        </FlexRow>
+        </div>
       </div>
     </div>
   );
