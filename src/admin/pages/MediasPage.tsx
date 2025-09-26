@@ -16,13 +16,14 @@ import {
   setIsEdit,
   setMediaKey,
   setMediaType,
+  uploadMedia,
   useIsEdit,
   useItemKey,
   useMediaKey,
   useMediaType,
 } from '../controllers';
 import { AddPlaylistItemButton, EditPlaylist } from '../components/medias/EditPlaylist';
-import { needAuthId, needGroupId, PlaylistModel, upload } from '@common/api';
+import { needAuthId, needGroupId, PlaylistModel } from '@common/api';
 import { Edit, FolderPlus, MapPlus, Play, Upload } from 'lucide-react';
 
 const c = Css('MediasPage', {});
@@ -110,7 +111,7 @@ export const MediasPage = () => {
           {...tooltip('Téléverser des medias')}
           icon={<Upload />}
           color="primary"
-          onFiles={(files) => upload(files, media?.id)}
+          onFiles={(files) => uploadMedia(files, media?.id)}
         />
 
         <SearchField />

@@ -1,6 +1,123 @@
 import { MediaModel, PlaylistModel } from '@common/api';
 import { mediaCtrl } from '../../colls';
 import { deepClone, getChanges, groupBy, isEmpty, isItem, isList, sort, uniq } from '@common/utils';
+import { uuid } from '../../../common/utils/str';
+import { needGroupId } from '../../../common/api/messages';
+import { JobModel } from '../../../common/api/models';
+import { toError } from '../../../common/utils/cast';
+import { MsgDict } from '@common/utils';
+import { needAuthId } from '../../../common/api/apiReq';
+
+const MAX_CONCURRENT_UPLOADS = 3;
+
+export interface UploadItem extends JobModel {
+  file: File;
+  parent?: string;
+}
+
+export const uploadMediaJobs$ = new MsgDict<UploadItem>({});
+
+const update = (id: string, changes: Partial<UploadItem>) => {
+  changes.updated = new Date();
+  uploadMediaJobs$.merge({ [id]: changes });
+};
+
+const startUploadMedia = async (item: UploadItem) => {
+  const id = item.id;
+  console.info('upload started', { id, item });
+
+  try {
+    const file = item.file;
+    if (!file) return;
+
+    update(id, { status: 'processing' });
+
+    const parent = item.parent && (await mediaCtrl.get(item.parent));
+
+    console.debug('upload creating', { item });
+    const media = await mediaCtrl.create(
+      {
+        title: String(file.name),
+        source: file,
+        group: needGroupId(),
+        user: needAuthId(),
+        parent: parent?.id,
+      },
+      {
+        req: {
+          xhr: true,
+          timeout: 5 * 60 * 1000,
+          onProgress: (progress) => {
+            console.debug('upload progress', id, progress);
+            update(id, { progress: progress * 100 });
+          },
+        },
+      }
+    );
+
+    console.debug('upload created', { item, media });
+
+    if (parent && parent.type === 'playlist') {
+      console.debug('upload apply playlist', { item, media, parent });
+      await mediaCtrl.apply(parent.id, (next) => {
+        next.deps.push(media.id);
+        next.data.items.push({ media: media.id });
+      });
+    }
+
+    update(id, { progress: 100, status: 'finished' });
+
+    console.info('upload success', item, media);
+    return media;
+  } catch (e) {
+    const error = toError(e);
+    console.warn('upload failed', item, error);
+    update(id, { error: error.message, status: 'failed' });
+  } finally {
+    setTimeout(() => {
+      console.debug('upload clean', id, item);
+      uploadMediaJobs$.delete(id);
+    }, 5000);
+  }
+};
+
+const processQueue = async () => {
+  while (true) {
+    const items = Object.values(uploadMediaJobs$.v);
+    if (items.filter((i) => i.status === 'processing').length >= MAX_CONCURRENT_UPLOADS) {
+      return;
+    }
+
+    const item = items.find((i) => i.status === '');
+    if (!item) {
+      return;
+    }
+
+    await startUploadMedia(item);
+  }
+};
+
+export const uploadMedia = (files: File[], parent?: string): string[] => {
+  console.debug('uploadMedia', { files, parent });
+  const ids = files.map((file) => {
+    const id = uuid();
+    uploadMediaJobs$.update({
+      [id]: {
+        id,
+        file,
+        name: file.name,
+        action: 'upload',
+        status: '',
+        created: new Date(),
+        updated: new Date(),
+        parent,
+      },
+    });
+    return id;
+  });
+  processQueue();
+  return ids;
+};
 
 export const updateMedia = async <T extends MediaModel>(id: string, apply: (next: T) => void) => {
   const prev = mediaCtrl.get(id);

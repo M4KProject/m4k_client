@@ -11,8 +11,8 @@ import {
 } from '@common/components';
 import { Trash2 } from 'lucide-react';
 import { JobStatus } from './JobStatus';
-import { JobModel, uploadJobs$ } from '@common/api';
-import { jobCtrl, mediaCtrl } from '../../controllers';
+import { JobModel } from '@common/api';
+import { jobCtrl, mediaCtrl, uploadMediaJobs$ } from '../../controllers';
 import { useMsg } from '@common/hooks';
 import { Css } from '@common/ui';
 import { MediaPreview } from '../medias/MediaPreview';
@@ -36,7 +36,7 @@ export interface JobsTableProps {
 
 export const JobsTable = ({ filter, panel, ...props }: JobsTableProps) => {
   const jobs = useGroupItems(jobCtrl);
-  const uploadJobs = useMsg(uploadJobs$);
+  const uploadJobs = useMsg(uploadMediaJobs$);
   const allJobs = [...jobs, ...Object.values(uploadJobs)];
   const filteredJobs = filter ? allJobs.filter(filter) : allJobs;
   // const sortedJobs = sort(filteredJobs, (j) => -new Date(j.updated).getTime());

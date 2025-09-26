@@ -90,7 +90,6 @@ export const setGroupKey = propSetter('groupKey');
 export const setDeviceKey = propSetter('deviceKey');
 
 const q = { ...getUrlQuery() };
-if (q.media) q.mediaKey = q.media;
-if (q.group) q.groupKey = q.group;
-if (q.device) q.deviceKey = q.device;
+if (q.media || q.m) q.mediaKey = q.media || q.m;
+if (q.group || q.g) q.groupKey = q.group || q.g;
 updateRoute(q as Partial<Route>);
