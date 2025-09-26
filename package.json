@@ -10,7 +10,8 @@
     "analyze:open": "vite build --mode apk && npx rollup-plugin-visualizer dist/stats.html --open",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "clean-imports": "eslint src --fix"
+    "eslint-fix": "eslint src --fix",
+    "clean-imports": "npx unimported --fix"
   },
   "dependencies": {
     "lucide-react": "^0.542.0",
