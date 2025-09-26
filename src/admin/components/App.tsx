@@ -13,7 +13,7 @@ import { AccountPage } from '../pages/AccountPage';
 import { Page, useGroupKey, usePage } from '../controllers/router';
 import { groupCtrl, useItemKey } from '../controllers';
 import { useEffect } from 'preact/hooks';
-import { apiAuth$ } from '@common/api';
+import { apiAuth$, groupId$ } from '@common/api';
 
 const c = Css('App', {
   '': {
@@ -76,7 +76,12 @@ const AppContent = () => {
 export const App = () => {
   const groupKey = useGroupKey();
   const group = useItemKey(groupCtrl, groupKey);
+  const groupId = group?.id;
   const { isDark, primary, secondary } = group?.data || {};
+
+  useEffect(() => {
+    groupId$.set(groupId);
+  }, [groupId]);
 
   useEffect(() => {
     updateTheme({ isDark, primary, secondary });

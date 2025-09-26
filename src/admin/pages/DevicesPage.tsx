@@ -26,7 +26,11 @@ import { deviceCtrl, mediaCtrl } from '../controllers';
 import { useGroupItems } from '../controllers/useItem';
 import { setDeviceKey, setPage, useIsAdvanced } from '../controllers/router';
 
-const c = Css('DevicesPage', {});
+const c = Css('DevicesPage', {
+  'Buttons': {
+    fRow: ['center', 'space-around'],
+  }
+});
 
 export const PairingForm = ({ onClose }: { onClose: () => void }) => {
   const [key, setKey] = useState('');
@@ -35,9 +39,11 @@ export const PairingForm = ({ onClose }: { onClose: () => void }) => {
   const handlePairing = async () => {
     if (!key) return;
 
+    const cleanKey = key.toLowerCase().replace(/ /g, '');
+
     try {
-      console.log('Tentative de pairage avec le code:', key);
-      await apiGet(`pair/${key}/${group}`);
+      console.log('Tentative de pairage avec le code:', cleanKey);
+      await apiGet(`pair/${cleanKey}/${group}`);
       onClose();
     } catch (e) {
       const error = toErr(e);
@@ -50,7 +56,9 @@ export const PairingForm = ({ onClose }: { onClose: () => void }) => {
   return (
     <Form>
       <Field label="Code de pairage" value={key} onValue={setKey} />
-      <Button title="Pairer l'écran" color="primary" onClick={handlePairing} />
+      <div class={c('Buttons')}>
+        <Button title="Pairer l'écran" color="primary" onClick={handlePairing} />
+      </div>
     </Form>
   );
 };
