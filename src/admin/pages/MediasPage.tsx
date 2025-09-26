@@ -1,5 +1,13 @@
 import { Css } from '@common/ui';
-import { BackButton, Button, Page, PageBody, Toolbar, tooltip, UploadButton } from '@common/components';
+import {
+  BackButton,
+  Button,
+  Page,
+  PageBody,
+  Toolbar,
+  tooltip,
+  UploadButton,
+} from '@common/components';
 import { MediaTable } from '../components/medias/MediaTable';
 import { SearchField } from '../components/SearchField';
 import {
@@ -19,9 +27,7 @@ import { Edit, FolderPlus, MapPlus, Play, Upload } from 'lucide-react';
 
 const c = Css('MediasPage', {});
 
-const handleAddToPlaylist = async () => {
-  
-}
+const handleAddToPlaylist = async () => {};
 
 const handleCreatePlaylist = async () => {
   const playlist = await mediaCtrl.create({
@@ -33,7 +39,7 @@ const handleCreatePlaylist = async () => {
   });
   setMediaType('playlist');
   setMediaKey(playlist.key);
-}
+};
 
 export const MediasPage = () => {
   const type = useMediaType();
@@ -52,30 +58,16 @@ export const MediasPage = () => {
   return (
     <Page class={c('Page')}>
       <Toolbar title="Medias">
+        {media && <BackButton onClick={() => setMediaKey('')} />}
 
-        {media && (
-          <BackButton onClick={() => setMediaKey('')} />
-        )}
+        {media?.type === 'playlist' && <AddPlaylistItemButton playlist={media as PlaylistModel} />}
 
-        {media?.type === 'playlist' && (
-          <AddPlaylistItemButton playlist={media as PlaylistModel} />
-        )}
-
-        {media && (
-          isEdit ? (
-            <Button
-              icon={<Play />}
-              title="Afficher le media"
-              onClick={() => setIsEdit(false)}
-            />
+        {media &&
+          (isEdit ? (
+            <Button icon={<Play />} title="Afficher le media" onClick={() => setIsEdit(false)} />
           ) : (
-            <Button
-              icon={<Edit />}
-              title="Éditer le media"
-              onClick={() => setIsEdit(true)}
-            />
-          )
-        )}
+            <Button icon={<Edit />} title="Éditer le media" onClick={() => setIsEdit(true)} />
+          ))}
 
         {media?.type === 'playlist' ? (
           <Button
@@ -94,7 +86,7 @@ export const MediasPage = () => {
             Crée une Playlist
           </Button>
         )}
-        
+
         {type === '' && (
           <Button
             icon={<FolderPlus />}
@@ -122,7 +114,6 @@ export const MediasPage = () => {
         />
 
         <SearchField />
-
       </Toolbar>
       <PageBody>{content}</PageBody>
     </Page>

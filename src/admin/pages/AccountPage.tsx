@@ -75,7 +75,7 @@ export const AccountPage = () => {
             label="Mode sombre"
             name="isDark"
             value={theme.isUserDark}
-            onValue={isUserDark => updateTheme({ isUserDark })}
+            onValue={(isUserDark) => updateTheme({ isUserDark })}
           />
           {/* <FieldGroup>
             <Field

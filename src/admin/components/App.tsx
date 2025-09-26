@@ -80,7 +80,7 @@ export const App = () => {
 
   useEffect(() => {
     updateTheme({ isDark, primary, secondary });
-  }, [isDark, primary, secondary])
-  
+  }, [isDark, primary, secondary]);
+
   return <AppContent />;
 };

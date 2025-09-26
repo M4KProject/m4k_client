@@ -40,7 +40,7 @@ export const GroupsPage = () => {
   const group = useItem(groupCtrl, groupKey);
   const isAdvanced = useIsAdvanced();
   const groups = useItems(groupCtrl);
-  
+
   const handleAdd = async () => {
     if (!auth) return;
     const group = await groupCtrl.create({ name: 'Nouveau Groupe', user: auth.id });
@@ -99,7 +99,7 @@ export const GroupsPage = () => {
                     type="switch"
                     value={g.data?.isDark}
                     onValue={(isDark) => {
-                      groupCtrl.apply(g.id, prev => {
+                      groupCtrl.apply(g.id, (prev) => {
                         prev.data = { ...prev.data, isDark };
                       });
                     }}
@@ -110,7 +110,7 @@ export const GroupsPage = () => {
                     type="color"
                     value={g.data?.primary}
                     onValue={(primary) => {
-                      groupCtrl.apply(g.id, prev => {
+                      groupCtrl.apply(g.id, (prev) => {
                         prev.data = { ...prev.data, primary };
                       });
                     }}
@@ -121,7 +121,7 @@ export const GroupsPage = () => {
                     type="color"
                     value={g.data?.secondary}
                     onValue={(secondary) => {
-                      groupCtrl.apply(g.id, prev => {
+                      groupCtrl.apply(g.id, (prev) => {
                         prev.data = { ...prev.data, secondary };
                       });
                     }}
