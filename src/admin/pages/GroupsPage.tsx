@@ -15,7 +15,7 @@ import {
   tooltip,
   RowHead,
 } from '@common/components';
-import { Css, getColor, updateTheme } from '@common/ui';
+import { Css, getColor } from '@common/ui';
 import { SearchField } from '../components/SearchField';
 import { Role, auth$ } from '@common/api';
 import { groupCtrl, memberCtrl } from '../controllers';

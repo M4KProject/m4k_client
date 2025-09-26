@@ -1,5 +1,5 @@
 import { Css } from '@common/ui';
-import { FileInfo, MediaModel, Thumb, VideoData, getUrl } from '@common/api';
+import { FileInfo, MediaModel, Thumb, getUrl } from '@common/api';
 import { isStrNotEmpty, uuid } from '@common/utils';
 import { useMemo } from 'preact/hooks';
 import { Popover, useIsOver } from './Popover';

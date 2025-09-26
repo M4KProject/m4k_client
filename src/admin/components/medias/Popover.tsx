@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, useMemo } from 'preact/hooks';
+import { useRef, useEffect, useMemo } from 'preact/hooks';
 import { ComponentChildren } from 'preact';
 import { Msg, uuid } from '@common/utils';
 import { useMsg } from '@common/hooks';
