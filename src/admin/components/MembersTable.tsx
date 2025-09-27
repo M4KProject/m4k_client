@@ -1,5 +1,5 @@
 import { Css } from '@common/ui';
-import { toNbr, toStr } from '@common/utils';
+import { byId, toNbr, toStr } from '@common/utils';
 import {
   Field,
   Button,
@@ -13,20 +13,22 @@ import {
   RowHead,
 } from '@common/components';
 import { Trash2 } from 'lucide-react';
-import { memberCtrl } from '../controllers';
+import { deviceCtrl, memberCtrl } from '../controllers';
 import { useGroupItems } from '../controllers/useItem';
 
 const c = Css('MemberTable', {});
 
 export const MemberTable = () => {
   const members = useGroupItems(memberCtrl);
+  const devices = useGroupItems(deviceCtrl);
+  const deviceById = byId(devices);
 
   return (
     <Table class={c()}>
       <TableHead>
         <RowHead>
           <CellHead>Appareil</CellHead>
-          <CellHead>Email</CellHead>
+          <CellHead>Titre</CellHead>
           <CellHead>Droit</CellHead>
           <CellHead>Description</CellHead>
           <CellHead>Actions</CellHead>
@@ -38,7 +40,7 @@ export const MemberTable = () => {
             <Cell>
               <Field type="switch" value={!!m.device} readonly />
             </Cell>
-            <Cell>{m.email}</Cell>
+            <Cell>{m.device ? deviceById[m.device]?.name : m.email}</Cell>
             <Cell>
               <Field
                 type="select"
