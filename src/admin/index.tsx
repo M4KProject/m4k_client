@@ -2,7 +2,7 @@ import { render } from 'preact';
 import { App } from './components/App';
 import { addFont, refreshTheme, addEl, addResponsiveListener, setCss } from '@common/ui';
 import { apiError$, authRefresh } from '@common/api';
-import { app } from '../app';
+import { app } from '../shared/app';
 import * as controllers from './controllers';
 import { showError } from '@common/components';
 

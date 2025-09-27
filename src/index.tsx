@@ -1,7 +1,9 @@
 import { addResponsiveListener } from '@common/ui';
 import { getUrlQuery } from '@common/ui/getUrlQuery';
-import { isDevice$ } from './messages';
-import './app';
+import { isBool, Msg } from '@common/utils';
+import './shared/app';
+
+export const isDevice$ = new Msg(false, 'isDevice$', true, isBool);
 
 addResponsiveListener();
 
