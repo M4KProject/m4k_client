@@ -4,10 +4,11 @@ import { MediaModel } from '@common/api';
 import { tooltip, Button, Row, Cell, Field } from '@common/components';
 import { SelectedField } from '../SelectedField';
 import { MediaPreview } from './MediaPreview';
-import { mediaCtrl, updatePlaylist } from '../../controllers';
+import { updatePlaylist } from '../../controllers';
+import { mediaSync } from '@/api/sync';
 import { useState } from 'preact/hooks';
 import { MediaIcon } from './MediaIcon';
-import { updateRoute } from '@/admin/controllers/router';
+import { updateRoute } from '@/router/setters';
 import { selectedById$ } from '@/admin/controllers/selected';
 
 export interface MediaCtx {
@@ -52,7 +53,7 @@ export const MediaRow = ({ m, ctx, tab }: { m: MediaModel; ctx: MediaCtx; tab: n
           <Field
             {...(isAdvanced ? tooltip(m.order) : {})}
             value={m.title}
-            onValue={(title) => mediaCtrl.update(m.id, { title })}
+            onValue={(title) => mediaSync.update(m.id, { title })}
           />
         </Cell>
         <Cell>
@@ -69,7 +70,7 @@ export const MediaRow = ({ m, ctx, tab }: { m: MediaModel; ctx: MediaCtx; tab: n
               onClick={async () => {
                 for (const id of selectedIds) {
                   selectedById$.setItem(id, undefined);
-                  await mediaCtrl.update(id, { parent: m.id });
+                  await mediaSync.update(id, { parent: m.id });
                 }
               }}
             />
@@ -112,9 +113,9 @@ export const MediaRow = ({ m, ctx, tab }: { m: MediaModel; ctx: MediaCtx; tab: n
             {...tooltip('Supprimer')}
             onClick={async () => {
               for (const c of children) {
-                mediaCtrl.update(c.id, { parent: null });
+                mediaSync.update(c.id, { parent: null });
               }
-              mediaCtrl.delete(m.id);
+              mediaSync.delete(m.id);
             }}
           />
         </Cell>

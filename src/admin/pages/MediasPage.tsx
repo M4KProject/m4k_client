@@ -10,28 +10,21 @@ import {
 } from '@common/components';
 import { MediaTable } from '../components/medias/MediaTable';
 import { SearchField } from '../components/SearchField';
-import {
-  getNextTitle,
-  mediaCtrl,
-  setIsEdit,
-  setMediaKey,
-  setMediaType,
-  uploadMedia,
-  useIsEdit,
-  useItemKey,
-  useMediaKey,
-  useMediaType,
-} from '../controllers';
+import { getNextTitle, uploadMedia } from '../controllers';
+import { mediaSync } from '@/api/sync';
 import { AddPlaylistItemButton, EditPlaylist } from '../components/medias/EditPlaylist';
 import { needAuthId, needGroupId, PlaylistModel } from '@common/api';
 import { Edit, FolderPlus, MapPlus, Play, Upload } from 'lucide-react';
+import { useIsEdit, useMediaType } from '@/router/hooks';
+import { setIsEdit, setMediaKey, setMediaType } from '@/router/setters';
+import { useMedia } from '@/api/hooks';
 
 const c = Css('MediasPage', {});
 
 const handleAddToPlaylist = async () => {};
 
 const handleCreatePlaylist = async () => {
-  const playlist = await mediaCtrl.create({
+  const playlist = await mediaSync.create({
     title: getNextTitle('Playlist'),
     mime: 'application/playlist',
     type: 'playlist',
@@ -44,8 +37,7 @@ const handleCreatePlaylist = async () => {
 
 export const MediasPage = () => {
   const type = useMediaType();
-  const mediaKey = useMediaKey();
-  const media = useItemKey(mediaCtrl, mediaKey);
+  const media = useMedia();
   const isEdit = useIsEdit();
 
   let content = null;
@@ -93,7 +85,7 @@ export const MediasPage = () => {
             icon={<FolderPlus />}
             {...tooltip('Créer un nouveau dossier')}
             onClick={() => {
-              mediaCtrl.create({
+              mediaSync.create({
                 title: getNextTitle('Dossier'),
                 mime: 'application/folder',
                 type: 'folder',

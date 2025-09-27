@@ -1,0 +1,14 @@
+import { Msg } from '@common/utils';
+import { Route } from './types';
+
+export const routeNotDebounced$ = new Msg<Route>({}, 'route$', true);
+export const route$ = routeNotDebounced$.debounce(50);
+
+export const page$ = route$.map((r) => r.page);
+export const isEdit$ = route$.map((r) => r.isEdit);
+export const isAdmin$ = route$.map((r) => r.isAdmin);
+export const isAdvanced$ = route$.map((r) => r.isAdvanced);
+export const mediaType$ = route$.map((r) => r.mediaType);
+export const mediaKey$ = route$.map((r) => r.mediaKey);
+export const groupKey$ = route$.map((r) => r.groupKey);
+export const deviceKey$ = route$.map((r) => r.deviceKey);

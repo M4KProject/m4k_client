@@ -12,12 +12,13 @@ import {
 import { Trash2 } from 'lucide-react';
 import { JobStatus } from './JobStatus';
 import { JobModel } from '@common/api';
-import { jobCtrl, mediaCtrl, uploadMediaJobs$ } from '../../controllers';
+import { uploadMediaJobs$ } from '../../controllers';
+import { jobSync } from '@/api/sync';
 import { useMsg } from '@common/hooks';
 import { Css } from '@common/ui';
 import { MediaPreview } from '../medias/MediaPreview';
 import { byId } from '@common/utils/by';
-import { useGroupItems } from '@/admin/controllers/useItem';
+import { useJobs, useMedias } from '@/api/hooks';
 
 const c = Css('JobsTable', {
   Panel: {
@@ -48,13 +49,13 @@ export interface JobsTableProps {
 }
 
 export const JobsTable = ({ filter, panel, ...props }: JobsTableProps) => {
-  const jobs = useGroupItems(jobCtrl);
+  const jobs = useJobs();
   const uploadJobs = useMsg(uploadMediaJobs$);
   const allJobs = [...jobs, ...Object.values(uploadJobs)];
   const filteredJobs = filter ? allJobs.filter(filter) : allJobs;
   // const sortedJobs = sort(filteredJobs, (j) => -new Date(j.updated).getTime());
 
-  const medias = useGroupItems(mediaCtrl);
+  const medias = useMedias();
   const mediaById = byId(medias);
 
   if (panel && filteredJobs.length === 0) {
@@ -86,7 +87,7 @@ export const JobsTable = ({ filter, panel, ...props }: JobsTableProps) => {
                 icon={<Trash2 />}
                 color="error"
                 {...tooltip('Supprimer')}
-                onClick={() => jobCtrl.delete(job.id)}
+                onClick={() => jobSync.delete(job.id)}
               />
             </Cell>
           </Row>

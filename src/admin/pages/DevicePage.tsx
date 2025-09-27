@@ -6,8 +6,8 @@ import { DeviceScreen } from '../components/devices/DeviceScreen';
 import { DeviceConsole } from '../components/devices/DeviceConsole';
 import { getUrl } from '@common/api';
 import { stringify } from '@common/utils';
-import { useDevice } from '../controllers/device';
-import { deviceCtrl } from '../controllers';
+import { deviceSync } from '@/api/sync';
+import { useDevice } from '@/api/hooks';
 
 const c = Css('DevicePage', {
   Body: {
@@ -33,7 +33,7 @@ export const DevicePage = () => {
   const executeAction = async (action: string, input?: any) => {
     if (!device) return;
     try {
-      await deviceCtrl.update(device.id, { action: action as any, input });
+      await deviceSync.update(device.id, { action: action as any, input });
       setConsoleOutput((p) => p + `> Action: ${action}\n`);
     } catch (error) {
       setConsoleOutput((p) => p + `> Error: ${error}\n`);

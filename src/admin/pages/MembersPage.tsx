@@ -6,7 +6,7 @@ import { useState } from 'preact/hooks';
 import { MemberTable } from '../components/MembersTable';
 import { SearchField } from '../components/SearchField';
 import { Role, needGroupId } from '@common/api';
-import { memberCtrl, userCtrl } from '../controllers';
+import { memberSync, userSync } from '@/api/sync';
 
 const c = Css('MembersPage', {});
 
@@ -28,10 +28,10 @@ const CreateMemberForm = ({ onClose }: { onClose: () => void }) => {
     setError('');
     try {
       if (isNew) {
-        await userCtrl.create({ email, password, passwordConfirm: password });
-        await memberCtrl.create({ email, group: needGroupId(), role: Role.editor });
+        await userSync.create({ email, password, passwordConfirm: password });
+        await memberSync.create({ email, group: needGroupId(), role: Role.editor });
       } else {
-        await memberCtrl.create({ email, group: needGroupId(), role: Role.editor });
+        await memberSync.create({ email, group: needGroupId(), role: Role.editor });
       }
       onClose();
     } catch (e) {

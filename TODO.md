@@ -1,6 +1,7 @@
 # Options de restructuration des dossiers (2025)
 
 ## Option 1: Structure basée sur les fonctionnalités (Feature-Based)
+
 **Recommandée pour les projets avec logique fonctionnelle**
 
 ```
@@ -41,12 +42,14 @@ src/
 ```
 
 **Avantages:**
+
 - Isolation des fonctionnalités
 - Facilite le travail en équipe
 - Code modulaire et réutilisable
 - Évite les imports circulaires
 
 ## Option 2: Structure fonctionnelle pure (Function-First)
+
 **Optimisée pour la programmation fonctionnelle**
 
 ```
@@ -78,12 +81,14 @@ src/
 ```
 
 **Avantages:**
+
 - Séparation claire entre fonctions pures et side effects
 - Facilite les tests unitaires
 - Code plus prévisible et debuggable
 - Encourage l'immutabilité
 
 ## Option 3: Structure par couches (Layered Architecture)
+
 **Inspirée des patterns backend**
 
 ```
@@ -114,12 +119,14 @@ src/
 ```
 
 **Avantages:**
+
 - Architecture scalable
 - Séparation claire des responsabilités
 - Facilite les tests et mocks
 - Indépendance des couches
 
 ## Option 4: Structure hybride moderne (Recommended 2025)
+
 **Combine les meilleures pratiques actuelles**
 
 ```
@@ -153,6 +160,7 @@ src/
 ```
 
 **Avantages:**
+
 - Équilibre entre modularité et simplicité
 - Exports publics clairs
 - Facilite le tree-shaking
@@ -161,13 +169,16 @@ src/
 ## Critères de choix
 
 ### Pour votre projet (M4K Client):
+
 - **Taille**: Projet moyen avec 3 interfaces distinctes
 - **Équipe**: Probablement petite équipe
 - **Logique**: Beaucoup de fonctions pures et reactive patterns
 - **Maintenance**: Code facile à comprendre et modifier
 
 ### Recommandation personnalisée:
+
 **Option 4 (Hybride moderne)** semble la plus adaptée car:
+
 1. Respecte vos patterns actuels (messages/, controllers/ → modules/)
 2. Facilite la maintenance avec des modules autonomes
 3. Garde la simplicité pour une petite équipe
@@ -175,6 +186,7 @@ src/
 5. Permet une migration progressive depuis votre structure actuelle
 
 ### Prochaines étapes suggérées:
+
 1. Choisir une option
 2. Migrer un module à la fois (ex: commencer par `auth/`)
 3. Tester la nouvelle structure avec un module complet

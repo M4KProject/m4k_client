@@ -10,10 +10,11 @@ import { JobsPage } from '../pages/JobsPage';
 import { DevicesPage } from '../pages/DevicesPage';
 import { AuthPage } from '../pages/AuthPage';
 import { AccountPage } from '../pages/AccountPage';
-import { Page, useGroupKey, usePage } from '../controllers/router';
-import { groupCtrl, useItemKey } from '../controllers';
 import { useEffect } from 'preact/hooks';
 import { apiAuth$, groupId$ } from '@common/api';
+import { Page } from '@/router/types';
+import { usePage } from '@/router/hooks';
+import { useGroup } from '@/api/hooks';
 
 const c = Css('App', {
   '': {
@@ -74,8 +75,7 @@ const AppContent = () => {
 };
 
 export const App = () => {
-  const groupKey = useGroupKey();
-  const group = useItemKey(groupCtrl, groupKey);
+  const group = useGroup();
   const groupId = group?.id;
   const { isDark, primary, secondary } = group?.data || {};
 

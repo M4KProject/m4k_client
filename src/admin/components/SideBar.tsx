@@ -2,20 +2,12 @@ import { addTr } from '@common/hooks';
 import { Css } from '@common/ui';
 import { Side, SideButton, SideSep } from '@common/components';
 import { Home, Users, Monitor, User, Zap } from 'lucide-react';
-import { groupCtrl } from '../controllers';
 import { MediaIcon } from './medias/MediaIcon';
-import {
-  Page,
-  setGroupKey,
-  setPage,
-  updateRoute,
-  useGroupKey,
-  useIsAdvanced,
-  useMediaType,
-  usePage,
-} from '../controllers/router';
-import { useItemKey, useItems } from '../controllers/useItem';
+import { setGroupKey, setPage, updateRoute } from '../../router/setters';
+import { useGroup, useGroups } from '../../api/hooks';
 import { MediaType } from '@common/api';
+import { useIsAdvanced, useMediaType, usePage } from '@/router/hooks';
+import { Page } from '@/router/types';
 
 const c = Css('SideBar', {
   Version: {
@@ -43,12 +35,11 @@ addTr({
 
 export const SideBar = () => {
   const isAdvanced = useIsAdvanced();
-  const groupKey = useGroupKey();
-  const group = useItemKey(groupCtrl, groupKey);
+  const group = useGroup();
   const page = usePage();
   const mediaType = useMediaType();
+  const groups = useGroups();
 
-  const groups = useItems(groupCtrl);
   if (groups.length === 1) setGroupKey(groups[0].key);
 
   const go = (page: Page) => () => setPage(page);

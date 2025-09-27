@@ -13,7 +13,7 @@ import {
 } from '@common/utils';
 import { ApiAuth, authLogin, authSignUp, DeviceModel, UserModel } from '@common/api';
 import { serverDate } from '@common/api/serverTime';
-import { deviceCtrl } from '@/device/controllers';
+import { deviceSync } from '@/api/sync';
 
 export const deviceEmail$ = new Msg('', 'deviceEmail', true);
 export const devicePassword$ = new Msg('', 'devicePassword', true);
@@ -61,7 +61,7 @@ const deviceLogin = async (): Promise<DeviceModel> => {
   const info = await m4k.info();
   info.started = serverDate();
 
-  const device = await deviceCtrl.coll.upsert(
+  const device = await deviceSync.coll.upsert(
     { user: deviceAuth.id },
     {
       user: deviceAuth.id,
@@ -84,7 +84,7 @@ const deviceStart = async () => {
   deviceUnsubscribe();
 
   console.debug('deviceStart subscribe', device.id);
-  deviceUnsubscribe = deviceCtrl.coll.on((device, action) => {
+  deviceUnsubscribe = deviceSync.coll.on((device, action) => {
     console.debug('deviceStart subscribe', action, device);
     if (action === 'delete') {
       deviceLogin();
@@ -105,7 +105,7 @@ const deviceLoop = async () => {
 
   if (!device) throw new Error('no device');
 
-  device = await deviceCtrl.update(device.id, {
+  device = await deviceSync.update(device.id, {
     online: serverDate(),
   });
   console.debug('deviceLoop updated', device);
@@ -134,7 +134,7 @@ deviceAction$.on(() => runAction(device$.v));
 const capture = async (device: DeviceModel, options?: M4kResizeOptions | undefined) => {
   const url = await m4k.capture(options);
   const blob = await req('GET', url, { resType: 'blob' });
-  return await deviceCtrl.update(device.id, { capture: blob });
+  return await deviceSync.update(device.id, { capture: blob });
 };
 
 const execAction = async (device: DeviceModel, action: string, input: string) => {
@@ -175,7 +175,7 @@ const runAction = async (device: DeviceModel) => {
   const { action, input } = device;
   if (!action) return;
 
-  await deviceCtrl.update(device.id, { action: '', online: serverDate() });
+  await deviceSync.update(device.id, { action: '', online: serverDate() });
 
   let value: any = null;
   let error: any = null;
@@ -186,7 +186,7 @@ const runAction = async (device: DeviceModel) => {
     error = err;
   }
 
-  await deviceCtrl.update(device.id, {
+  await deviceSync.update(device.id, {
     action: '',
     result: {
       success: !error,
@@ -202,7 +202,7 @@ const runAction = async (device: DeviceModel) => {
 // import { m4k } from "@common/m4k";
 // import supabase from "./supabase";
 // import { uuid } from "@common/utils/str";
-// import { actionRepo, deviceRepo } from "./repos";
+// import { actionRepo, deviceSync } from "./repos";
 // import { User } from "@supabase/supabase-js";
 // import { Tables } from "./database.types";
 // import { sleep } from "@common/utils/async";
@@ -288,10 +288,10 @@ const runAction = async (device: DeviceModel) => {
 
 //     const user = await authUser()
 
-//     device = await deviceRepo.findOne({ user_id: user.id })
+//     device = await deviceSync.findOne({ user_id: user.id })
 //     if (device) return device
 
-//     device = await deviceRepo.insert({ user_id: user.id })
+//     device = await deviceSync.insert({ user_id: user.id })
 //     return device
 // }
 
@@ -320,7 +320,7 @@ const runAction = async (device: DeviceModel) => {
 //         console.info('device', device)
 
 //         const deviceInfo = await m4k.deviceInfo();
-//         await deviceRepo.update(device.id, {
+//         await deviceSync.update(device.id, {
 //             type: deviceInfo.model,
 //             started_at: new Date().toISOString(),
 //             online_at: new Date().toISOString(),
@@ -345,7 +345,7 @@ const runAction = async (device: DeviceModel) => {
 //     //         const username = 'U_' + Date.now().toString(16) + randString(3);
 //     //         const password = 'P_' + randString(20);
 //     //         logInfo('create device', username);
-//     //         await deviceRepo.create({ username, password, passwordConfirm: password }, { select: ['id'] });
+//     //         await deviceSync.create({ username, password, passwordConfirm: password }, { select: ['id'] });
 //     //         setLogin({ username, password });
 //     //         logInfo('create device ok', username);
 //     //         return await deviceLogin();
@@ -361,7 +361,7 @@ const runAction = async (device: DeviceModel) => {
 //     //         const { username, password } = (await getLogin()) || {};
 //     //         if (!username || !password) return createDevice();
 //     //         logInfo('wait device login', { username });
-//     //         const device = await deviceRepo.login(username, password);
+//     //         const device = await deviceSync.login(username, password);
 //     //         if (device) logInfo('device login ok', username, device.id);
 //     //         return device;
 //     //     }

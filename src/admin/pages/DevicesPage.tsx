@@ -20,11 +20,12 @@ import {
 } from '@common/components';
 import { RefreshCw, Trash2, Settings, Plus, Power } from 'lucide-react';
 import { useState } from 'preact/hooks';
-import { apiGet, serverTime, DeviceModel, groupId$ } from '@common/api';
+import { apiGet, serverTime, DeviceModel, groupId$, MediaModel } from '@common/api';
 import { SearchField } from '../components/SearchField';
-import { deviceCtrl, mediaCtrl } from '../controllers';
-import { useGroupItems } from '../controllers/useItem';
-import { setDeviceKey, setPage, useIsAdvanced } from '../controllers/router';
+import { deviceSync, Sync } from '@/api/sync';
+import { setDeviceKey, setPage } from '../../router/setters';
+import { useIsAdvanced } from '@/router/hooks';
+import { useDevices, useMedias } from '@/api/hooks';
 
 const c = Css('DevicesPage', {
   Buttons: {
@@ -65,8 +66,8 @@ export const PairingForm = ({ onClose }: { onClose: () => void }) => {
 
 export const DevicesPage = () => {
   const isAdvanced = useIsAdvanced();
-  const medias = useGroupItems(mediaCtrl);
-  const devices = useGroupItems(deviceCtrl);
+  const medias = useMedias();
+  const devices = useDevices();
 
   // search ? devices.filter((d) => isSearched(d.name, search)) : devices;
 
@@ -123,7 +124,7 @@ export const DevicesPage = () => {
                     <Field
                       {...tooltip(d.id)}
                       value={d.key}
-                      onValue={(key) => deviceCtrl.update(d.id, { key })}
+                      onValue={(key) => deviceSync.update(d.id, { key })}
                     />
                   </Cell>
                 )}
@@ -137,7 +138,7 @@ export const DevicesPage = () => {
                   </Cell>
                 )}
                 <Cell>
-                  <Field value={d.name} onValue={(name) => deviceCtrl.update(d.id, { name })} />
+                  <Field value={d.name} onValue={(name) => deviceSync.update(d.id, { name })} />
                 </Cell>
                 <Cell>{`${d.info?.width || 0}x${d.info?.height || 0}`}</Cell>
                 <Cell>
@@ -155,7 +156,7 @@ export const DevicesPage = () => {
                     type="select"
                     items={medias.map((c) => [c.id, c.title || c.key || c.id])}
                     value={d.media}
-                    onValue={(media) => deviceCtrl.update(d.id, { media })}
+                    onValue={(media) => deviceSync.update(d.id, { media })}
                   />
                 </Cell>
                 <Cell variant="around">
@@ -163,13 +164,13 @@ export const DevicesPage = () => {
                     icon={<RefreshCw />}
                     color="primary"
                     {...tooltip('Rafraîchir')}
-                    onClick={() => deviceCtrl.update(d.id, { action: 'reload' })}
+                    onClick={() => deviceSync.update(d.id, { action: 'reload' })}
                   />
                   <Button
                     icon={<Power />}
                     color="primary"
                     {...tooltip('Redémarrer')}
-                    onClick={() => deviceCtrl.update(d.id, { action: 'reboot' })}
+                    onClick={() => deviceSync.update(d.id, { action: 'reboot' })}
                   />
                   {isAdvanced && (
                     <Button
@@ -183,7 +184,7 @@ export const DevicesPage = () => {
                       icon={<Trash2 />}
                       color="error"
                       {...tooltip('Supprimer')}
-                      onClick={() => deviceCtrl.delete(d.id)}
+                      onClick={() => deviceSync.delete(d.id)}
                     />
                   )}
                 </Cell>
@@ -195,3 +196,6 @@ export const DevicesPage = () => {
     </Page>
   );
 };
+function useGroupItems(mediaSync: Sync<MediaModel>) {
+  throw new Error('Function not implemented.');
+}

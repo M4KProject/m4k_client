@@ -4,11 +4,10 @@ import { addTr, useMsg } from '@common/hooks';
 import { MediaModel } from '@common/api';
 import { Table, CellHead, TableHead, TableBody, RowHead } from '@common/components';
 import { JobsTable } from '../jobs/JobsTable';
-import { mediaCtrl } from '../../controllers';
 import { MediaCtx, MediaRow } from './MediaRow';
-import { useIsAdvanced } from '@/admin/controllers/router';
 import { selectedById$ } from '@/admin/controllers/selected';
-import { useGroupItems } from '@/admin/controllers/useItem';
+import { useMedias } from '@/api/hooks';
+import { useIsAdvanced } from '@/router/hooks';
 
 addTr({
   pending: 'en attente',
@@ -21,7 +20,7 @@ addTr({
 const c = Css('MediaTable', {});
 
 export const MediaTable = ({ type }: { type?: MediaModel['type'] }) => {
-  const medias = useGroupItems(mediaCtrl);
+  const medias = useMedias();
   const isAdvanced = useIsAdvanced();
   const allSelectedById = useMsg(selectedById$);
   const mediaById = byId(medias);

@@ -13,14 +13,14 @@ import {
   RowHead,
 } from '@common/components';
 import { Trash2 } from 'lucide-react';
-import { deviceCtrl, memberCtrl } from '../controllers';
-import { useGroupItems } from '../controllers/useItem';
+import { memberSync } from '@/api/sync';
+import { useDevices, useMembers } from '@/api/hooks';
 
 const c = Css('MemberTable', {});
 
 export const MemberTable = () => {
-  const members = useGroupItems(memberCtrl);
-  const devices = useGroupItems(deviceCtrl);
+  const members = useMembers();
+  const devices = useDevices();
   const deviceById = byId(devices);
 
   return (
@@ -50,14 +50,14 @@ export const MemberTable = () => {
                   ['30', 'Administrateur'],
                 ]}
                 value={toStr(m.role)}
-                onValue={(role) => memberCtrl.update(m.id, { role: toNbr(role) })}
+                onValue={(role) => memberSync.update(m.id, { role: toNbr(role) })}
               />
             </Cell>
             <Cell>
               <Field
                 type="text"
                 value={m.desc}
-                onValue={(desc) => memberCtrl.update(m.id, { desc })}
+                onValue={(desc) => memberSync.update(m.id, { desc })}
               />
             </Cell>
             <Cell variant="around">
@@ -65,7 +65,7 @@ export const MemberTable = () => {
                 icon={<Trash2 />}
                 color="error"
                 {...tooltip('Supprimer')}
-                onClick={() => memberCtrl.delete(m.id)}
+                onClick={() => memberSync.delete(m.id)}
               />
             </Cell>
           </Row>

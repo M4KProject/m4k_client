@@ -7,8 +7,10 @@ import { useMsg } from '@common/hooks';
 import { LogOut, KeyRound } from 'lucide-react';
 import { useState } from 'preact/hooks';
 import { LoadingPage } from './LoadingPage';
-import { apiAuth$, authLogout, coll } from '@common/api';
-import { setIsAdvanced, useIsAdvanced } from '../controllers/router';
+import { apiAuth$, authLogout } from '@common/api';
+import { userSync } from '@/api/sync';
+import { useIsAdvanced } from '@/router/hooks';
+import { setIsAdvanced } from '@/router/setters';
 
 const c = Css('AccountPage', {
   Color: {
@@ -34,7 +36,7 @@ export const AccountPage = () => {
 
   const handleUpdatePassword = async () => {
     try {
-      await coll('users').update(auth.id, { oldPassword, password, passwordConfirm: password });
+      await userSync.update(auth.id, { oldPassword, password, passwordConfirm: password });
       setPasswordError('');
       setPassword('');
     } catch (_error) {

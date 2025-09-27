@@ -22,10 +22,10 @@ import {
   RowHead,
 } from '@common/components';
 import { Plus, Trash2, Copy, ArrowUp, ArrowDown } from 'lucide-react';
-import { mediaCtrl, updatePlaylist } from '@/admin/controllers';
+import { updatePlaylist } from '@/admin/controllers';
 import { JobsTable } from '../jobs/JobsTable';
 import { MediaPreview } from './MediaPreview';
-import { useGroupItems } from '@/admin/controllers/useItem';
+import { useMedias } from '@/api/hooks';
 
 const c = Css('EditPlaylist', {
   '': {
@@ -43,7 +43,7 @@ export const AddPlaylistItemButton = ({ playlist }: { playlist: PlaylistModel })
 };
 
 export const EditPlaylist = ({ playlist }: { playlist: PlaylistModel }) => {
-  const medias = useGroupItems(mediaCtrl);
+  const medias = useMedias();
 
   const updateItem = (index: number, changes: Partial<PlaylistEntry>) => {
     updatePlaylist(playlist.id, ({ data }) => {

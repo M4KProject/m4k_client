@@ -1,5 +1,5 @@
 import { MediaModel, PlaylistModel } from '@common/api';
-import { mediaCtrl } from '@/handlers';
+import { mediaSync } from '@/api/sync';
 import { deepClone, getChanges, groupBy, isEmpty, isItem, isList, sort, uniq } from '@common/utils';
 import { uuid } from '../../../common/utils/str';
 import { needGroupId } from '../../../common/api/messages';
@@ -32,10 +32,10 @@ const startUploadMedia = async (item: UploadItem) => {
 
     update(id, { status: 'processing' });
 
-    const parent = item.parent && (await mediaCtrl.get(item.parent));
+    const parent = item.parent && (await mediaSync.get(item.parent));
 
     console.debug('upload creating', { item });
-    const media = await mediaCtrl.create(
+    const media = await mediaSync.create(
       {
         title: String(file.name),
         source: file,
@@ -59,7 +59,7 @@ const startUploadMedia = async (item: UploadItem) => {
 
     if (parent && parent.type === 'playlist') {
       console.debug('upload apply playlist', { item, media, parent });
-      await mediaCtrl.apply(parent.id, (next) => {
+      await mediaSync.apply(parent.id, (next) => {
         next.deps.push(media.id);
         next.data.items.push({ media: media.id });
       });
@@ -120,7 +120,7 @@ export const uploadMedia = (files: File[], parent?: string): string[] => {
 };
 
 export const updateMedia = async <T extends MediaModel>(id: string, apply: (next: T) => void) => {
-  const prev = mediaCtrl.get(id);
+  const prev = mediaSync.get(id);
   if (!prev) return;
   const next = deepClone(prev);
   if (!isItem(next.data)) next.data = {};
@@ -128,7 +128,7 @@ export const updateMedia = async <T extends MediaModel>(id: string, apply: (next
   next.deps = uniq(next.deps);
   const changes = getChanges(prev, next);
   if (!isEmpty(changes)) {
-    return await mediaCtrl.update(id, changes);
+    return await mediaSync.update(id, changes);
   }
 };
 
@@ -140,7 +140,7 @@ const cleanPlaylist = (next: PlaylistModel) => {
   data.items = data.items.filter(isItem);
   const items = data.items;
 
-  const mediaById = mediaCtrl.byId();
+  const mediaById = mediaSync.byId();
   const itemsByMediaId = groupBy(items, (item) => item.media || '');
   delete itemsByMediaId[''];
 

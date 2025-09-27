@@ -18,9 +18,10 @@ import {
 import { Css, getColor } from '@common/ui';
 import { SearchField } from '../components/SearchField';
 import { Role, apiAuth$ } from '@common/api';
-import { groupCtrl, memberCtrl } from '../controllers';
-import { setGroupKey, useGroupKey, useIsAdvanced } from '../controllers/router';
-import { useItem, useItems } from '../controllers/useItem';
+import { groupSync, memberSync } from '@/api/sync';
+import { useIsAdvanced } from '@/router/hooks';
+import { setGroupKey } from '@/router/setters';
+import { useGroup, useGroups } from '@/api/hooks';
 
 const c = Css('GroupsPage', {
   Color: {
@@ -36,17 +37,16 @@ export const Color = ({ color }: { color: string }) => (
 
 export const GroupsPage = () => {
   const auth = useMsg(apiAuth$);
-  const groupKey = useGroupKey();
-  const group = useItem(groupCtrl, groupKey);
+  const group = useGroup();
+  const groups = useGroups();
   const isAdvanced = useIsAdvanced();
-  const groups = useItems(groupCtrl);
 
   const handleAdd = async () => {
     if (!auth) return;
-    const group = await groupCtrl.create({ name: 'Nouveau Groupe', user: auth.id });
+    const group = await groupSync.create({ name: 'Nouveau Groupe', user: auth.id });
     if (group) {
       const role = Role.viewer;
-      await memberCtrl.create({ user: auth.id, group: group.id, role });
+      await memberSync.create({ user: auth.id, group: group.id, role });
     }
   };
 
@@ -78,7 +78,7 @@ export const GroupsPage = () => {
                   <Field
                     name={'C' + i}
                     type="switch"
-                    value={g.key === groupKey || g.id === groupKey}
+                    value={g.id === group.id}
                     onValue={(v) => setGroupKey(v ? g.key : '')}
                   />
                 </Cell>
@@ -87,19 +87,19 @@ export const GroupsPage = () => {
                     <Field
                       {...tooltip(g.id)}
                       value={g.key}
-                      onValue={(key) => groupCtrl.update(g.id, { key })}
+                      onValue={(key) => groupSync.update(g.id, { key })}
                     />
                   </Cell>
                 )}
                 <Cell>
-                  <Field value={g.name} onValue={(name) => groupCtrl.update(g.id, { name })} />
+                  <Field value={g.name} onValue={(name) => groupSync.update(g.id, { name })} />
                 </Cell>
                 <Cell>
                   <Field
                     type="switch"
                     value={g.data?.isDark}
                     onValue={(isDark) => {
-                      groupCtrl.apply(g.id, (prev) => {
+                      groupSync.apply(g.id, (prev) => {
                         prev.data = { ...prev.data, isDark };
                       });
                     }}
@@ -110,7 +110,7 @@ export const GroupsPage = () => {
                     type="color"
                     value={g.data?.primary}
                     onValue={(primary) => {
-                      groupCtrl.apply(g.id, (prev) => {
+                      groupSync.apply(g.id, (prev) => {
                         prev.data = { ...prev.data, primary };
                       });
                     }}
@@ -121,7 +121,7 @@ export const GroupsPage = () => {
                     type="color"
                     value={g.data?.secondary}
                     onValue={(secondary) => {
-                      groupCtrl.apply(g.id, (prev) => {
+                      groupSync.apply(g.id, (prev) => {
                         prev.data = { ...prev.data, secondary };
                       });
                     }}
@@ -132,7 +132,7 @@ export const GroupsPage = () => {
                     icon={<Trash2 />}
                     color="error"
                     {...tooltip('Supprimer')}
-                    onClick={() => groupCtrl.delete(g.id)}
+                    onClick={() => groupSync.delete(g.id)}
                   />
                 </Cell>
               </Row>

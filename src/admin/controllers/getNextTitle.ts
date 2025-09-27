@@ -1,7 +1,7 @@
-import { mediaCtrl } from '@/handlers';
+import { mediaSync } from '@/api/sync';
 
 export const getNextTitle = (start: string) => {
-  const medias = mediaCtrl.filter();
+  const medias = mediaSync.filter();
   let i = 1;
   let title = start;
   while (true) {
