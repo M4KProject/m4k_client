@@ -1,5 +1,5 @@
 import { MediaModel, PlaylistModel } from '@common/api';
-import { mediaCtrl } from '../../colls';
+import { mediaCtrl } from '@/handlers';
 import { deepClone, getChanges, groupBy, isEmpty, isItem, isList, sort, uniq } from '@common/utils';
 import { uuid } from '../../../common/utils/str';
 import { needGroupId } from '../../../common/api/messages';

@@ -1,4 +1,3 @@
-export * from '../../colls';
 export * from './getNextTitle';
 export * from './media';
 export * from './router';

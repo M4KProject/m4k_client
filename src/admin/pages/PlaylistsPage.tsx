@@ -1,7 +1,7 @@
 import { Css } from '@common/ui';
 import { Page, PageBody, Toolbar } from '@common/components';
 import { MediaTable } from '../components/medias/MediaTable';
-import { mediaCtrl } from '@/colls';
+import { mediaCtrl } from '@/handlers';
 import { SearchField } from '../components/SearchField';
 import { PlaylistModel } from '@common/api';
 import { AddPlaylistItemButton, EditPlaylist } from '../components/medias/EditPlaylist';

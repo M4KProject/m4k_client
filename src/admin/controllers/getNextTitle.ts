@@ -1,4 +1,4 @@
-import { mediaCtrl } from '@/colls';
+import { mediaCtrl } from '@/handlers';
 
 export const getNextTitle = (start: string) => {
   const medias = mediaCtrl.filter();
