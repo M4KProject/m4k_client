@@ -9,7 +9,7 @@ import {
 import copyPlaylist from './copyPlaylist';
 import { deviceInit } from './services/device';
 import { m4k } from '@common/m4k';
-import { App } from './components/App';
+import { DeviceApp } from './components/DeviceApp';
 
 console.debug('loaded');
 
@@ -24,7 +24,7 @@ export const mount = () => {
   refreshTheme();
 
   _rootEl = addEl('div', { id: 'm4kDevice', parent: 'body' });
-  render(<App />, _rootEl);
+  render(<DeviceApp />, _rootEl);
 
   deviceInit();
 

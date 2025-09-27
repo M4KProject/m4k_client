@@ -21,7 +21,7 @@ import { useEffect } from 'preact/hooks';
 import { offlineMode$ } from '../messages';
 import { DialogContainer } from './DialogContainer';
 
-const c = Css('App', {
+const c = Css('DeviceApp', {
   '': {
     fRow: 'stretch',
     position: 'fixed',
@@ -54,13 +54,13 @@ const CompByPage: Record<PageName, () => JSX.Element> = {
   },
 };
 
-const AppRouter = () => {
+const DeviceAppRouter = () => {
   const page = useMsg(page$);
   const Page = CompByPage[page] || ActionsPage;
   return <Page />;
 };
 
-const AppContent = () => {
+const DeviceAppContent = () => {
   const page = useMsg(page$);
   const device = useMsg(device$);
 
@@ -127,12 +127,12 @@ const AppContent = () => {
         </Side>
       )}
       <Corners />
-      <AppRouter />
+      <DeviceAppRouter />
       <DialogContainer />
     </div>
   );
 };
 
-export const App = () => {
-  return <AppContent />;
+export const DeviceApp = () => {
+  return <DeviceAppContent />;
 };
