@@ -1,6 +1,6 @@
 import { Css } from '@common/ui';
 import { FileInfo, MediaModel, Thumb, getUrl } from '@common/api';
-import {isStrDef, uuid } from '@common/utils';
+import { isStrDef, uuid } from '@common/utils';
 import { useMemo } from 'preact/hooks';
 import { Popover, useIsOver } from './Popover';
 

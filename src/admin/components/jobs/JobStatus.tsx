@@ -27,7 +27,7 @@ addTr({
   deleted: 'Supprimé',
 });
 
-const statusIcons: Dictionary<typeof Clock> = {
+const statusIcons: TMap<typeof Clock> = {
   pending: Clock,
   processing: Play,
   finished: CheckCircle,

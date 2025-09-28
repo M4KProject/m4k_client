@@ -1,5 +1,5 @@
-import { Dict, MsgDict } from '@common/utils';
+import { Dict, MsgMap } from '@common/utils';
 
-export const selectedById$ = new MsgDict<boolean>({});
+export const selectedById$ = new MsgMap<boolean>({});
 
-export const updateSelected = (changes: Dictionary<boolean>) => selectedById$.update(changes);
+export const updateSelected = (changes: TMap<boolean>) => selectedById$.update(changes);

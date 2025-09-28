@@ -7,7 +7,6 @@ import { Button, Field, Form, showDialog } from '@common/components';
 import { Globe, Lock } from 'lucide-react';
 import { device$ } from '../services/device';
 import { codePin$, offlineMode$ } from '../messages';
-import { FlexRow } from '@common/components/Flex';
 
 const c = Css('CodePinView', {
   '': {
@@ -15,7 +14,16 @@ const c = Css('CodePinView', {
   },
   Code: {
     w: '100%',
-    textAlign: 'center',
+    textAlign: 'right',
+  },
+  Buttons: {
+    fRow: 1,
+  },
+  Sep: {
+    flex: 1,
+  },
+  ' .Button': {
+    flex: 1,
   },
 });
 
@@ -31,7 +39,7 @@ export const CodePinView = ({ open$ }: { open$: Msg<boolean> }) => {
 
   useEffect(() => {
     if (timerMs > 10000) {
-      close();
+      handleClose();
     }
   }, [timerMs]);
 
@@ -45,21 +53,19 @@ export const CodePinView = ({ open$ }: { open$: Msg<boolean> }) => {
 
   return (
     <Form class={c()}>
-      <div class={c('Code')}>{device?.key}</div>
       <Field type="password" label="Code PIN" value={codePin} onValue={setCodePin} />
       <div class={c('Buttons')}>
-        <Button icon={<Lock />} onClick={handleClose}>
-          Valider
-        </Button>
+        <Button title="Valider" color="primary" icon={<Lock />} onClick={handleClose} />
+        <div class={c('Sep')} />
         <Button
+          title="Online"
           icon={<Globe />}
           onClick={() => {
             offlineMode$.set(false);
           }}
-        >
-          Online
-        </Button>
+        />
       </div>
+      <div class={c('Code')}>{device?.key}</div>
     </Form>
     // <>
     //     <Form

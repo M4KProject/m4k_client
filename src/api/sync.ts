@@ -1,7 +1,7 @@
 import { Coll, CollOptions, Where } from '@common/api/Coll';
 import { ModelBase, ModelCreate, ModelUpdate } from '@common/api/models.base';
 import { byId } from '@common/utils/by';
-import { isDictionaryOfItem, isEmpty, isList, isStr } from '@common/utils/check';
+import { isItemMap, isEmpty, isList, isStr } from '@common/utils/check';
 import { notImplemented } from '@common/utils/error';
 import {
   DeviceModel,
@@ -16,21 +16,23 @@ import { stringify } from '@common/utils/json';
 import { deepClone, getChanges } from '@common/utils/obj';
 import { apiError$ } from '@common/api';
 import { showError } from '@common/components';
+import { TMap } from '@common/utils/types';
+import { MsgMap } from '@common/utils/MsgMap';
 
 export class Sync<T extends ModelBase> {
   readonly name: string;
-  readonly up$: IMsgReadonly<Dictionary<T>>;
+  readonly up$: IMsgReadonly<TMap<T>>;
   readonly coll: Coll<T>;
 
-  private readonly cache: MsgDict<T>;
-  private readonly filterMap: Dictionary<IMsgReadonly<T[]>> = {};
-  private readonly findMap: Dictionary<IMsgReadonly<T>> = {};
+  private readonly cache: MsgMap<T>;
+  private readonly filterMap: TMap<IMsgReadonly<T[]>> = {};
+  private readonly findMap: TMap<IMsgReadonly<T>> = {};
   private isInit = false;
 
   constructor(name: string) {
     this.name = name;
     this.coll = new Coll<T>(name);
-    this.cache = new MsgDict<T>({}, name + 'Cache', true, isDictionaryOfItem);
+    this.cache = new MsgMap<T>({}, name + 'Cache', true, isItemMap);
     this.up$ = this.cache.throttle(100);
   }
 
@@ -100,7 +102,7 @@ export class Sync<T extends ModelBase> {
   async load() {
     this.log('load');
     const items = await this.coll.all();
-    const changes: Dictionary<T | null> = byId(items);
+    const changes: TMap<T | null> = byId(items);
     const prev = this.filter();
     const deletedIds = prev.filter((i) => !changes[i.id]).map((r) => r.id);
     for (const id of deletedIds) changes[id] = null;

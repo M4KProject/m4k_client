@@ -5,7 +5,7 @@ import { uuid } from '../../../common/utils/str';
 import { needGroupId } from '../../../common/api/messages';
 import { JobModel } from '../../../common/api/models';
 import { toError } from '../../../common/utils/cast';
-import { MsgDict } from '@common/utils';
+import { MsgMap } from '@common/utils';
 import { needAuthId } from '../../../common/api/apiReq';
 
 const MAX_CONCURRENT_UPLOADS = 3;
@@ -15,7 +15,7 @@ export interface UploadItem extends JobModel {
   parent?: string;
 }
 
-export const uploadMediaJobs$ = new MsgDict<UploadItem>({});
+export const uploadMediaJobs$ = new MsgMap<UploadItem>({});
 
 const update = (id: string, changes: Partial<UploadItem>) => {
   changes.updated = new Date();
