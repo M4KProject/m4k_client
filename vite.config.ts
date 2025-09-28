@@ -9,7 +9,7 @@ import path from 'node:path';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
-  const define: Record<string, any> = {
+  const define: Dictionary<any> = {
     'import.meta.env.APK_MODE': mode === 'apk',
   };
   Object.entries(define).map(([k, v]) => (define[k] = JSON.stringify(v)));

@@ -1,5 +1,5 @@
 import { Css } from '@common/ui';
-import { formatDate, formatDateTime, stringify, toDate, toErr, toTime } from '@common/utils';
+import { formatDate, formatDateTime, stringify, toDate, toError, toTime } from '@common/utils';
 import { useMsg } from '@common/hooks';
 import {
   Button,
@@ -47,7 +47,7 @@ export const PairingForm = ({ onClose }: { onClose: () => void }) => {
       await apiGet(`pair/${cleanKey}/${group}`);
       onClose();
     } catch (e) {
-      const error = toErr(e);
+      const error = toError(e);
       console.error('Erreur lors du pairage:', error);
       alert('Erreur lors du pairage. Vérifiez le code et réessayez.');
       onClose();

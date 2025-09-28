@@ -5,7 +5,7 @@ import {
   sleep,
   toStr,
   uuid,
-  toErr,
+  toError,
   parse,
   randKey,
   ReqError,
@@ -119,7 +119,7 @@ export const deviceInit = async () => {
     try {
       await deviceStart();
     } catch (e) {
-      console.warn('deviceInit', toErr(e));
+      console.warn('deviceInit', toError(e));
     }
     await sleep(60000);
   }
@@ -170,7 +170,7 @@ const execAction = async (device: DeviceModel, action: string, input: string) =>
 const runAction = async (device: DeviceModel) => {
   console.debug('runAction', device.action, device.input, device);
 
-  if (!device) throw toErr('no device');
+  if (!device) throw toError('no device');
 
   const { action, input } = device;
   if (!action) return;
@@ -366,7 +366,7 @@ const runAction = async (device: DeviceModel) => {
 //     //         return device;
 //     //     }
 //     //     catch (e: any) {
-//     //         const err = toErr(e);
+//     //         const err = toError(e);
 //     //         logWarn('device login error', err.data, err);
 //     //         if (err.code === 400) {
 //     //             await sleep(2000);

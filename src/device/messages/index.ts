@@ -1,4 +1,4 @@
-import { isStrNotEmpty } from '@common/utils';
+import {isStrDef } from '@common/utils';
 import { newMsg } from '@common/utils/Msg';
 
 export * from './dialog$';
@@ -6,9 +6,9 @@ export * from './page$';
 export * from './playlist$';
 export * from './contentRotation$';
 
-export const codePin$ = newMsg('yoyo', 'codePin', true, isStrNotEmpty);
+export const codePin$ = newMsg('yoyo', 'codePin', true,isStrDef);
 
-export const copyDir$ = newMsg('playlist', 'copyDir', true, isStrNotEmpty);
+export const copyDir$ = newMsg('playlist', 'copyDir', true,isStrDef);
 
 export const itemDurationMs$ = newMsg(5000, 'itemDurationMs', true);
 

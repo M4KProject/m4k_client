@@ -27,7 +27,7 @@ addTr({
   deleted: 'Supprimé',
 });
 
-const statusIcons: Record<string, typeof Clock> = {
+const statusIcons: Dictionary<typeof Clock> = {
   pending: Clock,
   processing: Play,
   finished: CheckCircle,

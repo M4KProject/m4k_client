@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'preact/hooks';
 import { m4k } from '@common/m4k';
-import { stringify, toErr, withTimeout } from '@common/utils';
+import { stringify, toError, withTimeout } from '@common/utils';
 import {
   Button,
   Cell,
@@ -68,7 +68,7 @@ const initTests = (): TestData[] => {
         const ms = Date.now() - started;
         return { success: true, value, ms };
       } catch (error) {
-        return { error: toErr(error).message, value };
+        return { error: toError(error).message, value };
       }
     };
     return { name, getResult, expect };

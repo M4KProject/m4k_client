@@ -1,9 +1,10 @@
 import { MediaType } from '@common/api';
 import { getUrlQuery } from '@common/ui';
-import { isEq, toBool, toStr } from '@common/utils';
+import { toBool, toStr } from '@common/utils';
 import { Page, Route } from './types';
 import { getRoute } from './getters';
 import { routeNotDebounced$ } from './msgs';
+import { isDeepEqual } from '@common/utils/isDeepEqual';
 
 const cleanRoute = (route: Route): Route => ({
   page: toStr(route.page) as Page,
@@ -19,7 +20,7 @@ const cleanRoute = (route: Route): Route => ({
 const setRoute = (route: Route) => {
   const prev = getRoute();
   const next = cleanRoute(route);
-  if (!isEq(prev, next)) routeNotDebounced$.set(next);
+  if (!isDeepEqual(prev, next)) routeNotDebounced$.set(next);
 };
 
 export const updateRoute = (changes: Partial<Route>) => setRoute({ ...getRoute(), ...changes });

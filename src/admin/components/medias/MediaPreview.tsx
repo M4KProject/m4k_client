@@ -1,6 +1,6 @@
 import { Css } from '@common/ui';
 import { FileInfo, MediaModel, Thumb, getUrl } from '@common/api';
-import { isStrNotEmpty, uuid } from '@common/utils';
+import {isStrDef, uuid } from '@common/utils';
 import { useMemo } from 'preact/hooks';
 import { Popover, useIsOver } from './Popover';
 
@@ -34,11 +34,11 @@ const getVariants = (media?: MediaModel): Variant[] => {
   const results = [];
   media.data?.variants?.forEach((info, i) => {
     const file = media.variants[i];
-    if (isStrNotEmpty(file)) {
+    if (isStrDef(file)) {
       results.push({ ...info, file, media });
     }
   });
-  if (isStrNotEmpty(media.source)) {
+  if (isStrDef(media.source)) {
     const file = media.source;
     results.push({ ...media, file, media });
   }

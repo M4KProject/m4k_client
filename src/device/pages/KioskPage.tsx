@@ -1,5 +1,5 @@
 import { Css } from '@common/ui';
-import { toNbr, toErr } from '@common/utils';
+import { toNbr, toError } from '@common/utils';
 import { Button } from '@common/components';
 import { usePromise, useMsg } from '@common/hooks';
 import { useEffect, useRef, useState } from 'preact/hooks';
@@ -105,7 +105,7 @@ const KioskVideo = ({
     };
 
     el.onerror = (e) => {
-      console.error(`[ITEM_VIDEO] Video error:`, toErr(e), url);
+      console.error(`[ITEM_VIDEO] Video error:`, toError(e), url);
       setTimeout(() => gotoNext(), 1000);
     };
 

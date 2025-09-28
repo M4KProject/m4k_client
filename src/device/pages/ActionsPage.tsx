@@ -1,5 +1,5 @@
 import { Css } from '@common/ui';
-import { toErr } from '@common/utils';
+import { toError } from '@common/utils';
 import { m4k } from '@common/m4k';
 import { usePromise } from '@common/hooks';
 import { Button } from '@common/components';
@@ -118,7 +118,7 @@ const clearCacheAndReload = async () => {
       window.location.reload();
     }, 1000);
   } catch (e) {
-    const error = toErr(e);
+    const error = toError(e);
     prog(1, 'error', `Erreur: ${error}`);
     console.error('Failed to clear SW cache:', error);
   }

@@ -1,9 +1,8 @@
-import { MsgDict } from '@common/utils/MsgDict';
 import { Coll, CollOptions, Where } from '@common/api/Coll';
 import { ModelBase, ModelCreate, ModelUpdate } from '@common/api/models.base';
 import { byId } from '@common/utils/by';
-import { Dict, isDictOfItem, isEmpty, isList, isStr } from '@common/utils/check';
-import { NotImplemented } from '@common/utils/error';
+import { isDictionaryOfItem, isEmpty, isList, isStr } from '@common/utils/check';
+import { notImplemented } from '@common/utils/error';
 import {
   DeviceModel,
   GroupModel,
@@ -20,18 +19,18 @@ import { showError } from '@common/components';
 
 export class Sync<T extends ModelBase> {
   readonly name: string;
-  readonly up$: IMsgReadonly<Dict<T>>;
+  readonly up$: IMsgReadonly<Dictionary<T>>;
   readonly coll: Coll<T>;
 
   private readonly cache: MsgDict<T>;
-  private readonly filterMap: Dict<IMsgReadonly<T[]>> = {};
-  private readonly findMap: Dict<IMsgReadonly<T>> = {};
+  private readonly filterMap: Dictionary<IMsgReadonly<T[]>> = {};
+  private readonly findMap: Dictionary<IMsgReadonly<T>> = {};
   private isInit = false;
 
   constructor(name: string) {
     this.name = name;
     this.coll = new Coll<T>(name);
-    this.cache = new MsgDict<T>({}, name + 'Cache', true, isDictOfItem);
+    this.cache = new MsgDict<T>({}, name + 'Cache', true, isDictionaryOfItem);
     this.up$ = this.cache.throttle(100);
   }
 
@@ -78,7 +77,7 @@ export class Sync<T extends ModelBase> {
             // case '?~':  // Any/At least one of Like/Contains (if not specified auto wraps the right string OPERAND in a "%" for wildcard match)
             // case '?!~': // Any/At least one of NOT Like/Contains (if not specified auto wraps the right string OPERAND in a "%" for wildcard match)
             default:
-              throw new NotImplemented(`operator "${operator}"`);
+              throw notImplemented(operator);
           }
         } else {
           return (v: any) => v[p] === filter;
@@ -101,7 +100,7 @@ export class Sync<T extends ModelBase> {
   async load() {
     this.log('load');
     const items = await this.coll.all();
-    const changes: Dict<T | null> = byId(items);
+    const changes: Dictionary<T | null> = byId(items);
     const prev = this.filter();
     const deletedIds = prev.filter((i) => !changes[i.id]).map((r) => r.id);
     for (const id of deletedIds) changes[id] = null;

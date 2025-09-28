@@ -12,8 +12,8 @@ import { updateRoute } from '@/router/setters';
 import { selectedById$ } from '@/admin/controllers/selected';
 
 export interface MediaCtx {
-  mediaById: Dict<MediaModel>;
-  mediasByParent: Dict<MediaModel[]>;
+  mediaById: Dictionary<MediaModel>;
+  mediasByParent: Dictionary<MediaModel[]>;
   isAdvanced: boolean;
   selectedIds: string[];
 }
