@@ -7,7 +7,8 @@ import { useEffect, useRef } from 'preact/hooks';
 
 const c = Css('ProgressView', {
   '': {
-    fRow: ['stretch'],
+    fCol: ['stretch'],
+    bg: 'b0',
   },
   Logs: {
     fCol: 1,
