@@ -1,4 +1,4 @@
-import { Dict, isPositive, round } from '@common/utils';
+import { TMap, isPositive, round } from '@common/utils';
 import { Trash2, FolderInput, PlusSquare, Edit } from 'lucide-react';
 import { MediaModel } from '@common/api';
 import { tooltip, Button, Row, Cell, Field } from '@common/components';

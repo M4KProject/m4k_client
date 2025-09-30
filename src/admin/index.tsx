@@ -1,10 +1,9 @@
 import { render } from 'preact';
 import { App } from './components/App';
 import { addFont, refreshTheme, addEl, addResponsiveListener, setCss } from '@common/ui';
-import { apiError$, authRefresh } from '@common/api';
+import { authRefresh } from '@common/api';
 import { app } from '../shared/app';
 import * as controllers from './controllers';
-import { showError } from '@common/components';
 
 console.debug('loaded');
 
@@ -14,8 +13,6 @@ Object.assign(app, controllers);
 
 export const mount = () => {
   console.debug('admin mount');
-
-  apiError$.on(showError);
 
   addResponsiveListener();
   addFont('Roboto');

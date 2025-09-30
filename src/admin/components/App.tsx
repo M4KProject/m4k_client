@@ -15,6 +15,7 @@ import { apiAuth$, groupId$ } from '@common/api';
 import { Page } from '@/router/types';
 import { usePage } from '@/router/hooks';
 import { useGroup } from '@/api/hooks';
+import { Errors } from './Errors';
 
 const c = Css('App', {
   '': {
@@ -70,6 +71,7 @@ const AppContent = () => {
     <div class={c()}>
       <SideBar />
       <AppRouter />
+      <Errors />
     </div>
   );
 };

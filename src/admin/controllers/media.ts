@@ -1,6 +1,6 @@
 import { MediaModel, PlaylistModel } from '@common/api';
 import { mediaSync } from '@/api/sync';
-import { deepClone, getChanges, groupBy, isEmpty, isItem, isList, sort, uniq } from '@common/utils';
+import { deepClone, getChanges, groupBy, isEmpty, isItem, isList, sortItems, uniq } from '@common/utils';
 import { uuid } from '../../../common/utils/str';
 import { needGroupId } from '../../../common/api/messages';
 import { JobModel } from '../../../common/api/models';
@@ -152,7 +152,7 @@ const cleanPlaylist = (next: PlaylistModel) => {
     }
   });
 
-  next.deps = sort(Object.keys(itemsByMediaId));
+  next.deps = sortItems(Object.keys(itemsByMediaId));
 };
 
 export const updatePlaylist = async (id: string, apply: (next: PlaylistModel) => void) =>

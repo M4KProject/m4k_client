@@ -14,8 +14,6 @@ import {
 import { IMsgReadonly } from '@common/utils/Msg';
 import { stringify } from '@common/utils/json';
 import { deepClone, getChanges } from '@common/utils/obj';
-import { apiError$ } from '@common/api';
-import { showError } from '@common/components';
 import { TMap } from '@common/utils/types';
 import { MsgMap } from '@common/utils/MsgMap';
 
@@ -197,5 +195,3 @@ export const jobSync = sync<JobModel>('jobs');
 export const mediaSync = sync<MediaModel>('medias');
 export const memberSync = sync<MemberModel>('members');
 export const userSync = sync<UserModel>('users');
-
-apiError$.on(showError);

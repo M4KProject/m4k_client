@@ -1,4 +1,4 @@
-import { Dict, MsgMap } from '@common/utils';
+import { TMap, MsgMap } from '@common/utils';
 
 export const selectedById$ = new MsgMap<boolean>({});
 
