@@ -30,10 +30,9 @@ export const Color = ({ color }: { color: string }) => (
   <div {...tooltip(color)} class={c('Color')} style={{ background: getColor(color) }} />
 );
 
-const getCols = (isAdvanced: boolean): GridCols<GroupModel, { groupId: string }> => [
-  {
+const getCols = (isAdvanced: boolean): GridCols<GroupModel, { groupId: string }> => ({
+  selected: {
     w: 30,
-    key: 'selected',
     title: 'Sélectionné',
     val: (item, ctx) => (
       <Field
@@ -43,8 +42,7 @@ const getCols = (isAdvanced: boolean): GridCols<GroupModel, { groupId: string }>
       />
     ),
   },
-  isAdvanced && {
-    prop: 'key',
+  key: isAdvanced && ({
     title: 'Clé',
     val: (item) => (
       <Field
@@ -53,16 +51,14 @@ const getCols = (isAdvanced: boolean): GridCols<GroupModel, { groupId: string }>
         onValue={(key) => groupSync.update(item.id, { key })}
       />
     ),
-  },
-  {
-    prop: 'name',
+  }),
+  name: {
     title: 'Nom',
     val: (item) => (
       <Field value={item.name} onValue={(name) => groupSync.update(item.id, { name })} />
     ),
   },
-  {
-    prop: 'key',
+  isDark: {
     title: 'Mode sombre',
     val: (item) => (
       <Field
@@ -76,8 +72,7 @@ const getCols = (isAdvanced: boolean): GridCols<GroupModel, { groupId: string }>
       />
     ),
   },
-  {
-    prop: 'key',
+  primary: {
     title: 'Couleur primaire',
     val: (item) => (
       <Field
@@ -91,8 +86,7 @@ const getCols = (isAdvanced: boolean): GridCols<GroupModel, { groupId: string }>
       />
     ),
   },
-  {
-    prop: 'key',
+  secondary: {
     title: 'Couleur secondaire',
     val: (item) => (
       <Field
@@ -106,9 +100,8 @@ const getCols = (isAdvanced: boolean): GridCols<GroupModel, { groupId: string }>
       />
     ),
   },
-  {
+  actions: {
     w: 30,
-    key: 'actions',
     title: 'Actions',
     variant: 'actions',
     val: (item) => (
@@ -120,7 +113,7 @@ const getCols = (isAdvanced: boolean): GridCols<GroupModel, { groupId: string }>
       />
     ),
   },
-];
+});
 
 const basicCols = getCols(false);
 const advancedCols = getCols(true);
