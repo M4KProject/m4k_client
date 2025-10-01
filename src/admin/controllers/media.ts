@@ -1,6 +1,15 @@
 import { MediaModel, PlaylistModel } from '@common/api';
 import { mediaSync } from '@/api/sync';
-import { deepClone, getChanges, groupBy, isEmpty, isItem, isList, sortItems, uniq } from '@common/utils';
+import {
+  deepClone,
+  getChanges,
+  groupBy,
+  isEmpty,
+  isItem,
+  isList,
+  sortItems,
+  uniq,
+} from '@common/utils';
 import { uuid } from '../../../common/utils/str';
 import { needGroupId } from '../../../common/api/messages';
 import { JobModel } from '../../../common/api/models';

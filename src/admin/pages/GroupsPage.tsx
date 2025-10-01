@@ -3,21 +3,16 @@ import { Plus, Trash2 } from 'lucide-react';
 import {
   Field,
   Button,
-  Table,
-  Cell,
-  CellHead,
-  Row,
-  TableBody,
-  TableHead,
   Page,
   Toolbar,
   PageBody,
   tooltip,
-  RowHead,
+  Grid,
+  GridCols,
 } from '@common/components';
 import { Css, getColor } from '@common/ui';
 import { SearchField } from '../components/SearchField';
-import { Role, apiAuth$ } from '@common/api';
+import { GroupModel, Role, apiAuth$ } from '@common/api';
 import { groupSync, memberSync } from '@/api/sync';
 import { useIsAdvanced } from '@/router/hooks';
 import { setGroupKey } from '@/router/setters';
@@ -34,6 +29,101 @@ const c = Css('GroupsPage', {
 export const Color = ({ color }: { color: string }) => (
   <div {...tooltip(color)} class={c('Color')} style={{ background: getColor(color) }} />
 );
+
+const getCols = (isAdvanced: boolean): GridCols<GroupModel, { groupId: string }> => [
+  {
+    w: 30,
+    key: 'selected',
+    title: 'Sélectionné',
+    val: (item, ctx) => (
+      <Field
+        type="switch"
+        value={item.id === ctx.groupId}
+        onValue={(v) => setGroupKey(v ? item.key : '')}
+      />
+    ),
+  },
+  isAdvanced && {
+    prop: 'key',
+    title: 'Clé',
+    val: (item) => (
+      <Field
+        {...tooltip(item.id)}
+        value={item.key}
+        onValue={(key) => groupSync.update(item.id, { key })}
+      />
+    ),
+  },
+  {
+    prop: 'name',
+    title: 'Nom',
+    val: (item) => (
+      <Field value={item.name} onValue={(name) => groupSync.update(item.id, { name })} />
+    ),
+  },
+  {
+    prop: 'key',
+    title: 'Mode sombre',
+    val: (item) => (
+      <Field
+        type="switch"
+        value={item.data?.isDark}
+        onValue={(isDark) => {
+          groupSync.apply(item.id, (prev) => {
+            prev.data = { ...prev.data, isDark };
+          });
+        }}
+      />
+    ),
+  },
+  {
+    prop: 'key',
+    title: 'Couleur primaire',
+    val: (item) => (
+      <Field
+        type="color"
+        value={item.data?.primary}
+        onValue={(primary) => {
+          groupSync.apply(item.id, (prev) => {
+            prev.data = { ...prev.data, primary };
+          });
+        }}
+      />
+    ),
+  },
+  {
+    prop: 'key',
+    title: 'Couleur secondaire',
+    val: (item) => (
+      <Field
+        type="color"
+        value={item.data?.secondary}
+        onValue={(secondary) => {
+          groupSync.apply(item.id, (prev) => {
+            prev.data = { ...prev.data, secondary };
+          });
+        }}
+      />
+    ),
+  },
+  {
+    w: 30,
+    key: 'actions',
+    title: 'Actions',
+    variant: 'actions',
+    val: (item) => (
+      <Button
+        icon={<Trash2 />}
+        color="error"
+        {...tooltip('Supprimer')}
+        onClick={() => groupSync.delete(item.id)}
+      />
+    ),
+  },
+];
+
+const basicCols = getCols(false);
+const advancedCols = getCols(true);
 
 export const GroupsPage = () => {
   const auth = useMsg(apiAuth$);
@@ -53,6 +143,8 @@ export const GroupsPage = () => {
 
   console.debug('GroupsPage', { auth, group, isAdvanced, groups });
 
+  const cols = isAdvanced ? advancedCols : basicCols;
+
   return (
     <Page class={c()}>
       <Toolbar title="Gestionnaire de groupes">
@@ -60,86 +152,7 @@ export const GroupsPage = () => {
         <SearchField />
       </Toolbar>
       <PageBody>
-        <Table>
-          <TableHead>
-            <RowHead>
-              <CellHead>Sélectionné</CellHead>
-              {isAdvanced && <CellHead>Clé</CellHead>}
-              <CellHead>Nom</CellHead>
-              <CellHead>Mode sombre</CellHead>
-              <CellHead>Couleur primaire</CellHead>
-              <CellHead>Couleur secondaire</CellHead>
-              <CellHead>Actions</CellHead>
-            </RowHead>
-          </TableHead>
-          <TableBody>
-            {groups.map((g, i) => (
-              <Row key={g.id}>
-                <Cell>
-                  <Field
-                    name={'C' + i}
-                    type="switch"
-                    value={g.id === groupId}
-                    onValue={(v) => setGroupKey(v ? g.key : '')}
-                  />
-                </Cell>
-                {isAdvanced && (
-                  <Cell>
-                    <Field
-                      {...tooltip(g.id)}
-                      value={g.key}
-                      onValue={(key) => groupSync.update(g.id, { key })}
-                    />
-                  </Cell>
-                )}
-                <Cell>
-                  <Field value={g.name} onValue={(name) => groupSync.update(g.id, { name })} />
-                </Cell>
-                <Cell>
-                  <Field
-                    type="switch"
-                    value={g.data?.isDark}
-                    onValue={(isDark) => {
-                      groupSync.apply(g.id, (prev) => {
-                        prev.data = { ...prev.data, isDark };
-                      });
-                    }}
-                  />
-                </Cell>
-                <Cell>
-                  <Field
-                    type="color"
-                    value={g.data?.primary}
-                    onValue={(primary) => {
-                      groupSync.apply(g.id, (prev) => {
-                        prev.data = { ...prev.data, primary };
-                      });
-                    }}
-                  />
-                </Cell>
-                <Cell>
-                  <Field
-                    type="color"
-                    value={g.data?.secondary}
-                    onValue={(secondary) => {
-                      groupSync.apply(g.id, (prev) => {
-                        prev.data = { ...prev.data, secondary };
-                      });
-                    }}
-                  />
-                </Cell>
-                <Cell variant="row">
-                  <Button
-                    icon={<Trash2 />}
-                    color="error"
-                    {...tooltip('Supprimer')}
-                    onClick={() => groupSync.delete(g.id)}
-                  />
-                </Cell>
-              </Row>
-            ))}
-          </TableBody>
-        </Table>
+        <Grid ctx={{ groupId }} cols={cols} items={groups} />
       </PageBody>
     </Page>
   );
