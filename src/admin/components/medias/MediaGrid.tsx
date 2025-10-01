@@ -31,30 +31,35 @@ const c = Css('MediaTable', {
 });
 
 interface MediaGridCtx {
-  isAdvanced: boolean,
-  selectedIds: string[],
-  getTab: (id: string) => number,
-  getIsOpen: (id: string) => boolean,
-  setIsOpen: (id: string, isOpen: boolean) => void,
-  getChildren: (id: string) => MediaModel[],
+  isAdvanced: boolean;
+  selectedIds: string[];
+  getTab: (id: string) => number;
+  getIsOpen: (id: string) => boolean;
+  setIsOpen: (id: string, isOpen: boolean) => void;
+  getChildren: (id: string) => MediaModel[];
 }
 
 const cols: GridCols<MediaModel, MediaGridCtx> = {
   select: {
     w: 10,
     cls: c('Select'),
-    val: ({ id }) => (
-      <SelectedField id={id} />
-    ),
+    val: ({ id }) => <SelectedField id={id} />,
   },
   title: {
     w: 100,
     title: 'Titre',
-    val: ({ id, type, order, title }, { isAdvanced, getTab, getIsOpen, setIsOpen, getChildren }) => (
+    val: (
+      { id, type, order, title },
+      { isAdvanced, getTab, getIsOpen, setIsOpen, getChildren }
+    ) => (
       <>
         <div style={{ width: 2 * getTab(id) + 'em' }} />
         <div onClick={() => setIsOpen(id, !getIsOpen(id))}>
-          <MediaIcon type={type} isOpen={getIsOpen(id)} hasChildren={type === 'folder' && getChildren(id).length > 0} />
+          <MediaIcon
+            type={type}
+            isOpen={getIsOpen(id)}
+            hasChildren={type === 'folder' && getChildren(id).length > 0}
+          />
         </div>
         <Field
           {...(isAdvanced ? tooltip(order) : {})}
@@ -62,12 +67,12 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
           onValue={(title) => mediaSync.update(id, { title })}
         />
       </>
-    )
+    ),
   },
   preview: {
     w: 20,
     title: 'Aperçu',
-    val: media => <MediaPreview media={media} />,
+    val: (media) => <MediaPreview media={media} />,
   },
   size: {
     w: 20,
@@ -86,12 +91,12 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
   resolution: {
     w: 20,
     title: 'Résolution',
-    val: ({ width, height }) => (width || height) ? `${width || 0}x${height || 0}` : '',
+    val: ({ width, height }) => (width || height ? `${width || 0}x${height || 0}` : ''),
   },
   seconds: {
     w: 10,
     title: 'Durée',
-    val: ({ seconds }) => isPositive(seconds) ? round(seconds) + 's' : '',
+    val: ({ seconds }) => (isPositive(seconds) ? round(seconds) + 's' : ''),
   },
   actions: {
     w: 10,
@@ -185,7 +190,7 @@ export const MediaTable = ({ type }: { type?: MediaModel['type'] }) => {
         if (children) deep(children, tab + 1);
       }
     }
-  }
+  };
   deep(rootMedias, 0);
 
   const ctx: MediaGridCtx = {

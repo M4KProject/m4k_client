@@ -19,6 +19,8 @@ const useGroupItems = <T extends GroupModelBase>(sync: Sync<T>, where?: Where<T>
   return useMsg(sync.filter$(group ? { ...where, group } : where));
 };
 
+const useById = <T extends ModelBase>(sync: Sync<T>, where?: Where<T>) => useMsg(sync.up$);
+
 export const useDevice = () => useItemKey(deviceSync, useDeviceKey());
 export const useMedia = () => useItemKey(mediaSync, useMediaKey());
 export const useGroup = () => useItemKey(groupSync, useGroupKey());
@@ -28,3 +30,9 @@ export const useMembers = () => useGroupItems(memberSync);
 export const useDevices = () => useGroupItems(deviceSync);
 export const useMedias = () => useGroupItems(mediaSync);
 export const useJobs = () => useGroupItems(jobSync);
+
+export const useGroupById = () => useById(groupSync);
+export const useMemberById = () => useById(memberSync);
+export const useDeviceById = () => useById(deviceSync);
+export const useMediaById = () => useById(mediaSync);
+export const useJobById = () => useById(jobSync);

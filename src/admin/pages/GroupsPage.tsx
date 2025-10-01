@@ -42,7 +42,7 @@ const getCols = (isAdvanced: boolean): GridCols<GroupModel, { groupId: string }>
       />
     ),
   },
-  key: isAdvanced && ({
+  key: isAdvanced && {
     title: 'Clé',
     val: (item) => (
       <Field
@@ -51,7 +51,7 @@ const getCols = (isAdvanced: boolean): GridCols<GroupModel, { groupId: string }>
         onValue={(key) => groupSync.update(item.id, { key })}
       />
     ),
-  }),
+  },
   name: {
     title: 'Nom',
     val: (item) => (

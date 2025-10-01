@@ -3,7 +3,7 @@ import { randKey, ReqError } from '@common/utils';
 import { Field, Button, Page, Toolbar, PageBody, showDialog, Form } from '@common/components';
 import { Plus } from 'lucide-react';
 import { useState } from 'preact/hooks';
-import { MemberTable } from '../components/MembersTable';
+import { MemberGrid } from '../components/MemberGrid';
 import { SearchField } from '../components/SearchField';
 import { Role, needGroupId } from '@common/api';
 import { memberSync, userSync } from '@/api/sync';
@@ -72,7 +72,7 @@ export const MembersPage = () => {
         <SearchField />
       </Toolbar>
       <PageBody>
-        <MemberTable />
+        <MemberGrid />
       </PageBody>
     </Page>
   );
