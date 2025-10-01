@@ -38,6 +38,7 @@ export const Color = ({ color }: { color: string }) => (
 export const GroupsPage = () => {
   const auth = useMsg(apiAuth$);
   const group = useGroup();
+  const groupId = group?.id;
   const groups = useGroups();
   const isAdvanced = useIsAdvanced();
 
@@ -78,7 +79,7 @@ export const GroupsPage = () => {
                   <Field
                     name={'C' + i}
                     type="switch"
-                    value={g.id === group.id}
+                    value={g.id === groupId}
                     onValue={(v) => setGroupKey(v ? g.key : '')}
                   />
                 </Cell>
