@@ -103,7 +103,6 @@ const getCols = (isAdvanced: boolean): GridCols<GroupModel, { groupId: string }>
   actions: {
     w: 30,
     title: 'Actions',
-    variant: 'actions',
     val: (item) => (
       <Button
         icon={<Trash2 />}

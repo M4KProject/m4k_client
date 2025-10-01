@@ -8,7 +8,7 @@ import {
   tooltip,
   UploadButton,
 } from '@common/components';
-import { MediaTable } from '../components/medias/MediaTable';
+import { MediaTable } from '../components/medias/MediaGrid';
 import { SearchField } from '../components/SearchField';
 import { getNextTitle, uploadMedia } from '../controllers';
 import { mediaSync } from '@/api/sync';
