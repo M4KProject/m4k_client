@@ -1,16 +1,6 @@
 import { Css } from '@common/ui';
 import { isItem, removeItem, ReqError, toError } from '@common/utils';
-import {
-  Button,
-  tooltip,
-  Table,
-  Cell,
-  CellHead,
-  Row,
-  TableBody,
-  TableHead,
-  RowHead,
-} from '@common/components';
+import { Button, tooltip, GridCols, Grid } from '@common/components';
 import { Trash2 } from 'lucide-react';
 import { apiError$ } from '@common/api';
 import { useEffect, useState } from 'preact/hooks';
@@ -18,8 +8,9 @@ import { useEffect, useState } from 'preact/hooks';
 const c = Css('Errors', {
   '': {
     position: 'fixed',
-    r: 1,
-    b: 1,
+    p: 1,
+    r: 0.5,
+    b: 0.5,
     w: 40,
     elevation: 3,
     rounded: 2,
@@ -35,6 +26,28 @@ interface ErrorItem {
   stack: string;
   deleted: number;
 }
+
+const cols: GridCols<any> = {
+  name: {
+    title: 'Nom',
+    props: (item) => tooltip(item.stack),
+    val: (item) => item.name,
+  },
+  message: {
+    title: 'Message',
+    val: (item) => item.message,
+  },
+  actions: {
+    val: (item, { deleteItem }) => (
+      <Button
+        icon={<Trash2 />}
+        color="error"
+        {...tooltip('Supprimer')}
+        onClick={() => deleteItem(item)}
+      />
+    ),
+  },
+};
 
 const errorToItem = (e: any) => {
   const error = toError(e);
@@ -91,35 +104,5 @@ export const Errors = () => {
 
   if (items.length === 0) return null;
 
-  return (
-    <div class={c()}>
-      <Table>
-        <TableHead>
-          <RowHead>
-            <CellHead>Appareil</CellHead>
-            <CellHead>Titre</CellHead>
-            <CellHead>Droit</CellHead>
-            <CellHead>Description</CellHead>
-            <CellHead>Actions</CellHead>
-          </RowHead>
-        </TableHead>
-        <TableBody>
-          {items.map((item, index) => (
-            <Row key={index}>
-              <Cell {...tooltip(item.stack)}>{item.name}</Cell>
-              <Cell>{item.message}</Cell>
-              <Cell variant="around">
-                <Button
-                  icon={<Trash2 />}
-                  color="error"
-                  {...tooltip('Supprimer')}
-                  onClick={() => deleteItem(item)}
-                />
-              </Cell>
-            </Row>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
-  );
+  return <Grid class={c()} cols={cols} ctx={{ deleteItem }} items={items} />;
 };
