@@ -3,7 +3,7 @@ import { Where } from '@common/api/Coll';
 import { GroupModelBase, ModelBase } from '@common/api/models';
 import { useMsg } from '@common/hooks';
 import { deviceSync, groupSync, jobSync, mediaSync, memberSync, Sync } from '@/api/sync';
-import { useDeviceKey, useGroupKey, useMediaKey } from '@/router/hooks';
+import { useDeviceKey, useGroupKey, useMediaKey, useIsAdvanced } from '@/router/hooks';
 
 const useItemKey = <T extends ModelBase>(sync: Sync<T>, key?: string) =>
   useMsg(key ? sync.find$([key, { key } as any]) : null);
@@ -25,7 +25,11 @@ export const useGroup = () => useItemKey(groupSync, useGroupKey());
 export const useGroups = () => useItems(groupSync);
 export const useMembers = () => useGroupItems(memberSync);
 export const useDevices = () => useGroupItems(deviceSync);
-export const useMedias = () => useGroupItems(mediaSync);
+export const useMedias = () => {
+  const allMedias = useGroupItems(mediaSync);
+  const isAdvanced = useIsAdvanced();
+  return isAdvanced ? allMedias : allMedias.filter((m) => !m.title.startsWith('.'));
+};
 export const useJobs = () => useGroupItems(jobSync);
 
 export const useGroupById = () => useById(groupSync);
