@@ -3,6 +3,7 @@ import { addTr } from '@common/hooks';
 import { Tr, Progress } from '@common/components';
 import { JobModel } from '@common/api';
 import { Play, Square, AlertCircle, CheckCircle, Clock } from 'lucide-react';
+import { TMap } from '@common/utils/types';
 
 const c = Css('JobStatus', {
   '': {
