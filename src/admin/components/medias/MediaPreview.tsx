@@ -1,8 +1,10 @@
 import { Css } from '@common/ui';
-import { FileInfo, MediaModel, Thumb, getUrl } from '@common/api';
-import { isStrDef, uuid } from '@common/utils';
+import { MediaModel } from '@common/api';
+import { uuid } from '@common/utils';
 import { useMemo } from 'preact/hooks';
 import { Popover, useIsOver } from './Popover';
+import { getVariants } from '@/api/getVariants';
+import { getMediaUrl } from '@/api/getMediaUrl';
 
 const c = Css('MediaPreview', {
   Video: {
@@ -23,30 +25,6 @@ const c = Css('MediaPreview', {
     bgMode: 'contain',
   },
 });
-
-interface Variant extends FileInfo {
-  media: MediaModel;
-  file: string;
-}
-
-const getVariants = (media?: MediaModel): Variant[] => {
-  if (!media || !media.data) return [];
-  const results = [];
-  media.data?.variants?.forEach((info, i) => {
-    const file = media.variants[i];
-    if (isStrDef(file)) {
-      results.push({ ...info, file, media });
-    }
-  });
-  if (isStrDef(media.source)) {
-    const file = media.source;
-    results.push({ ...media, file, media });
-  }
-  return results;
-};
-
-const getMediaUrl = (v?: Variant, thumb?: Thumb) =>
-  (v && getUrl('medias', v.media.id, v.file, thumb)) || '';
 
 export const MediaPreview = ({ media }: { media?: MediaModel }) => {
   const overId = useMemo(uuid, []);

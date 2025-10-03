@@ -48,10 +48,7 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
   title: {
     w: 100,
     title: 'Titre',
-    val: (
-      { id, type, order, title },
-      { isAdvanced, getTab, getIsOpen, setIsOpen, getChildren }
-    ) => (
+    val: ({ id, type, title }, { isAdvanced, getTab, getIsOpen, setIsOpen, getChildren }) => (
       <>
         <div style={{ width: 2 * getTab(id) + 'em' }} />
         <div onClick={() => setIsOpen(id, !getIsOpen(id))}>
@@ -61,11 +58,7 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
             hasChildren={type === 'folder' && getChildren(id).length > 0}
           />
         </div>
-        <Field
-          {...(isAdvanced ? tooltip(order) : {})}
-          value={title}
-          onValue={(title) => mediaSync.update(id, { title })}
-        />
+        <Field value={title} onValue={(title) => mediaSync.update(id, { title })} />
       </>
     ),
   },
