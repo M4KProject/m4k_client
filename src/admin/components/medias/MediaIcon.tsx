@@ -5,6 +5,7 @@ import {
   FileImage,
   Video,
   FileText,
+  File,
   List,
   HelpCircle,
   ChevronDown,
@@ -29,6 +30,7 @@ const infoByType: Record<MediaType, [string, typeof FolderOpen]> = {
   image: ['Image', FileImage],
   pdf: ['PDF', FileText],
   video: ['Video', Video],
+  page: ['Page', File],
   unknown: ['Inconnu', HelpCircle],
   '': ['Inconnu', HelpCircle],
 };

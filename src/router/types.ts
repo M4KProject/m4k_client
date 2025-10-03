@@ -1,3 +1,5 @@
+import { MediaModel } from '@common/api';
+
 export type Page = '' | 'account' | 'groups' | 'members' | 'devices' | 'medias' | 'jobs';
 
 export interface Route {
@@ -5,7 +7,7 @@ export interface Route {
   isEdit?: boolean;
   isAdmin?: boolean;
   isAdvanced?: boolean;
-  mediaType?: '' | 'folder' | 'playlist' | 'pdf' | 'image' | 'video' | 'unknown';
+  mediaType?: MediaModel['type'];
   mediaKey?: string;
   groupKey?: string;
   deviceKey?: string;

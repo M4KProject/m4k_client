@@ -235,7 +235,7 @@ export const TestPage = () => {
         <Grid
           cols={testCols}
           ctx={{ currentIndex }}
-          rowProps={(test, ctx, index) => {
+          rowProps={(test, _, index) => {
             const result = test.result || {};
             const mode =
               currentIndex + 1 === index

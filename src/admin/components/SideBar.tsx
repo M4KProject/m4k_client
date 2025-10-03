@@ -85,6 +85,13 @@ export const SideBar = () => {
           />
           <SideButton
             tab={true}
+            title="Pages"
+            icon={<MediaIcon type="page" />}
+            selected={page === 'medias' && mediaType === 'page'}
+            onClick={goMedias('page')}
+          />
+          <SideButton
+            tab={true}
             title="Videos"
             icon={<MediaIcon type="video" />}
             selected={page === 'medias' && mediaType === 'video'}
