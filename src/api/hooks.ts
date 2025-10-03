@@ -8,9 +8,6 @@ import { useDeviceKey, useGroupKey, useMediaKey } from '@/router/hooks';
 const useItemKey = <T extends ModelBase>(sync: Sync<T>, key?: string) =>
   useMsg(key ? sync.find$([key, { key } as any]) : null);
 
-const useItem = <T extends ModelBase>(sync: Sync<T>, whereOrId?: string | Where<T>) =>
-  useMsg(sync.find$(whereOrId));
-
 const useItems = <T extends ModelBase>(sync: Sync<T>, whereOrId?: Where<T>) =>
   useMsg(sync.filter$(whereOrId));
 
@@ -19,7 +16,7 @@ const useGroupItems = <T extends GroupModelBase>(sync: Sync<T>, where?: Where<T>
   return useMsg(sync.filter$(group ? { ...where, group } : where));
 };
 
-const useById = <T extends ModelBase>(sync: Sync<T>, where?: Where<T>) => useMsg(sync.up$);
+const useById = <T extends ModelBase>(sync: Sync<T>, _where?: Where<T>) => useMsg(sync.up$);
 
 export const useDevice = () => useItemKey(deviceSync, useDeviceKey());
 export const useMedia = () => useItemKey(mediaSync, useMediaKey());

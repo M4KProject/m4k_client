@@ -11,7 +11,7 @@ import {
   ReqError,
   toVoid,
 } from '@common/utils';
-import { ApiAuth, authLogin, authSignUp, DeviceModel, UserModel } from '@common/api';
+import { ApiAuth, authLogin, authSignUp, DeviceModel } from '@common/api';
 import { serverDate } from '@common/api/serverTime';
 import { deviceSync } from '@/api/sync';
 
