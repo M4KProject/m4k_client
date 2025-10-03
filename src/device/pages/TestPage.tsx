@@ -1,21 +1,8 @@
 import { useEffect, useMemo, useState } from 'preact/hooks';
 import { m4k } from '@common/m4k';
 import { stringify, toError, withTimeout } from '@common/utils';
-import {
-  Button,
-  Cell,
-  CellHead,
-  Field,
-  Form,
-  Page,
-  PageBody,
-  Toolbar,
-  Row,
-  Table,
-  TableBody,
-  TableHead,
-  RowHead,
-} from '@common/components';
+import { Button, Field, Form, Grid, Page, PageBody, Toolbar } from '@common/components';
+import { GridCols } from '@common/components/Grid';
 
 interface TestResult {
   success?: true;
@@ -169,28 +156,12 @@ const showValue = (value: any) => {
   return `${value}(${type})`;
 };
 
-const Test = ({ next, data }: { next: boolean; data: TestData }) => {
-  const r = useMemo(() => {
-    const result: TestResult = data.result || {};
-    return {
-      name: data.name,
-      ms: result.ms,
-      success: result.success || false,
-      expect: showValue(data.expect),
-      value: showValue(result.value),
-      error: result.error || '',
-    };
-  }, [data.result]);
-
-  return (
-    <Row mode={r.success ? 'success' : r.error ? 'error' : next ? 'selected' : undefined}>
-      <Cell>{r.name}</Cell>
-      <Cell>{r.ms}ms</Cell>
-      <Cell>{r.value}</Cell>
-      <Cell>{r.expect}</Cell>
-      <Cell>{r.error}</Cell>
-    </Row>
-  );
+const testCols: GridCols<TestData, { currentIndex: number }> = {
+  name: { title: 'Nom', val: (test) => test.name },
+  duration: { title: 'Durée', val: (test) => `${test.result?.ms || 0}ms` },
+  value: { title: 'Valeur', val: (test) => showValue(test.result?.value) },
+  expected: { title: 'Attendue', val: (test) => showValue(test.expect) },
+  error: { title: 'Erreur', val: (test) => test.result?.error || '' },
 };
 
 export const TestPage = () => {
@@ -261,22 +232,23 @@ export const TestPage = () => {
           />
           <Button onClick={handleExec}>Executer</Button>
         </Form>
-        <Table>
-          <TableHead>
-            <RowHead>
-              <CellHead>Nom</CellHead>
-              <CellHead>Durée</CellHead>
-              <CellHead>Valeur</CellHead>
-              <CellHead>Attendue</CellHead>
-              <CellHead>Erreur</CellHead>
-            </RowHead>
-          </TableHead>
-          <TableBody>
-            {(tests || []).map((test, i) => (
-              <Test key={i} next={currentIndex + 1 === i} data={test} />
-            ))}
-          </TableBody>
-        </Table>
+        <Grid
+          cols={testCols}
+          ctx={{ currentIndex }}
+          rowProps={(test, ctx, index) => {
+            const result = test.result || {};
+            const mode =
+              currentIndex + 1 === index
+                ? 'selected'
+                : result.success
+                  ? 'success'
+                  : result.error
+                    ? 'error'
+                    : undefined;
+            return { mode };
+          }}
+          items={tests || []}
+        />
       </PageBody>
     </Page>
   );

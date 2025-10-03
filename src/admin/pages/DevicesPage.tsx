@@ -4,25 +4,20 @@ import { useMsg } from '@common/hooks';
 import {
   Button,
   Field,
+  Grid,
   Page,
   Toolbar,
   PageBody,
-  Table,
-  Cell,
-  CellHead,
-  Row,
-  TableBody,
-  TableHead,
   tooltip,
   showDialog,
   Form,
-  RowHead,
 } from '@common/components';
+import { GridCols } from '@common/components/Grid';
 import { RefreshCw, Trash2, Settings, Plus, Power } from 'lucide-react';
 import { useState } from 'preact/hooks';
 import { apiGet, serverTime, DeviceModel, groupId$, MediaModel } from '@common/api';
 import { SearchField } from '../components/SearchField';
-import { deviceSync, Sync } from '@/api/sync';
+import { deviceSync } from '@/api/sync';
 import { setDeviceKey, setPage } from '../../router/setters';
 import { useIsAdvanced } from '@/router/hooks';
 import { useDevices, useMedias } from '@/api/hooks';
@@ -32,6 +27,110 @@ const c = Css('DevicesPage', {
     fRow: ['center', 'space-around'],
   },
 });
+
+const deviceCols: GridCols<
+  DeviceModel,
+  {
+    deviceSync: typeof deviceSync;
+    medias: MediaModel[];
+    onlineMin: number;
+    handleRemote: (device: DeviceModel) => void;
+    isAdvanced: boolean;
+  }
+> = {
+  key: {
+    title: 'Clé',
+    if: (_col, ctx) => ctx.isAdvanced,
+    val: (d, ctx) => (
+      <Field
+        {...tooltip(d.id)}
+        value={d.key}
+        onValue={(key) => ctx.deviceSync.update(d.id, { key })}
+      />
+    ),
+  },
+  type: {
+    title: 'Type',
+    if: (_col, ctx) => ctx.isAdvanced,
+    val: (d) => (
+      <Field
+        {...tooltip(() => stringify(d.info, null, 2))}
+        value={`${d.info?.type || ''} ${d.info?.version || ''}`}
+        readonly
+      />
+    ),
+  },
+  name: {
+    title: 'Nom',
+    val: (d, ctx) => (
+      <Field value={d.name} onValue={(name) => ctx.deviceSync.update(d.id, { name })} />
+    ),
+  },
+  resolution: {
+    title: 'Résolution',
+    val: (d) => `${d.info?.width || 0}x${d.info?.height || 0}`,
+  },
+  online: {
+    title: 'Online',
+    val: (d, ctx) => (
+      <Field
+        {...tooltip(formatDateTime(toDate(d.online)))}
+        type="switch"
+        value={d.online && toTime(d.online) > ctx.onlineMin}
+        readonly
+      />
+    ),
+  },
+  created: {
+    title: 'Création',
+    val: (d) => formatDate(d.created),
+  },
+  media: {
+    title: 'Média',
+    val: (d, ctx) => (
+      <Field
+        type="select"
+        items={ctx.medias.map((media) => [media.id, media.title || media.key || media.id])}
+        value={d.media}
+        onValue={(media) => ctx.deviceSync.update(d.id, { media })}
+      />
+    ),
+  },
+  actions: {
+    title: 'Actions',
+    val: (d, ctx) => (
+      <div style={{ display: 'flex', gap: '0.5em' }}>
+        <Button
+          icon={<RefreshCw />}
+          color="primary"
+          {...tooltip('Rafraîchir')}
+          onClick={() => ctx.deviceSync.update(d.id, { action: 'reload' })}
+        />
+        <Button
+          icon={<Power />}
+          color="primary"
+          {...tooltip('Redémarrer')}
+          onClick={() => ctx.deviceSync.update(d.id, { action: 'reboot' })}
+        />
+        {ctx.isAdvanced && (
+          <Button
+            icon={<Settings />}
+            {...tooltip('Mode remote')}
+            onClick={() => ctx.handleRemote(d)}
+          />
+        )}
+        {ctx.isAdvanced && (
+          <Button
+            icon={<Trash2 />}
+            color="error"
+            {...tooltip('Supprimer')}
+            onClick={() => ctx.deviceSync.delete(d.id)}
+          />
+        )}
+      </div>
+    ),
+  },
+};
 
 export const PairingForm = ({ onClose }: { onClose: () => void }) => {
   const [key, setKey] = useState('');
@@ -103,99 +202,12 @@ export const DevicesPage = () => {
         <SearchField />
       </Toolbar>
       <PageBody>
-        <Table>
-          <TableHead>
-            <RowHead>
-              {isAdvanced && <CellHead>Clé</CellHead>}
-              {isAdvanced && <CellHead>Type</CellHead>}
-              <CellHead>Nom</CellHead>
-              <CellHead>Résolution</CellHead>
-              <CellHead>Online</CellHead>
-              <CellHead>Création</CellHead>
-              <CellHead>Média</CellHead>
-              <CellHead>Actions</CellHead>
-            </RowHead>
-          </TableHead>
-          <TableBody>
-            {devices.map((d) => (
-              <Row key={d.id}>
-                {isAdvanced && (
-                  <Cell>
-                    <Field
-                      {...tooltip(d.id)}
-                      value={d.key}
-                      onValue={(key) => deviceSync.update(d.id, { key })}
-                    />
-                  </Cell>
-                )}
-                {isAdvanced && (
-                  <Cell>
-                    <Field
-                      {...tooltip(() => stringify(d.info, null, 2))}
-                      value={`${d.info?.type || ''} ${d.info?.version || ''}`}
-                      readonly
-                    />
-                  </Cell>
-                )}
-                <Cell>
-                  <Field value={d.name} onValue={(name) => deviceSync.update(d.id, { name })} />
-                </Cell>
-                <Cell>{`${d.info?.width || 0}x${d.info?.height || 0}`}</Cell>
-                <Cell>
-                  <Field
-                    {...tooltip(formatDateTime(toDate(d.online)))}
-                    type="switch"
-                    value={d.online && toTime(d.online) > onlineMin}
-                    readonly
-                  />
-                </Cell>
-                {/* {isAdvanced && <Cell>{formatDateTime(d.created)}</Cell>} */}
-                <Cell>{formatDate(d.created)}</Cell>
-                <Cell>
-                  <Field
-                    type="select"
-                    items={medias.map((c) => [c.id, c.title || c.key || c.id])}
-                    value={d.media}
-                    onValue={(media) => deviceSync.update(d.id, { media })}
-                  />
-                </Cell>
-                <Cell variant="around">
-                  <Button
-                    icon={<RefreshCw />}
-                    color="primary"
-                    {...tooltip('Rafraîchir')}
-                    onClick={() => deviceSync.update(d.id, { action: 'reload' })}
-                  />
-                  <Button
-                    icon={<Power />}
-                    color="primary"
-                    {...tooltip('Redémarrer')}
-                    onClick={() => deviceSync.update(d.id, { action: 'reboot' })}
-                  />
-                  {isAdvanced && (
-                    <Button
-                      icon={<Settings />}
-                      {...tooltip('Mode remote')}
-                      onClick={() => handleRemote(d)}
-                    />
-                  )}
-                  {isAdvanced && (
-                    <Button
-                      icon={<Trash2 />}
-                      color="error"
-                      {...tooltip('Supprimer')}
-                      onClick={() => deviceSync.delete(d.id)}
-                    />
-                  )}
-                </Cell>
-              </Row>
-            ))}
-          </TableBody>
-        </Table>
+        <Grid
+          cols={deviceCols}
+          ctx={{ deviceSync, medias, onlineMin, handleRemote, isAdvanced }}
+          items={devices}
+        />
       </PageBody>
     </Page>
   );
 };
-function useGroupItems(mediaSync: Sync<MediaModel>) {
-  throw new Error('Function not implemented.');
-}

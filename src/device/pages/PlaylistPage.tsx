@@ -1,18 +1,5 @@
-import {
-  Button,
-  Cell,
-  CellHead,
-  Field,
-  Page,
-  PageBody,
-  Toolbar,
-  Row,
-  Table,
-  TableBody,
-  TableHead,
-  tooltip,
-  RowHead,
-} from '@common/components';
+import { Button, Field, Grid, Page, PageBody, Toolbar, tooltip } from '@common/components';
+import { GridCols } from '@common/components/Grid';
 import { Css } from '@common/ui';
 import { round } from '@common/utils';
 import { useMsg } from '@common/hooks';
@@ -53,6 +40,88 @@ const sizeFormat = (size?: number) => {
 const getFileName = (path?: string) => {
   if (!path) return '';
   return path.split('/').pop() || path;
+};
+
+interface PlaylistItem {
+  mimeType?: string;
+  path?: string;
+  size?: number;
+  width?: number;
+  height?: number;
+  waitMs: number;
+}
+
+const playlistItemCols: GridCols<
+  PlaylistItem,
+  {
+    handleDurationUpdate: (index: number, duration: number) => void;
+    handleMoveUp: (index: number) => void;
+    handleMoveDown: (index: number) => void;
+    handleDuplicate: (index: number) => void;
+    handleDelete: (index: number) => void;
+    playlist: any;
+  }
+> = {
+  mimeType: { title: 'Type', val: (item) => item.mimeType },
+  preview: {
+    title: 'Aperçu',
+    cls: c('PreviewCell'),
+    val: (item) =>
+      item.mimeType?.startsWith('image/') && (
+        <div
+          class={c('Preview')}
+          style={{
+            backgroundImage: `url("${item.path}")`,
+          }}
+        />
+      ),
+  },
+  filename: { title: 'Nom du fichier', val: (item) => getFileName(item.path) },
+  size: { title: 'Taille', val: (item) => sizeFormat(item.size) },
+  format: { title: 'Format', val: (item) => `${item.width}x${item.height}` },
+  duration: {
+    title: 'Durée (s)',
+    val: (item, ctx, i) => (
+      <Field
+        type="number"
+        value={round(item.waitMs / 1000, 2)}
+        onValue={(waitMs) => ctx.handleDurationUpdate(i, Number(waitMs))}
+      />
+    ),
+  },
+  actions: {
+    title: 'Actions',
+    val: (_item, ctx, i) => (
+      <div style={{ display: 'flex', gap: '0.5em' }}>
+        <Button
+          icon={<ArrowUp />}
+          color="primary"
+          {...tooltip(i === 0 ? 'Aller à la fin' : 'Monter')}
+          onClick={() => ctx.handleMoveUp(i)}
+        />
+        <Button
+          icon={<ArrowDown />}
+          color="primary"
+          {...tooltip(
+            i === (ctx.playlist?.items?.length || 0) - 1 ? 'Aller au début' : 'Descendre'
+          )}
+          onClick={() => ctx.handleMoveDown(i)}
+        />
+        <Button
+          icon={<Copy />}
+          color="primary"
+          {...tooltip('Dupliquer')}
+          onClick={() => ctx.handleDuplicate(i)}
+        />
+        <Button
+          icon={<Trash2 />}
+          color="error"
+          {...tooltip('Supprimer')}
+          onClick={() => ctx.handleDelete(i)}
+        />
+      </div>
+    ),
+  },
 };
 
 export const PlaylistPage = () => {
@@ -147,76 +216,18 @@ export const PlaylistPage = () => {
     <Page>
       <Toolbar title="Élément dans la playlist" />
       <PageBody>
-        <Table>
-          <TableHead>
-            <RowHead>
-              <CellHead>Type</CellHead>
-              <CellHead>Aperçu</CellHead>
-              <CellHead>Nom du fichier</CellHead>
-              <CellHead>Taille</CellHead>
-              <CellHead>Format</CellHead>
-              <CellHead>Durée (s)</CellHead>
-              <CellHead>Actions</CellHead>
-            </RowHead>
-          </TableHead>
-          <TableBody>
-            {(playlist?.items || []).map((item, i) => (
-              <Row key={i}>
-                <Cell>{item.mimeType}</Cell>
-                <Cell class={c('PreviewCell')}>
-                  {item.mimeType?.startsWith('image/') && (
-                    <div
-                      class={c('Preview')}
-                      style={{
-                        backgroundImage: `url("${item.path}")`,
-                      }}
-                    />
-                  )}
-                </Cell>
-                <Cell>{getFileName(item.path)}</Cell>
-                <Cell>{sizeFormat(item.size)}</Cell>
-                <Cell>
-                  {item.width}x{item.height}
-                </Cell>
-                <Cell>
-                  <Field
-                    type="number"
-                    value={round(item.waitMs / 1000, 2)}
-                    onValue={(waitMs) => handleDurationUpdate(i, Number(waitMs))}
-                  />
-                </Cell>
-                <Cell variant="around">
-                  <Button
-                    icon={<ArrowUp />}
-                    color="primary"
-                    {...tooltip(i === 0 ? 'Aller à la fin' : 'Monter')}
-                    onClick={() => handleMoveUp(i)}
-                  />
-                  <Button
-                    icon={<ArrowDown />}
-                    color="primary"
-                    {...tooltip(
-                      i === (playlist?.items?.length || 0) - 1 ? 'Aller au début' : 'Descendre'
-                    )}
-                    onClick={() => handleMoveDown(i)}
-                  />
-                  <Button
-                    icon={<Copy />}
-                    color="primary"
-                    {...tooltip('Dupliquer')}
-                    onClick={() => handleDuplicate(i)}
-                  />
-                  <Button
-                    icon={<Trash2 />}
-                    color="error"
-                    {...tooltip('Supprimer')}
-                    onClick={() => handleDelete(i)}
-                  />
-                </Cell>
-              </Row>
-            ))}
-          </TableBody>
-        </Table>
+        <Grid
+          cols={playlistItemCols}
+          ctx={{
+            handleDurationUpdate,
+            handleMoveUp,
+            handleMoveDown,
+            handleDuplicate,
+            handleDelete,
+            playlist,
+          }}
+          items={playlist?.items || []}
+        />
       </PageBody>
     </Page>
   );
