@@ -18,7 +18,7 @@ export const mount = () => {
   addFont('Roboto');
   refreshTheme();
 
-  setCss('font', { 'html,body': { fontFamily: 'Roboto' } });
+  setCss('fontFamily', { ',html,body': { fontFamily: 'Roboto' } });
 
   _rootEl = addEl('div', { id: 'm4kAdmin', parent: 'body' });
   render(<App />, _rootEl);
