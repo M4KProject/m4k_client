@@ -3,7 +3,7 @@ import { byId, groupBy, MsgMap, sortItems } from '@common/utils';
 import { addTr, useMsg } from '@common/hooks';
 import { MediaModel } from '@common/api';
 import { Grid, GridCols } from '@common/components';
-import { JobsTable } from '../jobs/JobsTable';
+import { JobGrid } from '../jobs/JobGrid';
 import { selectedById$ } from '@/admin/controllers/selected';
 import { useMedias } from '@/api/hooks';
 import { useIsAdvanced } from '@/router/hooks';
@@ -207,7 +207,7 @@ export const MediaTable = ({ type }: { type?: MediaModel['type'] }) => {
   return (
     <>
       <Grid ctx={ctx} cols={cols} items={items} />
-      <JobsTable filter={(job) => job.status !== 'finished'} panel={true} />
+      <JobGrid filter={(job) => job.status !== 'finished'} panel={true} />
     </>
   );
 };

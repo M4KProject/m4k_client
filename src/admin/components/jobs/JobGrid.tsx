@@ -11,7 +11,7 @@ import { byId } from '@common/utils/by';
 import { useJobs, useMedias } from '@/api/hooks';
 import { filterItems, TMap } from '@common/utils';
 
-const c = Css('JobsTable', {
+const c = Css('JobGrid', {
   Panel: {
     position: 'fixed',
     r: 1,
@@ -52,13 +52,13 @@ const cols: GridCols<JobModel, { mediaById: TMap<MediaModel> }> = {
   },
 };
 
-export interface JobsTableProps {
+export interface JobGridProps {
   class?: string;
   filter?: (job: JobModel) => boolean;
   panel?: boolean;
 }
 
-export const JobsTable = ({ filter, panel, ...props }: JobsTableProps) => {
+export const JobGrid = ({ filter, panel, ...props }: JobGridProps) => {
   const jobs = useJobs();
   const uploadJobs = useMsg(uploadMediaJobs$);
   const allJobs = [...jobs, ...Object.values(uploadJobs)];

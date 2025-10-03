@@ -12,7 +12,7 @@ import { Grid, Field, Button, tooltip, Flag } from '@common/components';
 import { GridCols } from '@common/components/Grid';
 import { Plus, Trash2, Copy, ArrowUp, ArrowDown } from 'lucide-react';
 import { updatePlaylist } from '@/admin/controllers';
-import { JobsTable } from '../jobs/JobsTable';
+import { JobGrid } from '../jobs/JobGrid';
 import { MediaPreview } from './MediaPreview';
 import { useMedias } from '@/api/hooks';
 
@@ -184,7 +184,7 @@ export const EditPlaylist = ({ playlist }: { playlist: PlaylistModel }) => {
         ctx={{ updateItem, moveItemIndex, duplicateItem, deleteItem, medias }}
         items={playlist.data?.items || []}
       />
-      <JobsTable filter={(job) => job.status !== 'finished'} panel={true} />
+      <JobGrid filter={(job) => job.status !== 'finished'} panel={true} />
     </div>
   );
 };
