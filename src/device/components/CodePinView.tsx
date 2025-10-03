@@ -1,7 +1,7 @@
 import { Css } from '@common/ui';
 import { Msg } from '@common/utils';
 import { useEffect, useState } from 'preact/hooks';
-import { useTimerMs, useMsg } from '@common/hooks';
+import { useInterval, useMsg } from '@common/hooks';
 import { page$ } from '../messages/page$';
 import { Button, Field, Form, showDialog } from '@common/components';
 import { Globe, Lock } from 'lucide-react';
@@ -31,7 +31,7 @@ export const CodePinView = ({ open$ }: { open$: Msg<boolean> }) => {
   const [codePin, setCodePin] = useState('');
   const device = useMsg(device$);
   const [updated, setUpdated] = useState(0);
-  const timerMs = useTimerMs(1000, [updated]);
+  const timerMs = useInterval(1000, [updated]);
 
   const handleClose = () => {
     open$.set(false);
