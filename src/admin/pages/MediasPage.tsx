@@ -18,6 +18,7 @@ import { Edit, FolderPlus, MapPlus, Play, Upload } from 'lucide-react';
 import { useIsEdit, useMediaType } from '@/router/hooks';
 import { setIsEdit, setMediaKey, setMediaType } from '@/router/setters';
 import { useMedia } from '@/api/hooks';
+import { MediaView } from '@/components/MediaView';
 
 const c = Css('MediasPage', {});
 
@@ -44,6 +45,8 @@ export const MediasPage = () => {
 
   if (type === 'playlist' && media?.type === 'playlist' && isEdit) {
     content = <EditPlaylist playlist={media as PlaylistModel} />;
+  } else if (media && !isEdit) {
+    content = <MediaView media={media} />;
   } else {
     content = <MediaTable type={type} />;
   }

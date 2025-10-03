@@ -8,7 +8,7 @@ import { selectedById$ } from '@/admin/controllers/selected';
 import { useMedias } from '@/api/hooks';
 import { useIsAdvanced } from '@/router/hooks';
 import { TMap, isPositive, round } from '@common/utils';
-import { Trash2, FolderInput, PlusSquare, Edit } from 'lucide-react';
+import { Trash2, FolderInput, PlusSquare, Edit, Eye } from 'lucide-react';
 import { tooltip, Button, Field } from '@common/components';
 import { SelectedField } from '../SelectedField';
 import { MediaPreview } from './MediaPreview';
@@ -92,7 +92,7 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
     val: ({ seconds }) => (isPositive(seconds) ? round(seconds) + 's' : ''),
   },
   actions: {
-    w: 10,
+    w: 20,
     cls: c('Actions'),
     val: ({ id, key, type }, { selectedIds, getChildren }) => (
       <>
@@ -140,6 +140,13 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
             )}
           </>
         )}
+        <Button
+          icon={<Eye />}
+          {...tooltip('Afficher le media')}
+          onClick={() => {
+            updateRoute({ mediaKey: key, isEdit: false });
+          }}
+        />
         <Button
           icon={<Trash2 />}
           color="error"
