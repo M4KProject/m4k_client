@@ -1,15 +1,18 @@
-import { tooltip, Button, GridCols, Grid } from '@common/components';
+import { tooltip, Button, GridCols, Grid, Tr } from '@common/components';
 import { Trash2 } from 'lucide-react';
 import { JobStatus } from './JobStatus';
 import { JobModel, MediaModel } from '@common/api';
 import { uploadMediaJobs$ } from '../../controllers';
 import { jobSync } from '@/api/sync';
-import { useMsg } from '@common/hooks';
+import { useMsg, addTr } from '@common/hooks';
 import { Css } from '@common/ui';
 import { MediaPreview } from '../medias/MediaPreview';
 import { byId } from '@common/utils/by';
 import { useJobs, useMedias } from '@/api/hooks';
 import { filterItems, TMap } from '@common/utils';
+
+// Ajout des traductions pour les actions de job
+addTr({ convert: 'Convertion du media', addMember: 'Ajouter membre' });
 
 const c = Css('JobGrid', {
   Panel: {
@@ -33,7 +36,7 @@ const c = Css('JobGrid', {
 });
 
 const cols: GridCols<JobModel, { mediaById: TMap<MediaModel> }> = {
-  action: { title: 'Action', val: (job) => job.action },
+  action: { title: 'Action', val: (job) => <Tr>{job.action}</Tr> },
   statut: { title: 'Statut', val: (job) => <JobStatus job={job} /> },
   media: {
     title: 'Media',
