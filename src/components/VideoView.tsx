@@ -7,11 +7,20 @@ import { getMediaUrl } from '@/api/getMediaUrl';
 
 const c = Css('VideoView', {
   '': {
-    position: 'absolute',
-    overflow: 'hidden',
-    fCenter: 1,
+    bgMode: 'cover',
+  },
+  Video: {
     wh: '100%',
-    xy: 0,
+    itemFit: 'fill',
+  },
+  'Video-contain': {
+    itemFit: 'contain',
+  },
+  'Video-cover': {
+    itemFit: 'cover',
+  },
+  'Video-fill': {
+    itemFit: 'fill',
   },
 });
 
@@ -20,18 +29,30 @@ export type VideoViewProps = DivProps &
     media?: VideoModel;
   };
 
-export const VideoView = ({ media, ...props }: VideoViewProps) => {
+export const VideoView = ({ media, onNext, fit, ...props }: VideoViewProps) => {
   const variants = getVariants(media);
   const videos = variants.filter((v) => v.type === 'video');
+  const images = variants.filter((v) => v.type === 'image');
+  const posterImage = images[0];
 
   return (
-    <div {...props} class={c(props)}>
+    <div
+      {...props}
+      class={c('', props)}
+      style={{
+        backgroundImage: posterImage ? `url('${getMediaUrl(posterImage)}')` : undefined,
+        ...props.style,
+      }}
+    >
       <video
+        class={c('Video', fit && `Video-${fit}`)}
         controls={false}
         autoPlay={true}
         muted={true}
+        onEnded={onNext}
         onError={(e) => {
           console.warn('Video load error:', e);
+          onNext?.();
         }}
       >
         {videos.map((v, i) => (
