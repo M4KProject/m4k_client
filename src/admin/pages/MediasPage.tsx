@@ -17,8 +17,8 @@ import { needAuthId, needGroupId, PlaylistModel } from '@common/api';
 import { Edit, FolderPlus, MapPlus, Play, Upload } from 'lucide-react';
 import { useIsEdit, useMediaType } from '@/router/hooks';
 import { setIsEdit, setMediaKey, setMediaType } from '@/router/setters';
-import { useMedia } from '@/api/hooks';
-import { MediaView } from '@/components/MediaView';
+import { useMedia, useMediaById } from '@/api/hooks';
+import { MediaView } from '@/components/medias';
 
 const c = Css('MediasPage', {});
 
@@ -39,6 +39,7 @@ const handleCreatePlaylist = async () => {
 export const MediasPage = () => {
   const type = useMediaType();
   const media = useMedia();
+  const mediaById = useMediaById();
   const isEdit = useIsEdit();
 
   let content = null;
@@ -46,7 +47,7 @@ export const MediasPage = () => {
   if (type === 'playlist' && media?.type === 'playlist' && isEdit) {
     content = <EditPlaylist playlist={media as PlaylistModel} />;
   } else if (media && !isEdit) {
-    content = <MediaView media={media} />;
+    content = <MediaView media={media} mediaById={mediaById} />;
   } else {
     content = <MediaTable type={type} />;
   }
