@@ -20,33 +20,31 @@ const c = Css('PdfView', {
     position: 'absolute',
     inset: 0,
     overflow: 'auto',
-    textAlign: 'center',
-    bg: '#f5f5f5',
-    pb: 5,
+    bg: 'b2',
   },
   Page: {
+    position: 'absolute',
+    xy: 0,
     wh: '100%',
     bgMode: 'contain',
-    bgPosition: 'center',
-    bgRepeat: 'no-repeat',
-    minHeight: '100vh',
   },
   Toolbar: {
     position: 'absolute',
     b: 1.25,
     l: '50%',
-    transform: 'translateX(-50%)',
+    translateX: '-50%',
     fRow: ['center', 'center'],
     gap: 0.5,
     zIndex: 10,
-    bg: 'rgba(255, 255, 255, 0.9)',
+    bg: 'b1',
+    opacity: 0.9,
     p: 0.5,
     rounded: 2,
     elevation: 2,
   },
-  PageInfo: {
+  PageNbr: {
     bold: 1,
-    fg: '#333',
+    fg: 'f1',
     px: 0.5,
     whiteSpace: 'nowrap',
   },
@@ -99,7 +97,7 @@ export const PdfView = ({ media, divProps }: PdfViewProps) => {
           color={currentPage <= 0 ? 'secondary' : 'primary'}
           onClick={currentPage <= 0 ? undefined : handlePreviousPage}
         />
-        <div class={c('PageInfo')}>
+        <div class={c('PageNbr')}>
           {currentPage + 1} / {totalPages}
         </div>
         <Button
