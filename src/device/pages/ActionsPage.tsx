@@ -7,9 +7,16 @@ import copyPlaylist from '../copyPlaylist';
 import { newProgressDialog } from '../components/ProgressView';
 import { clearAllCache } from '../../serviceWorker';
 import { copyDir$, url$ } from '../messages';
+import { isDevice$ } from '@/index';
 
 const c = Css('Actions', {
+  '': {
+    flex: 1,
+    p: 0.5,
+  },
   Buttons: {
+    flex: 1,
+    m: 0.5,
     fRow: ['center', 'space-around'],
     flexWrap: 'wrap',
   },
@@ -154,8 +161,8 @@ export const ActionsPage = () => {
         <Button onClick={() => m4k.exit()}>Quitter</Button>
       </div>
 
-      <b>Installer :</b>
       <div class={c('Buttons')}>
+        <h3>Installer :</h3>
         <Button onClick={() => installApk('autostart22.apk')}>AutoStart</Button>
         <Button onClick={() => installApk('RawBT609.apk')}>RawBt Printer V6.0.9</Button>
         <Button onClick={() => installApk('RawBT703.apk')}>RawBt Printer V7.0.3</Button>
@@ -164,16 +171,16 @@ export const ActionsPage = () => {
         <Button onClick={() => installApk('WebView132.apk')}>WebView 132</Button>
       </div>
 
-      <b>Installer WebView :</b>
       <div class={c('Buttons')}>
+        <h3>Installer WebView :</h3>
         {/* https://www.apkmirror.com/apk/google-inc/android-system-webview/ */}
         <Button onClick={() => installApk('webview134_arm64_a8.apk')}>
           WebView 134 ARM64 Android8+
         </Button>
       </div>
 
-      <b>Ouvrir :</b>
       <div class={c('Buttons')}>
+        <h3>Ouvrir :</h3>
         <Button onClick={testPrint}>Test Impression</Button>
         <Button
           onClick={() =>
@@ -217,8 +224,8 @@ export const ActionsPage = () => {
                 <Button onClick={() => m4k.set("screenOrientation", "reverse_portrait")}>Reverse Portrait</Button>
             </div> */}
 
-      <b>Autre :</b>
       <div class={c('Buttons')}>
+        <h3>Autre :</h3>
         <Button
           onClick={async () => {
             url$.set('https://boardscreen.fr/');
@@ -226,6 +233,14 @@ export const ActionsPage = () => {
           }}
         >
           Boardscreen
+        </Button>
+        <Button
+          onClick={async () => {
+            localStorage.clear();
+            location.href = '/';
+          }}
+        >
+          Supprimer le Device
         </Button>
       </div>
     </div>

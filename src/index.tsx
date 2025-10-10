@@ -8,10 +8,10 @@ export const isDevice$ = new Msg(false, 'isDevice$', true, isBool);
 addResponsiveListener();
 
 const main = () => {
-  const query = getUrlQuery();
+  const { d } = getUrlQuery();
 
-  if (query.device !== undefined) {
-    isDevice$.set(!!query.device);
+  if (d) {
+    isDevice$.set(!!d);
   }
 
   if (isDevice$.v) {

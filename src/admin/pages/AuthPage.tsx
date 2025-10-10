@@ -46,8 +46,7 @@ const c = Css('AuthPage', {
 
 export const AuthPage = () => {
   const handleDeviceMode = () => {
-    localStorage.setItem('isDevice', 'true');
-    window.location.href = '/device/';
+    window.location.href = '/?device';
   };
 
   return (
