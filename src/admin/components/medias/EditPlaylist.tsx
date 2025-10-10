@@ -45,12 +45,8 @@ const playlistCols: GridCols<
     val: (entry, ctx, index) => (
       <Field
         type="time"
-        value={entry.startTime !== undefined ? secondsToTimeString(entry.startTime) : ''}
-        onValue={(startTime) =>
-          ctx.updateItem(index, {
-            startTime: startTime ? parseToSeconds(startTime) || undefined : undefined,
-          })
-        }
+        value={entry.startHours * 3600}
+        onValue={(value) => ctx.updateItem(index, { startHours: value / 3600 })}
       />
     ),
   },
@@ -60,12 +56,8 @@ const playlistCols: GridCols<
     val: (entry, ctx, index) => (
       <Field
         type="time"
-        value={entry.endTime !== undefined ? secondsToTimeString(entry.endTime) : ''}
-        onValue={(endTime) =>
-          ctx.updateItem(index, {
-            endTime: endTime ? parseToSeconds(endTime) || undefined : undefined,
-          })
-        }
+        value={entry.endHours * 3600}
+        onValue={(value) => ctx.updateItem(index, { endHours: value / 3600 })}
       />
     ),
   },
