@@ -94,21 +94,18 @@ const playlistCols: GridCols<
       />
     ),
   },
-  preview: {
-    title: 'Aperçu',
-    val: (entry, ctx) =>
-      entry.media && <MediaPreview media={ctx.medias.find((m) => m.id === entry.media)} />,
-  },
   media: {
     title: 'Media',
-    val: (entry, ctx, index) => (
-      <Field
-        type="select"
-        value={entry.media || ''}
-        items={ctx.medias.map((g) => [g.id, g.title])}
-        onValue={(id) => ctx.updateItem(index, { media: id || '' })}
-      />
-    ),
+    val: (entry, ctx) =>
+      entry.media && <MediaPreview media={ctx.medias.find((m) => m.id === entry.media)} />,
+    // val: (entry, ctx, index) => (
+    //   <Field
+    //     type="select"
+    //     value={entry.media || ''}
+    //     items={ctx.medias.map((g) => [g.id, g.title])}
+    //     onValue={(id) => ctx.updateItem(index, { media: id || '' })}
+    //   />
+    // ),
   },
   actions: {
     title: 'Actions',
