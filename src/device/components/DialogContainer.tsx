@@ -6,7 +6,7 @@ const c = Css('DialogContainer', {
   '': {
     position: 'fixed',
     inset: 0,
-    bg: '#000000AA',
+    bg: 'mask',
     fCenter: 1,
     zIndex: 10000,
   },
@@ -17,7 +17,7 @@ const c = Css('DialogContainer', {
     maxWidth: '90%',
     minWidth: '400px',
     overflow: 'hidden',
-    bg: 'bg',
+    bg: 'b0',
   },
   Header: {
     fCenter: 1,
