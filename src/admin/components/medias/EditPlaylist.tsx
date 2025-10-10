@@ -33,24 +33,14 @@ const playlistCols: GridCols<
   }
 > = {
   title: {
+    w: 30,
     title: 'Titre',
     val: (entry, ctx, index) => (
       <Field value={entry.title} onValue={(title) => ctx.updateItem(index, { title })} />
     ),
   },
-  duration: {
-    title: 'Durée (s)',
-    val: (entry, ctx, index) => (
-      <Field
-        type="number"
-        value={entry.duration?.toString() || ''}
-        onValue={(duration) =>
-          ctx.updateItem(index, { duration: duration ? parseInt(duration) : undefined })
-        }
-      />
-    ),
-  },
   startTime: {
+    w: 20,
     title: 'Heure début',
     val: (entry, ctx, index) => (
       <Field
@@ -65,6 +55,7 @@ const playlistCols: GridCols<
     ),
   },
   endTime: {
+    w: 20,
     title: 'Heure fin',
     val: (entry, ctx, index) => (
       <Field
@@ -79,6 +70,7 @@ const playlistCols: GridCols<
     ),
   },
   language: {
+    w: 20,
     title: 'Langue',
     val: (entry, ctx, index) => (
       <Field
@@ -95,11 +87,13 @@ const playlistCols: GridCols<
     ),
   },
   preview: {
+    w: 20,
     title: 'Aperçu',
     val: (entry, ctx) =>
       entry.media && <MediaPreview media={ctx.medias.find((m) => m.id === entry.media)} />,
   },
   media: {
+    w: 60,
     title: 'Media',
     val: (entry, ctx, index) => (
       <Field
@@ -110,7 +104,21 @@ const playlistCols: GridCols<
       />
     ),
   },
+  duration: {
+    w: 15,
+    title: 'Durée (s)',
+    val: (entry, ctx, index) => (
+      <Field
+        type="number"
+        value={entry.duration?.toString() || ''}
+        onValue={(duration) =>
+          ctx.updateItem(index, { duration: duration ? parseInt(duration) : undefined })
+        }
+      />
+    ),
+  },
   actions: {
+    w: 40,
     title: 'Actions',
     val: (_entry, ctx, index) => (
       <div style={{ display: 'flex', gap: '0.5em' }}>
