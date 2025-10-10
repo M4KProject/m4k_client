@@ -15,7 +15,7 @@ export const PlaylistView = ({ media, mediaById, fit, anim, divProps }: Playlist
   const data = media.data || {};
   const dataItems = data.items || (media?.deps || []).map((id) => ({ media: id }));
   const items = dataItems
-    .map((data): MediaViewProps|undefined => {
+    .map((data): MediaViewProps | undefined => {
       const media = mediaById[data.media];
       if (!media) return null;
       return {
@@ -24,7 +24,7 @@ export const PlaylistView = ({ media, mediaById, fit, anim, divProps }: Playlist
         anim: data.anim || anim,
         seconds: data.seconds || media.seconds || 5,
         mediaById,
-      }
+      };
     })
     .filter(isNotEmpty);
 
@@ -35,8 +35,8 @@ export const PlaylistView = ({ media, mediaById, fit, anim, divProps }: Playlist
 
   items.forEach((item, i) => {
     item.pos = i === curr ? 'curr' : i === next ? 'next' : 'prev';
-  })
-  
+  });
+
   const gotoNext = () => {
     setIndex(next);
   };
@@ -49,9 +49,7 @@ export const PlaylistView = ({ media, mediaById, fit, anim, divProps }: Playlist
   return (
     <div {...divProps} class={c('', divProps)}>
       {items.map((item: any, i: number) => {
-        return (
-          <MediaView key={item.id} {...item} onNext={gotoNext} />
-        );
+        return <MediaView key={item.id} {...item} onNext={gotoNext} />;
       })}
     </div>
   );

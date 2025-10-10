@@ -48,8 +48,8 @@ export interface MediaViewProps<T extends MediaModel = any> {
   seconds?: number;
   pos?: 'hidden' | 'prev' | 'curr' | 'next';
   onNext?: () => void;
-  divProps?: DivProps,
-};
+  divProps?: DivProps;
+}
 
 export const EmptyView = ({ media, divProps }: MediaViewProps) => {
   return (
@@ -63,7 +63,7 @@ const compByType: Record<string, (props: MediaViewProps) => JSX.Element> = {};
 
 export const addComp = (type: string, comp: (props: MediaViewProps) => JSX.Element) => {
   compByType[type] = comp;
-}
+};
 
 export const getComp = (type: string) => compByType[type] || EmptyView;
 
@@ -71,7 +71,7 @@ export const MediaView = (props: MediaViewProps) => {
   const { media, anim, pos, fit, divProps } = props;
   const type = media.type || 'empty';
   const Comp = getComp(type);
-  
+
   return (
     <Comp
       {...props}
@@ -83,8 +83,8 @@ export const MediaView = (props: MediaViewProps) => {
           fit && `-${fit}`,
           pos && `-${pos}`,
           anim && `-${anim}`,
-          divProps,
-        )
+          divProps
+        ),
       }}
     />
   );
