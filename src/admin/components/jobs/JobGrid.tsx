@@ -36,15 +36,12 @@ const c = Css('JobGrid', {
 });
 
 const cols: GridCols<JobModel, { mediaById: TMap<MediaModel> }> = {
-  action: { title: 'Action', val: (job) => <Tr>{job.action}</Tr> },
-  statut: { title: 'Statut', val: (job) => <JobStatus job={job} /> },
-  media: {
-    title: 'Media',
-    val: ({ media }, { mediaById }) => <MediaPreview media={mediaById[media]} />,
-  },
-  actions: {
-    title: 'Actions',
-    val: (job) => (
+  action: ['Action', (job) => <Tr>{job.action}</Tr>],
+  statut: ['Statut', (job) => <JobStatus job={job} />],
+  media: ['Media', ({ media }, { mediaById }) => <MediaPreview media={mediaById[media]} />],
+  actions: [
+    'Actions',
+    (job) => (
       <Button
         icon={<Trash2 />}
         color="error"
@@ -52,7 +49,7 @@ const cols: GridCols<JobModel, { mediaById: TMap<MediaModel> }> = {
         onClick={() => jobSync.delete(job.id)}
       />
     ),
-  },
+  ],
 };
 
 export interface JobGridProps {

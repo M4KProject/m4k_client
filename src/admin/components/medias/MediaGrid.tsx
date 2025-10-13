@@ -40,15 +40,10 @@ interface MediaGridCtx {
 }
 
 const cols: GridCols<MediaModel, MediaGridCtx> = {
-  select: {
-    w: 10,
-    cls: c('Select'),
-    val: ({ id }) => <SelectedField id={id} />,
-  },
-  title: {
-    w: 100,
-    title: 'Titre',
-    val: ({ id, type, title }, { isAdvanced, getTab, getIsOpen, setIsOpen, getChildren }) => (
+  select: ['', ({ id }) => <SelectedField id={id} />, { w: 10, cls: c('Select') }],
+  title: [
+    'Titre',
+    ({ id, type, title }, { isAdvanced, getTab, getIsOpen, setIsOpen, getChildren }) => (
       <>
         <div style={{ width: 2 * getTab(id) + 'em' }} />
         <div onClick={() => setIsOpen(id, !getIsOpen(id))}>
@@ -61,16 +56,12 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
         <Field value={title} onValue={(title) => mediaSync.update(id, { title })} />
       </>
     ),
-  },
-  preview: {
-    w: 20,
-    title: 'Aperçu',
-    val: (media) => <MediaPreview media={media} />,
-  },
-  size: {
-    w: 20,
-    title: 'Poids',
-    val: ({ bytes }) => {
+    { w: 100 },
+  ],
+  preview: ['Aperçu', (media) => <MediaPreview media={media} />, { w: 20 }],
+  size: [
+    'Poids',
+    ({ bytes }) => {
       if (!bytes) return '';
       const kb = bytes / 1024;
       const mb = kb / 1024;
@@ -80,21 +71,17 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
       if (kb > 0.95) return round(kb, 2) + 'Ko';
       return bytes + 'o';
     },
-  },
-  resolution: {
-    w: 20,
-    title: 'Résolution',
-    val: ({ width, height }) => (width || height ? `${width || 0}x${height || 0}` : ''),
-  },
-  seconds: {
-    w: 10,
-    title: 'Durée',
-    val: ({ seconds }) => (isPositive(seconds) ? round(seconds) + 's' : ''),
-  },
-  actions: {
-    w: 20,
-    cls: c('Actions'),
-    val: ({ id, key, type }, { selectedIds, getChildren }) => (
+    { w: 20 },
+  ],
+  resolution: [
+    'Résolution',
+    ({ width, height }) => (width || height ? `${width || 0}x${height || 0}` : ''),
+    { w: 20 },
+  ],
+  seconds: ['Durée', ({ seconds }) => (isPositive(seconds) ? round(seconds) + 's' : ''), { w: 10 }],
+  actions: [
+    '',
+    ({ id, key, type }, { selectedIds, getChildren }) => (
       <>
         {type === 'folder' && selectedIds.length > 0 && (
           <Button
@@ -160,7 +147,8 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
         />
       </>
     ),
-  },
+    { w: 20, cls: c('Actions') },
+  ],
 };
 
 const openById$ = new MsgMap<boolean>({});

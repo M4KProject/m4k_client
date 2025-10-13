@@ -157,11 +157,11 @@ const showValue = (value: any) => {
 };
 
 const testCols: GridCols<TestData, { currentIndex: number }> = {
-  name: { title: 'Nom', val: (test) => test.name },
-  duration: { title: 'Durée', val: (test) => `${test.result?.ms || 0}ms` },
-  value: { title: 'Valeur', val: (test) => showValue(test.result?.value) },
-  expected: { title: 'Attendue', val: (test) => showValue(test.expect) },
-  error: { title: 'Erreur', val: (test) => test.result?.error || '' },
+  name: ['Nom', (test) => test.name],
+  duration: ['Durée', (test) => `${test.result?.ms || 0}ms`],
+  value: ['Valeur', (test) => showValue(test.result?.value)],
+  expected: ['Attendue', (test) => showValue(test.expect)],
+  error: ['Erreur', (test) => test.result?.error || ''],
 };
 
 export const TestPage = () => {

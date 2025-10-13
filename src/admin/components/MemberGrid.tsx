@@ -9,27 +9,22 @@ import { DeviceModel, MemberModel } from '@common/api';
 const c = Css('MemberGrid', {});
 
 const cols: GridCols<MemberModel, { deviceById: TMap<DeviceModel> }> = {
-  id: {
-    w: 10,
-    title: 'Appareil',
-    val: ({ device }) => <Field type="switch" value={!!device} readonly />,
-  },
-  name: {
-    w: 100,
-    title: 'Email',
-    val: ({ device, email }, { deviceById }) => (device ? deviceById[device]?.name : email),
-  },
-  desc: {
-    w: 100,
-    title: 'Description',
-    val: ({ id, desc }) => (
+  id: ['Appareil', ({ device }) => <Field type="switch" value={!!device} readonly />, { w: 10 }],
+  name: [
+    'Email',
+    ({ device, email }, { deviceById }) => (device ? deviceById[device]?.name : email),
+    { w: 100 },
+  ],
+  desc: [
+    'Description',
+    ({ id, desc }) => (
       <Field type="text" value={desc} onValue={(desc) => memberSync.update(id, { desc })} />
     ),
-  },
-  role: {
-    w: 50,
-    title: 'Droit',
-    val: ({ id, role }) => (
+    { w: 100 },
+  ],
+  role: [
+    'Droit',
+    ({ id, role }) => (
       <Field
         type="select"
         items={[
@@ -41,11 +36,11 @@ const cols: GridCols<MemberModel, { deviceById: TMap<DeviceModel> }> = {
         onValue={(role) => memberSync.update(id, { role: toNbr(role) })}
       />
     ),
-  },
-  actions: {
-    w: 20,
-    title: 'Actions',
-    val: ({ id }) => (
+    { w: 50 },
+  ],
+  actions: [
+    'Actions',
+    ({ id }) => (
       <Button
         icon={<Trash2 />}
         color="error"
@@ -53,7 +48,8 @@ const cols: GridCols<MemberModel, { deviceById: TMap<DeviceModel> }> = {
         onClick={() => memberSync.delete(id)}
       />
     ),
-  },
+    { w: 20 },
+  ],
 };
 
 export const MemberGrid = () => {

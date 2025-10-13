@@ -38,41 +38,36 @@ const deviceCols: GridCols<
     isAdvanced: boolean;
   }
 > = {
-  key: {
-    title: 'Clé',
-    if: (_col, ctx) => ctx.isAdvanced,
-    val: (d, ctx) => (
+  key: [
+    'Clé',
+    (d, ctx) => (
       <Field
         {...tooltip(d.id)}
         value={d.key}
         onValue={(key) => ctx.deviceSync.update(d.id, { key })}
       />
     ),
-  },
-  type: {
-    title: 'Type',
-    if: (_col, ctx) => ctx.isAdvanced,
-    val: (d) => (
+    { if: (_col, ctx) => ctx.isAdvanced },
+  ],
+  type: [
+    'Type',
+    (d) => (
       <Field
         {...tooltip(() => stringify(d.info, null, 2))}
         value={`${d.info?.type || ''} ${d.info?.version || ''}`}
         readonly
       />
     ),
-  },
-  name: {
-    title: 'Nom',
-    val: (d, ctx) => (
-      <Field value={d.name} onValue={(name) => ctx.deviceSync.update(d.id, { name })} />
-    ),
-  },
-  resolution: {
-    title: 'Résolution',
-    val: (d) => `${d.info?.width || 0}x${d.info?.height || 0}`,
-  },
-  online: {
-    title: 'Online',
-    val: (d, ctx) => (
+    { if: (_col, ctx) => ctx.isAdvanced },
+  ],
+  name: [
+    'Nom',
+    (d, ctx) => <Field value={d.name} onValue={(name) => ctx.deviceSync.update(d.id, { name })} />,
+  ],
+  resolution: ['Résolution', (d) => `${d.info?.width || 0}x${d.info?.height || 0}`],
+  online: [
+    'Online',
+    (d, ctx) => (
       <Field
         {...tooltip(formatDateTime(toDate(d.online)))}
         type="switch"
@@ -80,14 +75,11 @@ const deviceCols: GridCols<
         readonly
       />
     ),
-  },
-  created: {
-    title: 'Création',
-    val: (d) => formatDate(d.created),
-  },
-  media: {
-    title: 'Playlist',
-    val: (d, ctx) => (
+  ],
+  created: ['Création', (d) => formatDate(d.created)],
+  media: [
+    'Playlist',
+    (d, ctx) => (
       <Field
         type="select"
         items={ctx.medias
@@ -97,10 +89,10 @@ const deviceCols: GridCols<
         onValue={(media) => ctx.deviceSync.update(d.id, { media })}
       />
     ),
-  },
-  actions: {
-    title: 'Actions',
-    val: (d, ctx) => (
+  ],
+  actions: [
+    'Actions',
+    (d, ctx) => (
       <div style={{ display: 'flex', gap: '0.5em' }}>
         <Button
           icon={<RefreshCw />}
@@ -131,7 +123,7 @@ const deviceCols: GridCols<
         )}
       </div>
     ),
-  },
+  ],
 };
 
 export const PairingForm = ({ onClose }: { onClose: () => void }) => {

@@ -62,11 +62,10 @@ const playlistItemCols: GridCols<
     playlist: any;
   }
 > = {
-  mimeType: { title: 'Type', val: (item) => item.mimeType },
-  preview: {
-    title: 'Aperçu',
-    cls: c('PreviewCell'),
-    val: (item) =>
+  mimeType: ['Type', (item) => item.mimeType],
+  preview: [
+    'Aperçu',
+    (item) =>
       item.mimeType?.startsWith('image/') && (
         <div
           class={c('Preview')}
@@ -75,23 +74,24 @@ const playlistItemCols: GridCols<
           }}
         />
       ),
-  },
-  filename: { title: 'Nom du fichier', val: (item) => getFileName(item.path) },
-  size: { title: 'Taille', val: (item) => sizeFormat(item.size) },
-  format: { title: 'Format', val: (item) => `${item.width}x${item.height}` },
-  duration: {
-    title: 'Durée (s)',
-    val: (item, ctx, i) => (
+    { cls: c('PreviewCell') },
+  ],
+  filename: ['Nom du fichier', (item) => getFileName(item.path)],
+  size: ['Taille', (item) => sizeFormat(item.size)],
+  format: ['Format', (item) => `${item.width}x${item.height}`],
+  duration: [
+    'Durée (s)',
+    (item, ctx, i) => (
       <Field
         type="number"
         value={round(item.waitMs / 1000, 2)}
         onValue={(waitMs) => ctx.handleDurationUpdate(i, Number(waitMs))}
       />
     ),
-  },
-  actions: {
-    title: 'Actions',
-    val: (_item, ctx, i) => (
+  ],
+  actions: [
+    'Actions',
+    (_item, ctx, i) => (
       <div style={{ display: 'flex', gap: '0.5em' }}>
         <Button
           icon={<ArrowUp />}
@@ -121,7 +121,7 @@ const playlistItemCols: GridCols<
         />
       </div>
     ),
-  },
+  ],
 };
 
 export const PlaylistPage = () => {

@@ -5,37 +5,35 @@ import { groupSync } from '@/api/sync';
 import { setGroupKey } from '@/router/setters';
 
 const getGroupCols = (isAdvanced: boolean): GridCols<GroupModel, { groupId: string }> => ({
-  selected: {
-    w: 30,
-    title: 'Sélectionné',
-    val: (item, ctx) => (
+  selected: [
+    'Sélectionné',
+    (item, ctx) => (
       <Field
         type="switch"
         value={item.id === ctx.groupId}
         onValue={(v) => setGroupKey(v ? item.key : '')}
       />
     ),
-  },
-  key: {
-    title: 'Clé',
-    if: () => isAdvanced,
-    val: (item) => (
+    { w: 30 },
+  ],
+  key: [
+    'Clé',
+    (item) => (
       <Field
         {...tooltip(item.id)}
         value={item.key}
         onValue={(key) => groupSync.update(item.id, { key })}
       />
     ),
-  },
-  name: {
-    title: 'Nom',
-    val: (item) => (
-      <Field value={item.name} onValue={(name) => groupSync.update(item.id, { name })} />
-    ),
-  },
-  isDark: {
-    title: 'Mode sombre',
-    val: (item) => (
+    { if: () => isAdvanced },
+  ],
+  name: [
+    'Nom',
+    (item) => <Field value={item.name} onValue={(name) => groupSync.update(item.id, { name })} />,
+  ],
+  isDark: [
+    'Mode sombre',
+    (item) => (
       <Field
         type="switch"
         value={item.data?.isDark}
@@ -46,10 +44,10 @@ const getGroupCols = (isAdvanced: boolean): GridCols<GroupModel, { groupId: stri
         }}
       />
     ),
-  },
-  primary: {
-    title: 'Couleur primaire',
-    val: (item) => (
+  ],
+  primary: [
+    'Couleur primaire',
+    (item) => (
       <Field
         type="color"
         value={item.data?.primary}
@@ -60,10 +58,10 @@ const getGroupCols = (isAdvanced: boolean): GridCols<GroupModel, { groupId: stri
         }}
       />
     ),
-  },
-  secondary: {
-    title: 'Couleur secondaire',
-    val: (item) => (
+  ],
+  secondary: [
+    'Couleur secondaire',
+    (item) => (
       <Field
         type="color"
         value={item.data?.secondary}
@@ -74,11 +72,10 @@ const getGroupCols = (isAdvanced: boolean): GridCols<GroupModel, { groupId: stri
         }}
       />
     ),
-  },
-  actions: {
-    w: 30,
-    title: 'Actions',
-    val: (item) => (
+  ],
+  actions: [
+    'Actions',
+    (item) => (
       <Button
         icon={<Trash2 />}
         color="error"
@@ -86,7 +83,8 @@ const getGroupCols = (isAdvanced: boolean): GridCols<GroupModel, { groupId: stri
         onClick={() => groupSync.delete(item.id)}
       />
     ),
-  },
+    { w: 30 },
+  ],
 });
 
 export interface GroupGridProps {

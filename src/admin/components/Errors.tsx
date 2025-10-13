@@ -28,17 +28,11 @@ interface ErrorItem {
 }
 
 const cols: GridCols<any> = {
-  name: {
-    title: 'Nom',
-    props: (item) => tooltip(item.stack),
-    val: (item) => item.name,
-  },
-  message: {
-    title: 'Message',
-    val: (item) => item.message,
-  },
-  actions: {
-    val: (item, { deleteItem }) => (
+  name: ['Nom', (item) => item.name, { props: (item) => tooltip(item.stack) }],
+  message: ['Message', (item) => item.message],
+  actions: [
+    '',
+    (item, { deleteItem }) => (
       <Button
         icon={<Trash2 />}
         color="error"
@@ -46,7 +40,7 @@ const cols: GridCols<any> = {
         onClick={() => deleteItem(item)}
       />
     ),
-  },
+  ],
 };
 
 const errorToItem = (e: any) => {

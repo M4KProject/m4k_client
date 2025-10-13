@@ -32,39 +32,38 @@ const playlistCols: GridCols<
     medias: MediaModel[];
   }
 > = {
-  title: {
-    w: 30,
-    title: 'Titre',
-    val: (entry, ctx, index) => (
+  title: [
+    'Titre',
+    (entry, ctx, index) => (
       <Field value={entry.title} onValue={(title) => ctx.updateItem(index, { title })} />
     ),
-  },
-  startTime: {
-    w: 20,
-    title: 'Heure début',
-    val: (entry, ctx, index) => (
+    { w: 30 },
+  ],
+  startTime: [
+    'Heure début',
+    (entry, ctx, index) => (
       <Field
         type="time"
         value={entry.startHours * 3600}
         onValue={(value) => ctx.updateItem(index, { startHours: value / 3600 })}
       />
     ),
-  },
-  endTime: {
-    w: 20,
-    title: 'Heure fin',
-    val: (entry, ctx, index) => (
+    { w: 20 },
+  ],
+  endTime: [
+    'Heure fin',
+    (entry, ctx, index) => (
       <Field
         type="time"
         value={entry.endHours * 3600}
         onValue={(value) => ctx.updateItem(index, { endHours: value / 3600 })}
       />
     ),
-  },
-  language: {
-    w: 20,
-    title: 'Langue',
-    val: (entry, ctx, index) => (
+    { w: 20 },
+  ],
+  language: [
+    'Langue',
+    (entry, ctx, index) => (
       <Field
         type="select"
         value={entry.language || 'fr'}
@@ -77,17 +76,17 @@ const playlistCols: GridCols<
         onValue={(language) => ctx.updateItem(index, { language })}
       />
     ),
-  },
-  preview: {
-    w: 20,
-    title: 'Aperçu',
-    val: (entry, ctx) =>
+    { w: 20 },
+  ],
+  preview: [
+    'Aperçu',
+    (entry, ctx) =>
       entry.media && <MediaPreview media={ctx.medias.find((m) => m.id === entry.media)} />,
-  },
-  media: {
-    w: 60,
-    title: 'Media',
-    val: (entry, ctx, index) => (
+    { w: 20 },
+  ],
+  media: [
+    'Media',
+    (entry, ctx, index) => (
       <Field
         type="select"
         value={entry.media || ''}
@@ -95,11 +94,11 @@ const playlistCols: GridCols<
         onValue={(id) => ctx.updateItem(index, { media: id || '' })}
       />
     ),
-  },
-  duration: {
-    w: 15,
-    title: 'Durée (s)',
-    val: (entry, ctx, index) => (
+    { w: 60 },
+  ],
+  duration: [
+    'Durée (s)',
+    (entry, ctx, index) => (
       <Field
         type="number"
         value={entry.duration?.toString() || ''}
@@ -108,11 +107,11 @@ const playlistCols: GridCols<
         }
       />
     ),
-  },
-  actions: {
-    w: 40,
-    title: 'Actions',
-    val: (_entry, ctx, index) => (
+    { w: 15 },
+  ],
+  actions: [
+    'Actions',
+    (_entry, ctx, index) => (
       <div style={{ display: 'flex', gap: '0.5em' }}>
         <Button
           icon={<ArrowUp />}
@@ -137,7 +136,8 @@ const playlistCols: GridCols<
         />
       </div>
     ),
-  },
+    { w: 40 },
+  ],
 };
 
 export const AddPlaylistItemButton = ({ playlist }: { playlist: PlaylistModel }) => {
