@@ -86,11 +86,13 @@ const deviceCols: GridCols<
     val: (d) => formatDate(d.created),
   },
   media: {
-    title: 'Média',
+    title: 'Playlist',
     val: (d, ctx) => (
       <Field
         type="select"
-        items={ctx.medias.map((media) => [media.id, media.title || media.key || media.id])}
+        items={ctx.medias
+          .filter((media) => media.type === 'playlist')
+          .map((media) => [media.id, media.title || media.key || media.id])}
         value={d.media}
         onValue={(media) => ctx.deviceSync.update(d.id, { media })}
       />
