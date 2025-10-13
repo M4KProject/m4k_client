@@ -1,13 +1,6 @@
 import { PlaylistEntry, PlaylistModel, MediaModel } from '@common/api';
 import { Css } from '@common/ui';
-import {
-  addItem,
-  removeIndex,
-  secondsToTimeString,
-  parseToSeconds,
-  deepClone,
-  moveIndex,
-} from '@common/utils';
+import { addItem, removeIndex, deepClone, moveIndex } from '@common/utils';
 import { Grid, Field, Button, tooltip, Flag } from '@common/components';
 import { GridCols } from '@common/components/Grid';
 import { Plus, Trash2, Copy, ArrowUp, ArrowDown } from 'lucide-react';
@@ -43,9 +36,9 @@ const playlistCols: GridCols<
     'Heure début',
     (entry, ctx, index) => (
       <Field
-        type="time"
-        value={entry.startHours * 3600}
-        onValue={(value) => ctx.updateItem(index, { startHours: value / 3600 })}
+        type="seconds"
+        value={(entry.startHours || 0) * 3600}
+        onValue={(seconds) => ctx.updateItem(index, { startHours: seconds / 3600 })}
       />
     ),
     { w: 20 },
@@ -54,9 +47,9 @@ const playlistCols: GridCols<
     'Heure fin',
     (entry, ctx, index) => (
       <Field
-        type="time"
-        value={entry.endHours * 3600}
-        onValue={(value) => ctx.updateItem(index, { endHours: value / 3600 })}
+        type="seconds"
+        value={(entry.endHours || 24) * 3600}
+        onValue={(seconds) => ctx.updateItem(index, { endHours: seconds / 3600 })}
       />
     ),
     { w: 20 },
