@@ -104,6 +104,13 @@ export const SideBar = () => {
             selected={page === 'medias' && mediaType === 'image'}
             onClick={goMedias('image')}
           />
+          <SideButton
+            tab={true}
+            title="Fichiers PDF"
+            icon={<MediaIcon type="pdf" />}
+            selected={page === 'medias' && mediaType === 'pdf'}
+            onClick={goMedias('pdf')}
+          />
           <SideButton title="Jobs" icon={<Zap />} selected={page === 'jobs'} onClick={go('jobs')} />
         </>
       ) : null}

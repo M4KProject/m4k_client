@@ -1,5 +1,5 @@
 import { Css } from '@common/ui';
-import { byId, groupBy, MsgMap, sortItems } from '@common/utils';
+import { byId, filterItems, groupBy, MsgMap, sortItems } from '@common/utils';
 import { addTr, useMsg } from '@common/hooks';
 import { MediaModel } from '@common/api';
 import { Grid, GridCols } from '@common/components';
@@ -154,7 +154,8 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
 const openById$ = new MsgMap<boolean>({});
 
 export const MediaTable = ({ type }: { type?: MediaModel['type'] }) => {
-  const medias = useMedias();
+  let medias = useMedias();
+  medias = type ? medias.filter((m) => m.type === type || m.type === 'folder') : medias;
   const openById = useMsg(openById$);
   const isAdvanced = useIsAdvanced();
   const allSelectedById = useMsg(selectedById$);
@@ -163,7 +164,7 @@ export const MediaTable = ({ type }: { type?: MediaModel['type'] }) => {
   const selectedIds = Object.keys(allSelectedById).filter((id) => mediaById[id]);
 
   const tabById: TMap<number> = {};
-  const rootMedias = (type ? medias.filter((m) => m.type === type) : mediasByParent['']) || [];
+  const rootMedias = mediasByParent[''] || [];
 
   const items: MediaModel[] = [];
 
