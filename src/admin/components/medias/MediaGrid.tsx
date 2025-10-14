@@ -116,12 +116,14 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
                 {...tooltip(`Ajouter ${selectedIds.length} élément(s) à la playlist`)}
                 onClick={async () => {
                   updatePlaylist(id, (playlist) => {
-                    playlist.data.items = [
-                      ...playlist.data.items,
-                      ...selectedIds.map((id) => ({
-                        media: id,
-                      })),
-                    ];
+                    if (playlist.data && playlist.data.items) {
+                      playlist.data.items = [
+                        ...playlist.data.items,
+                        ...selectedIds.map((id) => ({
+                          media: id,
+                        })),
+                      ];
+                    }
                   });
                 }}
               />
@@ -141,7 +143,7 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
           {...tooltip('Supprimer')}
           onClick={async () => {
             for (const c of getChildren(id)) {
-              mediaSync.update(c.id, { parent: null });
+              mediaSync.update(c.id, { parent: null as any });
             }
             mediaSync.delete(id);
           }}
@@ -161,8 +163,8 @@ export const getMediasByParent = (medias: MediaModel[]) => {
   for (const parentId in mediasByParent) {
     if (parentId) {
       const parent = mediaById[parentId];
-      if (!parent) {
-        rootMedias.push(...mediasByParent[parentId]);
+      if (!parent && mediasByParent[parentId]) {
+        rootMedias.push(...mediasByParent[parentId]!);
       }
     }
   }
@@ -176,7 +178,7 @@ export const MediaTable = ({ type }: { type?: MediaModel['type'] }) => {
   const allSelectedById = useMsg(selectedById$);
   const mediaById = byId(medias);
   const mediasByParent = useMemo(() => getMediasByParent(medias), [medias]);
-  const selectedIds = Object.keys(allSelectedById).filter((id) => mediaById[id]);
+  const selectedIds = Object.keys(allSelectedById).filter((id) => id && mediaById[id]);
 
   const tabById: TMap<number> = {};
   const rootMedias = mediasByParent[''] || [];
@@ -184,12 +186,12 @@ export const MediaTable = ({ type }: { type?: MediaModel['type'] }) => {
   const items: MediaModel[] = [];
 
   const deep = (medias: MediaModel[], tab: number) => {
-    sortItems(medias, (m) => m.title);
+    sortItems(medias, (m) => m.title ?? '');
     for (const media of medias) {
       const id = media.id;
       items.push(media);
       tabById[id] = tab;
-      if (openById[id]) {
+      if (id && openById[id]) {
         const children = mediasByParent[id];
         if (children) deep(children, tab + 1);
       }
@@ -200,10 +202,10 @@ export const MediaTable = ({ type }: { type?: MediaModel['type'] }) => {
   const ctx: MediaGridCtx = {
     isAdvanced,
     selectedIds,
-    getChildren: (id) => mediasByParent[id] || [],
-    getIsOpen: (id) => openById[id] || false,
+    getChildren: (id) => (id && mediasByParent[id]) || [],
+    getIsOpen: (id) => !!(id && openById[id]),
     setIsOpen: (id, isOpen) => openById$.setItem(id, isOpen),
-    getTab: (id) => tabById[id] || 0,
+    getTab: (id) => (id && tabById[id]) || 0,
   };
 
   console.debug('MediaTable', ctx, items);

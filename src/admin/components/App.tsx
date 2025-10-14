@@ -50,7 +50,7 @@ const CompByPage: Record<Page, () => JSX.Element> = {
 
 const AppRouter = () => {
   const page = usePage();
-  const Page = CompByPage[page] || GroupsPage;
+  const Page = page ? (CompByPage[page] ?? GroupsPage) : GroupsPage;
   return <Page />;
 };
 
@@ -82,7 +82,7 @@ export const App = () => {
   const { isDark, primary, secondary } = group?.data || {};
 
   useEffect(() => {
-    groupId$.set(groupId);
+    groupId$.set(groupId ?? '');
   }, [groupId]);
 
   useEffect(() => {

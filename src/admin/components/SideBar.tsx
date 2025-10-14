@@ -40,7 +40,7 @@ export const SideBar = () => {
   const mediaType = useMediaType();
   const groups = useGroups();
 
-  if (groups.length === 1) setGroupKey(groups[0].key);
+  if (groups.length === 1) setGroupKey(groups[0]!.key);
 
   const go = (page: Page) => () => setPage(page);
 

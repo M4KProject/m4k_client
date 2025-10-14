@@ -9,12 +9,14 @@ import { useMemo } from 'preact/hooks';
 const useItemKey = <T extends ModelBase>(sync: Sync<T>, key?: string) =>
   useMsg(key ? sync.find$([key, { key } as any]) : null);
 
-const useItems = <T extends ModelBase>(sync: Sync<T>, whereOrId?: Where<T>) =>
-  useMsg(sync.filter$(whereOrId));
+const useItems = <T extends ModelBase>(sync: Sync<T>, whereOrId?: Where<T>): T[] =>
+  useMsg(sync.filter$(whereOrId)).filter((item): item is T => item !== undefined);
 
-const useGroupItems = <T extends GroupModelBase>(sync: Sync<T>, where?: Where<T>) => {
+const useGroupItems = <T extends GroupModelBase>(sync: Sync<T>, where?: Where<T>): T[] => {
   const group = useMsg(groupId$);
-  return useMsg(sync.filter$(group ? { ...where, group } : where));
+  return useMsg(sync.filter$(group ? { ...where, group } : where)).filter(
+    (item): item is T => item !== undefined
+  );
 };
 
 const useById = <T extends ModelBase>(sync: Sync<T>, _where?: Where<T>) => useMsg(sync.up$);
@@ -23,7 +25,7 @@ export const useDevice = () => useItemKey(deviceSync, useDeviceKey());
 export const useMedia = () => useItemKey(mediaSync, useMediaKey());
 export const useGroup = () => useItemKey(groupSync, useGroupKey());
 
-export const useGroups = () => useItems(groupSync);
+export const useGroups = (): GroupModelBase[] => useItems(groupSync);
 export const useGroupMembers = () => useGroupItems(memberSync);
 export const useGroupDevices = () => useGroupItems(deviceSync);
 export const useGroupMedias = (type?: MediaModel['type']) => {

@@ -23,7 +23,7 @@ const c = Css('Errors', {
 interface ErrorItem {
   name: string;
   message: string;
-  stack: string;
+  stack: string | undefined;
   deleted: number;
 }
 

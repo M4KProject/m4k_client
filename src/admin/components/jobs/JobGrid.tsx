@@ -38,7 +38,10 @@ const c = Css('JobGrid', {
 const cols: GridCols<JobModel, { mediaById: TMap<MediaModel> }> = {
   action: ['Action', (job) => <Tr>{job.action}</Tr>],
   statut: ['Statut', (job) => <JobStatus job={job} />],
-  media: ['Media', ({ media }, { mediaById }) => <MediaPreview media={mediaById[media]} />],
+  media: [
+    'Media',
+    ({ media }, { mediaById }) => <MediaPreview media={media ? mediaById[media] : undefined} />,
+  ],
   actions: [
     'Actions',
     (job) => (
@@ -61,12 +64,13 @@ export interface JobGridProps {
 export const JobGrid = ({ filter, panel, ...props }: JobGridProps) => {
   const jobs = useGroupJobs();
   const uploadJobs = useMsg(uploadMediaJobs$);
-  const allJobs = [...jobs, ...Object.values(uploadJobs)];
+  const uploadJobsList = Object.values(uploadJobs).filter((j) => j !== undefined);
+  const allJobs: JobModel[] = [...jobs, ...uploadJobsList];
   filterItems(allJobs, filter);
   // sortItems(allJobs, job => -new Date(job.updated).getTime());
 
   const medias = useGroupMedias();
-  const mediaById = byId(medias);
+  const mediaById = byId(medias.filter((m): m is MediaModel => m !== undefined));
 
   if (panel && allJobs.length === 0) {
     return <div class={c('Panel', 'Panel-close', props)} />;
