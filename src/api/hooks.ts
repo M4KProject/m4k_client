@@ -1,6 +1,6 @@
 import { groupId$ } from '@common/api/messages';
 import { Where } from '@common/api/Coll';
-import { GroupModelBase, MediaModel, ModelBase } from '@common/api/models';
+import { GroupModel, GroupModelBase, MediaModel, ModelBase } from '@common/api/models';
 import { useMsg } from '@common/hooks';
 import { deviceSync, groupSync, jobSync, mediaSync, memberSync, Sync } from '@/api/sync';
 import { useDeviceKey, useGroupKey, useMediaKey, useIsAdvanced } from '@/router/hooks';
@@ -25,7 +25,7 @@ export const useDevice = () => useItemKey(deviceSync, useDeviceKey());
 export const useMedia = () => useItemKey(mediaSync, useMediaKey());
 export const useGroup = () => useItemKey(groupSync, useGroupKey());
 
-export const useGroups = (): GroupModelBase[] => useItems(groupSync);
+export const useGroups = (): GroupModel[] => useItems(groupSync) as GroupModel[];
 export const useGroupMembers = () => useGroupItems(memberSync);
 export const useGroupDevices = () => useGroupItems(deviceSync);
 export const useGroupMedias = (type?: MediaModel['type']) => {
@@ -33,7 +33,7 @@ export const useGroupMedias = (type?: MediaModel['type']) => {
   const isAdvanced = useIsAdvanced();
   return useMemo(() => {
     let medias = allMedias;
-    if (!isAdvanced) medias = medias.filter((m) => !m.title.startsWith('.'));
+    if (!isAdvanced) medias = medias.filter((m) => !m.title?.startsWith('.'));
     if (type) medias = medias.filter((m) => m.type === type || m.type === 'folder');
     return medias;
   }, [allMedias, isAdvanced, type]);

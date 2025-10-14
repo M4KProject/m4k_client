@@ -1,5 +1,5 @@
 import { Css } from '@common/ui';
-import { toNbr, toError } from '@common/utils';
+import { toNbr, toError, retry } from '@common/utils';
 import { Button } from '@common/components';
 import { usePromise, useMsg } from '@common/hooks';
 import { useEffect, useRef, useState } from 'preact/hooks';
@@ -139,7 +139,7 @@ const KioskItem = ({
   pos: 'hidden' | 'prev' | 'curr' | 'next';
   gotoNext: () => void;
 }) => {
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement>(null);
   const [info] = usePromise(() => m4k.fileInfo(item.path), [item]);
 
   const isCurr = pos === 'curr';
@@ -166,6 +166,7 @@ const KioskItem = ({
       const timer = setTimeout(gotoNext, duration);
       return () => clearTimeout(timer);
     }
+    return;
   }, [isCurr, isVideo, isImage, duration, gotoNext]);
 
   return (

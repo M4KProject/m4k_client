@@ -126,10 +126,10 @@ export const deviceInit = async () => {
 };
 
 device$.on((device) => {
-  deviceAction$.set(device.action);
+  deviceAction$.set(device?.action);
 });
 
-deviceAction$.on(() => runAction(device$.v));
+deviceAction$.on(() => device$.v && runAction(device$.v));
 
 const capture = async (device: DeviceModel, options?: M4kResizeOptions | undefined) => {
   const url = await m4k.capture(options);
@@ -137,7 +137,7 @@ const capture = async (device: DeviceModel, options?: M4kResizeOptions | undefin
   return await deviceSync.update(device.id, { capture: blob });
 };
 
-const execAction = async (device: DeviceModel, action: string, input: string) => {
+const execAction = async (device: DeviceModel, action: string, input?: string) => {
   switch (action) {
     case 'reload':
       return m4k.reload();
@@ -148,7 +148,7 @@ const execAction = async (device: DeviceModel, action: string, input: string) =>
     case 'exit':
       return await m4k.exit();
     case 'capture':
-      await capture(device, parse(input) as M4kResizeOptions);
+      await capture(device, parse(input || '') as M4kResizeOptions);
       return;
     case 'js':
       return await m4k.js(toStr(input));

@@ -59,9 +59,9 @@ export const EmptyView = ({ media, divProps }: MediaViewProps) => {
   );
 };
 
-const compByType: Record<string, (props: MediaViewProps) => JSX.Element> = {};
+const compByType: Record<string, (props: MediaViewProps) => JSX.Element | null> = {};
 
-export const addComp = (type: string, comp: (props: MediaViewProps) => JSX.Element) => {
+export const addComp = (type: string, comp: (props: MediaViewProps) => JSX.Element | null) => {
   compByType[type] = comp;
 };
 

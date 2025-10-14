@@ -3,7 +3,7 @@ import { getUrlQuery } from '@common/ui/getUrlQuery';
 import { isBool, Msg } from '@common/utils';
 import './shared/app';
 
-export const isDevice$ = new Msg(false, 'isDevice$', true, isBool);
+export const isDevice$ = new Msg<boolean>(false, 'isDevice$', true, isBool);
 
 addResponsiveListener();
 

@@ -200,7 +200,7 @@ export const MediaTable = ({ type }: { type?: MediaModel['type'] }) => {
   deep(rootMedias, 0);
 
   const ctx: MediaGridCtx = {
-    isAdvanced,
+    isAdvanced: !!isAdvanced,
     selectedIds,
     getChildren: (id) => (id && mediasByParent[id]) || [],
     getIsOpen: (id) => !!(id && openById[id]),

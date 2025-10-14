@@ -36,12 +36,14 @@ const infoByType: Record<MediaType, [string, typeof FolderOpen]> = {
 };
 
 export interface MediaIconProps {
-  type: MediaType;
+  type?: MediaType;
   isOpen?: boolean;
   hasChildren?: boolean;
 }
 
 export const MediaIcon = ({ type, isOpen, hasChildren }: MediaIconProps) => {
+  if (!type) return null;
+
   const info = infoByType[type] || infoByType.unknown;
   let Icon = info[1] || HelpCircle;
   let title = info[0] || 'Inconnu';

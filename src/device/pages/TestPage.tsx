@@ -223,12 +223,12 @@ export const TestPage = () => {
           <Field
             label="Résultat"
             type="multiline"
-            value={stringify(result, null, 2) || String(result)}
+            value={stringify(result, undefined, 2) || String(result)}
           />
           <Field
             label="Valeur"
             type="multiline"
-            value={stringify(result?.value, null, 2) || String(result?.value)}
+            value={stringify(result?.value, undefined, 2) || String(result?.value)}
           />
           <Button onClick={handleExec}>Executer</Button>
         </Form>
