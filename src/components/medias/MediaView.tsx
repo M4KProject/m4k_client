@@ -1,11 +1,8 @@
 import { Css } from '@common/ui';
-import { MediaModel } from '@common/api';
+import { MediaAnim, MediaFit, MediaModel } from '@common/api';
 import { DivProps } from '@common/components';
 import { TMap } from '@common/utils';
 import { JSX } from 'preact';
-
-export type MediaFit = 'contain' | 'cover' | 'fill';
-export type MediaAnim = 'toLeft' | 'toBottom' | 'fade' | 'zoom';
 
 const c = Css('MediaView', {
   '': {

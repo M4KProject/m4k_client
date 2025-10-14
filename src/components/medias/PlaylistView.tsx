@@ -1,5 +1,5 @@
 import { Css } from '@common/ui';
-import { PlaylistModel } from '@common/api';
+import { PlaylistEntry, PlaylistModel } from '@common/api';
 import { useState } from 'preact/hooks';
 import { useTimeout } from '@common/hooks';
 import { MediaView, MediaViewProps } from './MediaView';
@@ -13,16 +13,16 @@ export const PlaylistView = ({ media, mediaById, fit, anim, divProps }: Playlist
   const [index, setIndex] = useState(0);
 
   const data = media.data || {};
-  const dataItems = data.items || (media?.deps || []).map((id) => ({ media: id }));
+  const dataItems = data.items || (media?.deps || []).map((id) => ({ media: id }) as PlaylistEntry);
   const items = dataItems
-    .map((data): MediaViewProps | undefined => {
-      const media = mediaById[data.media];
-      if (!media) return null;
+    .map((d): MediaViewProps | undefined => {
+      const media = mediaById[d.media!];
+      if (!media) return undefined;
       return {
         media,
-        fit: data.fit || fit,
-        anim: data.anim || anim,
-        seconds: data.seconds || media.seconds || 5,
+        fit: d.fit || fit,
+        anim: d.anim || anim,
+        seconds: d.seconds || media.seconds || 5,
         mediaById,
       };
     })
@@ -34,14 +34,14 @@ export const PlaylistView = ({ media, mediaById, fit, anim, divProps }: Playlist
   const next = (curr + 1) % length;
 
   items.forEach((item, i) => {
-    item.pos = i === curr ? 'curr' : i === next ? 'next' : 'prev';
+    if (item) item.pos = i === curr ? 'curr' : i === next ? 'next' : 'prev';
   });
 
   const gotoNext = () => {
     setIndex(next);
   };
 
-  const seconds = items[curr].seconds;
+  const seconds = (items && items[curr]?.seconds) || 5;
   useTimeout(length > 0 ? gotoNext : null, seconds * 1000, [seconds, curr]);
 
   if (!media || length === 0) return null;

@@ -53,7 +53,7 @@ const copyPlaylist = async (fromDir: string) => {
       try {
         const path = `${dir}/${fileName}`;
         prog(step, 'info', `Traitement "${fileName}"`);
-        await process(path, fileName);
+        await process(path, fileName!);
       } catch (e) {
         const error = toError(e);
         console.error(`playlistFilter "${fileName}" : ${error}`);

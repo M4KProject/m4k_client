@@ -63,7 +63,7 @@ export const PdfView = ({ media, divProps }: PdfViewProps) => {
 
   if (!media || totalPages === 0) return null;
 
-  const currentPageKey = pages[currentPage];
+  const currentPageKey = pages[currentPage] || '';
   const currentImage = imagesByPage[currentPageKey]?.[0];
 
   const handlePreviousPage = () => {
