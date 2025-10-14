@@ -23,6 +23,7 @@ const playlistCols: GridCols<
     duplicateItem: (index: number) => void;
     deleteItem: (index: number) => void;
     medias: MediaModel[];
+    playlistId: string;
   }
 > = {
   title: [
@@ -83,7 +84,7 @@ const playlistCols: GridCols<
       <Field
         type="select"
         value={entry.media || ''}
-        items={ctx.medias.map((g) => [g.id, g.title])}
+        items={ctx.medias.filter((m) => m.id !== ctx.playlistId).map((g) => [g.id, g.title])}
         onValue={(id) => ctx.updateItem(index, { media: id || '' })}
       />
     ),
@@ -174,7 +175,14 @@ export const EditPlaylist = ({ playlist }: { playlist: PlaylistModel }) => {
     <div class={c()}>
       <Grid
         cols={playlistCols}
-        ctx={{ updateItem, moveItemIndex, duplicateItem, deleteItem, medias }}
+        ctx={{
+          updateItem,
+          moveItemIndex,
+          duplicateItem,
+          deleteItem,
+          medias,
+          playlistId: playlist.id,
+        }}
         items={playlist.data?.items || []}
       />
       <JobGrid filter={(job) => job.status !== 'finished'} panel={true} />
