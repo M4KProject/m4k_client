@@ -66,9 +66,12 @@ const startUploadMedia = async (item: UploadItem) => {
     console.debug('upload created', { item, media });
 
     if (playlist) {
-      console.debug('upload apply playlist', { item, media, parent });
+      console.debug('upload apply playlist', { item, media, playlist });
       await mediaSync.apply(playlist.id, (next) => {
+        if (!next.deps) next.deps = [];
         next.deps.push(media.id);
+        if (!next.data) next.data = {};
+        if (!next.data.items) next.data.items = [];
         next.data.items.push({ media: media.id });
       });
     }
@@ -138,7 +141,7 @@ export const updateMedia = async <T extends MediaModel>(id: string, apply: (next
   const next = deepClone(prev);
   if (!isItem(next.data)) next.data = {};
   apply(next as T);
-  next.deps = uniq(next.deps);
+  next.deps = uniq(next.deps || []);
   const changes = getChanges(prev, next);
   if (!isEmpty(changes)) {
     return await mediaSync.update(id, changes);
@@ -165,7 +168,8 @@ const cleanPlaylist = (next: PlaylistModel) => {
     }
   });
 
-  next.deps = sortItems(Object.keys(itemsByMediaId));
+  const sortedDeps = sortItems(Object.keys(itemsByMediaId));
+  next.deps = sortedDeps ? sortedDeps : [];
 };
 
 export const updatePlaylist = async (id: string, apply: (next: PlaylistModel) => void) =>

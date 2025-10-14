@@ -111,7 +111,7 @@ export const PanZoom = ({
     event.preventDefault();
     setTouches(event.touches);
 
-    if (event.touches.length === 1) {
+    if (event.touches.length === 1 && event.touches[0]) {
       setIsDragging(true);
       setLastPointer(getPointerPos(event.touches[0]));
     }
@@ -121,7 +121,7 @@ export const PanZoom = ({
   const handleTouchMove = (event: TouchEvent) => {
     event.preventDefault();
 
-    if (event.touches.length === 1 && isDragging) {
+    if (event.touches.length === 1 && isDragging && event.touches[0]) {
       // Single finger drag
       const pointer = getPointerPos(event.touches[0]);
       const deltaX = pointer.x - lastPointer.x;
@@ -135,6 +135,8 @@ export const PanZoom = ({
       const touch2 = event.touches[1];
       const oldTouch1 = touches[0];
       const oldTouch2 = touches[1];
+
+      if (!touch1 || !touch2 || !oldTouch1 || !oldTouch2) return;
 
       // Calculate current distance
       const currentDistance = Math.sqrt(

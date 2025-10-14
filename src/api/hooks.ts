@@ -6,17 +6,18 @@ import { deviceSync, groupSync, jobSync, mediaSync, memberSync, Sync } from '@/a
 import { useDeviceKey, useGroupKey, useMediaKey, useIsAdvanced } from '@/router/hooks';
 import { useMemo } from 'preact/hooks';
 
-const useItemKey = <T extends ModelBase>(sync: Sync<T>, key?: string) =>
-  useMsg(key ? sync.find$([key, { key } as any]) : null);
+const useItemKey = <T extends ModelBase>(sync: Sync<T>, key?: string): T | undefined =>
+  useMsg(key ? sync.find$(key) : undefined) as T | undefined;
 
-const useItems = <T extends ModelBase>(sync: Sync<T>, whereOrId?: Where<T>): T[] =>
-  useMsg(sync.filter$(whereOrId)).filter((item): item is T => item !== undefined);
+const useItems = <T extends ModelBase>(sync: Sync<T>, whereOrId?: Where<T>): T[] => {
+  const items = useMsg(sync.filter$(whereOrId));
+  return items || [];
+};
 
 const useGroupItems = <T extends GroupModelBase>(sync: Sync<T>, where?: Where<T>): T[] => {
   const group = useMsg(groupId$);
-  return useMsg(sync.filter$(group ? { ...where, group } : where)).filter(
-    (item): item is T => item !== undefined
-  );
+  const items = useMsg(sync.filter$(group ? ({ ...where, group } as Where<T>) : where));
+  return items || [];
 };
 
 const useById = <T extends ModelBase>(sync: Sync<T>, _where?: Where<T>) => useMsg(sync.up$);

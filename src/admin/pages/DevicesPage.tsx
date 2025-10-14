@@ -35,7 +35,7 @@ const deviceCols: GridCols<
     medias: MediaModel[];
     onlineMin: number;
     handleRemote: (device: DeviceModel) => void;
-    isAdvanced: boolean;
+    isAdvanced: boolean | undefined;
   }
 > = {
   key: [
@@ -47,18 +47,18 @@ const deviceCols: GridCols<
         onValue={(key) => ctx.deviceSync.update(d.id, { key })}
       />
     ),
-    { if: (_col, ctx) => ctx.isAdvanced },
+    { if: (_col, ctx) => !!ctx.isAdvanced },
   ],
   type: [
     'Type',
     (d) => (
       <Field
-        {...tooltip(() => stringify(d.info, null, 2))}
+        {...tooltip(() => stringify(d.info))}
         value={`${d.info?.type || ''} ${d.info?.version || ''}`}
         readonly
       />
     ),
-    { if: (_col, ctx) => ctx.isAdvanced },
+    { if: (_col, ctx) => !!ctx.isAdvanced },
   ],
   name: [
     'Nom',

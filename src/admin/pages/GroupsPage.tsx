@@ -46,7 +46,7 @@ export const GroupsPage = () => {
         <SearchField />
       </Toolbar>
       <PageBody>
-        <GroupGrid groups={groups} groupId={groupId} isAdvanced={isAdvanced} />
+        <GroupGrid groups={groups} groupId={groupId} isAdvanced={!!isAdvanced} />
       </PageBody>
     </Page>
   );

@@ -27,8 +27,10 @@ export const DevicePage = () => {
   const [consoleOutput, setConsoleOutput] = useState('Console ready...\n');
 
   useEffect(() => {
-    setConsoleOutput((p) => p + stringify(device.result, null, 2) + '\n');
-  }, [device.result]);
+    if (device?.result) {
+      setConsoleOutput((p) => p + stringify(device.result) + '\n');
+    }
+  }, [device?.result]);
 
   const executeAction = async (action: string, input?: any) => {
     if (!device) return;

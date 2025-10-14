@@ -50,22 +50,22 @@ export class Sync<T extends ModelBase> {
     const whereList = isList(where) ? where : [where];
 
     const filtersList = whereList.map((where) =>
-      Object.entries(where).map(([p, filter]) => {
+      Object.entries(where || {}).map(([p, filter]) => {
         if (isList(filter)) {
           const [operator, operand] = filter;
           switch (operator) {
             case '=':
-              return (v: any) => v[p] === operand;
+              return (v: any) => v[p] === (operand ?? null);
             case '!=':
-              return (v: any) => v[p] !== operand;
+              return (v: any) => v[p] !== (operand ?? null);
             case '>':
-              return (v: any) => v[p] > operand;
+              return (v: any) => v[p] > (operand ?? null);
             case '>=':
-              return (v: any) => v[p] >= operand;
+              return (v: any) => v[p] >= (operand ?? null);
             case '<':
-              return (v: any) => v[p] < operand;
+              return (v: any) => v[p] < (operand ?? null);
             case '<=':
-              return (v: any) => v[p] <= operand;
+              return (v: any) => v[p] <= (operand ?? null);
             // case '~':   // Like/Contains (if not specified auto wraps the right string OPERAND in a "%" for wildcard match)
             // case '!~':  // NOT Like/Contains (if not specified auto wraps the right string OPERAND in a "%" for wildcard match)
             // case '?=':  // Any/At least one of Equal
@@ -85,7 +85,7 @@ export class Sync<T extends ModelBase> {
       })
     );
 
-    const filter = (i) => filtersList.find((filters) => filters.every((f) => f(i)));
+    const filter = (i: T) => filtersList.find((filters) => filters.every((f) => f(i)));
 
     const results = one ? [items.find(filter)] : items.filter(filter);
     return results;
@@ -102,9 +102,9 @@ export class Sync<T extends ModelBase> {
     const items = await this.coll.all();
     const changes: TMap<T | null> = byId(items);
     const prev = this.filter();
-    const deletedIds = prev.filter((i) => !changes[i.id]).map((r) => r.id);
+    const deletedIds = prev.filter((i) => i && !changes[i.id]).map((r) => r!.id);
     for (const id of deletedIds) changes[id] = null;
-    this.cache.update(changes);
+    this.cache.update(changes as TMap<T>);
   }
 
   init() {
@@ -118,22 +118,30 @@ export class Sync<T extends ModelBase> {
     }
   }
 
-  filter$(where?: Where<T>) {
+  filter$(where?: Where<T>): IMsgReadonly<T[]> {
     this.init();
     const key = isStr(where) ? where : stringify(where);
     const map = this.filterMap;
-    return map[key] || (map[key] = this.cache.map(() => this.filter(where)));
+    if (!map[key]) {
+      map[key] = this.cache.map(() =>
+        this.filter(where).filter((item): item is T => item !== undefined)
+      );
+    }
+    return map[key] as IMsgReadonly<T[]>;
   }
 
-  find$(where?: string | Where<T>) {
+  find$(where?: string | Where<T>): IMsgReadonly<T> {
     this.init();
     const key = isStr(where) ? where : stringify(where);
     const map = this.findMap;
-    return map[key] || (map[key] = this.cache.map(() => this.get(where)));
+    if (!map[key]) {
+      map[key] = this.cache.map(() => this.get(where) as T);
+    }
+    return map[key] as IMsgReadonly<T>;
   }
 
   private set(id: string, item: T | null) {
-    this.cache.setItem(id, item);
+    this.cache.setItem(id, item as T | undefined);
   }
 
   async create(item: ModelCreate<T>, o?: CollOptions<T>): Promise<T> {
@@ -145,10 +153,11 @@ export class Sync<T extends ModelBase> {
 
   async update(id: string, changes: ModelUpdate<T>, o?: CollOptions<T>): Promise<T | null> {
     const prev = this.get(id);
-    this.set(id, { ...prev, ...changes });
+    if (!prev) return null;
+    this.set(id, { ...prev, ...changes } as T);
     try {
       const result = await this.coll.update(id, changes, o);
-      const next = { ...prev, ...changes, ...result };
+      const next = { ...prev, ...changes, ...result } as T;
       this.set(id, next);
       return next;
     } catch (e) {
@@ -159,14 +168,15 @@ export class Sync<T extends ModelBase> {
 
   async apply(id: string, cb: (next: T) => void, o?: CollOptions<T>): Promise<T | null> {
     const prev = this.get(id);
-    const next = deepClone(prev);
+    if (!prev) return null;
+    const next = deepClone(prev) as T;
     cb(next);
     const changes = getChanges(prev, next);
     if (isEmpty(changes)) return prev;
     this.set(id, next);
     try {
-      const result = await this.coll.update(id, changes, o);
-      const next2 = { ...next, ...result };
+      const result = await this.coll.update(id, changes as ModelUpdate<T>, o);
+      const next2 = { ...next, ...result } as T;
       this.set(id, next2);
       return next2;
     } catch (e) {
@@ -181,7 +191,7 @@ export class Sync<T extends ModelBase> {
     try {
       await this.coll.delete(id, o);
     } catch (e) {
-      this.set(id, prev);
+      if (prev) this.set(id, prev);
       throw e;
     }
   }
