@@ -21,7 +21,8 @@ const MAX_CONCURRENT_UPLOADS = 3;
 
 export interface UploadItem extends JobModel {
   file: File;
-  parent?: string;
+  folder?: MediaModel;
+  playlist?: MediaModel;
 }
 
 export const uploadMediaJobs$ = new MsgMap<UploadItem>({});
@@ -32,7 +33,7 @@ const update = (id: string, changes: Partial<UploadItem>) => {
 };
 
 const startUploadMedia = async (item: UploadItem) => {
-  const id = item.id;
+  const { id, folder, playlist } = item;
   console.info('upload started', { id, item });
 
   try {
@@ -41,8 +42,6 @@ const startUploadMedia = async (item: UploadItem) => {
 
     update(id, { status: 'processing' });
 
-    const parent = item.parent && (await mediaSync.get(item.parent));
-
     console.debug('upload creating', { item });
     const media = await mediaSync.create(
       {
@@ -50,7 +49,7 @@ const startUploadMedia = async (item: UploadItem) => {
         source: file,
         group: needGroupId(),
         user: needAuthId(),
-        parent: parent?.id,
+        parent: folder?.id,
       },
       {
         req: {
@@ -66,9 +65,9 @@ const startUploadMedia = async (item: UploadItem) => {
 
     console.debug('upload created', { item, media });
 
-    if (parent && parent.type === 'playlist') {
+    if (playlist) {
       console.debug('upload apply playlist', { item, media, parent });
-      await mediaSync.apply(parent.id, (next) => {
+      await mediaSync.apply(playlist.id, (next) => {
         next.deps.push(media.id);
         next.data.items.push({ media: media.id });
       });
@@ -106,8 +105,12 @@ const processQueue = async () => {
   }
 };
 
-export const uploadMedia = (files: File[], parent?: string): string[] => {
-  console.debug('uploadMedia', { files, parent });
+export const uploadMedia = (
+  files: File[],
+  folder?: MediaModel,
+  playlist?: MediaModel
+): string[] => {
+  console.debug('uploadMedia', { files, folder });
   const ids = files.map((file) => {
     const id = uuid();
     uploadMediaJobs$.update({
@@ -119,7 +122,8 @@ export const uploadMedia = (files: File[], parent?: string): string[] => {
         status: '',
         created: new Date(),
         updated: new Date(),
-        parent,
+        folder,
+        playlist,
       },
     });
     return id;

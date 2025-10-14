@@ -8,7 +8,7 @@ import { useMsg, addTr } from '@common/hooks';
 import { Css } from '@common/ui';
 import { MediaPreview } from '../medias/MediaPreview';
 import { byId } from '@common/utils/by';
-import { useJobs, useMedias } from '@/api/hooks';
+import { useGroupJobs, useGroupMedias } from '@/api/hooks';
 import { filterItems, TMap } from '@common/utils';
 
 // Ajout des traductions pour les actions de job
@@ -59,13 +59,13 @@ export interface JobGridProps {
 }
 
 export const JobGrid = ({ filter, panel, ...props }: JobGridProps) => {
-  const jobs = useJobs();
+  const jobs = useGroupJobs();
   const uploadJobs = useMsg(uploadMediaJobs$);
   const allJobs = [...jobs, ...Object.values(uploadJobs)];
   filterItems(allJobs, filter);
   // sortItems(allJobs, job => -new Date(job.updated).getTime());
 
-  const medias = useMedias();
+  const medias = useGroupMedias();
   const mediaById = byId(medias);
 
   if (panel && allJobs.length === 0) {

@@ -3,7 +3,7 @@ import { TMap, toNbr, toStr } from '@common/utils';
 import { Field, Button, tooltip, GridCols, Grid } from '@common/components';
 import { Trash2 } from 'lucide-react';
 import { memberSync } from '@/api/sync';
-import { useDeviceById, useMembers } from '@/api/hooks';
+import { useDeviceById, useGroupMembers } from '@/api/hooks';
 import { DeviceModel, MemberModel } from '@common/api';
 
 const c = Css('MemberGrid', {});
@@ -53,7 +53,7 @@ const cols: GridCols<MemberModel, { deviceById: TMap<DeviceModel> }> = {
 };
 
 export const MemberGrid = () => {
-  const members = useMembers();
+  const members = useGroupMembers();
   const deviceById = useDeviceById();
 
   return <Grid class={c()} cols={cols} items={members} ctx={{ deviceById }} />;

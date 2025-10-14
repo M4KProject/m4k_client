@@ -7,7 +7,7 @@ import { Plus, Trash2, Copy, ArrowUp, ArrowDown } from 'lucide-react';
 import { updatePlaylist } from '@/admin/controllers';
 import { JobGrid } from '../jobs/JobGrid';
 import { MediaPreview } from './MediaPreview';
-import { useMedias } from '@/api/hooks';
+import { useGroupMedias } from '@/api/hooks';
 
 const c = Css('EditPlaylist', {
   '': {
@@ -144,7 +144,7 @@ export const AddPlaylistItemButton = ({ playlist }: { playlist: PlaylistModel })
 };
 
 export const EditPlaylist = ({ playlist }: { playlist: PlaylistModel }) => {
-  const medias = useMedias();
+  const medias = useGroupMedias();
 
   const updateItem = (index: number, changes: Partial<PlaylistEntry>) => {
     updatePlaylist(playlist.id, ({ data }) => {

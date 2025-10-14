@@ -5,7 +5,7 @@ import { MediaModel } from '@common/api';
 import { Grid, GridCols } from '@common/components';
 import { JobGrid } from '../jobs/JobGrid';
 import { selectedById$ } from '@/admin/controllers/selected';
-import { useMedias } from '@/api/hooks';
+import { useMediaById, useGroupMedias } from '@/api/hooks';
 import { useIsAdvanced } from '@/router/hooks';
 import { TMap, isPositive, round } from '@common/utils';
 import { Trash2, FolderInput, PlusSquare, Edit, Eye } from 'lucide-react';
@@ -16,6 +16,7 @@ import { updatePlaylist } from '../../controllers';
 import { mediaSync } from '@/api/sync';
 import { MediaIcon } from './MediaIcon';
 import { updateRoute } from '@/router/setters';
+import { useMemo } from 'preact/hooks';
 
 addTr({
   pending: 'en attente',
@@ -153,14 +154,28 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
 
 const openById$ = new MsgMap<boolean>({});
 
+export const getMediasByParent = (medias: MediaModel[]) => {
+  const mediaById = byId(medias);
+  const mediasByParent = groupBy(medias, (m) => m.parent || '');
+  const rootMedias = mediasByParent[''] || (mediasByParent[''] = []);
+  for (const parentId in mediasByParent) {
+    if (parentId) {
+      const parent = mediaById[parentId];
+      if (!parent) {
+        rootMedias.push(...mediasByParent[parentId]);
+      }
+    }
+  }
+  return mediasByParent;
+};
+
 export const MediaTable = ({ type }: { type?: MediaModel['type'] }) => {
-  let medias = useMedias();
-  medias = type ? medias.filter((m) => m.type === type || m.type === 'folder') : medias;
+  const medias = useGroupMedias(type);
   const openById = useMsg(openById$);
   const isAdvanced = useIsAdvanced();
   const allSelectedById = useMsg(selectedById$);
   const mediaById = byId(medias);
-  const mediasByParent = groupBy(medias, (m) => mediaById[m.parent]?.id || '');
+  const mediasByParent = useMemo(() => getMediasByParent(medias), [medias]);
   const selectedIds = Object.keys(allSelectedById).filter((id) => mediaById[id]);
 
   const tabById: TMap<number> = {};

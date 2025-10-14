@@ -20,7 +20,7 @@ import { SearchField } from '../components/SearchField';
 import { deviceSync } from '@/api/sync';
 import { setDeviceKey, setPage } from '../../router/setters';
 import { useIsAdvanced } from '@/router/hooks';
-import { useDevices, useMedias } from '@/api/hooks';
+import { useGroupDevices, useGroupMedias } from '@/api/hooks';
 
 const c = Css('DevicesPage', {
   Buttons: {
@@ -159,8 +159,8 @@ export const PairingForm = ({ onClose }: { onClose: () => void }) => {
 
 export const DevicesPage = () => {
   const isAdvanced = useIsAdvanced();
-  const medias = useMedias();
-  const devices = useDevices();
+  const medias = useGroupMedias();
+  const devices = useGroupDevices();
 
   // search ? devices.filter((d) => isSearched(d.name, search)) : devices;
 

@@ -107,7 +107,17 @@ export const MediasPage = () => {
           {...tooltip('Téléverser des medias')}
           icon={<Upload />}
           color="primary"
-          onFiles={(files) => uploadMedia(files, media?.id)}
+          onFiles={(files) => {
+            if (media?.type === 'playlist') {
+              uploadMedia(files, media.parent ? mediaById[media.parent] : undefined, media);
+              return;
+            }
+            if (media?.type === 'folder') {
+              uploadMedia(files, media);
+              return;
+            }
+            uploadMedia(files);
+          }}
         />
 
         <SearchField />
