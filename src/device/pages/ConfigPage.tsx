@@ -10,7 +10,7 @@ const c = Css('ConfigPage', {
     p: 1,
   },
   Actions: {
-    fRow: 1,
+    fRow: [],
     p: 0.5,
     gap: 0.5,
   },

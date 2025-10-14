@@ -8,7 +8,7 @@ import { Msg } from '@common/utils';
 
 const c = Css('SearchField', {
   '': {
-    fRow: 1,
+    fRow: [],
   },
 });
 

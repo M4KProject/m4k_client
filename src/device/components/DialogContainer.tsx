@@ -7,11 +7,11 @@ const c = Css('DialogContainer', {
     position: 'fixed',
     inset: 0,
     bg: 'mask',
-    fCenter: 1,
+    fCenter: [],
     zIndex: 10000,
   },
   Window: {
-    fCol: 1,
+    fCol: [],
     elevation: 3,
     rounded: 2,
     maxWidth: '90%',
@@ -20,7 +20,7 @@ const c = Css('DialogContainer', {
     bg: 'b0',
   },
   Header: {
-    fCenter: 1,
+    fCenter: [],
     textAlign: 'center',
     bold: 1,
     p: 1,
@@ -28,7 +28,7 @@ const c = Css('DialogContainer', {
     fg: 'headerTitle',
   },
   Content: {
-    fCol: 1,
+    fCol: [],
     p: 1,
   },
 });

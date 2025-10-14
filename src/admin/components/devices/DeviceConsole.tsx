@@ -24,7 +24,7 @@ const c = Css('DeviceConsole', {
     whiteSpace: 'pre-wrap',
   },
   Actions: {
-    fCenter: 1,
+    fCenter: [],
     gap: 1,
     p: 0.5,
   },

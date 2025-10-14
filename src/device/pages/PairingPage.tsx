@@ -7,7 +7,7 @@ import { offlineMode$ } from '../messages';
 
 const c = Css('PairingPage', {
   '': {
-    fCenter: 1,
+    fCenter: [],
     wh: '100%',
     bg: 'b3',
   },

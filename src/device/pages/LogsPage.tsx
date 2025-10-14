@@ -28,7 +28,7 @@
 //         overflow: 'auto',
 //     },
 //     '': {
-//         fRow: 1,
+//         fRow: [],
 //         minHeight: "1em",
 //         fontSize: "0.5em",
 //         my: 0.1,

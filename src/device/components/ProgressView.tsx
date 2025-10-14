@@ -11,7 +11,7 @@ const c = Css('ProgressView', {
     bg: 'b0',
   },
   Logs: {
-    fCol: 1,
+    fCol: [],
     overflow: 'auto',
     minHeight: '7em',
     maxHeight: '7em',

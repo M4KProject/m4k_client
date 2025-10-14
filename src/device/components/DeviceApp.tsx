@@ -32,7 +32,7 @@ const c = Css('DeviceApp', {
     fontFamily: 'Roboto',
   },
   '-loading': {
-    fCenter: 1,
+    fCenter: [],
   },
 });
 

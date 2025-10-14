@@ -28,7 +28,7 @@ const c = Css('App', {
     fontFamily: 'Roboto',
   },
   '-loading': {
-    fCenter: 1,
+    fCenter: [],
   },
 });
 

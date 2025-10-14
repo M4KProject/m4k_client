@@ -12,7 +12,7 @@ const c = Css('PdfView', {
   '': {
     position: 'absolute',
     overflow: 'hidden',
-    fCenter: 1,
+    fCenter: [],
     wh: '100%',
     xy: 0,
   },

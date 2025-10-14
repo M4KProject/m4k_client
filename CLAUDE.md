@@ -146,7 +146,7 @@ This codebase uses a custom CSS-in-JS system with powerful utility functions:
 ```typescript
 const css = Css('ComponentName', {
   '': {
-    fCol: 1,           // display: flex; flex-direction: column
+    fCol: [],           // display: flex; flex-direction: column
     p: 2,              // padding: 2em
     bg: 'primary'      // background-color: var(--primary-color)
   },
@@ -180,9 +180,9 @@ const Component = () => {
 
 **Flexbox:**
 
-- `fRow: 1 | [] | [align] | [align, justify]` - flex-direction: row
-- `fCol: 1 | [] | [align] | [align, justify]` - flex-direction: column
-- `fCenter: 1 | [] | [direction]` - centered flex container
+- `fRow: [] | [] | [align] | [align, justify]` - flex-direction: row
+- `fCol: [] | [] | [align] | [align, justify]` - flex-direction: column
+- `fCenter: [] | [] | [direction]` - centered flex container
 
 **Spacing:**
 
@@ -215,7 +215,7 @@ const Component = () => {
 ```typescript
 // Simple flex layout
 const css = Css('MyComponent', {
-  '': { fCol: 1, p: 2, bg: 'background' },
+  '': { fCol: [], p: 2, bg: 'background' },
   Header: { fRow: ['center', 'space-between'], pb: 1 },
   Content: { fCol: ['stretch'], flex: 1 },
 });

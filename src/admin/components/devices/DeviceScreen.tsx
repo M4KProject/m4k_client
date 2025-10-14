@@ -10,7 +10,7 @@ const c = Css('DeviceScreen', {
     bgMode: 'contain',
   },
   NoCapture: {
-    fCenter: 1,
+    fCenter: [],
     bg: '#FFF',
     fg: '#000',
     p: 1,

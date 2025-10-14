@@ -11,7 +11,7 @@ import { useGroupMedias } from '@/api/hooks';
 
 const c = Css('EditPlaylist', {
   '': {
-    fCol: 1,
+    fCol: [],
   },
 });
 

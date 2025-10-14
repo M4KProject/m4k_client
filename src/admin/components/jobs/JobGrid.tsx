@@ -23,7 +23,7 @@ const c = Css('JobGrid', {
     elevation: 3,
     rounded: 2,
     bg: 'b0',
-    fCol: 1,
+    fCol: [],
     transition: 1,
   },
   'Panel-close': {

@@ -3,7 +3,7 @@ import { Loading } from '@common/components';
 
 const c = Css('LoadingPage', {
   '': {
-    fCenter: 1,
+    fCenter: [],
   },
 });
 

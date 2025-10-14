@@ -11,7 +11,7 @@ const c = Css('MediaView', {
   '': {
     position: 'absolute',
     overflow: 'hidden',
-    fCenter: 1,
+    fCenter: [],
     wh: '100%',
     xy: 0,
     transition: 0.3,
