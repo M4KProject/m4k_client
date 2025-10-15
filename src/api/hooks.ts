@@ -1,13 +1,19 @@
 import { groupId$ } from '@common/api/messages';
 import { Where } from '@common/api/Coll';
-import { GroupModel, GroupModelBase, MediaModel, ModelBase } from '@common/api/models';
+import {
+  GroupModel,
+  GroupModelBase,
+  KeyModelBase,
+  MediaModel,
+  ModelBase,
+} from '@common/api/models';
 import { useMsg } from '@common/hooks';
 import { deviceSync, groupSync, jobSync, mediaSync, memberSync, Sync } from '@/api/sync';
 import { useDeviceKey, useGroupKey, useMediaKey, useIsAdvanced } from '@/router/hooks';
 import { useMemo } from 'preact/hooks';
 
-const useItemKey = <T extends ModelBase>(sync: Sync<T>, key?: string): T | undefined =>
-  useMsg(key ? sync.find$(key) : undefined) as T | undefined;
+const useItemKey = <T extends KeyModelBase>(sync: Sync<T>, key?: string): T | undefined =>
+  useMsg(key ? sync.find$({ key }) : undefined) as T | undefined;
 
 const useItems = <T extends ModelBase>(sync: Sync<T>, whereOrId?: Where<T>): T[] => {
   const items = useMsg(sync.filter$(whereOrId));

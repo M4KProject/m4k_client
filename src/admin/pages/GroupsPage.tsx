@@ -1,12 +1,9 @@
-import { useMsg } from '@common/hooks';
 import { Plus } from 'lucide-react';
 import { Button, Page, Toolbar, PageBody, tooltip } from '@common/components';
 import { Css, getColor } from '@common/ui';
 import { SearchField } from '../components/SearchField';
 import { Role, apiAuth$ } from '@common/api';
 import { groupSync, memberSync } from '@/api/sync';
-import { useIsAdvanced } from '@/router/hooks';
-import { useGroup, useGroups } from '@/api/hooks';
 import { GroupGrid } from '../components/GroupGrid';
 
 const c = Css('GroupsPage', {
@@ -22,13 +19,8 @@ export const Color = ({ color }: { color: string }) => (
 );
 
 export const GroupsPage = () => {
-  const auth = useMsg(apiAuth$);
-  const group = useGroup();
-  const groupId = group?.id;
-  const groups = useGroups();
-  const isAdvanced = useIsAdvanced();
-
   const handleAdd = async () => {
+    const auth = apiAuth$.v;
     if (!auth) return;
     const group = await groupSync.create({ name: 'Nouveau Groupe', user: auth.id });
     if (group) {
@@ -37,7 +29,7 @@ export const GroupsPage = () => {
     }
   };
 
-  console.debug('GroupsPage', { auth, group, isAdvanced, groups });
+  console.debug('GroupsPage');
 
   return (
     <Page class={c()}>
@@ -46,7 +38,7 @@ export const GroupsPage = () => {
         <SearchField />
       </Toolbar>
       <PageBody>
-        <GroupGrid groups={groups} groupId={groupId} isAdvanced={!!isAdvanced} />
+        <GroupGrid />
       </PageBody>
     </Page>
   );

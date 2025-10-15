@@ -13,7 +13,7 @@ import { AccountPage } from '../pages/AccountPage';
 import { useEffect } from 'preact/hooks';
 import { apiAuth$, groupId$ } from '@common/api';
 import { Page } from '@/router/types';
-import { usePage } from '@/router/hooks';
+import { useGroupKey, usePage } from '@/router/hooks';
 import { useGroup } from '@/api/hooks';
 import { Errors } from './Errors';
 
@@ -76,7 +76,8 @@ const AppContent = () => {
   );
 };
 
-export const App = () => {
+export const AppSyncGroup = () => {
+  const groupKey = useGroupKey();
   const group = useGroup();
   const groupId = group?.id;
   const { isDark, primary, secondary } = group?.data || {};
@@ -89,5 +90,17 @@ export const App = () => {
     updateTheme({ isDark, primary, secondary });
   }, [isDark, primary, secondary]);
 
-  return <AppContent />;
+  console.debug('AppSyncGroup', { groupKey, group, groupId });
+
+  return null;
+};
+
+export const App = () => {
+  console.debug('App');
+  return (
+    <>
+      <AppSyncGroup />
+      <AppContent />
+    </>
+  );
 };

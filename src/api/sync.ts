@@ -16,8 +16,61 @@ import { stringify } from '@common/utils/json';
 import { deepClone, getChanges } from '@common/utils/obj';
 import { TMap } from '@common/utils/types';
 import { MsgMap } from '@common/utils/MsgMap';
+import { firstUpper } from '@common/utils';
+
+export type IdOrWhere<T extends ModelBase> = string | Where<T>;
+
+const filter = <T extends ModelBase>(items: T[], where?: Where<T>, one?: boolean) => {
+  if (isEmpty(where)) return items;
+
+  const whereList = isList(where) ? where : [where];
+
+  const filtersList = whereList.map((where) =>
+    Object.entries(where || {}).map(([p, filter]) => {
+      if (isList(filter)) {
+        const [operator, operand] = filter;
+        switch (operator) {
+          case '=':
+            return (v: any) => v[p] === (operand ?? null);
+          case '!=':
+            return (v: any) => v[p] !== (operand ?? null);
+          case '>':
+            return (v: any) => v[p] > (operand ?? null);
+          case '>=':
+            return (v: any) => v[p] >= (operand ?? null);
+          case '<':
+            return (v: any) => v[p] < (operand ?? null);
+          case '<=':
+            return (v: any) => v[p] <= (operand ?? null);
+          // case '~':   // Like/Contains (if not specified auto wraps the right string OPERAND in a "%" for wildcard match)
+          // case '!~':  // NOT Like/Contains (if not specified auto wraps the right string OPERAND in a "%" for wildcard match)
+          // case '?=':  // Any/At least one of Equal
+          // case '?!=': // Any/At least one of NOT equal
+          // case '?>':  // Any/At least one of Greater than
+          // case '?>=': // Any/At least one of Greater than or equal
+          // case '?<':  // Any/At least one of Less than
+          // case '?<=': // Any/At least one of Less than or equal
+          // case '?~':  // Any/At least one of Like/Contains (if not specified auto wraps the right string OPERAND in a "%" for wildcard match)
+          // case '?!~': // Any/At least one of NOT Like/Contains (if not specified auto wraps the right string OPERAND in a "%" for wildcard match)
+          default:
+            throw notImplemented(operator);
+        }
+      } else {
+        return (v: any) => v[p] === filter;
+      }
+    })
+  );
+
+  const filter = (i: T) => filtersList.find((filters) => filters.every((f) => f(i)));
+
+  let results = one ? [items.find(filter)] : items.filter(filter);
+  results = results.filter((item): item is T => item !== undefined);
+
+  return results as T[];
+};
 
 export class Sync<T extends ModelBase> {
+  readonly log: string;
   readonly name: string;
   readonly up$: IMsgReadonly<TMap<T>>;
   readonly coll: Coll<T>;
@@ -28,89 +81,50 @@ export class Sync<T extends ModelBase> {
   private isInit = false;
 
   constructor(name: string) {
+    this.log = firstUpper(name).replace(/s$/, '') + 'Sync';
     this.name = name;
     this.coll = new Coll<T>(name);
     this.cache = new MsgMap<T>({}, name + 'Cache', true, isItemMap);
     this.up$ = this.cache.throttle(100);
-  }
 
-  log(...args: any[]) {
-    console.debug('Sync', this.name, ...args);
+    this.cache.on((next) => console.debug(this.log, 'cache next', { next }));
+    this.up$.on((next) => console.debug(this.log, 'up$ next', { next }));
   }
 
   byId() {
     return this.cache.v;
   }
 
-  filter(where?: Where<T>, one?: boolean) {
-    this.log('find', where, one);
-    const items = this.cache.getItems();
-    if (isEmpty(where)) return items;
-
-    const whereList = isList(where) ? where : [where];
-
-    const filtersList = whereList.map((where) =>
-      Object.entries(where || {}).map(([p, filter]) => {
-        if (isList(filter)) {
-          const [operator, operand] = filter;
-          switch (operator) {
-            case '=':
-              return (v: any) => v[p] === (operand ?? null);
-            case '!=':
-              return (v: any) => v[p] !== (operand ?? null);
-            case '>':
-              return (v: any) => v[p] > (operand ?? null);
-            case '>=':
-              return (v: any) => v[p] >= (operand ?? null);
-            case '<':
-              return (v: any) => v[p] < (operand ?? null);
-            case '<=':
-              return (v: any) => v[p] <= (operand ?? null);
-            // case '~':   // Like/Contains (if not specified auto wraps the right string OPERAND in a "%" for wildcard match)
-            // case '!~':  // NOT Like/Contains (if not specified auto wraps the right string OPERAND in a "%" for wildcard match)
-            // case '?=':  // Any/At least one of Equal
-            // case '?!=': // Any/At least one of NOT equal
-            // case '?>':  // Any/At least one of Greater than
-            // case '?>=': // Any/At least one of Greater than or equal
-            // case '?<':  // Any/At least one of Less than
-            // case '?<=': // Any/At least one of Less than or equal
-            // case '?~':  // Any/At least one of Like/Contains (if not specified auto wraps the right string OPERAND in a "%" for wildcard match)
-            // case '?!~': // Any/At least one of NOT Like/Contains (if not specified auto wraps the right string OPERAND in a "%" for wildcard match)
-            default:
-              throw notImplemented(operator);
-          }
-        } else {
-          return (v: any) => v[p] === filter;
-        }
-      })
-    );
-
-    const filter = (i: T) => filtersList.find((filters) => filters.every((f) => f(i)));
-
-    const results = one ? [items.find(filter)] : items.filter(filter);
+  filter(where?: Where<T>, one?: boolean): T[] {
+    const results = filter(this.cache.getItems(), where, one);
+    console.debug(this.log, 'filter results', { where, one, results });
     return results;
   }
 
-  get(where?: string | Where<T>) {
-    if (!where) return undefined;
-    if (isStr(where)) return this.cache.getItem(where);
-    return this.filter(where, true)[0];
+  get(where?: IdOrWhere<T>) {
+    let result: T | undefined = undefined;
+    if (!where) {
+    } else if (isStr(where)) result = this.cache.getItem(where);
+    else result = this.filter(where, true)[0];
+    console.debug(this.log, 'get', { where, result });
+    return result;
   }
 
   async load() {
-    this.log('load');
+    console.debug(this.log, 'loading');
     const items = await this.coll.all();
     const changes: TMap<T | null> = byId(items);
     const prev = this.filter();
     const deletedIds = prev.filter((i) => i && !changes[i.id]).map((r) => r!.id);
     for (const id of deletedIds) changes[id] = null;
     this.cache.update(changes as TMap<T>);
+    console.debug(this.log, 'loaded', { items, changes, deletedIds });
   }
 
   init() {
     if (!this.isInit) {
       this.isInit = true;
-      this.log('init');
+      console.debug(this.log, 'init');
       this.coll.on((item, action) => {
         this.set(item.id, action === 'delete' ? null : item);
       });
@@ -119,25 +133,29 @@ export class Sync<T extends ModelBase> {
   }
 
   filter$(where?: Where<T>): IMsgReadonly<T[]> {
-    this.init();
     const key = isStr(where) ? where : stringify(where);
-    const map = this.filterMap;
-    if (!map[key]) {
-      map[key] = this.cache.map(() =>
-        this.filter(where).filter((item): item is T => item !== undefined)
-      );
-    }
-    return map[key] as IMsgReadonly<T[]>;
+    console.debug(this.log, 'filter$', { where, key });
+    this.init();
+
+    const cache = this.filterMap;
+    const prev = cache[key];
+    if (prev) return prev;
+
+    console.debug(this.log, 'find$ new', { where, key });
+    return (cache[key] = this.up$.map(() => this.filter(where)));
   }
 
-  find$(where?: string | Where<T>): IMsgReadonly<T> {
-    this.init();
+  find$(where?: IdOrWhere<T>): IMsgReadonly<T> {
     const key = isStr(where) ? where : stringify(where);
-    const map = this.findMap;
-    if (!map[key]) {
-      map[key] = this.cache.map(() => this.get(where) as T);
-    }
-    return map[key] as IMsgReadonly<T>;
+    console.debug(this.log, 'find$', { where, key });
+    this.init();
+
+    const cache = this.findMap;
+    const prev = cache[key];
+    if (prev) return prev;
+
+    console.debug(this.log, 'find$ new', { where, key });
+    return (cache[key] = this.up$.map(() => this.get(where) as T));
   }
 
   private set(id: string, item: T | null) {
@@ -145,13 +163,14 @@ export class Sync<T extends ModelBase> {
   }
 
   async create(item: ModelCreate<T>, o?: CollOptions<T>): Promise<T> {
-    this.log('create', item, o);
+    console.debug(this.log, 'create', item, o);
     const result = await this.coll.create(item, o);
     this.set(result.id, result);
     return result;
   }
 
   async update(id: string, changes: ModelUpdate<T>, o?: CollOptions<T>): Promise<T | null> {
+    console.debug(this.log, 'update', id, changes, o);
     const prev = this.get(id);
     if (!prev) return null;
     this.set(id, { ...prev, ...changes } as T);
@@ -167,6 +186,7 @@ export class Sync<T extends ModelBase> {
   }
 
   async apply(id: string, cb: (next: T) => void, o?: CollOptions<T>): Promise<T | null> {
+    console.debug(this.log, 'apply', id, o);
     const prev = this.get(id);
     if (!prev) return null;
     const next = deepClone(prev) as T;
@@ -186,6 +206,7 @@ export class Sync<T extends ModelBase> {
   }
 
   async delete(id: string, o?: CollOptions<T>): Promise<void> {
+    console.debug(this.log, 'delete', id, o);
     const prev = this.get(id);
     this.set(id, null);
     try {

@@ -3,14 +3,22 @@ import { Trash2 } from 'lucide-react';
 import { GroupModel } from '@common/api';
 import { groupSync } from '@/api/sync';
 import { setGroupKey } from '@/router/setters';
+import { useGroupKey, useIsAdvanced } from '@/router/hooks';
+import { useGroups } from '@/api/hooks';
 
-const getGroupCols = (isAdvanced: boolean): GridCols<GroupModel, { groupId: string }> => ({
+const cols: GridCols<
+  GroupModel,
+  {
+    groupKey: string;
+    isAdvanced: boolean;
+  }
+> = {
   selected: [
     'Sélectionné',
     (item, ctx) => (
       <Field
         type="switch"
-        value={item.id === ctx.groupId}
+        value={item.key === ctx.groupKey}
         onValue={(v) => setGroupKey(v ? item.key : '')}
       />
     ),
@@ -25,7 +33,7 @@ const getGroupCols = (isAdvanced: boolean): GridCols<GroupModel, { groupId: stri
         onValue={(key) => groupSync.update(item.id, { key })}
       />
     ),
-    { if: () => isAdvanced },
+    { if: ({}, { isAdvanced }) => isAdvanced },
   ],
   name: [
     'Nom',
@@ -85,16 +93,14 @@ const getGroupCols = (isAdvanced: boolean): GridCols<GroupModel, { groupId: stri
     ),
     { w: 30 },
   ],
-});
+};
 
-export interface GroupGridProps {
-  groups: GroupModel[];
-  groupId?: string;
-  isAdvanced: boolean;
-}
+export interface GroupGridProps {}
 
-export const GroupGrid = ({ groups, groupId, isAdvanced }: GroupGridProps) => {
-  const cols = getGroupCols(isAdvanced);
-
-  return <Grid ctx={{ groupId: groupId || '' }} cols={cols} items={groups} />;
+export const GroupGrid = ({}: GroupGridProps) => {
+  const groups = useGroups();
+  const groupKey = useGroupKey();
+  const isAdvanced = useIsAdvanced();
+  console.debug('GroupGrid', { groups, groupKey, isAdvanced });
+  return <Grid ctx={{ groupKey, isAdvanced }} cols={cols} items={groups} />;
 };
