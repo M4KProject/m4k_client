@@ -46,8 +46,6 @@ export const PanZoom = ({ children, ...props }: PanZoomProps) => {
     let isDragging = false;
 
     const applyTransform = (x: number, y: number, zoom: number, animate = false) => {
-      zoom = clamp(zoom, 1, 5);
-
       lastX = x;
       lastY = y;
       lastZoom = zoom;
@@ -83,7 +81,7 @@ export const PanZoom = ({ children, ...props }: PanZoomProps) => {
           const newX = pointerX - (pointerX - lastX) * (zoom / lastZoom);
           const newY = pointerY - (pointerY - lastY) * (zoom / lastZoom);
 
-          applyTransform(newX, newY, lastZoom);
+          applyTransform(newX, newY, zoom);
         },
         { passive: false }
       ),
