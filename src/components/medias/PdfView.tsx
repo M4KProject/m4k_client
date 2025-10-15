@@ -7,6 +7,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { MediaViewProps } from './MediaView';
 import { getVariants } from '@/api/getVariants';
 import { getMediaUrl } from '@/api/getMediaUrl';
+import { PanZoom } from './PanZoom';
 
 const c = Css('PdfView', {
   '': {
@@ -80,7 +81,7 @@ export const PdfView = ({ media, divProps }: PdfViewProps) => {
 
   return (
     <div {...divProps} class={c(divProps)}>
-      <div class={c('Container')}>
+      <PanZoom class={c('Container')}>
         {currentImage && (
           <div
             class={c('Page')}
@@ -89,7 +90,7 @@ export const PdfView = ({ media, divProps }: PdfViewProps) => {
             }}
           />
         )}
-      </div>
+      </PanZoom>
 
       <div class={c('Toolbar')}>
         <Button
