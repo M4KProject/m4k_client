@@ -44,7 +44,12 @@ export const SideBar = () => {
 
   const go = (page: Page) => () => setPage(page);
 
-  const goMedias = (mediaType: MediaType) => () => updateRoute({ page: 'medias', mediaType });
+  const goMedias = (mediaType: MediaType) => () =>
+    updateRoute({
+      page: 'medias',
+      mediaType,
+      mediaKey: '',
+    });
 
   return (
     <Side>
@@ -76,41 +81,27 @@ export const SideBar = () => {
             selected={page === 'medias' && !mediaType}
             onClick={goMedias('')}
           />
-          <SideButton
-            tab={true}
-            title="Playlists"
-            icon={<MediaIcon type="playlist" />}
-            selected={page === 'medias' && mediaType === 'playlist'}
-            onClick={goMedias('playlist')}
-          />
-          <SideButton
-            tab={true}
-            title="Pages"
-            icon={<MediaIcon type="page" />}
-            selected={page === 'medias' && mediaType === 'page'}
-            onClick={goMedias('page')}
-          />
-          <SideButton
-            tab={true}
-            title="Videos"
-            icon={<MediaIcon type="video" />}
-            selected={page === 'medias' && mediaType === 'video'}
-            onClick={goMedias('video')}
-          />
-          <SideButton
-            tab={true}
-            title="Images"
-            icon={<MediaIcon type="image" />}
-            selected={page === 'medias' && mediaType === 'image'}
-            onClick={goMedias('image')}
-          />
-          <SideButton
-            tab={true}
-            title="Fichiers PDF"
-            icon={<MediaIcon type="pdf" />}
-            selected={page === 'medias' && mediaType === 'pdf'}
-            onClick={goMedias('pdf')}
-          />
+
+          {page === 'medias'
+            ? (
+                [
+                  ['playlist', 'Playlists'],
+                  ['page', 'Pages'],
+                  ['video', 'Videos'],
+                  ['image', 'Images'],
+                  ['pdf', 'Fichiers PDF'],
+                ] as [MediaType, string][]
+              ).map(([type, title]) => (
+                <SideButton
+                  key={type}
+                  tab={true}
+                  title={title}
+                  icon={<MediaIcon type={type} />}
+                  selected={page === 'medias' && mediaType === type}
+                  onClick={goMedias(type)}
+                />
+              ))
+            : null}
           <SideButton title="Jobs" icon={<Zap />} selected={page === 'jobs'} onClick={go('jobs')} />
         </>
       ) : null}

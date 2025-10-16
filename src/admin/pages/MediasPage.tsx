@@ -55,7 +55,7 @@ export const MediasPage = () => {
   return (
     <Page class={c('Page')}>
       <Toolbar title="Medias">
-        {media && <BackButton onClick={() => setMediaKey('')} />}
+        {/* {media && <BackButton onClick={() => setMediaKey('')} />} */}
 
         {media?.type === 'playlist' && <AddPlaylistItemButton playlist={media as PlaylistModel} />}
 
