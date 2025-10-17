@@ -4,6 +4,7 @@ import { byId } from '@common/utils/by';
 import { isItemMap, isEmpty, isList, isStr } from '@common/utils/check';
 import { notImplemented } from '@common/utils/error';
 import {
+  ApplicationModel,
   DeviceModel,
   GroupModel,
   JobModel,
@@ -226,3 +227,5 @@ export const jobSync = sync<JobModel>('jobs');
 export const mediaSync = sync<MediaModel>('medias');
 export const memberSync = sync<MemberModel>('members');
 export const userSync = sync<UserModel>('users');
+
+export const applicationsColl = new Coll<ApplicationModel>('applications');
