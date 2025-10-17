@@ -5,6 +5,7 @@ import { Download } from 'lucide-react';
 import { applicationsColl } from '../../api/sync';
 import { ApplicationModel } from '@common/api';
 import { sortItems } from '@common/utils';
+import { m4k } from '@common/m4k';
 
 const c = Css('Apps', {
   '': {
@@ -31,19 +32,32 @@ const c = Css('Apps', {
   AppButton: {},
 });
 
+export const AppButton = ({ id, file }: { id: string; file: string }) => {
+  const url = applicationsColl.getUrl(id, file);
+  return (
+    <Button
+      class={c('AppButton')}
+      icon={<Download />}
+      color="primary"
+      onClick={(e) => {
+        if (m4k.isInterface) {
+          e.preventDefault();
+          m4k.installApk(url);
+        }
+      }}
+      href={url}
+      link
+      download
+    />
+  );
+};
+
 export const Apps = () => {
   const [applications, setApplications] = useState<ApplicationModel[]>([]);
 
   useEffect(() => {
     applicationsColl.all().then(setApplications);
   }, []);
-
-  const handleDownload = (app: ApplicationModel) => {
-    if (app.file) {
-      const fileUrl = applicationsColl.getUrl(app.id, app.file);
-      window.open(fileUrl, '_blank');
-    }
-  };
 
   sortItems(applications, (a) => (a.name || '') + a.version);
 
@@ -55,12 +69,7 @@ export const Apps = () => {
             <div class={c('AppName')}>{app.name}</div>
             {app.version && <div class={c('AppVersion')}>Version: {app.version}</div>}
           </div>
-          <Button
-            class={c('AppButton')}
-            icon={<Download />}
-            color="primary"
-            onClick={() => handleDownload(app)}
-          />
+          <AppButton id={app.id} file={String(app.file)} />
         </div>
       ))}
     </div>

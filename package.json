@@ -19,10 +19,13 @@
     "workbox-window": "^7.3.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.28.4",
+    "@babel/helpers": "^7.28.4",
     "@preact/preset-vite": "^2.9.3",
     "@types/node": "^24.1.0",
     "@typescript-eslint/eslint-plugin": "^8.39.0",
     "@typescript-eslint/parser": "^8.39.0",
+    "call-bind-apply-helpers": "^1.0.2",
     "eslint": "^9.31.0",
     "eslint-config-preact": "^2.0.0",
     "prettier": "^3.6.2",

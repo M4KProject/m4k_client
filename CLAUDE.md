@@ -4,14 +4,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Development Commands
 
-- `pnpm dev` - Start development server at http://localhost:5173/ with host access for device testing
-- `pnpm build` - Build standard PWA for production, emitting to `dist/`
-- `pnpm build:apk` - Build single-file APK version (no PWA features)
-- `pnpm preview` - Start preview server at http://localhost:4173/ to test production build
-- `pnpm analyze` - Build APK version and analyze bundle with vite-bundle-analyzer
-- `pnpm analyze:open` - Build APK version and open bundle analysis in browser
-- `pnpm format` - Format code using Prettier
-- `pnpm format:check` - Check code formatting without changing files
+- `npm run dev` - Start development server at http://localhost:5173/ with host access for device testing
+- `npm run build` - Build standard PWA for production, emitting to `dist/`
+- `npm run build:apk` - Build single-file APK version (no PWA features)
+- `npm run preview` - Start preview server at http://localhost:4173/ to test production build
+- `npm run analyze` - Build APK version and analyze bundle with vite-bundle-analyzer
+- `npm run analyze:open` - Build APK version and open bundle analysis in browser
+- `npm run format` - Format code using Prettier
+- `npm run format:check` - Check code formatting without changing files
 
 ### Linting and Type Checking
 
@@ -25,7 +25,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 This application has a unique dual build system:
 
 - **PWA Mode** (default): Full Progressive Web App with service worker, caching, and installability
-- **APK Mode** (`pnpm build:apk`): Single-file HTML build optimized for Android APK packaging
+- **APK Mode** (`npm run build:apk`): Single-file HTML build optimized for Android APK packaging
   - Uses `vite-plugin-singlefile` to bundle everything into one HTML file
   - Disables PWA features for compatibility with APK environments
   - Includes bundle analysis tools for optimization

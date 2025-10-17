@@ -1,6 +1,6 @@
 import { addResponsiveListener } from '@common/ui';
 import { isBool, isNil, Msg } from '@common/utils';
-import { global } from '@common/utils';
+import { m4k } from '@common/m4k';
 import './shared/app';
 
 export const isDevice$ = new Msg<boolean>(false, 'isDevice$', true, isBool);
@@ -11,8 +11,7 @@ const main = () => {
   let isDevice = isDevice$.v;
 
   if (isNil(isDevice)) {
-    const w = global;
-    if (w._m4k || w.fully) {
+    if (m4k.isInterface) {
       isDevice = true;
     }
   }
