@@ -62,14 +62,14 @@ const initTests = (): TestData[] => {
   };
 
   return [
-    t('js1', () => m4k.js('1+1'), { success: true, value: 2 }),
-    t('js2', () => m4k.js('"abc" + "def"'), { success: true, value: 'abcdef' }),
-    t('js3', () => m4k.js('Promise.resolve({ ok: 1 })'), { success: true, value: { ok: 1 } }),
-    t('js4', () => m4k.js('() => { throw new Error("test") }'), {
+    t('js1', () => m4k.evalJs('1+1'), { success: true, value: 2 }),
+    t('js2', () => m4k.evalJs('"abc" + "def"'), { success: true, value: 'abcdef' }),
+    t('js3', () => m4k.evalJs('Promise.resolve({ ok: 1 })'), { success: true, value: { ok: 1 } }),
+    t('js4', () => m4k.evalJs('() => { throw new Error("test") }'), {
       success: false,
       error: 'Error: test',
     }),
-    t('js5', () => m4k.js('() => { return 5 }'), { success: true, value: 5 }),
+    t('js5', () => m4k.evalJs('() => { return 5 }'), { success: true, value: 5 }),
     t(
       'su',
       () => m4k.su('echo "abc"'),
@@ -180,7 +180,7 @@ export const TestPage = () => {
         case 'sh':
           return m4k.sh(script);
         default:
-          return m4k.js(script);
+          return m4k.evalJs(script);
       }
     })();
     setResult(result);

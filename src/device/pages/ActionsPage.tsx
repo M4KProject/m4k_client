@@ -8,6 +8,7 @@ import { newProgressDialog } from '../components/ProgressView';
 import { clearAllCache } from '../../serviceWorker';
 import { copyDir$, url$ } from '../messages';
 import { isDevice$ } from '@/index';
+import { Apps } from '@/admin/components/Apps';
 
 const c = Css('Actions', {
   '': {
@@ -108,7 +109,7 @@ const textToBinary = (text: string) => {
 const testPrint = async () => {
   const binary = textToBinary('Mon test ! \n\n <([{ e:éè a:à euro:€ }])>');
   const base64 = btoa(binary);
-  const result = await m4k.startIntent(`rawbt:base64,${base64}`);
+  const result = await m4k.startIntent({ uri: `rawbt:base64,${base64}` });
   console.debug('testPrint', result);
 };
 
@@ -213,7 +214,7 @@ export const ActionsPage = () => {
         >
           TeamViewer QuickSupport
         </Button>
-        <Button onClick={() => m4k.openAutoStart()}>AutoStart</Button>
+        {/* <Button onClick={() => m4k.openAutoStart()}>AutoStart</Button> */}
       </div>
 
       {/* <b>Rotation :</b>
@@ -243,6 +244,8 @@ export const ActionsPage = () => {
           Supprimer le Device
         </Button>
       </div>
+
+      <Apps />
     </div>
   );
 };

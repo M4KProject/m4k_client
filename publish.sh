@@ -10,7 +10,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-pnpm build
+npm run build
 
 POD=$(kubectl get pods -l app=m4k-shared-data-editor -n m4k -o jsonpath='{.items[0].metadata.name}' 2>/dev/null)
 if [ -z "$POD" ]; then

@@ -1,9 +1,10 @@
 import { Css } from '@common/ui';
 import { Form, Field, Button } from '@common/components';
 import { m4k } from '@common/m4k';
-import { usePromise } from '@common/hooks';
+import { useAsyncEffect, usePromise } from '@common/hooks';
 import { toNbr } from '@common/utils/cast';
 import { useState } from 'preact/hooks';
+import { isNil } from '@common/utils';
 
 const c = Css('ConfigPage', {
   '': {
@@ -19,195 +20,104 @@ const c = Css('ConfigPage', {
   },
 });
 
+const useSetting = (key: string, defaultValue: any): [string, (next: string) => Promise<void>] => {
+  const [value, setValue] = useState('');
+
+  useAsyncEffect(async () => {
+    const curr = await m4k.getSetting(key);
+    setValue(curr);
+  }, [key]);
+
+  return [isNil(value) ? defaultValue : value, (next: string) => m4k.setSetting(key, next)];
+};
+
 const ConfigPage = () => {
-  // Base configuration state
-  const [password, setPassword] = useState('');
-  const [initBase] = usePromise(async () => {
-    const config = await m4k.getConfig();
-    const passwordValue = config.password;
-    setPassword(passwordValue || '');
-    return passwordValue;
-  }, []);
-
-  // Site configuration state
-  const [url, setUrl] = useState('');
-  const [backColor, setBackColor] = useState('');
-  const [initSite] = usePromise(async () => {
-    const config = await m4k.getConfig();
-    const urlValue = config.url;
-    const backColorValue = config.backColor;
-    setUrl(urlValue || '');
-    setBackColor(backColorValue || '');
-    return { url: urlValue, backColor: backColorValue };
-  }, []);
-
-  // Playlist configuration state
-  const [copyDir, setCopyDir] = useState('');
-  const [itemDuration, setItemDuration] = useState('');
-  const [itemFit, setItemFit] = useState<'contain' | 'cover' | 'fill'>('contain');
-  const [itemAnim, setItemAnim] = useState<'rightToLeft' | 'topToBottom' | 'fade' | 'zoom'>(
-    'rightToLeft'
-  );
-  const [hasVideoMuted, setHasVideoMuted] = useState<string>('true');
-  const [initPlaylist] = usePromise(async () => {
-    const config = await m4k.getConfig();
-    const copyDirValue = config.copyDir;
-    const itemDurationMs = config.itemDurationMs;
-    const itemDurationValue = itemDurationMs ? itemDurationMs / 1000 + 's' : '10s';
-    const itemFitValue = config.itemFit;
-    const itemAnimValue = config.itemAnim;
-    const hasVideoMutedValue = config.hasVideoMuted;
-
-    setCopyDir(copyDirValue || '');
-    setItemDuration(itemDurationValue || '10s');
-    setItemFit(itemFitValue || 'contain');
-    setItemAnim(itemAnimValue || 'rightToLeft');
-    setHasVideoMuted(hasVideoMutedValue ? 'true' : 'false');
-
-    return {
-      copyDir: copyDirValue,
-      itemDuration: itemDurationValue,
-      itemFit: itemFitValue,
-      itemAnim: itemAnimValue,
-      hasVideoMuted: hasVideoMutedValue,
-    };
-  }, []);
-
-  const handleBaseSubmit = async (e: Event) => {
-    e.preventDefault();
-    const passwordValue = password.toLowerCase() || 'mediactil';
-    const config = await m4k.getConfig();
-    await m4k.setConfig({ ...config, password: passwordValue });
-    await m4k.reload();
-  };
-
-  const handleSiteSubmit = async (e: Event) => {
-    e.preventDefault();
-    const config = await m4k.getConfig();
-    await m4k.setConfig({ ...config, url, backColor });
-    await m4k.reload();
-  };
-
-  const handlePlaylistSubmit = async (e: Event) => {
-    e.preventDefault();
-    const itemDurationMs = toNbr(itemDuration.replace('s', ''), 10) * 1000;
-    const config = await m4k.getConfig();
-    await m4k.setConfig({
-      ...config,
-      copyDir,
-      itemDurationMs,
-      itemFit,
-      itemAnim,
-      hasVideoMuted: hasVideoMuted === 'true',
-    });
-    await m4k.reload();
-  };
+  const [password, setPassword] = useSetting('password', 'yoyo');
+  const [url, setUrl] = useSetting('url', '');
+  const [backColor, setBackColor] = useSetting('backColor', '');
+  const [copyDir, setCopyDir] = useSetting('copyDir', 'playlist');
+  const [itemDuration, setItemDuration] = useSetting('itemDuration', '10s');
+  const [itemFit, setItemFit] = useSetting('itemFit', 'contain');
+  const [itemAnim, setItemAnim] = useSetting('itemAnim', 'rightToLeft');
+  const [hasVideoMuted, setHasVideoMuted] = useSetting('hasVideoMuted', true);
 
   return (
     <div class={c()}>
-      {initBase !== undefined ? (
-        <Form title="Configuration Base" onSubmit={handleBaseSubmit}>
-          <Field
-            type="password"
-            name="password"
-            label="Mot de passe"
-            value={password}
-            onValue={setPassword}
-            required
-          />
-          <div class={c('Actions')}>
-            <Button>Sauvegarder</Button>
-          </div>
-        </Form>
-      ) : (
-        'Chargement...'
-      )}
+      <Form title="Configuration Base">
+        <Field
+          type="password"
+          name="password"
+          label="Mot de passe"
+          value={password}
+          onValue={setPassword}
+          required
+        />
+      </Form>
 
-      {initSite ? (
-        <Form title="Configuration Page Web" onSubmit={handleSiteSubmit}>
-          <Field
-            type="text"
-            name="url"
-            label="URL"
-            helper="https://"
-            value={url}
-            onValue={setUrl}
-          />
-          <Field
-            type="color"
-            name="backColor"
-            label="Bouton Retour Couleur"
-            helper="#FF0000"
-            value={backColor}
-            onValue={setBackColor}
-          />
-          <div class={c('Actions')}>
-            <Button>Sauvegarder</Button>
-          </div>
-        </Form>
-      ) : (
-        'Chargement...'
-      )}
+      <Form title="Configuration Page Web">
+        <Field type="text" name="url" label="URL" helper="https://" value={url} onValue={setUrl} />
+        <Field
+          type="color"
+          name="backColor"
+          label="Bouton Retour Couleur"
+          helper="#FF0000"
+          value={backColor}
+          onValue={setBackColor}
+        />
+      </Form>
 
-      {initPlaylist ? (
-        <Form title="Configuration Playlist" onSubmit={handlePlaylistSubmit}>
-          <Field
-            type="text"
-            name="copyDir"
-            label="Copier le dossier"
-            value={copyDir}
-            onValue={setCopyDir}
-          />
-          <Field
-            type="text"
-            name="itemDuration"
-            label="Durée d'affichage d'une image (en secondes)"
-            value={itemDuration}
-            onValue={setItemDuration}
-          />
-          <Field
-            type="select"
-            name="itemFit"
-            label="Mode d'affichage des images/video"
-            value={itemFit}
-            onValue={setItemFit}
-            items={[
-              ['contain', 'contient'],
-              ['cover', 'couverture'],
-              ['fill', 'remplissage'],
-            ]}
-          />
-          <Field
-            type="select"
-            name="itemAnim"
-            label="Animation"
-            value={itemAnim}
-            onValue={setItemAnim}
-            items={[
-              ['rightToLeft', 'droite gauche'],
-              ['topToBottom', 'haut bas'],
-              ['fade', 'fondu'],
-              ['zoom', 'zoom'],
-            ]}
-          />
-          <Field
-            type="select"
-            name="hasVideoMuted"
-            label="Video sans audio"
-            value={hasVideoMuted}
-            onValue={setHasVideoMuted}
-            items={[
-              ['true', 'oui'],
-              ['false', 'non'],
-            ]}
-          />
-          <div class={c('Actions')}>
-            <Button>Sauvegarder</Button>
-          </div>
-        </Form>
-      ) : (
-        'Chargement...'
-      )}
+      <Form title="Configuration Playlist">
+        <Field
+          type="text"
+          name="copyDir"
+          label="Copier le dossier"
+          value={copyDir}
+          onValue={setCopyDir}
+        />
+        <Field
+          type="text"
+          name="itemDuration"
+          label="Durée d'affichage d'une image (en secondes)"
+          value={itemDuration}
+          onValue={setItemDuration}
+        />
+        <Field
+          type="select"
+          name="itemFit"
+          label="Mode d'affichage des images/video"
+          value={itemFit}
+          onValue={setItemFit}
+          items={[
+            ['contain', 'contient'],
+            ['cover', 'couverture'],
+            ['fill', 'remplissage'],
+          ]}
+        />
+        <Field
+          type="select"
+          name="itemAnim"
+          label="Animation"
+          value={itemAnim}
+          onValue={setItemAnim}
+          items={[
+            ['rightToLeft', 'droite gauche'],
+            ['topToBottom', 'haut bas'],
+            ['fade', 'fondu'],
+            ['zoom', 'zoom'],
+          ]}
+        />
+        <Field
+          type="select"
+          name="hasVideoMuted"
+          label="Video sans audio"
+          value={hasVideoMuted}
+          onValue={setHasVideoMuted}
+          items={[
+            ['true', 'oui'],
+            ['false', 'non'],
+          ]}
+        />
+      </Form>
     </div>
   );
 };

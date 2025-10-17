@@ -1,6 +1,6 @@
 import { addResponsiveListener } from '@common/ui';
-import { getUrlQuery } from '@common/ui/getUrlQuery';
-import { isBool, Msg } from '@common/utils';
+import { isBool, isNil, Msg } from '@common/utils';
+import { global } from '@common/utils';
 import './shared/app';
 
 export const isDevice$ = new Msg<boolean>(false, 'isDevice$', true, isBool);
@@ -8,13 +8,16 @@ export const isDevice$ = new Msg<boolean>(false, 'isDevice$', true, isBool);
 addResponsiveListener();
 
 const main = () => {
-  const { d } = getUrlQuery();
+  let isDevice = isDevice$.v;
 
-  if (d) {
-    isDevice$.set(!!d);
+  if (isNil(isDevice)) {
+    const w = global;
+    if (w._m4k || w.fully) {
+      isDevice = true;
+    }
   }
 
-  if (isDevice$.v) {
+  if (isDevice) {
     import('./device/index').then((m) => m.mount());
     return;
   }

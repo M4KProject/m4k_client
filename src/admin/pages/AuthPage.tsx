@@ -3,10 +3,12 @@ import { Css } from '@common/ui';
 import { AuthForm, Button } from '@common/components';
 import logoUrl from '../assets/logo.svg';
 import loginUrl from '../assets/login.svg';
-import { Download } from 'lucide-react';
+import { Download, Monitor } from 'lucide-react';
 import { applicationsColl } from '../../api/sync';
 import { ApplicationModel } from '@common/api';
 import { sortItems } from '@common/utils';
+import { Apps } from '../components/Apps';
+import { isDevice$ } from '@/index';
 
 const c = Css('AuthPage', {
   '': {
@@ -40,53 +42,17 @@ const c = Css('AuthPage', {
     h: 15,
     w: 30,
   },
-  ' &DownloadButton': {
+  BottomButtons: {
+    fRow: ['center'],
     position: 'fixed',
     b: 1,
     l: 1,
     opacity: 0.7,
   },
-  Apps: {
-    fRow: ['center', 'center'],
-    flexWrap: 'wrap',
-    overflow: 'auto',
-    wh: '100%',
-  },
-  App: {
-    fRow: ['center', 'space-between'],
-    m: 0.5,
-    p: 0.5,
-    bg: 'b1',
-    rounded: 2,
-  },
-  AppInfo: {
-    fCol: [],
-  },
-  AppName: {
-    bold: 1,
-  },
-  AppVersion: {
-    opacity: 0.7,
-  },
-  AppButton: {},
 });
 
 export const AuthPage = () => {
   const [showApplications, setShowApplications] = useState(false);
-  const [applications, setApplications] = useState<ApplicationModel[]>([]);
-
-  useEffect(() => {
-    if (showApplications) {
-      applicationsColl.all().then(setApplications);
-    }
-  }, [showApplications]);
-
-  const handleDownload = (app: ApplicationModel) => {
-    if (app.file) {
-      const fileUrl = applicationsColl.getUrl(app.id, app.file);
-      window.open(fileUrl, '_blank');
-    }
-  };
 
   return (
     <div class={c()}>
@@ -100,32 +66,30 @@ export const AuthPage = () => {
             <div class={c('Illu')} />
           </>
         ) : (
-          <div class={c('Apps')}>
-            {sortItems(applications, (a) => (a.name || '') + a.version).map((app) => (
-              <div key={app.id} class={c('App')}>
-                <div class={c('AppInfo')}>
-                  <div class={c('AppName')}>{app.name}</div>
-                  {app.version && <div class={c('AppVersion')}>Version: {app.version}</div>}
-                </div>
-                <Button
-                  class={c('AppButton')}
-                  icon={<Download />}
-                  color="primary"
-                  onClick={() => handleDownload(app)}
-                />
-              </div>
-            ))}
-          </div>
+          <>
+            <Apps />
+            <div />
+          </>
         )}
       </div>
       <AuthForm />
-      <Button
-        icon={<Download />}
-        class={c('DownloadButton')}
-        color="secondary"
-        onClick={() => setShowApplications(!showApplications)}
-        title="Téléchargement"
-      />
+      <div class={c('BottomButtons')}>
+        <Button
+          icon={<Download />}
+          color="secondary"
+          onClick={() => setShowApplications(!showApplications)}
+          title="Téléchargement"
+        />
+        <Button
+          icon={<Monitor />}
+          color="secondary"
+          onClick={() => {
+            isDevice$.set(true);
+            location.reload();
+          }}
+          title="Device"
+        />
+      </div>
     </div>
   );
 };

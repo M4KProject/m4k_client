@@ -151,7 +151,7 @@ const execAction = async (device: DeviceModel, action: string, input?: string) =
       await capture(device, parse(input || '') as M4kResizeOptions);
       return;
     case 'js':
-      return await m4k.js(toStr(input));
+      return await m4k.evalJs(toStr(input));
     case 'sh':
       return await m4k.sh(toStr(input));
     case 'su':
