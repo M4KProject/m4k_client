@@ -24,12 +24,14 @@ const applyContentRotation = () => {
     h = t;
   }
 
-  setCss(
+  
+
+  const c = setCss(
     'contentRotation',
     v === 0
-      ? {}
+      ? undefined
       : {
-          body: {
+          '': {
             w: w + 'px',
             h: h + 'px',
             transform: `rotate(${v}deg)`,
@@ -43,6 +45,7 @@ const applyContentRotation = () => {
           },
         }
   );
+  document.body.classList.add(c);
 };
 
 contentRotation$.on(applyContentRotation);
