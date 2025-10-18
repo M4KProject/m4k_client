@@ -13,7 +13,6 @@ export const contentRotation$ = newMsg<0 | 90 | 180 | 270>(
 
 const applyContentRotation = () => {
   const v = contentRotation$.v;
-  console.debug('apply contentRotation', v);
 
   let w = window.innerWidth;
   let h = window.innerHeight;
@@ -23,8 +22,6 @@ const applyContentRotation = () => {
     w = h;
     h = t;
   }
-
-  
 
   const c = setCss(
     'contentRotation',

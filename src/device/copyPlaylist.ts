@@ -158,7 +158,7 @@ const copyPlaylist = async (fromDir: string) => {
     }
   );
 
-  console.debug('playlist items', items);
+  console.debug('playlist items', JSON.stringify(items));
   playlist$.set({ items });
 
   // Wait for localStorage persistence
