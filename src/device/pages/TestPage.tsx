@@ -1,11 +1,13 @@
-import { useEffect, useMemo, useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 import { m4k } from '@common/m4k';
 import { stringify, toError, truncate, withTimeout } from '@common/utils';
 import { Button, Field, Form, Grid, Page, PageBody, Toolbar } from '@common/components';
 import { GridCols } from '@common/components/Grid';
+import { Play } from 'lucide-react';
+import { useAsyncEffect, useConstant } from '@common/hooks';
 
 interface TestResult {
-  success?: true;
+  success?: boolean;
   error?: string;
   value?: any;
   ms?: number;
@@ -16,6 +18,7 @@ interface TestData {
   getResult: () => Promise<TestResult>;
   expect: any;
   result?: TestResult;
+  index: number;
 }
 
 const initTests = (): TestData[] => {
@@ -58,7 +61,7 @@ const initTests = (): TestData[] => {
         return { error: toError(error).message, value };
       }
     };
-    return { name, getResult, expect };
+    return { name, getResult, expect, index: 0 };
   };
 
   return [
@@ -138,7 +141,10 @@ const initTests = (): TestData[] => {
       () => m4k.fileInfo(dir),
       (i) => i.type === ''
     ),
-  ];
+  ].map((t, i) => {
+    t.index = i;
+    return t;
+  });
 };
 
 const showValue = (value: any) => truncate(
@@ -159,20 +165,30 @@ const showValue = (value: any) => truncate(
   30
 );
 
-const testCols: GridCols<TestData, { currentIndex: number }> = {
+const testCols: GridCols<TestData, { play: (test: TestData) => void }> = {
   name: ['Nom', (test) => test.name],
   duration: ['Durée', (test) => `${test.result?.ms || 0}ms`],
   value: ['Valeur', (test) => showValue(test.result?.value)],
   expected: ['Attendue', (test) => showValue(test.expect)],
   error: ['Erreur', (test) => test.result?.error || ''],
+  actions: [
+    'Actions',
+    (item, { play }) => (
+      <Button
+        icon={<Play />}
+        onClick={() => play(item)}
+      />
+    ),
+    { w: 30 },
+  ],
 };
 
 export const TestPage = () => {
   const [script, setScript] = useState('');
   const [type, setType] = useState('');
   const [result, setResult] = useState<any>(null);
-  const tests = useMemo(() => initTests(), []);
-  const [currentIndex, setCurrentIndex] = useState(-1);
+  const initialTests = useConstant(() => initTests());
+  const [tests, setTests] = useState<TestData[]>(initialTests);
 
   const handleExec = async () => {
     console.debug('DebugPage handle');
@@ -189,22 +205,22 @@ export const TestPage = () => {
     setResult(result);
   };
 
-  useEffect(() => {
-    if (!tests) return;
-    const index = currentIndex + 1;
-    const current = tests[index];
-    if (!current) return;
+  const play = async (test: TestData) => {
+    const result = await withTimeout(test.getResult(), 5000)
+      .catch(error => ({ value: null, success: false, error: String(error) } as TestResult));
 
-    withTimeout(current.getResult(), 3000)
-      .then((result) => {
-        current.result = result;
-        setCurrentIndex(index);
-      })
-      .catch((error) => {
-        current.result = error;
-        setCurrentIndex(index);
-      });
-  }, [tests, currentIndex]);
+    setTests(tests => {
+      const next = [...tests];
+      next[test.index] = { ...test, result };
+      return next;
+    });
+  };
+
+  useAsyncEffect(async () => {
+    for (const test of initialTests) {
+      await play(test);
+    }
+  }, []);
 
   return (
     <Page>
@@ -237,20 +253,15 @@ export const TestPage = () => {
         </Form>
         <Grid
           cols={testCols}
-          ctx={{ currentIndex }}
+          ctx={{ play }}
           rowProps={(test, _, index) => {
             const result = test.result || {};
             const mode =
-              currentIndex + 1 === index
-                ? 'selected'
-                : result.success
-                  ? 'success'
-                  : result.error
-                    ? 'error'
-                    : undefined;
+              result.success ? 'success' :
+              result.error ? 'error' : undefined;
             return { mode };
           }}
-          items={tests || []}
+          items={tests}
         />
       </PageBody>
     </Page>
