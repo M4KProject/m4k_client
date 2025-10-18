@@ -5,7 +5,6 @@ export type PageName =
   | 'codePin'
   | 'kiosk'
   | 'actions'
-  | 'site'
   | 'playlist'
   | 'configPlaylist'
   | 'wifi'

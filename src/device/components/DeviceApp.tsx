@@ -6,9 +6,8 @@ import { Side, SideButton, SideSep } from '@common/components';
 import { JSX } from 'preact';
 import { page$, PageName } from '../messages/page$';
 import { LoadingPage } from '../pages/LoadingPage';
-import { MonitorSpeaker, Settings, Bug, Calendar, List, Globe, Wrench } from 'lucide-react';
+import { MonitorSpeaker, Settings, Bug, Calendar, List, Wrench } from 'lucide-react';
 import { CodePinPage } from '../pages/CodePinPage';
-import { SitePage } from '../pages/SitePage';
 import { ConfigPlaylistPage } from '../pages/ConfigPlaylistPage';
 import { TestPage } from '../pages/TestPage';
 import { Corners } from './Corners';
@@ -40,7 +39,6 @@ const CompByPage: Record<PageName, () => JSX.Element> = {
   '': KioskPage,
   kiosk: KioskPage,
   actions: ActionsPage,
-  site: SitePage,
   playlist: PlaylistPage,
   configPlaylist: ConfigPlaylistPage,
   wifi: LoadingPage,
@@ -104,12 +102,6 @@ const DeviceAppContent = () => {
             icon={<Settings />}
             title="Config"
             onClick={go('configPlaylist')}
-          />
-          <SideButton
-            selected={page === 'site'}
-            icon={<Globe />}
-            title="Site Web"
-            onClick={go('site')}
           />
           {/* <SideButton icon={<MdWifi />} page="wifi" title="Wifi" /> */}
           <SideSep />

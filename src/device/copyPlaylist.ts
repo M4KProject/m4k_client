@@ -41,10 +41,11 @@ const copyPlaylist = async (fromDir: string) => {
     const files = await m4k.ls(dir);
     const filteredFiles = files.filter((f) => filter(f, getType(f)));
     const len = filteredFiles.length;
+    if (len === 0) return;
 
     const prog = newProgressDialog(`${title} (${len})`);
 
-    if (before) before(filteredFiles);
+    if (before) await before(filteredFiles);
 
     for (let i = 0; i < filteredFiles.length; i++) {
       const step = i / filteredFiles.length;
@@ -62,13 +63,9 @@ const copyPlaylist = async (fromDir: string) => {
       }
     }
 
-    if (len > 0) {
-      prog(1, 'info', `Traitement des fichiers terminée`);
-    } else {
-      prog(1, 'info', `Aucun fichier`);
-    }
+    prog(1, 'info', `OK`);
 
-    await sleep(1000);
+    await sleep(5000);
   };
 
   let sourceFilesCount = 0;
@@ -100,6 +97,21 @@ const copyPlaylist = async (fromDir: string) => {
 
   await newFilesProcess(
     PLAYLIST_DIR,
+    `Exécution de script`,
+    fileName => fileName.endsWith('update.js'),
+    null,
+    async (path) => {
+      const result = await m4k.loadJs(path);
+      console.info('Script execution result:', stringify(result));
+      await m4k.rm(path);
+      if (!result.success) {
+        throw new Error(`Script failed with code ${result.error}`);
+      }
+    }
+  );
+
+  await newFilesProcess(
+    PLAYLIST_DIR,
     `Installation d'application`,
     (_, type) => type === 'apk',
     null,
@@ -111,26 +123,7 @@ const copyPlaylist = async (fromDir: string) => {
 
   await newFilesProcess(
     PLAYLIST_DIR,
-    `Exécution de script`,
-    (_, type) => type === 'sh',
-    null,
-    async (path) => {
-      const chmodResult = await m4k.su(`chmod +x "${path}"`);
-      if (chmodResult.code !== 0) {
-        throw new Error(`Failed to set execute permission: ${chmodResult.err}`);
-      }
-      const result = await m4k.su(`"${path}"`);
-      console.info('Script execution result:', stringify(result));
-      await m4k.rm(path);
-      if (result.code !== 0) {
-        throw new Error(`Script failed with code ${result.code}: ${result.err}`);
-      }
-    }
-  );
-
-  await newFilesProcess(
-    PLAYLIST_DIR,
-    `Convertion des fichiers PDF en images`,
+    `Convertion PDF en images`,
     (_, type) => type === 'pdf',
     null,
     async (path) => {
