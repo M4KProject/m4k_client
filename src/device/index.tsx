@@ -10,6 +10,7 @@ import copyPlaylist from './copyPlaylist';
 import { deviceInit } from './services/device';
 import { m4k } from '@common/m4k';
 import { DeviceApp } from './components/DeviceApp';
+import { copyDir$ } from './messages';
 
 console.debug('loaded');
 
@@ -30,7 +31,7 @@ export const mount = () => {
 
   m4k.subscribe(async (e) => {
     if (e.type !== 'storage' || e.action !== 'mounted') return;
-    await copyPlaylist(`${e.path}/playlist`);
+    await copyPlaylist(`${e.path}/${copyDir$.v}`);
   });
 
   console.debug('device mounted');

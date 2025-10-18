@@ -10,6 +10,10 @@ export const codePin$ = newMsg('yoyo', 'codePin', true, isStrDef);
 
 export const copyDir$ = newMsg('playlist', 'copyDir', true, isStrDef);
 
+export const backColor$ = newMsg(false, 'backColor', true);
+
+export const url$ = newMsg('', 'url', true);
+
 export const itemDurationMs$ = newMsg(5000, 'itemDurationMs', true);
 
 export type ItemFit = 'contain' | 'cover' | 'fill';
@@ -23,6 +27,5 @@ export const itemAnim$ = newMsg<ItemAnim>('zoom', 'itemAnim', true, isItemAnim);
 
 export const hasVideoMuted$ = newMsg(true, 'hasVideoMuted', true);
 
-export const url$ = newMsg('', 'url', true);
-
 export const offlineMode$ = newMsg(false, 'offlineMode', true);
+
