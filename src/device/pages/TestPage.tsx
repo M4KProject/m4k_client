@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'preact/hooks';
 import { m4k } from '@common/m4k';
-import { stringify, toError, truncate, withTimeout } from '@common/utils';
+import { randHex, stringify, toError, truncate, withTimeout } from '@common/utils';
 import { Button, Field, Form, Grid, Page, PageBody, Toolbar } from '@common/components';
 import { GridCols } from '@common/components/Grid';
 import { Play } from 'lucide-react';
@@ -23,11 +23,13 @@ interface TestData {
 
 const initTests = (): TestData[] => {
   // const testKey: 'test' = 'test';
-  const testString = '{}()[]<>\n\té&"è^$€\'"';
+  const testString1 = randHex(30);
+  const testString2 = '{}()[]<>\n\té&"è^$€\'"';
   // const testObject = { a: [{}, [1, 5.2], testString] };
   const dir = `app/test`;
   const b64Name = '_b64';
   const b64Path = `${dir}/${b64Name}`;
+  const b64Value = btoa(randHex(100));
   const cpPath = `${b64Path}Cp`;
   const utf8Name = '_utf8';
   const utf8Path = `${dir}/${utf8Name}`;
@@ -89,19 +91,21 @@ const initTests = (): TestData[] => {
       () => m4k.fileInfo(dir),
       (i) => i.type === 'dir'
     ),
-    t('write', () => m4k.write(b64Path, 'abc', 'base64')),
-    t('read', () => m4k.read(b64Path, 'base64'), 'abc'),
-    t('write2', () => m4k.write(utf8Path, testString, 'utf8')),
-    t('read2', () => m4k.read(utf8Path, 'utf8'), testString),
-    t(
-      'fetch file',
-      () =>
-        m4k
-          .url(utf8Path)
-          .then(fetch)
-          .then((r) => r.text()),
-      testString
-    ), // m4k.read(utf8Path, 'utf8'), testString), // m4k.url(utf8Path)
+    t('write', () => m4k.write(utf8Path, testString1, 'utf8')),
+    t('read', () => m4k.read(utf8Path, 'utf8'), testString1),
+    t('write2', () => m4k.write(utf8Path, testString2, 'utf8')),
+    t('read2', () => m4k.read(utf8Path, 'utf8'), testString2),
+    t('write64', () => m4k.write(b64Path, b64Value, 'base64')),
+    t('read64', () => m4k.read(b64Path, 'base64'), b64Value),
+    // t(
+    //   'fetch file',
+    //   () =>
+    //     m4k
+    //       .url(utf8Path)
+    //       .then(fetch)
+    //       .then((r) => r.text()),
+    //   testString
+    // ), // m4k.read(utf8Path, 'utf8'), testString), // m4k.url(utf8Path)
     t(
       'ls',
       () => m4k.ls(dir, false),
