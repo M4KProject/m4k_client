@@ -10,7 +10,7 @@ export const codePin$ = newMsg('yoyo', 'codePin', true, isStrDef);
 
 export const copyDir$ = newMsg('playlist', 'copyDir', true, isStrDef);
 
-export const backColor$ = newMsg(false, 'backColor', true);
+export const bgColor$ = newMsg('#000000', 'bgColor', true);
 
 export const url$ = newMsg('', 'url', true);
 

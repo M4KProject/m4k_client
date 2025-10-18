@@ -5,7 +5,7 @@ import { usePromise, useMsg } from '@common/hooks';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { openCodePinDialog } from '../components/CodePinView';
 import { device$ } from '../services/device';
-import { hasVideoMuted$, itemAnim$, itemDurationMs$, itemFit$, playlist$, url$ } from '../messages';
+import { bgColor$, hasVideoMuted$, itemAnim$, itemDurationMs$, itemFit$, playlist$, url$ } from '../messages';
 import { m4k } from '@common/m4k';
 
 type PlaylistItem = any;
@@ -191,6 +191,7 @@ export const KioskPage = () => {
   const [count, setCount] = useState(0);
 
   const url = useMsg(url$);
+  const bgColor = useMsg(bgColor$).trim();
   const playlist = useMsg(playlist$);
   const itemDurationMs = useMsg(itemDurationMs$);
   const itemFit = useMsg(itemFit$);
@@ -249,7 +250,7 @@ export const KioskPage = () => {
   }
 
   return (
-    <div class={c('Container')} onClick={() => setOpen(true)}>
+    <div class={c('Container')} style={bgColor ? { backgroundColor: bgColor } : {}} onClick={() => setOpen(true)}>
       {items.map((item, index) => (
         <KioskItem
           key={`${item.path}-${index}`}

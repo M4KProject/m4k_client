@@ -1,5 +1,5 @@
 import { Field, Form, Page, PageBody, Toolbar } from '@common/components';
-import { useMsgState } from '@common/hooks';
+import { useAsyncEffect, useMsgState } from '@common/hooks';
 import {
   copyDir$,
   hasVideoMuted$,
@@ -9,29 +9,58 @@ import {
   contentRotation$,
   codePin$,
   url$,
-  backColor$,
+  bgColor$,
 } from '../messages';
-import { round } from '@common/utils';
+import { isNil, round, toBool, toNbr } from '@common/utils';
+import { useState } from 'preact/hooks';
+import { m4k } from '@common/m4k';
 
-// const useSetting = (key: string, defaultValue: any): [string, (next: string) => Promise<void>] => {
-//   const [value, setValue] = useState('');
-//   useAsyncEffect(async () => {
-//     const curr = await m4k.getSetting(key);
-//     setValue(curr);
-//   }, [key]);
-//   return [isNil(value) ? defaultValue : value, (next: string) => m4k.setSetting(key, next)];
-// };
+const useSetting = (key: string): [string|null, (next: string|null) => Promise<void>] => {
+  const [value, setValue] = useState<string|null>('');
+
+  useAsyncEffect(async () => {
+    const curr = await m4k.getSetting(key);
+    setValue(curr);
+  }, [key]);
+
+  return [
+    value,
+    (next) => m4k.setSetting(key, next)
+  ];
+};
+
+const useBooleanSetting = (key: string, defVal: boolean): [boolean, (next: boolean|null) => Promise<void>] => {
+  const [value, setValue] = useSetting(key);
+
+  return [
+    toBool(value, defVal),
+    (next) => setValue(isNil(next) ? null : next ? '1' : '0')
+  ];
+};
+
+const useNumberSetting = (key: string, defVal: number): [number, (next: number|null) => Promise<void>] => {
+  const [value, setValue] = useSetting(key);
+
+  return [
+    toNbr(value, defVal),
+    (next) => setValue(isNil(next) ? null : String(next))
+  ];
+};
 
 export const ConfigPlaylistPage = () => {
   const [codePin, setCodePin] = useMsgState(codePin$);
   const [url, setUrl] = useMsgState(url$);
-  const [backColor, setBackColor] = useMsgState(backColor$);
+  const [bgColor, setBgColor] = useMsgState(bgColor$);
   const [copyDir, setCopyDir] = useMsgState(copyDir$);
   const [itemDurationMs, setItemDurationMs] = useMsgState(itemDurationMs$);
   const [itemFit, setItemFit] = useMsgState(itemFit$);
   const [itemAnim, setItemAnim] = useMsgState(itemAnim$);
   const [hasVideoMuted, setHasVideoMuted] = useMsgState(hasVideoMuted$);
   const [contentRotation, setContentRotation] = useMsgState(contentRotation$);
+
+  const [isAutoPermissions, setIsAutoPermissions] = useBooleanSetting('isAutoPermissions', true);
+  const [idleSeconds, setIdleSeconds] = useNumberSetting('idleSeconds', 600);
+  const [startUrl, setStartUrl] = useSetting('startUrl');
 
   return (
     <Page>
@@ -53,11 +82,11 @@ export const ConfigPlaylistPage = () => {
         <Form title="Configuration Playlist">
           <Field
             type="color"
-            name="backColor"
-            label="Bouton Retour Couleur"
+            name="bgColor"
+            label="Couleur du fond"
             helper="#000000ff"
-            value={backColor}
-            onValue={setBackColor}
+            value={bgColor}
+            onValue={setBgColor}
           />
           <Field
             label="Durée d'affichage d'une image (en secondes)"
@@ -110,6 +139,27 @@ export const ConfigPlaylistPage = () => {
               [180, '180°'],
               [270, '270°'],
             ]}
+          />
+        </Form>
+
+        <Form title="Autres">
+          <Field
+            label="Permissions au démarrage"
+            type="switch"
+            value={isAutoPermissions}
+            onValue={setIsAutoPermissions}
+          />
+          <Field
+            label="Délai d'inactivité (secondes)"
+            type="number"
+            value={idleSeconds}
+            onValue={setIdleSeconds}
+          />
+          <Field
+            label="URL de l'application"
+            type="text"
+            value={startUrl}
+            onValue={setStartUrl}
           />
         </Form>
       </PageBody>

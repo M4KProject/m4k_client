@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'preact/hooks';
 import { m4k } from '@common/m4k';
-import { stringify, toError, withTimeout } from '@common/utils';
+import { stringify, toError, truncate, withTimeout } from '@common/utils';
 import { Button, Field, Form, Grid, Page, PageBody, Toolbar } from '@common/components';
 import { GridCols } from '@common/components/Grid';
 
@@ -141,20 +141,23 @@ const initTests = (): TestData[] => {
   ];
 };
 
-const showValue = (value: any) => {
-  const type = typeof value;
-  switch (type) {
-    case 'function':
-      return String(value);
-    case 'undefined':
-      return 'undefined';
-    case 'object':
-      return JSON.stringify(value);
-    case 'string':
-      return '"' + String(value).split('\n').join('\\n') + '"';
-  }
-  return `${value}(${type})`;
-};
+const showValue = (value: any) => truncate(
+  (() => {
+    const type = typeof value;
+    switch (type) {
+      case 'function':
+        return String(value);
+      case 'undefined':
+        return 'undefined';
+      case 'object':
+        return JSON.stringify(value);
+      case 'string':
+        return '"' + String(value).split('\n').join('\\n') + '"';
+    }
+    return `${value}(${type})`;
+  })(),
+  30
+);
 
 const testCols: GridCols<TestData, { currentIndex: number }> = {
   name: ['Nom', (test) => test.name],
