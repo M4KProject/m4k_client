@@ -89,8 +89,8 @@ const initTests = (): TestData[] => {
       () => m4k.fileInfo(dir),
       (i) => i.type === 'dir'
     ),
-    t('write', () => m4k.write(b64Path, btoa('abc'), 'base64')),
-    t('read', () => m4k.read(b64Path, 'base64'), btoa('abc')),
+    t('write', () => m4k.write(b64Path, 'abc', 'base64')),
+    t('read', () => m4k.read(b64Path, 'base64'), 'abc'),
     t('write2', () => m4k.write(utf8Path, testString, 'utf8')),
     t('read2', () => m4k.read(utf8Path, 'utf8'), testString),
     t(
