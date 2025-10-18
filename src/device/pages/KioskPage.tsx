@@ -1,5 +1,5 @@
 import { Css } from '@common/ui';
-import { toNbr, toError, retry } from '@common/utils';
+import { toNbr, toError, retry, humanize } from '@common/utils';
 import { Button } from '@common/components';
 import { usePromise, useMsg } from '@common/hooks';
 import { useEffect, useRef, useState } from 'preact/hooks';
@@ -7,6 +7,9 @@ import { openCodePinDialog } from '../components/CodePinView';
 import { device$ } from '../services/device';
 import { bgColor$, hasVideoMuted$, itemAnim$, itemDurationMs$, itemFit$, playlist$, url$ } from '../messages';
 import { m4k } from '@common/m4k';
+import { logger } from '@common/utils';
+
+const log = logger('KioskPage');
 
 type PlaylistItem = any;
 
@@ -87,7 +90,7 @@ const KioskVideo = ({
   useEffect(() => {
     if (!el) return;
 
-    console.debug(`[ITEM_VIDEO] Setting up video:`, url);
+    log.d(`Setting up video:`, url);
 
     el.setAttribute('playsinline', 'true');
     el.setAttribute('webkit-playsinline', 'true');
@@ -95,22 +98,22 @@ const KioskVideo = ({
     el.preload = 'metadata';
     el.autoplay = true;
 
-    el.onloadstart = () => console.debug(`[ITEM_VIDEO] Video loadstart:`, url);
+    el.onloadstart = () => log.d(`Video loadstart:`, url);
     el.onloadedmetadata = () => {
-      console.debug(`[ITEM_VIDEO] Video metadata loaded - duration:`, el.duration, 'url:', url);
+      log.d(`Video metadata loaded - duration:`, el.duration, 'url:', url);
     };
     el.oncanplay = () => {
-      console.debug(`[ITEM_VIDEO] Video can play:`, url);
-      el.play().catch((e) => console.error(`[ITEM_VIDEO] Play error:`, e));
+      log.d(`Video can play:`, url);
+      el.play().catch((e) => log.e(`Play error:`, e));
     };
 
     el.onerror = (e) => {
-      console.error(`[ITEM_VIDEO] Video error:`, toError(e), url);
+      log.e(`Video error:`, toError(e), url);
       setTimeout(() => gotoNext(), 1000);
     };
 
     el.onended = () => {
-      console.debug(`[ITEM_VIDEO] Video ended normally:`, url);
+      log.d(`Video ended normally:`, url);
       gotoNext();
     };
 
@@ -211,7 +214,11 @@ export const KioskPage = () => {
 
   const gotoNext = () => setCount((count) => count + 1);
 
-  console.debug('KioskPage', { prev, curr, next, device });
+  log.d('KioskPage', { prev, curr, next, device });
+
+  useEffect(() => {
+    log.d('playlist', playlist$.v);
+  }, []);
 
   // Si un contenu est associé au device, l'afficher via ContentViewer
   if (device?.media) {

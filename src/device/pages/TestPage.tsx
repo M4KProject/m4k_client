@@ -1,10 +1,12 @@
-import { useEffect, useState } from 'preact/hooks';
+import { useState } from 'preact/hooks';
 import { m4k } from '@common/m4k';
-import { randHex, stringify, toError, truncate, withTimeout } from '@common/utils';
+import { logger, randHex, stringify, toError, truncate, withTimeout } from '@common/utils';
 import { Button, Field, Form, Grid, Page, PageBody, Toolbar } from '@common/components';
 import { GridCols } from '@common/components/Grid';
 import { Play } from 'lucide-react';
 import { useAsyncEffect, useConstant } from '@common/hooks';
+
+const log = logger('TestPage');
 
 interface TestResult {
   success?: boolean;
@@ -195,7 +197,7 @@ export const TestPage = () => {
   const [tests, setTests] = useState<TestData[]>(initialTests);
 
   const handleExec = async () => {
-    console.debug('DebugPage handle');
+    log.d('DebugPage handle');
     const result = await (() => {
       switch (type) {
         case 'su':

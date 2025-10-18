@@ -1,8 +1,10 @@
 import { newProgressDialog } from './components/ProgressView';
 import { m4k } from '@common/m4k';
-import { sleep, stringify, toError } from '@common/utils';
+import { humanize, logger, sleep, stringify, toError } from '@common/utils';
 import { M4kFileInfo } from '@common/m4k/m4kInterface';
 import { playlist$ } from './messages';
+
+const log = logger('copyPlaylist');
 
 const PLAYLIST_DIR = 'playlist';
 
@@ -57,7 +59,7 @@ const copyPlaylist = async (fromDir: string) => {
         await process(path, fileName!);
       } catch (e) {
         const error = toError(e);
-        console.error(`playlistFilter "${fileName}" : ${error}`);
+        log.e(`playlistFilter "${fileName}" : ${error}`);
         prog(step, 'error', `Erreur "${fileName}" : ${error}`);
         await sleep(4000);
       }
@@ -79,6 +81,7 @@ const copyPlaylist = async (fromDir: string) => {
       await m4k.mkdir(PLAYLIST_DIR);
     },
     async (filePath, fileName) => {
+      log.d('cp', filePath, `${PLAYLIST_DIR}/${fileName}`);
       await m4k.cp(filePath, `${PLAYLIST_DIR}/${fileName}`);
     }
   );
@@ -90,6 +93,7 @@ const copyPlaylist = async (fromDir: string) => {
     (_, type) => type === 'zip',
     null,
     async (path) => {
+      log.d('unzip', path);
       await m4k.unzip(path);
       await m4k.rm(path);
     }
@@ -101,8 +105,9 @@ const copyPlaylist = async (fromDir: string) => {
     fileName => fileName.endsWith('update.js'),
     null,
     async (path) => {
+      log.d('loadJs', path);
       const result = await m4k.loadJs(path);
-      console.info('Script execution result:', stringify(result));
+      log.i('Script execution result:', stringify(result));
       await m4k.rm(path);
       if (!result.success) {
         throw new Error(`Script failed with code ${result.error}`);
@@ -116,6 +121,7 @@ const copyPlaylist = async (fromDir: string) => {
     (_, type) => type === 'apk',
     null,
     async (path) => {
+      log.d('installApk', path);
       await m4k.installApk(path);
       await m4k.rm(path);
     }
@@ -127,6 +133,7 @@ const copyPlaylist = async (fromDir: string) => {
     (_, type) => type === 'pdf',
     null,
     async (path) => {
+      log.d('pdf', path);
       await m4k.pdfToImages(path);
       await m4k.rm(path);
     }
@@ -140,6 +147,7 @@ const copyPlaylist = async (fromDir: string) => {
     async (path) => {
       const sourcePath = await m4k.absolutePath(path);
       const resizedPath = await m4k.resize(sourcePath);
+      log.d('resized', sourcePath, resizedPath);
       if (sourcePath !== resizedPath) {
         await m4k.rm(sourcePath);
       }
@@ -154,11 +162,12 @@ const copyPlaylist = async (fromDir: string) => {
     null,
     async (path) => {
       const info = await m4k.fileInfo(path);
+      log.d('info', info);
       items.push(info);
     }
   );
 
-  console.debug('playlist items', JSON.stringify(items));
+  log.d('playlist items', items);
   playlist$.set({ items });
 
   // Wait for localStorage persistence

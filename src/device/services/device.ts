@@ -58,7 +58,7 @@ const deviceLogin = async (): Promise<DeviceModel> => {
   deviceEmail$.set(email);
   devicePassword$.set(password);
 
-  const info = await m4k.info();
+  const info = await m4k.deviceInfo();
   info.started = serverDate();
 
   const device = await deviceSync.coll.upsert(
@@ -157,7 +157,7 @@ const execAction = async (device: DeviceModel, action: string, input?: string) =
     case 'su':
       return await m4k.su(toStr(input));
     case 'info':
-      return await m4k.info();
+      return await m4k.deviceInfo();
     case 'ping':
       return input;
     case 'kiosk_on':

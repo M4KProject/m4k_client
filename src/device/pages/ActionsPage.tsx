@@ -133,7 +133,7 @@ const clearCacheAndReload = async () => {
 };
 
 export const ActionsPage = () => {
-  const [info] = usePromise(() => m4k.info(), []);
+  const [info] = usePromise(() => m4k.deviceInfo(), []);
 
   return (
     <div class={c()}>
