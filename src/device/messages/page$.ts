@@ -1,5 +1,5 @@
 import { Msg } from '@common/utils/Msg';
-import { readUrlParams } from '@common/ui/urlParams';
+import { getUrlParams } from '@common/ui/urlParams';
 
 export type PageName =
   | 'codePin'
@@ -14,4 +14,4 @@ export type PageName =
   | 'pairing'
   | '';
 
-export const page$ = new Msg<PageName>((readUrlParams().page as PageName) || 'kiosk');
+export const page$ = new Msg<PageName>((getUrlParams(location.href).page as PageName) || 'kiosk');
