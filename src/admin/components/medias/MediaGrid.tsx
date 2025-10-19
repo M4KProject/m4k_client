@@ -1,14 +1,14 @@
 import { Css } from '@common/ui';
-import { byId, filterItems, groupBy, MsgMap, sortItems } from '@common/utils';
+import { byId, groupBy, MsgMap, sortItems } from '@common/utils';
 import { addTr, useMsg } from '@common/hooks';
 import { MediaModel } from '@common/api';
 import { Grid, GridCols } from '@common/components';
 import { JobGrid } from '../jobs/JobGrid';
 import { selectedById$ } from '@/admin/controllers/selected';
-import { useMediaById, useGroupMedias } from '@/api/hooks';
+import { useGroupMedias } from '@/api/hooks';
 import { useIsAdvanced } from '@/router/hooks';
 import { TMap, isPositive, round } from '@common/utils';
-import { Trash2, FolderInput, PlusSquare, Edit, Eye } from 'lucide-react';
+import { Trash2, FolderInput, PlusSquare, Edit, Eye, Download } from 'lucide-react';
 import { tooltip, Button, Field } from '@common/components';
 import { SelectedField } from '../SelectedField';
 import { MediaPreview } from './MediaPreview';
@@ -17,6 +17,7 @@ import { mediaSync } from '@/api/sync';
 import { MediaIcon } from './MediaIcon';
 import { updateRoute } from '@/router/setters';
 import { useMemo } from 'preact/hooks';
+import { startMediaDownload } from '@/api/startMediaDownload';
 
 addTr({
   pending: 'en attente',
@@ -137,6 +138,13 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
             updateRoute({ mediaKey: key, isEdit: false });
           }}
         />
+        {type !== 'folder' && type !== 'playlist' && (
+          <Button
+            icon={<Download />}
+            {...tooltip('Télécharger')}
+            onClick={() => startMediaDownload(id)}
+          />
+        )}
         <Button
           icon={<Trash2 />}
           color="error"
