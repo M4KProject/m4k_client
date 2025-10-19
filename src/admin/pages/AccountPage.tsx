@@ -11,6 +11,7 @@ import { apiAuth$, authLogout } from '@common/api';
 import { userSync } from '@/api/sync';
 import { useIsAdvanced } from '@/router/hooks';
 import { setIsAdvanced } from '@/router/setters';
+import { Branding } from '@/device/components/Branding';
 
 const c = Css('AccountPage', {
   Color: {
@@ -147,6 +148,7 @@ export const AccountPage = () => {
             onValue={setPassword}
             props={{ autocomplete: 'new-password' }}
           />
+          <Branding />
         </Form>
       </PageBody>
     </Page>

@@ -4,6 +4,7 @@ import { Button, LoadingSpinner } from '@common/components';
 import { device$ } from '../services/device';
 import { page$ } from '../messages/page$';
 import { offlineMode$ } from '../messages';
+import { Branding } from '../components/Branding';
 
 const c = Css('PairingPage', {
   '': {
@@ -74,6 +75,7 @@ export const PairingPage = () => {
           />
         </div>
       </div>
+      <Branding />
     </div>
   );
 };

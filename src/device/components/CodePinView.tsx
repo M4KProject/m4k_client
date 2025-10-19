@@ -7,6 +7,7 @@ import { Button, Field, Form, showDialog } from '@common/components';
 import { Globe, Lock } from 'lucide-react';
 import { device$ } from '../services/device';
 import { codePin$, offlineMode$ } from '../messages';
+import { Branding } from './Branding';
 
 const c = Css('CodePinView', {
   '': {
@@ -66,6 +67,7 @@ export const CodePinView = ({ open$ }: { open$: Msg<boolean> }) => {
         />
       </div>
       <div class={c('Code')}>{device?.key}</div>
+      <Branding />
     </Form>
     // <>
     //     <Form
