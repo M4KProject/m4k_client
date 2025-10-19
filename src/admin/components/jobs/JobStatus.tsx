@@ -14,7 +14,10 @@ const c = Css('JobStatus', {
     m: 0.5,
   },
   '-pending': { fg: 'secondary' },
-  '-processing': { fg: 'primary' },
+  '-processing': {
+    fg: 'primary',
+    w: '100%',
+  },
   '-finished': { fg: 'success' },
   '-failed': { fg: 'error' },
   '-deleted': { fg: 'muted' },
@@ -46,7 +49,7 @@ export const JobStatus = ({ job }: JobStatusProps) => {
 
   if (status === 'processing') {
     return (
-      <div class={c(' &-processing')}>
+      <div class={c('', '-processing')}>
         <Progress progress={job.progress || 0} />
       </div>
     );
@@ -54,14 +57,14 @@ export const JobStatus = ({ job }: JobStatusProps) => {
 
   if (status === 'failed') {
     return (
-      <div class={c(' &-failed')}>
+      <div class={c('', '-failed')}>
         <Tr>{job.error || ''}</Tr>
       </div>
     );
   }
 
   return (
-    <div class={c(` &-${status}`)}>
+    <div class={c('', `-${status}`)}>
       <Icon size={16} />
       <Tr>{status}</Tr>
     </div>
