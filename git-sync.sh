@@ -6,14 +6,16 @@ npm run format
 
 cd ./common
 git add .
-git commit -m "$1"
+git commit -m "sync"
 sleep 1
+git pull
 git push
 
 sleep 1
 
 cd ../
 git add .
-git commit -m "$1"
+git commit -m "sync"
 sleep 1
+git pull
 git push
