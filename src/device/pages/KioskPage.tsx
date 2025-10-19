@@ -92,19 +92,27 @@ const KioskVideo = ({
 
     log.d(`Setting up video:`, url);
 
+    // Configurer les attributs AVANT de charger la source
     el.setAttribute('playsinline', 'true');
     el.setAttribute('webkit-playsinline', 'true');
+    el.setAttribute('autoplay', 'true');
     el.muted = hasVideoMuted ?? true;
-    el.preload = 'metadata';
-    el.autoplay = true;
+    el.preload = 'auto';
 
     el.onloadstart = () => log.d(`Video loadstart:`, url);
+
     el.onloadedmetadata = () => {
       log.d(`Video metadata loaded - duration:`, el.duration, 'url:', url);
+      // Forcer la lecture immédiatement après le chargement des métadonnées
+      el.play().catch((e) => log.e(`Play error on metadata:`, e));
     };
+
     el.oncanplay = () => {
       log.d(`Video can play:`, url);
-      el.play().catch((e) => log.e(`Play error:`, e));
+      // Double sécurité : relancer la lecture si elle n'a pas démarré
+      if (el.paused) {
+        el.play().catch((e) => log.e(`Play error on canplay:`, e));
+      }
     };
 
     el.onerror = (e) => {
@@ -117,9 +125,19 @@ const KioskVideo = ({
       gotoNext();
     };
 
-    // Charger la source
+    // Charger la source APRÈS avoir configuré tous les gestionnaires
     el.src = url;
     el.load();
+
+    // Tentative de lecture immédiate (au cas où autoplay ne fonctionne pas)
+    const playTimeout = setTimeout(() => {
+      if (el.paused) {
+        log.d(`Forcing play via timeout:`, url);
+        el.play().catch((e) => log.e(`Play error on timeout:`, e));
+      }
+    }, 100);
+
+    return () => clearTimeout(playTimeout);
   }, [el, url, hasVideoMuted, gotoNext]);
 
   return <video ref={ref} style={{ width: '100%', height: '100%' }} />;
