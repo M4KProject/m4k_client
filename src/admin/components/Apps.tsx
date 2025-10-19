@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'preact/hooks';
-import { Css } from '@common/ui';
+import { Css, updateUrlParams } from '@common/ui';
 import { AuthForm, Button } from '@common/components';
 import { Download } from 'lucide-react';
 import { applicationsColl } from '../../api/sync';
@@ -33,7 +33,7 @@ const c = Css('Apps', {
 });
 
 export const AppButton = ({ id, file }: { id: string; file: string }) => {
-  const url = applicationsColl.getUrl(id, file);
+  const url = applicationsColl.getDownloadUrl(id, file);
   return (
     <Button
       class={c('AppButton')}
@@ -56,7 +56,7 @@ export const Apps = () => {
   const [applications, setApplications] = useState<ApplicationModel[]>([]);
 
   useEffect(() => {
-    applicationsColl.all().then(setApplications);
+    applicationsColl.all({ where: { active: true } }).then(setApplications);
   }, []);
 
   sortItems(applications, (a) => (a.name || '') + a.version);
