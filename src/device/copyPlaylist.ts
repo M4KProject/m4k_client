@@ -102,7 +102,7 @@ const copyPlaylist = async (fromDir: string) => {
   await newFilesProcess(
     PLAYLIST_DIR,
     `Exécution de script`,
-    fileName => fileName.endsWith('update.js'),
+    (fileName) => fileName.endsWith('update.js'),
     null,
     async (path) => {
       log.d('loadJs', path);

@@ -153,23 +153,24 @@ const initTests = (): TestData[] => {
   });
 };
 
-const showValue = (value: any) => truncate(
-  (() => {
-    const type = typeof value;
-    switch (type) {
-      case 'function':
-        return String(value);
-      case 'undefined':
-        return 'undefined';
-      case 'object':
-        return JSON.stringify(value);
-      case 'string':
-        return '"' + String(value).split('\n').join('\\n') + '"';
-    }
-    return `${value}(${type})`;
-  })(),
-  30
-);
+const showValue = (value: any) =>
+  truncate(
+    (() => {
+      const type = typeof value;
+      switch (type) {
+        case 'function':
+          return String(value);
+        case 'undefined':
+          return 'undefined';
+        case 'object':
+          return JSON.stringify(value);
+        case 'string':
+          return '"' + String(value).split('\n').join('\\n') + '"';
+      }
+      return `${value}(${type})`;
+    })(),
+    30
+  );
 
 const testCols: GridCols<TestData, { play: (test: TestData) => void }> = {
   name: ['Nom', (test) => test.name],
@@ -179,12 +180,7 @@ const testCols: GridCols<TestData, { play: (test: TestData) => void }> = {
   error: ['Erreur', (test) => test.result?.error || ''],
   actions: [
     'Actions',
-    (item, { play }) => (
-      <Button
-        icon={<Play />}
-        onClick={() => play(item)}
-      />
-    ),
+    (item, { play }) => <Button icon={<Play />} onClick={() => play(item)} />,
     { w: 30 },
   ],
 };
@@ -212,10 +208,11 @@ export const TestPage = () => {
   };
 
   const play = async (test: TestData) => {
-    const result = await withTimeout(test.getResult(), 5000)
-      .catch(error => ({ value: null, success: false, error: String(error) } as TestResult));
+    const result = await withTimeout(test.getResult(), 5000).catch(
+      (error) => ({ value: null, success: false, error: String(error) }) as TestResult
+    );
 
-    setTests(tests => {
+    setTests((tests) => {
       const next = [...tests];
       next[test.index] = { ...test, result };
       return next;
@@ -262,9 +259,7 @@ export const TestPage = () => {
           ctx={{ play }}
           rowProps={(test, _, index) => {
             const result = test.result || {};
-            const mode =
-              result.success ? 'success' :
-              result.error ? 'error' : undefined;
+            const mode = result.success ? 'success' : result.error ? 'error' : undefined;
             return { mode };
           }}
           items={tests}

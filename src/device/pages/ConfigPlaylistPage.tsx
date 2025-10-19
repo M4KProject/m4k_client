@@ -15,36 +15,33 @@ import { isNil, round, toBool, toNbr } from '@common/utils';
 import { useState } from 'preact/hooks';
 import { m4k } from '@common/m4k';
 
-const useSetting = (key: string): [string|null, (next: string|null) => Promise<void>] => {
-  const [value, setValue] = useState<string|null>('');
+const useSetting = (key: string): [string | null, (next: string | null) => Promise<void>] => {
+  const [value, setValue] = useState<string | null>('');
 
   useAsyncEffect(async () => {
     const curr = await m4k.getSetting(key);
     setValue(curr);
   }, [key]);
 
-  return [
-    value,
-    (next) => m4k.setSetting(key, next)
-  ];
+  return [value, (next) => m4k.setSetting(key, next)];
 };
 
-const useBooleanSetting = (key: string, defVal: boolean): [boolean, (next: boolean|null) => Promise<void>] => {
+const useBooleanSetting = (
+  key: string,
+  defVal: boolean
+): [boolean, (next: boolean | null) => Promise<void>] => {
   const [value, setValue] = useSetting(key);
 
-  return [
-    toBool(value, defVal),
-    (next) => setValue(isNil(next) ? null : next ? '1' : '0')
-  ];
+  return [toBool(value, defVal), (next) => setValue(isNil(next) ? null : next ? '1' : '0')];
 };
 
-const useNumberSetting = (key: string, defVal: number): [number, (next: number|null) => Promise<void>] => {
+const useNumberSetting = (
+  key: string,
+  defVal: number
+): [number, (next: number | null) => Promise<void>] => {
   const [value, setValue] = useSetting(key);
 
-  return [
-    toNbr(value, defVal),
-    (next) => setValue(isNil(next) ? null : String(next))
-  ];
+  return [toNbr(value, defVal), (next) => setValue(isNil(next) ? null : String(next))];
 };
 
 export const ConfigPlaylistPage = () => {
@@ -76,7 +73,14 @@ export const ConfigPlaylistPage = () => {
             required
           />
           <Field label="Copier le dossier" value={copyDir} onValue={setCopyDir} />
-          <Field type="text" name="url" label="URL" helper="https://" value={url} onValue={setUrl} />
+          <Field
+            type="text"
+            name="url"
+            label="URL"
+            helper="https://"
+            value={url}
+            onValue={setUrl}
+          />
         </Form>
 
         <Form title="Configuration Playlist">
@@ -117,7 +121,7 @@ export const ConfigPlaylistPage = () => {
             ]}
           />
         </Form>
-        
+
         <Form title="Configuration Video">
           <Field
             label="Video sans audio"
@@ -155,12 +159,7 @@ export const ConfigPlaylistPage = () => {
             value={idleSeconds}
             onValue={setIdleSeconds}
           />
-          <Field
-            label="URL de l'application"
-            type="text"
-            value={startUrl}
-            onValue={setStartUrl}
-          />
+          <Field label="URL de l'application" type="text" value={startUrl} onValue={setStartUrl} />
         </Form>
       </PageBody>
     </Page>

@@ -28,4 +28,3 @@ export const itemAnim$ = newMsg<ItemAnim>('zoom', 'itemAnim', true, isItemAnim);
 export const hasVideoMuted$ = newMsg(true, 'hasVideoMuted', true);
 
 export const offlineMode$ = newMsg(false, 'offlineMode', true);
-

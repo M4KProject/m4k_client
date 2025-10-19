@@ -8,11 +8,11 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // Android icon sizes for different densities
 const iconSizes = {
-  'mdpi': 48,
-  'hdpi': 72,
-  'xhdpi': 96,
-  'xxhdpi': 144,
-  'xxxhdpi': 192
+  mdpi: 48,
+  hdpi: 72,
+  xhdpi: 96,
+  xxhdpi: 144,
+  xxxhdpi: 192,
 };
 
 const svgPath = join(__dirname, 'src/admin/assets/logoWithoutText.svg');
@@ -32,10 +32,7 @@ async function generateIcons() {
       await mkdir(outputDir, { recursive: true });
 
       // Convert SVG to PNG at specified size
-      await sharp(svgBuffer)
-        .resize(size, size)
-        .png()
-        .toFile(outputPath);
+      await sharp(svgBuffer).resize(size, size).png().toFile(outputPath);
 
       console.log(`✅ Generated ${density} (${size}x${size}px): ${outputPath}`);
     } catch (error) {
