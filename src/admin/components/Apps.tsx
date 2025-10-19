@@ -32,7 +32,15 @@ const c = Css('Apps', {
   AppButton: {},
 });
 
-export const AppButton = ({ id, file }: { id: string; file: string }) => {
+export const AppButton = ({
+  id,
+  file,
+  filename,
+}: {
+  id: string;
+  file: string;
+  filename: string;
+}) => {
   const url = applicationsColl.getDownloadUrl(id, file);
   return (
     <Button
@@ -47,7 +55,7 @@ export const AppButton = ({ id, file }: { id: string; file: string }) => {
       }}
       href={url}
       link
-      download
+      download={filename}
     />
   );
 };
@@ -69,7 +77,7 @@ export const Apps = () => {
             <div class={c('AppName')}>{app.name}</div>
             {app.version && <div class={c('AppVersion')}>Version: {app.version}</div>}
           </div>
-          <AppButton id={app.id} file={String(app.file)} />
+          <AppButton id={app.id} file={String(app.file)} filename={app.name || ''} />
         </div>
       ))}
     </div>
