@@ -8,8 +8,7 @@ import { hasVideoMuted$ } from '../messages';
 const log = logger('KioskVideo');
 
 const c = Css('Kiosk', {
-  '': {
-  },
+  '': {},
 });
 
 export const KioskVideo = ({
@@ -25,11 +24,11 @@ export const KioskVideo = ({
   const el = ref.current;
   const hasVideoMuted = useMsg(hasVideoMuted$);
 
-    const tryPlay = () => {
-        if (el && el.paused && !el.ended && v.isCurr) {
-            el.play().catch((e) => log.e(`tryPlay error:`, e));
-        }
-    };
+  const tryPlay = () => {
+    if (el && el.paused && !el.ended && v.isCurr) {
+      el.play().catch((e) => log.e(`tryPlay error:`, e));
+    }
+  };
 
   const v = useConstant(() => ({ isCurr, onNext, url, tryPlay }));
   v.isCurr = isCurr;
@@ -85,7 +84,7 @@ export const KioskVideo = ({
   }, [el, url]);
 
   useEffect(() => {
-      log.d(`useEffect2`, v);
+    log.d(`useEffect2`, v);
     if (!el) return;
 
     if (!isCurr) {
@@ -99,13 +98,13 @@ export const KioskVideo = ({
     const timeouts = playAttempts.map((delay) => setTimeout(tryPlay, delay));
 
     return () => {
-        timeouts.forEach(clearTimeout);
+      timeouts.forEach(clearTimeout);
     };
   }, [el, isCurr, url]);
 
   return (
     <video
-        class={c('')}
+      class={c('')}
       ref={ref}
       src={url}
       playsinline
