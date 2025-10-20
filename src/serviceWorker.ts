@@ -1,3 +1,5 @@
+import { appGlobal } from '@common/utils/app';
+
 // Conditional import based on build mode
 let useRegisterSW: any = null;
 
@@ -64,7 +66,7 @@ export const usePWA = () => {
   return useRegisterSW({
     onNeedRefresh() {
       console.log('PWA: Update available');
-      window.dispatchEvent(new CustomEvent('sw-update-available'));
+      appGlobal.dispatchEvent(new CustomEvent('sw-update-available'));
     },
     onOfflineReady() {
       console.log('PWA: Ready to work offline');
@@ -142,9 +144,9 @@ export const getMediaCacheInfo = async (): Promise<CacheInfo> => {
 };
 
 export const onServiceWorkerUpdate = (callback: () => void): (() => void) => {
-  window.addEventListener('sw-update-available', callback);
+  appGlobal.addEventListener('sw-update-available', callback);
 
   return () => {
-    window.removeEventListener('sw-update-available', callback);
+    appGlobal.removeEventListener('sw-update-available', callback);
   };
 };

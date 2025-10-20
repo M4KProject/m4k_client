@@ -1,5 +1,5 @@
 import { setCss } from '@common/ui';
-import { repeat } from '@common/utils';
+import { appGlobal, repeat } from '@common/utils';
 import { newMsg } from '@common/utils/Msg';
 
 export type ContentRotation = 0 | 90 | 180 | 270;
@@ -14,8 +14,8 @@ export const contentRotation$ = newMsg<0 | 90 | 180 | 270>(
 const applyContentRotation = () => {
   const v = contentRotation$.v;
 
-  let w = window.innerWidth;
-  let h = window.innerHeight;
+  let w = appGlobal.innerWidth;
+  let h = appGlobal.innerHeight;
 
   if (v === 90 || v === 270) {
     const t = w;
@@ -70,7 +70,7 @@ const resetZoom = () => {
 
 // Also listen to window resize events
 if (typeof window !== 'undefined') {
-  window.addEventListener('resize', () => {
+  appGlobal.addEventListener('resize', () => {
     setTimeout(resetZoom, 100);
     setTimeout(applyContentRotation, 200);
   });

@@ -1,5 +1,5 @@
 import { Css } from '@common/ui';
-import { toError } from '@common/utils';
+import { appGlobal, toError } from '@common/utils';
 import { m4k } from '@common/m4k';
 import { usePromise } from '@common/hooks';
 import { Button } from '@common/components';
@@ -123,7 +123,7 @@ const clearCacheAndReload = async () => {
     prog(0.8, 'info', 'Cache supprimé, rechargement de la page...');
 
     setTimeout(() => {
-      window.location.reload();
+      appGlobal.location.reload();
     }, 1000);
   } catch (e) {
     const error = toError(e);
