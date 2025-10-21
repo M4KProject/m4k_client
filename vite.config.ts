@@ -105,6 +105,7 @@ export default defineConfig(({ mode }) => {
       alias: {
         '@': path.resolve(__dirname, './src'),
         '@common': path.resolve(__dirname, './common'),
+        'pocketbase-lite': path.resolve(__dirname, './pocketbase-lite/src'),
 
         // Map React imports from common library to Preact
         react: 'preact/compat',

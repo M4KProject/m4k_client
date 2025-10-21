@@ -30,8 +30,10 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@common/*": ["./common/*"]
+      "@common/*": ["./common/*"],
+      "pocketbase-lite": ["./pocketbase-lite/src"],
+      "pocketbase-lite/*": ["./pocketbase-lite/src/*"]
     }
   },
-  "include": ["node_modules/vite/client.d", "vite.config", "common/**/*", "src/**/*"]
+  "include": ["node_modules/vite/client.d", "vite.config", "common/**/*", "pocketbase-lite/**/*", "src/**/*"]
 }

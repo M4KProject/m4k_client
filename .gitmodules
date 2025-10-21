@@ -3,4 +3,4 @@
 	url = https://github.com/M4KProject/m4k_common.git
 [submodule "pocketbase-lite"]
 	path = pocketbase-lite
-	url = https://github.com/benoitadam/pocketbase-lite.git
+	url = https://github.com/baveg/pocketbase-lite.git
