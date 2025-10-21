@@ -1,7 +1,5 @@
 import { Css } from '@common/ui';
-import logoSvg from '@/admin/assets/logo.svg';
-import { addOverlay, removeOverlay } from '@common/ui/overlay';
-import { render } from 'preact';
+import logoSvg from '@/assets/logo.svg';
 import { useEffect } from 'preact/hooks';
 import { logger } from '@common/utils';
 import { portal } from '@common/components';
