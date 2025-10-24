@@ -41,12 +41,5 @@
     "common/**/*",
     "pocketbase-lite/**/*",
     "src/**/*",
-    "fluxio/src/async/retry.ts",
-    "fluxio/src/async/sleep.ts",
-    "fluxio/src/url/urlJoin.ts",
-    "fluxio/src/url/getExt.ts",
-    "fluxio/src/object/by.ts",
-    "fluxio/src/color.ts",
-    "fluxio/src/async/withTimeout.ts"
   ]
 }

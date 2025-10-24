@@ -4,6 +4,3 @@
 [submodule "pocketbase-lite"]
 	path = pocketbase-lite
 	url = https://github.com/baveg/pocketbase-lite.git
-[submodule "fluxio"]
-	path = fluxio
-	url = https://github.com/baveg/fluxio.git
