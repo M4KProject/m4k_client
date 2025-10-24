@@ -259,7 +259,10 @@ export const TestPage = () => {
           ctx={{ play }}
           rowProps={(test, _, index) => {
             const result = test.result || {};
-            const mode = result.success ? 'success' : result.error ? 'error' : undefined;
+            const mode =
+              result.success ? 'success'
+              : result.error ? 'error'
+              : undefined;
             return { mode };
           }}
           items={tests}

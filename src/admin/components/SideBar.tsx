@@ -61,7 +61,7 @@ export const SideBar = () => {
         onClick={go('groups')}
       />
       <SideSep />
-      {group || isAdvanced ? (
+      {group || isAdvanced ?
         <>
           <SideButton
             title="Members"
@@ -82,29 +82,29 @@ export const SideBar = () => {
             onClick={goMedias('')}
           />
 
-          {page === 'medias'
-            ? (
-                [
-                  ['playlist', 'Playlists'],
-                  ['page', 'Pages'],
-                  ['video', 'Videos'],
-                  ['image', 'Images'],
-                  ['pdf', 'Fichiers PDF'],
-                ] as [MediaType, string][]
-              ).map(([type, title]) => (
-                <SideButton
-                  key={type}
-                  tab={true}
-                  title={title}
-                  icon={<MediaIcon type={type} />}
-                  selected={page === 'medias' && mediaType === type}
-                  onClick={goMedias(type)}
-                />
-              ))
-            : null}
+          {page === 'medias' ?
+            (
+              [
+                ['playlist', 'Playlists'],
+                ['page', 'Pages'],
+                ['video', 'Videos'],
+                ['image', 'Images'],
+                ['pdf', 'Fichiers PDF'],
+              ] as [MediaType, string][]
+            ).map(([type, title]) => (
+              <SideButton
+                key={type}
+                tab={true}
+                title={title}
+                icon={<MediaIcon type={type} />}
+                selected={page === 'medias' && mediaType === type}
+                onClick={goMedias(type)}
+              />
+            ))
+          : null}
           <SideButton title="Jobs" icon={<Zap />} selected={page === 'jobs'} onClick={go('jobs')} />
         </>
-      ) : null}
+      : null}
       <SideSep />
       <div class={c('Version')}>2.1.0</div>
       <SideButton

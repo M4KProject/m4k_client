@@ -60,13 +60,11 @@ export const MediasPage = () => {
         {media?.type === 'playlist' && <AddPlaylistItemButton playlist={media as PlaylistModel} />}
 
         {media &&
-          (isEdit ? (
+          (isEdit ?
             <Button icon={<Play />} title="Afficher le media" onClick={() => setIsEdit(false)} />
-          ) : (
-            <Button icon={<Edit />} title="Éditer le media" onClick={() => setIsEdit(true)} />
-          ))}
+          : <Button icon={<Edit />} title="Éditer le media" onClick={() => setIsEdit(true)} />)}
 
-        {media?.type === 'playlist' ? (
+        {media?.type === 'playlist' ?
           <Button
             icon={<MapPlus />}
             {...tooltip('Ajouter à la playlist')}
@@ -74,15 +72,14 @@ export const MediasPage = () => {
           >
             Ajouter à la Playlist
           </Button>
-        ) : (
-          <Button
+        : <Button
             icon={<MapPlus />}
             {...tooltip('Créer une playlist')}
             onClick={handleCreatePlaylist}
           >
             Crée une Playlist
           </Button>
-        )}
+        }
 
         {type === '' && (
           <Button

@@ -25,22 +25,22 @@ const applyContentRotation = () => {
 
   const c = setCss(
     'contentRotation',
-    v === 0
-      ? undefined
-      : {
-          '': {
-            w: w + 'px',
-            h: h + 'px',
-            transform: `rotate(${v}deg)`,
-            transformOrigin: '50% 50%',
-            position: 'fixed',
-            top: '50%',
-            left: '50%',
-            marginTop: -h / 2 + 'px',
-            marginLeft: -w / 2 + 'px',
-            overflow: 'hidden',
-          },
-        }
+    v === 0 ? undefined : (
+      {
+        '': {
+          w: w + 'px',
+          h: h + 'px',
+          transform: `rotate(${v}deg)`,
+          transformOrigin: '50% 50%',
+          position: 'fixed',
+          top: '50%',
+          left: '50%',
+          marginTop: -h / 2 + 'px',
+          marginLeft: -w / 2 + 'px',
+          overflow: 'hidden',
+        },
+      }
+    )
   );
   document.body.classList.add(c);
 };

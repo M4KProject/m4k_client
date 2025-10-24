@@ -37,7 +37,7 @@ export const MediaPreview = ({ media }: { media?: MediaModel }) => {
 
   return (
     <Popover id={overId} class={c('')} title={media.title}>
-      {isOver && videos.length ? (
+      {isOver && videos.length ?
         <div class={c('Video')}>
           <video
             controls={false}
@@ -56,14 +56,14 @@ export const MediaPreview = ({ media }: { media?: MediaModel }) => {
             ))}
           </video>
         </div>
-      ) : images.length ? (
+      : images.length ?
         <div
           class={c('Image')}
           style={{
             backgroundImage: `url('${getMediaUrl(images[0], 360)}')`,
           }}
         />
-      ) : null}
+      : null}
     </Popover>
   );
 };

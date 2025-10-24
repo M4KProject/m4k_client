@@ -32,7 +32,15 @@ const useBooleanSetting = (
 ): [boolean, (next: boolean | null) => Promise<void>] => {
   const [value, setValue] = useSetting(key);
 
-  return [toBool(value, defVal), (next) => setValue(isNil(next) ? null : next ? '1' : '0')];
+  return [
+    toBool(value, defVal),
+    (next) =>
+      setValue(
+        isNil(next) ? null
+        : next ? '1'
+        : '0'
+      ),
+  ];
 };
 
 const useNumberSetting = (

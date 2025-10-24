@@ -34,7 +34,11 @@ export const PlaylistView = ({ media, mediaById, fit, anim, divProps }: Playlist
   const next = (curr + 1) % length;
 
   items.forEach((item, i) => {
-    if (item) item.pos = i === curr ? 'curr' : i === next ? 'next' : 'prev';
+    if (item)
+      item.pos =
+        i === curr ? 'curr'
+        : i === next ? 'next'
+        : 'prev';
   });
 
   const gotoNext = () => {

@@ -131,15 +131,14 @@ const KioskItem = ({
 
   return (
     <div class={c('', itemFit && `-${itemFit}`, itemAnim && `-${itemAnim}`, `-${pos}`)}>
-      {isVideo && info && info.url ? (
+      {isVideo && info && info.url ?
         <KioskVideo isCurr={isCurr} url={info.url} onNext={onNext} />
-      ) : isImage ? (
+      : isImage ?
         <div ref={ref} style={{ backgroundImage: `url('${info?.url}')` }} />
-      ) : (
-        <span>
+      : <span>
           Fichier: {item.path} Type: {info?.type}
         </span>
-      )}
+      }
     </div>
   );
 };
@@ -226,7 +225,14 @@ export const KioskPage = () => {
           itemAnim={itemAnim || 'zoom'}
           itemDurationMs={itemDurationMs}
           onNext={onNext}
-          pos={item === curr ? 'curr' : item === next ? 'next' : item === prev ? 'prev' : 'hidden'}
+          pos={
+            item === curr ? 'curr'
+            : item === next ?
+              'next'
+            : item === prev ?
+              'prev'
+            : 'hidden'
+          }
         />
       ))}
     </div>

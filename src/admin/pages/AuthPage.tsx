@@ -55,19 +55,18 @@ export const AuthPage = () => {
     <div class={c()}>
       <div class={c('Content')}>
         <div class={c('Logo')} />
-        {!showApplications ? (
+        {!showApplications ?
           <>
             <div class={c('Title')}>
               PLV DIGITALE - BORNES ET ECRANS INTERACTIFS - CONTENUS NUMERIQUES
             </div>
             <div class={c('Illu')} />
           </>
-        ) : (
-          <>
+        : <>
             <Apps />
             <div />
           </>
-        )}
+        }
       </div>
       <AuthForm />
       <div class={c('BottomButtons')}>
