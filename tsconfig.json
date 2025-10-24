@@ -32,7 +32,9 @@
       "@/*": ["./src/*"],
       "@common/*": ["./common/*"],
       "pocketbase-lite": ["./pocketbase-lite/src"],
-      "pocketbase-lite/*": ["./pocketbase-lite/src/*"]
+      "pocketbase-lite/*": ["./pocketbase-lite/src/*"],
+      "fluxio": ["./pocketbase-lite/fluxio/src/index"],
+      "fluxio/*": ["./pocketbase-lite/fluxio/src/*"]
     }
   },
   "include": [
