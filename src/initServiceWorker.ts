@@ -1,3 +1,35 @@
+import { glb, logger } from 'fluxio';
+
+const log = logger('SW');
+
+export const initServiceWorker = async () => {
+  log.d('init');
+  try {
+    const serviceWorker = glb.navigator?.serviceWorker;
+    if (!serviceWorker) return;
+
+    const registration = await serviceWorker.register('/sw.js');
+    log.d('registration', registration);
+
+    registration.addEventListener('updatefound', () => {
+      const newWorker = registration.installing;
+      if (!newWorker) return;
+
+      newWorker.addEventListener('statechange', () => {
+        if (newWorker.state === 'installed' && serviceWorker.controller) {
+          newWorker.postMessage('SKIP_WAITING');
+        }
+      });
+    });
+
+    serviceWorker.addEventListener('controllerchange', () => {
+      glb.location.reload();
+    });
+  } catch (error) {
+    log.e('failed', error);
+  }
+};
+
 // import { glb } from 'fluxio';
 
 // // Conditional import based on build mode
