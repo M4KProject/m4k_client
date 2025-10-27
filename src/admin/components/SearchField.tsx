@@ -1,10 +1,10 @@
 import { Field } from '@common/components';
-import { useMsg } from '@common/hooks';
+import { useFlux } from '@common/hooks';
 import { Search } from 'lucide-react';
 import { Css } from '@common/ui';
 import { Button } from '@common/components';
 import { search$ } from '../controllers/search';
-import { Msg } from '@common/utils';
+import { Flux } from 'fluxio';
 
 const c = Css('SearchField', {
   '': {
@@ -12,11 +12,11 @@ const c = Css('SearchField', {
   },
 });
 
-const isSearchOpen$ = new Msg(false);
+const isSearchOpen$ = new Flux(false);
 
 export const SearchField = () => {
-  const search = useMsg(search$);
-  const isSearchOpen = useMsg(isSearchOpen$);
+  const search = useFlux(search$);
+  const isSearchOpen = useFlux(isSearchOpen$);
 
   return (
     <div class={c()}>

@@ -1,6 +1,6 @@
 // import { Css, addJsFile, addCssFile } from '@common/ui';
 // import { setCss } from '@common/ui/css';
-// import { PageModel } from '@common/api';
+// import { PageModel } from '@/api';
 // import { DivProps } from '@common/components';
 // import { useEffect } from 'preact/hooks';
 // import { useGroupMedias } from '@/api/hooks';

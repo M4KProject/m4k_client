@@ -1,9 +1,9 @@
 import { Css } from '@common/ui';
-import { PlaylistEntry, PlaylistModel } from '@common/api';
+import { PlaylistEntry, PlaylistModel } from '@/api';
 import { useState } from 'preact/hooks';
 import { useTimeout } from '@common/hooks';
 import { MediaView, MediaViewProps } from './MediaView';
-import { isNotEmpty } from '@common/utils';
+import { isNotEmpty } from 'fluxio';
 
 const c = Css('PlaylistView', {});
 

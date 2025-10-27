@@ -1,6 +1,6 @@
-import { PlaylistEntry, PlaylistModel, MediaModel } from '@common/api';
+import { PlaylistEntry, PlaylistModel, MediaModel } from '@/api';
 import { Css } from '@common/ui';
-import { addItem, removeIndex, deepClone, moveIndex } from '@common/utils';
+import { addItem, removeIndex, deepClone, moveIndex } from 'fluxio';
 import { Grid, Field, Button, tooltip, Flag } from '@common/components';
 import { GridCols } from '@common/components/Grid';
 import { Plus, Trash2, Copy, ArrowUp, ArrowDown } from 'lucide-react';

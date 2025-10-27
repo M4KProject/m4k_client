@@ -1,14 +1,14 @@
 import { Css } from '@common/ui';
-import { TMap, toNbr, toStr } from '@common/utils';
+import { Dictionary, toNumber, toString } from 'fluxio';
 import { Field, Button, tooltip, GridCols, Grid } from '@common/components';
 import { Trash2 } from 'lucide-react';
 import { memberSync } from '@/api/sync';
 import { useDeviceById, useGroupMembers } from '@/api/hooks';
-import { DeviceModel, MemberModel } from '@common/api';
+import { DeviceModel, MemberModel } from '@/api';
 
 const c = Css('MemberGrid', {});
 
-const cols: GridCols<MemberModel, { deviceById: TMap<DeviceModel> }> = {
+const cols: GridCols<MemberModel, { deviceById: Dictionary<DeviceModel> }> = {
   id: ['Appareil', ({ device }) => <Field type="switch" value={!!device} readonly />, { w: 10 }],
   name: [
     'Email',
@@ -32,8 +32,8 @@ const cols: GridCols<MemberModel, { deviceById: TMap<DeviceModel> }> = {
           ['20', 'Lire et Écrire'],
           ['30', 'Administrateur'],
         ]}
-        value={toStr(role)}
-        onValue={(role) => memberSync.update(id, { role: toNbr(role) })}
+        value={toString(role)}
+        onValue={(role) => memberSync.update(id, { role: toNumber(role) })}
       />
     ),
     { w: 50 },

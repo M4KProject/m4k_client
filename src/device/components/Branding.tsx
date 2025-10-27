@@ -1,7 +1,7 @@
 import { Css } from '@common/ui';
 import logoSvg from '@/assets/logo.svg';
 import { useEffect } from 'preact/hooks';
-import { logger } from '@common/utils';
+import { logger } from 'fluxio';
 import { portal } from '@common/components';
 
 const log = logger('Branding');

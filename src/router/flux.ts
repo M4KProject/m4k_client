@@ -1,7 +1,7 @@
-import { Msg } from '@common/utils';
+import { fluxStored, isItem } from 'fluxio';
 import { Route } from './types';
 
-export const routeNotDebounced$ = new Msg<Route>({}, 'route$', true);
+export const routeNotDebounced$ = fluxStored<Route>('route$', {}, isItem);
 export const route$ = routeNotDebounced$.debounce(50);
 
 export const page$ = route$.map((r) => r.page || '');

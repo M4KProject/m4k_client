@@ -1,8 +1,8 @@
 import { Button, Field, Grid, Page, PageBody, Toolbar, tooltip } from '@common/components';
 import { GridCols } from '@common/components/Grid';
 import { Css } from '@common/ui';
-import { round } from '@common/utils';
-import { useMsg } from '@common/hooks';
+import { round } from 'fluxio';
+import { useFlux } from '@common/hooks';
 import { ArrowUp, ArrowDown, Copy, Trash2 } from 'lucide-react';
 import { playlist$ } from '../messages';
 
@@ -125,7 +125,7 @@ const playlistItemCols: GridCols<
 };
 
 export const PlaylistPage = () => {
-  const playlist = useMsg(playlist$);
+  const playlist = useFlux(playlist$);
 
   const handleDurationUpdate = (index: number, newDuration: number) => {
     if (!playlist) return;

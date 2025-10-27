@@ -1,6 +1,6 @@
 import { Css } from '@common/ui';
-import { MediaModel } from '@common/api';
-import { uuid } from '@common/utils';
+import { MediaModel } from '@/api';
+import { uuid } from 'fluxio';
 import { useMemo } from 'preact/hooks';
 import { Popover, useIsOver } from './Popover';
 import { getVariants } from '@/api/getVariants';

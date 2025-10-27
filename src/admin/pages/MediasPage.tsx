@@ -13,7 +13,7 @@ import { SearchField } from '../components/SearchField';
 import { getNextTitle, uploadMedia } from '../controllers';
 import { mediaSync } from '@/api/sync';
 import { AddPlaylistItemButton, EditPlaylist } from '../components/medias/EditPlaylist';
-import { needAuthId, needGroupId, PlaylistModel } from '@common/api';
+import { needAuthId, needGroupId, PlaylistModel } from '@/api';
 import { Edit, FolderPlus, MapPlus, Play, Upload } from 'lucide-react';
 import { useIsEdit, useMediaType } from '@/router/hooks';
 import { setIsEdit, setMediaKey, setMediaType } from '@/router/setters';

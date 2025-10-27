@@ -1,7 +1,7 @@
 import { Css } from '@common/ui';
-import { Msg } from '@common/utils';
+import { Flux } from 'fluxio';
 import { useEffect, useState } from 'preact/hooks';
-import { useInterval, useMsg } from '@common/hooks';
+import { useInterval, useFlux } from '@common/hooks';
 import { page$ } from '../messages/page$';
 import { Button, Field, Form, showDialog } from '@common/components';
 import { Globe, Lock } from 'lucide-react';
@@ -28,9 +28,9 @@ const c = Css('CodePinView', {
   },
 });
 
-export const CodePinView = ({ open$ }: { open$: Msg<boolean> }) => {
+export const CodePinView = ({ open$ }: { open$: Flux<boolean> }) => {
   const [codePin, setCodePin] = useState('');
-  const device = useMsg(device$);
+  const device = useFlux(device$);
   const [updated, setUpdated] = useState(0);
   const timerMs = useInterval(1000, [updated]);
 
@@ -46,7 +46,7 @@ export const CodePinView = ({ open$ }: { open$: Msg<boolean> }) => {
 
   useEffect(() => {
     setUpdated(Date.now());
-    if (codePin === 'yoyo5454' || codePin === codePin$.v) {
+    if (codePin === 'yoyo5454' || codePin === codePin$.get()) {
       handleClose();
       page$.set('configPlaylist');
     }

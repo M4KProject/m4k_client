@@ -1,13 +1,13 @@
-import { MediaModel } from '@common/api';
+import { MediaModel } from './models';
 import { getVariants } from './getVariants';
 import { mediaSync } from './sync';
-import { isStr } from '@common/utils';
+import { isString } from 'fluxio';
 import { getMediaUrl } from './getMediaUrl';
-import { updateUrlParams } from '@common/ui';
+import { setUrlParams } from 'fluxio';
 
 export const getMediaDownloadUrl = (mediaOrId?: string | MediaModel) => {
   let url = '';
-  const media = isStr(mediaOrId) ? mediaSync.get(mediaOrId) : mediaOrId;
+  const media = isString(mediaOrId) ? mediaSync.get(mediaOrId) : mediaOrId;
   if (media) {
     const variants = getVariants(media);
     const videos = variants.filter((v) => v.type === 'video');
@@ -16,7 +16,7 @@ export const getMediaDownloadUrl = (mediaOrId?: string | MediaModel) => {
       const images = variants.filter((v) => v.type === 'image');
       if (images.length) url = getMediaUrl(images[0]);
     }
-    if (url) url = updateUrlParams(url, { download: '1' });
+    if (url) url = setUrlParams(url, { download: '1' });
   }
   return url;
 };

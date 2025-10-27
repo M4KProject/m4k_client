@@ -1,9 +1,9 @@
 import { autoScrollEnd, Css } from '@common/ui';
-import { Msg } from '@common/utils';
 import { Progress } from '@common/components';
-import { useMsg } from '@common/hooks';
+import { useFlux } from '@common/hooks';
 import { dialog$ } from '../messages/dialog$';
 import { useEffect, useRef } from 'preact/hooks';
+import { flux } from 'fluxio';
 
 const c = Css('ProgressView', {
   '': {
@@ -33,10 +33,10 @@ export interface ProgressData {
   logs: ['debug' | 'info' | 'warn' | 'error', string][];
 }
 
-const progress$ = new Msg<ProgressData | null>(null);
+const progress$ = flux<ProgressData | null>(null);
 
 progress$.on((progress) => {
-  if (progress && dialog$.v?.id !== progress.id) {
+  if (progress && dialog$.get()?.id !== progress.id) {
     dialog$.set({
       id: 'progress',
       title: progress.title,
@@ -53,7 +53,7 @@ progress$.debounce(10000).on(() => {
 
 const ProgressView = () => {
   const logsRef = useRef<HTMLDivElement>(null);
-  const progress = useMsg(progress$);
+  const progress = useFlux(progress$);
   const value = progress?.value || 0;
   const logs = progress?.logs || [];
   const step = logs[logs.length - 1];

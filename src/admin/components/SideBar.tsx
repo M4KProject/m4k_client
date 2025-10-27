@@ -5,7 +5,7 @@ import { Home, Users, Monitor, User, Zap } from 'lucide-react';
 import { MediaIcon } from './medias/MediaIcon';
 import { setGroupKey, setPage, updateRoute } from '../../router/setters';
 import { useGroup, useGroups } from '../../api/hooks';
-import { MediaType } from '@common/api';
+import { MediaType } from '@/api';
 import { useIsAdvanced, useMediaType, usePage } from '@/router/hooks';
 import { Page } from '@/router/types';
 

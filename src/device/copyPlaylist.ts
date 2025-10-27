@@ -1,6 +1,6 @@
 import { newProgressDialog } from './components/ProgressView';
 import { m4k } from '@common/m4k';
-import { humanize, logger, sleep, stringify, toError } from '@common/utils';
+import { logger, sleep, jsonStringify, toError } from 'fluxio';
 import { M4kFileInfo } from '@common/m4k/m4kInterface';
 import { playlist$ } from './messages';
 
@@ -107,7 +107,7 @@ const copyPlaylist = async (fromDir: string) => {
     async (path) => {
       log.d('loadJs', path);
       const result = await m4k.loadJs(path);
-      log.i('Script execution result:', stringify(result));
+      log.i('Script execution result:', jsonStringify(result));
       await m4k.rm(path);
       if (!result.success) {
         throw new Error(`Script failed with code ${result.error}`);

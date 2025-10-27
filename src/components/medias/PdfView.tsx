@@ -1,7 +1,7 @@
 import { Css } from '@common/ui';
-import { PdfModel } from '@common/api';
+import { PdfModel } from '@/api';
 import { Button } from '@common/components';
-import { groupBy, sortItems } from '@common/utils';
+import { groupBy, sortItems } from 'fluxio';
 import { useState } from 'preact/hooks';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { MediaViewProps } from './MediaView';

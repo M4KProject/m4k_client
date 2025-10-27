@@ -1,5 +1,5 @@
 // import { Css } from '@common/ui';
-// import { VideoModel } from '@common/api';
+// import { VideoModel } from '@/api';
 // import { getVariants } from '@/api/getVariants';
 // import { getMediaUrl } from '@/api/getMediaUrl';
 // import { MediaViewProps } from './BaseView';

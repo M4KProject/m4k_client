@@ -1,5 +1,5 @@
 import { Css } from '@common/ui';
-import { repeat } from '@common/utils';
+import { repeat } from 'fluxio';
 import { openCodePinDialog } from './CodePinView';
 
 const c = Css('Corner', {

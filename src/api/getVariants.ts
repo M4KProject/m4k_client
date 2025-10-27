@@ -1,5 +1,5 @@
-import { FileInfo, MediaModel } from '@common/api';
-import { isStrDef } from '@common/utils';
+import { FileInfo, MediaModel } from './models';
+import { isStringValid } from 'fluxio';
 
 export interface Variant extends FileInfo {
   media: MediaModel;
@@ -12,11 +12,11 @@ export const getVariants = (media?: MediaModel): Variant[] => {
   media.data?.variants?.forEach((info, i) => {
     if (!media.variants) return;
     const file = media.variants[i];
-    if (isStrDef(file) && info.mime) {
+    if (isStringValid(file) && info.mime) {
       results.push({ ...info, file, media, mime: info.mime });
     }
   });
-  if (isStrDef(media.source) && media.mime && media.type && media.bytes !== undefined) {
+  if (isStringValid(media.source) && media.mime && media.type && media.bytes !== undefined) {
     const file = media.source;
     results.push({ ...media, file, media, mime: media.mime, type: media.type, bytes: media.bytes });
   }

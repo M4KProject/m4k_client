@@ -1,8 +1,7 @@
-import { toError } from '@common/utils';
 import { useEffect, useRef } from 'preact/hooks';
-import { logger } from '@common/utils';
+import { logger } from 'fluxio';
 import { Css } from '@common/ui';
-import { useConstant, useMsg } from '@common/hooks';
+import { useConstant, useFlux } from '@common/hooks';
 import { hasVideoMuted$ } from '../messages';
 
 const log = logger('KioskVideo');
@@ -22,7 +21,7 @@ export const KioskVideo = ({
 }) => {
   const ref = useRef<HTMLVideoElement>(null);
   const el = ref.current;
-  const hasVideoMuted = useMsg(hasVideoMuted$);
+  const hasVideoMuted = useFlux(hasVideoMuted$);
 
   const tryPlay = () => {
     if (el && el.paused && !el.ended && v.isCurr) {

@@ -1,10 +1,10 @@
 import { useRef, useEffect, useMemo } from 'preact/hooks';
 import { ComponentChildren } from 'preact';
-import { Msg, uuid } from '@common/utils';
-import { useMsg } from '@common/hooks';
+import { Flux, uuid } from 'fluxio';
+import { useFlux } from '@common/hooks';
 import { Css } from '@common/ui';
 
-const over$ = new Msg('');
+const over$ = new Flux('');
 
 const c = Css('Popover', {
   '': {
@@ -46,7 +46,7 @@ const c = Css('Popover', {
   },
 });
 
-export const useIsOver = (id: string) => useMsg(over$) === id;
+export const useIsOver = (id: string) => useFlux(over$) === id;
 
 export const setIsOver = (id: string, next: boolean) =>
   next ? over$.set(id) : over$.next((p) => (p === id ? '' : p));
@@ -61,7 +61,7 @@ interface PopoverProps {
 export const Popover = ({ id, children, class: className = '', title }: PopoverProps) => {
   const overId = useMemo(() => id || uuid(), [id]);
   const floatRef = useRef<HTMLDivElement>(null);
-  const isOver = useMsg(over$) === overId;
+  const isOver = useFlux(over$) === overId;
 
   useEffect(() => {
     const el = floatRef.current;

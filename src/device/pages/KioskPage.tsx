@@ -1,13 +1,12 @@
 import { Css } from '@common/ui';
-import { toNbr } from '@common/utils';
+import { toNumber } from 'fluxio';
 import { Button } from '@common/components';
-import { usePromise, useMsg } from '@common/hooks';
+import { usePromise, useFlux } from '@common/hooks';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { openCodePinDialog } from '../components/CodePinView';
 import { device$ } from '../services/device';
 import {
   bgColor$,
-  hasVideoMuted$,
   itemAnim$,
   itemDurationMs$,
   itemFit$,
@@ -15,7 +14,7 @@ import {
   url$,
 } from '../messages';
 import { m4k } from '@common/m4k';
-import { logger } from '@common/utils';
+import { logger } from 'fluxio';
 import { KioskVideo } from '../components/KioskVideo';
 
 const log = logger('KioskPage');
@@ -105,7 +104,7 @@ const KioskItem = ({
   const isCurr = pos === 'curr';
   const isImage = !!info && info.mimeType.startsWith('image');
   const isVideo = !!info && info.mimeType.startsWith('video');
-  const duration = isImage ? toNbr(item.waitMs, itemDurationMs || 5000) : 0;
+  const duration = isImage ? toNumber(item.waitMs, itemDurationMs || 5000) : 0;
 
   useEffect(() => {
     const el = ref.current;
@@ -144,17 +143,17 @@ const KioskItem = ({
 };
 
 export const KioskPage = () => {
-  const device = useMsg(device$);
+  const device = useFlux(device$);
 
   const [open, setOpen] = useState(false);
   const [count, setCount] = useState(0);
 
-  const url = useMsg(url$);
-  const bgColor = useMsg(bgColor$).trim();
-  const playlist = useMsg(playlist$);
-  const itemDurationMs = useMsg(itemDurationMs$);
-  const itemFit = useMsg(itemFit$);
-  const itemAnim = useMsg(itemAnim$);
+  const url = useFlux(url$);
+  const bgColor = useFlux(bgColor$).trim();
+  const playlist = useFlux(playlist$);
+  const itemDurationMs = useFlux(itemDurationMs$);
+  const itemFit = useFlux(itemFit$);
+  const itemAnim = useFlux(itemAnim$);
 
   const items = playlist?.items?.filter((i) => i) || [];
   const length = items?.length || 0;
@@ -172,7 +171,7 @@ export const KioskPage = () => {
   log.d('KioskPage', { prev, curr, next, device });
 
   useEffect(() => {
-    log.d('playlist', playlist$.v);
+    log.d('playlist', playlist$.get());
   }, []);
 
   // Si un contenu est associé au device, l'afficher via ContentViewer

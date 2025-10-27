@@ -11,13 +11,15 @@ import { deviceInit } from './services/device';
 import { m4k } from '@common/m4k';
 import { DeviceApp } from './components/DeviceApp';
 import { copyDir$ } from './messages';
+import { logger } from 'fluxio';
 
-console.debug('loaded');
+const log = logger('mountDevice');
+log.d('loaded');
 
 let _rootEl: HTMLElement | null = null;
 
-export const mount = () => {
-  console.debug('mount device');
+export const mountDevice = () => {
+  log.d('mount device');
 
   addResponsiveListener();
   addAutoHideListener();
@@ -31,17 +33,17 @@ export const mount = () => {
 
   m4k.subscribe(async (e) => {
     if (e.type !== 'storage' || e.action !== 'mounted') return;
-    await copyPlaylist(`${e.path}/${copyDir$.v}`);
+    await copyPlaylist(`${e.path}/${copyDir$.get()}`);
   });
 
-  console.debug('device mounted');
-};
+  log.d('device mounted');
+  
+  return () => {
+    log.d('unmount device');
 
-export const unmount = () => {
-  console.debug('unmount device');
-
-  if (_rootEl) {
-    _rootEl.remove();
-    _rootEl = null;
-  }
+    if (_rootEl) {
+      _rootEl.remove();
+      _rootEl = null;
+    }
+  };
 };

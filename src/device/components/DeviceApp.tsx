@@ -1,7 +1,6 @@
 import { Css } from '@common/ui';
-import { useMsg } from '@common/hooks';
+import { useFlux } from '@common/hooks';
 import { device$ } from '../services/device';
-import { usePWA } from '../../serviceWorker';
 import { Side, SideButton, SideSep } from '@common/components';
 import { JSX } from 'preact';
 import { page$, PageName } from '../messages/page$';
@@ -53,20 +52,17 @@ const CompByPage: Record<PageName, () => JSX.Element> = {
 };
 
 const DeviceAppRouter = () => {
-  const page = useMsg(page$);
+  const page = useFlux(page$);
   const Page = CompByPage[page] || ActionsPage;
   return <Page />;
 };
 
 const DeviceAppContent = () => {
-  const page = useMsg(page$);
-  const device = useMsg(device$);
-
-  // Initialize PWA
-  usePWA();
+  const page = useFlux(page$);
+  const device = useFlux(device$);
 
   useEffect(() => {
-    if (!device?.group && !offlineMode$.v) {
+    if (!device?.group && !offlineMode$.get()) {
       page$.set('pairing');
     }
   }, [device]);

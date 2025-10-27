@@ -1,13 +1,11 @@
 import { Css } from '@common/ui';
-import { appGlobal, toError } from '@common/utils';
+import { getStorage, glb, toError } from 'fluxio';
 import { m4k } from '@common/m4k';
 import { usePromise } from '@common/hooks';
 import { Button } from '@common/components';
 import copyPlaylist from '../copyPlaylist';
 import { newProgressDialog } from '../components/ProgressView';
-import { clearAllCache } from '../../serviceWorker';
 import { copyDir$, url$ } from '../messages';
-import { isDevice$ } from '@/index';
 import { Apps } from '@/admin/components/Apps';
 
 const c = Css('Actions', {
@@ -45,7 +43,7 @@ const c = Css('Actions', {
 //     const infoJson = await m4k.read(infoUrl);
 //     prog(0.4, 'info', `Remote Info : "${infoJson}"`)
 
-//     const info = parse(infoJson!);
+//     const info = jsonParse(infoJson!);
 
 //     const remoteVersion = info?.version
 //     prog(0.4, 'info', `Remote Version : "${remoteVersion}"`)
@@ -119,11 +117,11 @@ const clearCacheAndReload = async () => {
   prog(0.2, 'info', 'Suppression du cache Service Worker...');
 
   try {
-    await clearAllCache();
+    getStorage().clear();
     prog(0.8, 'info', 'Cache supprimé, rechargement de la page...');
 
     setTimeout(() => {
-      appGlobal.location.reload();
+      glb.location.reload();
     }, 1000);
   } catch (e) {
     const error = toError(e);
@@ -154,7 +152,7 @@ export const ActionsPage = () => {
         </Button>
         <Button
           onClick={async () => {
-            await copyPlaylist(`@storage/${copyDir$.v}`);
+            await copyPlaylist(`@storage/${copyDir$.get()}`);
           }}
         >
           Copier la playlist locale

@@ -1,4 +1,4 @@
-import { useMsg } from '@common/hooks';
+import { useFlux } from '@common/hooks';
 import { Css } from '@common/ui';
 import { Button, LoadingSpinner } from '@common/components';
 import { device$ } from '../services/device';
@@ -52,7 +52,7 @@ const c = Css('PairingPage', {
 });
 
 export const PairingPage = () => {
-  const device = useMsg(device$);
+  const device = useFlux(device$);
   const pairingCode = device?.key || device?.id || 'Chargement...';
 
   return (

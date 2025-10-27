@@ -11,7 +11,7 @@ import {
   ChevronDown,
   ChevronRight,
 } from 'lucide-react';
-import { MediaType } from '@common/api';
+import { MediaType } from '@/api';
 import { tooltip } from '@common/components';
 
 const c = Css('MediaIcon', {

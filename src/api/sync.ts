@@ -1,8 +1,7 @@
-import { Coll, CollOptions, Where } from '@common/api/Coll';
-import { ModelBase, ModelCreate, ModelUpdate } from '@common/api/models.base';
-import { byId } from '@common/utils/by';
-import { isItemMap, isEmpty, isList, isStr } from '@common/utils/check';
-import { notImplemented } from '@common/utils/error';
+import { PbColl, PbOptions, PbWhere, PbModel, PbCreate, PbUpdate, PbAuthColl } from 'pocketbase-lite';
+import { byId, fluxDictionary, fluxStored } from 'fluxio';
+import { isDictionaryOfItem, isEmpty, isArray, isString } from 'fluxio';
+import { notImplemented } from 'fluxio/error';
 import {
   ApplicationModel,
   DeviceModel,
@@ -11,24 +10,24 @@ import {
   MediaModel,
   MemberModel,
   UserModel,
-} from '@common/api/models';
-import { IMsgReadonly } from '@common/utils/Msg';
-import { stringify } from '@common/utils/json';
-import { deepClone, getChanges } from '@common/utils/obj';
-import { TMap } from '@common/utils/types';
-import { MsgMap } from '@common/utils/MsgMap';
-import { firstUpper } from '@common/utils';
+} from './models';
+import { Flux } from 'fluxio';
+import { jsonStringify } from 'fluxio';
+import { deepClone, getChanges } from 'fluxio';
+import { Dictionary } from 'fluxio';
+import { FluxDictionary } from 'fluxio';
+import { firstUpper } from 'fluxio';
 
-export type IdOrWhere<T extends ModelBase> = string | Where<T>;
+export type IdOrWhere<T extends PbModel> = string | PbWhere<T>;
 
-const filter = <T extends ModelBase>(items: T[], where?: Where<T>, one?: boolean) => {
+const filter = <T extends PbModel>(items: T[], where?: PbWhere<T>, one?: boolean) => {
   if (isEmpty(where)) return items;
 
-  const whereList = isList(where) ? where : [where];
+  const whereList = isArray(where) ? where : [where];
 
   const filtersList = whereList.map((where) =>
     Object.entries(where || {}).map(([p, filter]) => {
-      if (isList(filter)) {
+      if (isArray(filter)) {
         const [operator, operand] = filter;
         switch (operator) {
           case '=':
@@ -70,22 +69,22 @@ const filter = <T extends ModelBase>(items: T[], where?: Where<T>, one?: boolean
   return results as T[];
 };
 
-export class Sync<T extends ModelBase> {
+export class Sync<T extends PbModel> {
   readonly log: string;
   readonly name: string;
-  readonly up$: IMsgReadonly<TMap<T>>;
-  readonly coll: Coll<T>;
+  readonly up$: Flux<Dictionary<T>>;
+  readonly coll: PbColl<T>;
 
-  private readonly cache: MsgMap<T>;
-  private readonly filterMap: TMap<IMsgReadonly<T[]>> = {};
-  private readonly findMap: TMap<IMsgReadonly<T>> = {};
+  private readonly cache: FluxDictionary<T>;
+  private readonly filterMap: Dictionary<Flux<T[]>> = {};
+  private readonly findMap: Dictionary<Flux<T>> = {};
   private isInit = false;
 
   constructor(name: string) {
     this.log = firstUpper(name).replace(/s$/, '') + 'Sync';
     this.name = name;
-    this.coll = new Coll<T>(name);
-    this.cache = new MsgMap<T>({}, name + 'Cache', true, isItemMap);
+    this.coll = new PbColl<T>(name);
+    this.cache = fluxDictionary<T>(fluxStored(name + 'Cache', {}, isDictionaryOfItem));
     this.up$ = this.cache.throttle(100);
 
     this.cache.on((next) => console.debug(this.log, 'cache next', { next }));
@@ -93,10 +92,10 @@ export class Sync<T extends ModelBase> {
   }
 
   byId() {
-    return this.cache.v;
+    return this.cache.get();
   }
 
-  filter(where?: Where<T>, one?: boolean): T[] {
+  filter(where?: PbWhere<T>, one?: boolean): T[] {
     const results = filter(this.cache.getItems(), where, one);
     console.debug(this.log, 'filter results', { where, one, results });
     return results;
@@ -105,7 +104,7 @@ export class Sync<T extends ModelBase> {
   get(where?: IdOrWhere<T>) {
     let result: T | undefined = undefined;
     if (!where) {
-    } else if (isStr(where)) result = this.cache.getItem(where);
+    } else if (isString(where)) result = this.cache.getItem(where);
     else result = this.filter(where, true)[0];
     console.debug(this.log, 'get', { where, result });
     return result;
@@ -114,11 +113,11 @@ export class Sync<T extends ModelBase> {
   async load() {
     console.debug(this.log, 'loading');
     const items = await this.coll.all();
-    const changes: TMap<T | null> = byId(items);
+    const changes: Dictionary<T | null> = byId(items);
     const prev = this.filter();
     const deletedIds = prev.filter((i) => i && !changes[i.id]).map((r) => r!.id);
     for (const id of deletedIds) changes[id] = null;
-    this.cache.update(changes as TMap<T>);
+    this.cache.update(changes as Dictionary<T>);
     console.debug(this.log, 'loaded', { items, changes, deletedIds });
   }
 
@@ -133,8 +132,8 @@ export class Sync<T extends ModelBase> {
     }
   }
 
-  filter$(where?: Where<T>): IMsgReadonly<T[]> {
-    const key = isStr(where) ? where : stringify(where);
+  filter$(where?: PbWhere<T>): Flux<T[]> {
+    const key = isString(where) ? where : jsonStringify(where);
     console.debug(this.log, 'filter$', { where, key });
     this.init();
 
@@ -146,8 +145,8 @@ export class Sync<T extends ModelBase> {
     return (cache[key] = this.up$.map(() => this.filter(where)));
   }
 
-  find$(where?: IdOrWhere<T>): IMsgReadonly<T> {
-    const key = isStr(where) ? where : stringify(where);
+  find$(where?: IdOrWhere<T>): Flux<T> {
+    const key = isString(where) ? where : jsonStringify(where);
     console.debug(this.log, 'find$', { where, key });
     this.init();
 
@@ -163,14 +162,14 @@ export class Sync<T extends ModelBase> {
     this.cache.setItem(id, item as T | undefined);
   }
 
-  async create(item: ModelCreate<T>, o?: CollOptions<T>): Promise<T> {
+  async create(item: PbCreate<T>, o?: PbOptions<T>): Promise<T> {
     console.debug(this.log, 'create', item, o);
     const result = await this.coll.create(item, o);
     this.set(result.id, result);
     return result;
   }
 
-  async update(id: string, changes: ModelUpdate<T>, o?: CollOptions<T>): Promise<T | null> {
+  async update(id: string, changes: PbUpdate<T>, o?: PbOptions<T>): Promise<T | null> {
     console.debug(this.log, 'update', id, changes, o);
     const prev = this.get(id);
     if (!prev) return null;
@@ -186,7 +185,7 @@ export class Sync<T extends ModelBase> {
     }
   }
 
-  async apply(id: string, cb: (next: T) => void, o?: CollOptions<T>): Promise<T | null> {
+  async apply(id: string, cb: (next: T) => void, o?: PbOptions<T>): Promise<T | null> {
     console.debug(this.log, 'apply', id, o);
     const prev = this.get(id);
     if (!prev) return null;
@@ -196,7 +195,7 @@ export class Sync<T extends ModelBase> {
     if (isEmpty(changes)) return prev;
     this.set(id, next);
     try {
-      const result = await this.coll.update(id, changes as ModelUpdate<T>, o);
+      const result = await this.coll.update(id, changes as PbUpdate<T>, o);
       const next2 = { ...next, ...result } as T;
       this.set(id, next2);
       return next2;
@@ -206,7 +205,7 @@ export class Sync<T extends ModelBase> {
     }
   }
 
-  async delete(id: string, o?: CollOptions<T>): Promise<void> {
+  async delete(id: string, o?: PbOptions<T>): Promise<void> {
     console.debug(this.log, 'delete', id, o);
     const prev = this.get(id);
     this.set(id, null);
@@ -219,13 +218,14 @@ export class Sync<T extends ModelBase> {
   }
 }
 
-export const sync = <T extends ModelBase>(name: string) => new Sync<T>(name);
+export const sync = <T extends PbModel>(name: string) => new Sync<T>(name);
 
 export const deviceSync = sync<DeviceModel>('devices');
 export const groupSync = sync<GroupModel>('groups');
 export const jobSync = sync<JobModel>('jobs');
 export const mediaSync = sync<MediaModel>('medias');
 export const memberSync = sync<MemberModel>('members');
-export const userSync = sync<UserModel>('users');
+// export const userSync = sync<UserModel>('users');
 
-export const applicationsColl = new Coll<ApplicationModel>('applications');
+export const applicationColl = new PbColl<ApplicationModel>('applications');
+export const userColl = new PbAuthColl<UserModel>('users');

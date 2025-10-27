@@ -2,9 +2,10 @@ import { Plus } from 'lucide-react';
 import { Button, Page, Toolbar, PageBody, tooltip } from '@common/components';
 import { Css, getColor } from '@common/ui';
 import { SearchField } from '../components/SearchField';
-import { Role, apiAuth$ } from '@common/api';
+import { Role } from '@/api';
 import { groupSync, memberSync } from '@/api/sync';
 import { GroupGrid } from '../components/GroupGrid';
+import { getPbClient } from 'pocketbase-lite';
 
 const c = Css('GroupsPage', {
   Color: {
@@ -20,7 +21,7 @@ export const Color = ({ color }: { color: string }) => (
 
 export const GroupsPage = () => {
   const handleAdd = async () => {
-    const auth = apiAuth$.v;
+    const auth = getPbClient().getAuth();
     if (!auth) return;
     const group = await groupSync.create({ name: 'Nouveau Groupe', user: auth.id });
     if (group) {

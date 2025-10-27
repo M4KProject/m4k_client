@@ -15,8 +15,7 @@
   },
   "dependencies": {
     "lucide-react": "^0.542.0",
-    "preact": "^10.26.9",
-    "workbox-window": "^7.3.0"
+    "preact": "^10.26.9"
   },
   "devDependencies": {
     "@babel/core": "^7.28.4",

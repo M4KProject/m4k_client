@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'preact/hooks';
-import { Css, updateUrlParams } from '@common/ui';
-import { AuthForm, Button } from '@common/components';
+import { Css } from '@common/ui';
+import { Button } from '@common/components';
 import { Download } from 'lucide-react';
-import { applicationsColl } from '../../api/sync';
-import { ApplicationModel } from '@common/api';
-import { sortItems } from '@common/utils';
+import { ApplicationModel, applicationColl } from '@/api';
+import { sortItems } from 'fluxio';
 import { m4k } from '@common/m4k';
 
 const c = Css('Apps', {
@@ -41,7 +40,7 @@ export const AppButton = ({
   file: string;
   filename: string;
 }) => {
-  const url = applicationsColl.getDownloadUrl(id, file);
+  const url = applicationColl.getDownloadUrl(id, file);
   return (
     <Button
       class={c('AppButton')}
@@ -64,7 +63,7 @@ export const Apps = () => {
   const [applications, setApplications] = useState<ApplicationModel[]>([]);
 
   useEffect(() => {
-    applicationsColl.all({ where: { active: true } }).then(setApplications);
+    applicationColl.all({ active: true }).then(setApplications);
   }, []);
 
   sortItems(applications, (a) => (a.name || '') + a.version);

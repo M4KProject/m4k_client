@@ -1,13 +1,13 @@
 import { Css } from '@common/ui';
-import { byId, groupBy, MsgMap, sortItems } from '@common/utils';
-import { addTr, useMsg } from '@common/hooks';
-import { MediaModel } from '@common/api';
+import { byId, groupBy, FluxDictionary, sortItems } from 'fluxio';
+import { addTr, useFlux } from '@common/hooks';
+import { MediaModel } from '@/api';
 import { Grid, GridCols } from '@common/components';
 import { JobGrid } from '../jobs/JobGrid';
 import { selectedById$ } from '@/admin/controllers/selected';
 import { useGroupMedias } from '@/api/hooks';
 import { useIsAdvanced } from '@/router/hooks';
-import { TMap, isPositive, round } from '@common/utils';
+import { Dictionary, isPositive, round } from 'fluxio';
 import { Trash2, FolderInput, PlusSquare, Edit, Eye, Download } from 'lucide-react';
 import { tooltip, Button, Field } from '@common/components';
 import { SelectedField } from '../SelectedField';
@@ -162,7 +162,7 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
   ],
 };
 
-const openById$ = new MsgMap<boolean>({});
+const openById$ = new FluxDictionary<boolean>({});
 
 export const getMediasByParent = (medias: MediaModel[]) => {
   const mediaById = byId(medias);
@@ -181,14 +181,14 @@ export const getMediasByParent = (medias: MediaModel[]) => {
 
 export const MediaTable = ({ type }: { type?: MediaModel['type'] }) => {
   const medias = useGroupMedias(type);
-  const openById = useMsg(openById$);
+  const openById = useFlux(openById$);
   const isAdvanced = useIsAdvanced();
-  const allSelectedById = useMsg(selectedById$);
+  const allSelectedById = useFlux(selectedById$);
   const mediaById = byId(medias);
   const mediasByParent = useMemo(() => getMediasByParent(medias), [medias]);
   const selectedIds = Object.keys(allSelectedById).filter((id) => id && mediaById[id]);
 
-  const tabById: TMap<number> = {};
+  const tabById: Dictionary<number> = {};
   const rootMedias = mediasByParent[''] || [];
 
   const items: MediaModel[] = [];

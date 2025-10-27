@@ -1,8 +1,6 @@
 import { addListener, Css } from '@common/ui';
 import { DivProps } from '@common/components';
-import { useRef, useEffect, useState, useMemo } from 'preact/hooks';
-import { clamp } from '@common/utils';
-import { useConstant } from '@common/hooks';
+import { useRef, useEffect, useState } from 'preact/hooks';
 
 const c = Css('PanZoom', {
   '': {

@@ -1,4 +1,4 @@
-import { MediaModel, PlaylistModel } from '@common/api';
+import { JobModel, MediaModel, needAuthId, needGroupId, PlaylistModel } from '@/api';
 import { mediaSync } from '@/api/sync';
 import {
   deepClone,
@@ -6,16 +6,13 @@ import {
   groupBy,
   isEmpty,
   isItem,
-  isList,
+  isArray,
   sortItems,
   uniq,
-} from '@common/utils';
-import { uuid } from '../../../common/utils/str';
-import { needGroupId } from '../../../common/api/messages';
-import { JobModel } from '../../../common/api/models';
-import { toError } from '../../../common/utils/cast';
-import { MsgMap } from '@common/utils';
-import { needAuthId } from '../../../common/api/apiReq';
+  fluxDictionary,
+  toError,
+  uuid,
+} from 'fluxio';
 
 const MAX_CONCURRENT_UPLOADS = 3;
 
@@ -25,7 +22,7 @@ export interface UploadItem extends JobModel {
   playlist?: MediaModel;
 }
 
-export const uploadMediaJobs$ = new MsgMap<UploadItem>({});
+export const uploadMediaJobs$ = fluxDictionary<UploadItem>();
 
 const update = (id: string, changes: Partial<UploadItem>) => {
   changes.updated = new Date();
@@ -94,7 +91,7 @@ const startUploadMedia = async (item: UploadItem) => {
 
 const processQueue = async () => {
   while (true) {
-    const items = Object.values(uploadMediaJobs$.v);
+    const items = Object.values(uploadMediaJobs$.get());
     if (items.filter((i) => i.status === 'processing').length >= MAX_CONCURRENT_UPLOADS) {
       return;
     }
@@ -152,7 +149,7 @@ const cleanPlaylist = (next: PlaylistModel) => {
   if (!isItem(next.data)) next.data = {};
   const data = next.data;
 
-  if (!isList(data.items)) data.items = [];
+  if (!isArray(data.items)) data.items = [];
   data.items = data.items.filter(isItem);
   const items = data.items;
 

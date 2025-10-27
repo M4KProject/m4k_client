@@ -1,4 +1,4 @@
-import { useMsg } from '@common/hooks/useMsg';
+import { useFlux } from '@common/hooks/useFlux';
 import {
   route$,
   page$,
@@ -9,18 +9,18 @@ import {
   mediaKey$,
   groupKey$,
   deviceKey$,
-} from './msgs';
+} from './flux';
 
-export const useRoute = () => useMsg(route$);
+export const useRoute = () => useFlux(route$);
 
-export const usePage = () => useMsg(page$);
+export const usePage = () => useFlux(page$);
 
-export const useIsEdit = () => useMsg(isEdit$);
-export const useIsAdmin = () => useMsg(isAdmin$);
-export const useIsAdvanced = () => useMsg(isAdvanced$);
+export const useIsEdit = () => useFlux(isEdit$);
+export const useIsAdmin = () => useFlux(isAdmin$);
+export const useIsAdvanced = () => useFlux(isAdvanced$);
 
-export const useMediaType = () => useMsg(mediaType$);
+export const useMediaType = () => useFlux(mediaType$);
 
-export const useMediaKey = () => useMsg(mediaKey$);
-export const useGroupKey = () => useMsg(groupKey$);
-export const useDeviceKey = () => useMsg(deviceKey$);
+export const useMediaKey = () => useFlux(mediaKey$);
+export const useGroupKey = () => useFlux(groupKey$);
+export const useDeviceKey = () => useFlux(deviceKey$);

@@ -1,5 +1,5 @@
 import { Css } from '@common/ui';
-import { ImageModel } from '@common/api';
+import { ImageModel } from '@/api';
 import { MediaViewProps } from './MediaView';
 import { getVariants } from '@/api/getVariants';
 import { getMediaUrl } from '@/api/getMediaUrl';

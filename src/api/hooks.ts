@@ -1,32 +1,26 @@
-import { groupId$ } from '@common/api/messages';
-import { Where } from '@common/api/Coll';
-import {
-  GroupModel,
-  GroupModelBase,
-  KeyModelBase,
-  MediaModel,
-  ModelBase,
-} from '@common/api/models';
-import { useMsg } from '@common/hooks';
-import { deviceSync, groupSync, jobSync, mediaSync, memberSync, Sync } from '@/api/sync';
-import { useDeviceKey, useGroupKey, useMediaKey, useIsAdvanced } from '@/router/hooks';
+import { groupId$ } from './groupId$';
+import { GroupModel, MediaModel } from './models';
+import { useFlux } from '@common/hooks';
+import { deviceSync, groupSync, jobSync, mediaSync, memberSync, Sync } from './sync';
+import { useDeviceKey, useGroupKey, useMediaKey, useIsAdvanced } from '../router/hooks';
 import { useMemo } from 'preact/hooks';
+import { PbModel, PbWhere } from 'pocketbase-lite';
 
-const useItemKey = <T extends KeyModelBase>(sync: Sync<T>, key?: string): T | undefined =>
-  useMsg(key ? sync.find$({ key }) : undefined) as T | undefined;
+const useItemKey = <T extends PbModel & { key?: string }>(sync: Sync<T>, key?: string): T | undefined =>
+  useFlux(key ? sync.find$({ key }) : undefined) as T | undefined;
 
-const useItems = <T extends ModelBase>(sync: Sync<T>, whereOrId?: Where<T>): T[] => {
-  const items = useMsg(sync.filter$(whereOrId));
+const useItems = <T extends PbModel>(sync: Sync<T>, whereOrId?: PbWhere<T>): T[] => {
+  const items = useFlux(sync.filter$(whereOrId));
   return items || [];
 };
 
-const useGroupItems = <T extends GroupModelBase>(sync: Sync<T>, where?: Where<T>): T[] => {
-  const group = useMsg(groupId$);
-  const items = useMsg(sync.filter$(group ? ({ ...where, group } as Where<T>) : where));
+const useGroupItems = <T extends PbModel & { group?: string }>(sync: Sync<T>, where?: PbWhere<T>): T[] => {
+  const group = useFlux(groupId$);
+  const items = useFlux(sync.filter$(group ? ({ ...where, group } as PbWhere<T>) : where));
   return items || [];
 };
 
-const useById = <T extends ModelBase>(sync: Sync<T>, _where?: Where<T>) => useMsg(sync.up$);
+const useById = <T extends PbModel>(sync: Sync<T>, _where?: PbWhere<T>) => useFlux(sync.up$);
 
 export const useDevice = () => useItemKey(deviceSync, useDeviceKey());
 export const useMedia = () => useItemKey(mediaSync, useMediaKey());

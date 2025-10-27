@@ -1,6 +1,6 @@
 import { useState } from 'preact/hooks';
 import { m4k } from '@common/m4k';
-import { logger, randHex, stringify, toError, truncate, withTimeout } from '@common/utils';
+import { logger, randHex, jsonStringify, toError, truncate, withTimeout } from 'fluxio';
 import { Button, Field, Form, Grid, Page, PageBody, Toolbar } from '@common/components';
 import { GridCols } from '@common/components/Grid';
 import { Play } from 'lucide-react';
@@ -245,12 +245,12 @@ export const TestPage = () => {
           <Field
             label="Résultat"
             type="multiline"
-            value={stringify(result, undefined, 2) || String(result)}
+            value={jsonStringify(result) || String(result)}
           />
           <Field
             label="Valeur"
             type="multiline"
-            value={stringify(result?.value, undefined, 2) || String(result?.value)}
+            value={jsonStringify(result?.value) || String(result?.value)}
           />
           <Button onClick={handleExec}>Executer</Button>
         </Form>

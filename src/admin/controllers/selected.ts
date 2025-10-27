@@ -1,5 +1,5 @@
-import { TMap, MsgMap } from '@common/utils';
+import { Dictionary, FluxDictionary } from 'fluxio';
 
-export const selectedById$ = new MsgMap<boolean>({});
+export const selectedById$ = new FluxDictionary<boolean>({});
 
-export const updateSelected = (changes: TMap<boolean>) => selectedById$.update(changes);
+export const updateSelected = (changes: Dictionary<boolean>) => selectedById$.update(changes);

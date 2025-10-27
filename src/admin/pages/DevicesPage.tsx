@@ -1,6 +1,6 @@
 import { Css } from '@common/ui';
-import { formatDate, formatDateTime, stringify, toDate, toError, toTime } from '@common/utils';
-import { useMsg } from '@common/hooks';
+import { jsonStringify, toDate, toError, toTime } from 'fluxio';
+import { useFlux } from '@common/hooks';
 import {
   Button,
   Field,
@@ -15,12 +15,14 @@ import {
 import { GridCols } from '@common/components/Grid';
 import { RefreshCw, Trash2, Settings, Plus, Power } from 'lucide-react';
 import { useState } from 'preact/hooks';
-import { apiGet, serverTime, DeviceModel, groupId$, MediaModel } from '@common/api';
+import { DeviceModel, groupId$, MediaModel } from '@/api';
 import { SearchField } from '../components/SearchField';
 import { deviceSync } from '@/api/sync';
 import { setDeviceKey, setPage } from '../../router/setters';
 import { useIsAdvanced } from '@/router/hooks';
 import { useGroupDevices, useGroupMedias } from '@/api/hooks';
+import { formatDate, formatDateTime } from '@common/utils/date';
+import { getPbClient } from 'pocketbase-lite';
 
 const c = Css('DevicesPage', {
   Buttons: {
@@ -53,7 +55,7 @@ const deviceCols: GridCols<
     'Type',
     (d) => (
       <Field
-        {...tooltip(() => stringify(d.info))}
+        {...tooltip(() => jsonStringify(d.info))}
         value={`${d.info?.type || ''} ${d.info?.version || ''}`}
         readonly
       />
@@ -128,7 +130,7 @@ const deviceCols: GridCols<
 
 export const PairingForm = ({ onClose }: { onClose: () => void }) => {
   const [key, setKey] = useState('');
-  const group = useMsg(groupId$);
+  const group = useFlux(groupId$);
 
   const handlePairing = async () => {
     if (!key) return;
@@ -137,7 +139,7 @@ export const PairingForm = ({ onClose }: { onClose: () => void }) => {
 
     try {
       console.log('Tentative de pairage avec le code:', cleanKey);
-      await apiGet(`pair/${cleanKey}/${group}`);
+      await getPbClient().req('GET', `pair/${cleanKey}/${group}`);
       onClose();
     } catch (e) {
       const error = toError(e);
@@ -164,7 +166,7 @@ export const DevicesPage = () => {
 
   // search ? devices.filter((d) => isSearched(d.name, search)) : devices;
 
-  const onlineMin = serverTime() - 10 * 1000;
+  const onlineMin = getPbClient().serverTime() - 10 * 1000;
 
   const handleAdd = async () => {
     showDialog('Pairer un nouvel écran', (open$) => {

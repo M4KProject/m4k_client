@@ -1,5 +1,5 @@
 // import { useEffect, useRef, useState } from 'react';
-// import { autoScrollEnd, Css,  stringify } from '@common/utils';
+// import { autoScrollEnd, Css,  jsonStringify } from 'fluxio';
 // import { Button, Div } from '@common/components';
 // import { m4k, M4kLog } from '@common/m4k';
 //
@@ -9,7 +9,7 @@
 //     switch (type) {
 //         case 'function': return String(value);
 //         case 'undefined': return 'undefined';
-//         case 'object': return stringify(value);
+//         case 'object': return jsonStringify(value);
 //         case 'string': return '"' + String(value).split('\n').join('\\n') + '"';
 //     }
 //     return `${value}(${type})`;
@@ -64,7 +64,7 @@
 //         const timer = setInterval(async () => {
 //             if (!isLoad) return;
 //             const newLogs = await m4k.popLogs(20);
-//             if (!isList(newLogs)) return;
+//             if (!isArray(newLogs)) return;
 //             setLogs(logs => {
 //                 const next = [ ...logs, ...newLogs ];
 //                 if (next.length > 200) next.splice(0, next.length-10);

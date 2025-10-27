@@ -1,7 +1,7 @@
 import { Route } from './types';
-import { route$ } from './msgs';
+import { route$ } from './flux';
 
-export const getRoute = () => route$.v;
+export const getRoute = () => route$.get();
 
 const getter =
   <K extends keyof Route>(prop: K) =>

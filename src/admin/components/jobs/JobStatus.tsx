@@ -1,9 +1,9 @@
 import { Css } from '@common/ui';
 import { addTr } from '@common/hooks';
 import { Tr, Progress } from '@common/components';
-import { JobModel } from '@common/api';
+import { JobModel } from '@/api';
 import { Play, Square, AlertCircle, CheckCircle, Clock } from 'lucide-react';
-import { TMap } from '@common/utils/types';
+import { Dictionary } from 'fluxio';
 
 const c = Css('JobStatus', {
   '': {
@@ -31,7 +31,7 @@ addTr({
   deleted: 'Supprimé',
 });
 
-const statusIcons: TMap<typeof Clock> = {
+const statusIcons: Dictionary<typeof Clock> = {
   pending: Clock,
   processing: Play,
   finished: CheckCircle,

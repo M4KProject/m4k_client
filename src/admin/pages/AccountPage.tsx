@@ -3,15 +3,15 @@ import { Page, PageBody, Toolbar, tooltip } from '@common/components';
 import { Button } from '@common/components';
 import { Form } from '@common/components';
 import { Field } from '@common/components';
-import { useMsg } from '@common/hooks';
+import { useFlux } from '@common/hooks';
 import { LogOut, KeyRound } from 'lucide-react';
 import { useState } from 'preact/hooks';
 import { LoadingPage } from './LoadingPage';
-import { apiAuth$, authLogout } from '@common/api';
-import { userSync } from '@/api/sync';
 import { useIsAdvanced } from '@/router/hooks';
 import { setIsAdvanced } from '@/router/setters';
 import { Branding } from '@/device/components/Branding';
+import { getPbClient } from 'pocketbase-lite';
+import { userColl } from '@/api';
 
 const c = Css('AccountPage', {
   Color: {
@@ -26,8 +26,8 @@ export const Color = ({ color }: { color: string }) => (
 );
 
 export const AccountPage = () => {
-  const theme = useMsg(theme$);
-  const auth = useMsg(apiAuth$);
+  const theme = useFlux(theme$);
+  const auth = useFlux(getPbClient().auth$);
   const [passwordError, setPasswordError] = useState('');
   const [password, setPassword] = useState('');
   const [oldPassword, setOldPassword] = useState('');
@@ -37,7 +37,7 @@ export const AccountPage = () => {
 
   const handleUpdatePassword = async () => {
     try {
-      await userSync.update(auth.id, { oldPassword, password, passwordConfirm: password });
+      await userColl.update(auth.id, { oldPassword, password, passwordConfirm: password });
       setPasswordError('');
       setPassword('');
     } catch (_error) {
@@ -48,7 +48,7 @@ export const AccountPage = () => {
   return (
     <Page class={c()}>
       <Toolbar title="Account">
-        <Button color="primary" title="Deconnexion" icon={<LogOut />} onClick={authLogout} />
+        <Button color="primary" title="Deconnexion" icon={<LogOut />} onClick={() => getPbClient().logout()} />
         <Button
           color="primary"
           title="Changer de mot de passe"

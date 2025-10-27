@@ -1,7 +1,7 @@
 import { Css } from '@common/ui';
-import { MediaAnim, MediaFit, MediaModel } from '@common/api';
+import { MediaAnim, MediaFit, MediaModel } from '@/api';
 import { DivProps } from '@common/components';
-import { TMap } from '@common/utils';
+import { Dictionary } from 'fluxio';
 import { JSX } from 'preact';
 
 const c = Css('MediaView', {
@@ -39,7 +39,7 @@ const c = Css('MediaView', {
 
 export interface MediaViewProps<T extends MediaModel = any> {
   media: T;
-  mediaById: TMap<MediaModel>;
+  mediaById: Dictionary<MediaModel>;
   fit?: MediaFit;
   anim?: MediaAnim;
   seconds?: number;

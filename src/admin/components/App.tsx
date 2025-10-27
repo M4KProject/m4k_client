@@ -1,7 +1,6 @@
 import { SideBar } from './SideBar';
 import { Css, updateTheme } from '@common/ui';
-import { useMsg } from '@common/hooks';
-import { usePWA } from '../../serviceWorker';
+import { useFlux } from '@common/hooks';
 import { JSX } from 'preact';
 import { GroupsPage } from '../pages/GroupsPage';
 import { MembersPage } from '../pages/MembersPage';
@@ -11,11 +10,12 @@ import { DevicesPage } from '../pages/DevicesPage';
 import { AuthPage } from '../pages/AuthPage';
 import { AccountPage } from '../pages/AccountPage';
 import { useEffect } from 'preact/hooks';
-import { apiAuth$, groupId$ } from '@common/api';
+import { groupId$ } from '@/api';
 import { Page } from '@/router/types';
 import { useGroupKey, usePage } from '@/router/hooks';
 import { useGroup } from '@/api/hooks';
 import { Errors } from './Errors';
+import { getPbClient } from 'pocketbase-lite';
 
 const c = Css('App', {
   '': {
@@ -55,11 +55,8 @@ const AppRouter = () => {
 };
 
 const AppContent = () => {
-  const auth = useMsg(apiAuth$);
-
-  // Initialize PWA
-  usePWA();
-
+  const auth = useFlux(getPbClient().auth$);
+  
   // console.debug("AppContent", { c, auth });
   if (!auth) {
     return <AuthPage />;

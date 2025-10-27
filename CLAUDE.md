@@ -40,7 +40,7 @@ This is a multi-interface content management system with three main applications
 - **Language**: TypeScript with comprehensive type checking and JSX
 - **PWA**: Vite PWA plugin with Workbox for offline-first architecture (disabled in APK mode)
 - **Styling**: Custom CSS-in-JS system using `useCss(componentName, css)` hook with `Css` type objects
-- **State Management**: Custom message-based reactive system (`Msg<T>` class with `useMsg` hook and localStorage persistence)
+- **State Management**: Custom message-based reactive system (`Flux<T>` class with `useFlux` hook and localStorage persistence)
 - **Routing**: Custom router with lazy loading, pattern matching, and multi-app support
 - **Data Layer**: Collection-based API with TypeScript models, authentication, and real-time updates
 - **Build Modes**: Dual build system - PWA mode for web deployment, APK mode for single-file Android packaging
@@ -89,7 +89,7 @@ The application is split into three main interfaces:
 ### Shared Dependencies
 
 - References `@common` shared library via path alias (`../common`)
-- Uses `@common/api`, `@common/utils`, `@common/hooks`, and `@common/components`
+- Uses `@common/api`, `fluxio`, `@common/hooks`, and `@common/components`
 - React compatibility layer for Preact (`react` and `react-dom` aliases point to `preact/compat`)
 
 ### Path Aliases
@@ -132,8 +132,8 @@ Uses a custom reactive messaging system with persistent storage:
 **Message Creation Pattern:**
 
 ```typescript
-export const message$ = new Msg<Type>(defaultValue, 'storageKey', persist?, validator?);
-const value = useMsg(message$); // Auto-reactive in components
+export const message$ = fluxStored<Type>(defaultValue, 'storageKey', persist?, validator?);
+const value = useFlux(message$); // Auto-reactive in components
 message$.set(newValue); // Update from anywhere
 ```
 
@@ -301,7 +301,7 @@ Models are generated in `common/api/models.generated.ts` from backend schema:
 
 ```typescript
 // Authentication pattern
-const auth = useMsg(auth$); // { id, email, token, ...UserModel }
+const auth = useFlux(auth$); // { id, email, token, ...UserModel }
 if (!auth) {
   // Redirect to login or show auth UI
   return <AuthPage />;
@@ -331,7 +331,7 @@ if (!auth) {
 
 ```typescript
 
-import { Css } from '@common/utils';
+import { Css } from 'fluxio';
 import { Button } from '@common/components';
 
 const c = Css('', {

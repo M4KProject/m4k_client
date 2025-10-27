@@ -1,4 +1,4 @@
-import { Msg } from '@common/utils/Msg';
+import { flux } from 'fluxio';
 import { JSX } from 'preact';
 
 export interface DialogOptions {
@@ -8,7 +8,7 @@ export interface DialogOptions {
   onClose?: () => void;
 }
 
-export const dialog$ = new Msg<DialogOptions | null>(null);
+export const dialog$ = flux<DialogOptions | null>(null);
 
 export const showDialog = (
   title: string,

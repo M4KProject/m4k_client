@@ -1,6 +1,6 @@
 import { Css } from '@common/ui';
 import { Button, Field } from '@common/components';
-import { DeviceModel } from '@common/api';
+import { DeviceModel } from '@/api';
 import { useState } from 'preact/hooks';
 import { Send, RefreshCw, FileJson } from 'lucide-react';
 

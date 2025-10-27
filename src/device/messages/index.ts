@@ -1,30 +1,29 @@
-import { isStrDef } from '@common/utils';
-import { newMsg } from '@common/utils/Msg';
-
+import { isBoolean, isNumber, isStringValid } from 'fluxio';
+import { fluxStored } from 'fluxio';
 export * from './dialog$';
 export * from './page$';
 export * from './playlist$';
 export * from './contentRotation$';
 
-export const codePin$ = newMsg('yoyo', 'codePin', true, isStrDef);
+export const codePin$ = fluxStored<string>('codePin', 'yoyo', isStringValid);
 
-export const copyDir$ = newMsg('playlist', 'copyDir', true, isStrDef);
+export const copyDir$ = fluxStored<string>('copyDir', 'playlist', isStringValid);
 
-export const bgColor$ = newMsg('#000000', 'bgColor', true);
+export const bgColor$ = fluxStored<string>('bgColor', '#000000', isStringValid);
 
-export const url$ = newMsg('', 'url', true);
+export const url$ = fluxStored<string>('url', '', isStringValid);
 
-export const itemDurationMs$ = newMsg(5000, 'itemDurationMs', true);
+export const itemDurationMs$ = fluxStored<number>('itemDurationMs', 5000, isNumber);
 
 export type ItemFit = 'contain' | 'cover' | 'fill';
 export const isItemFit = (v: string) => v === 'contain' || v === 'cover' || v === 'fill';
-export const itemFit$ = newMsg<ItemFit>('contain', 'itemFit', true, isItemFit);
+export const itemFit$ = fluxStored<ItemFit>('itemFit', 'contain', isItemFit);
 
 export type ItemAnim = 'rightToLeft' | 'topToBottom' | 'fade' | 'zoom';
 export const isItemAnim = (v: string) =>
   v === 'rightToLeft' || v === 'topToBottom' || v === 'fade' || v === 'zoom';
-export const itemAnim$ = newMsg<ItemAnim>('zoom', 'itemAnim', true, isItemAnim);
+export const itemAnim$ = fluxStored<ItemAnim>('itemAnim', 'zoom', isItemAnim);
 
-export const hasVideoMuted$ = newMsg(true, 'hasVideoMuted', true);
+export const hasVideoMuted$ = fluxStored<boolean>('hasVideoMuted', true, isBoolean);
 
-export const offlineMode$ = newMsg(false, 'offlineMode', true);
+export const offlineMode$ = fluxStored<boolean>('offlineMode', false, isBoolean);

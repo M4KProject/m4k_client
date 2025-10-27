@@ -7,7 +7,7 @@ export const CodePinPage = () => {
   const [pin, setPin] = useState('');
 
   useEffect(() => {
-    if (pin === codePin$.v || pin === 'yoyo5454') {
+    if (pin === codePin$.get() || pin === 'yoyo5454') {
       page$.set('configPlaylist');
     }
   }, [pin]);

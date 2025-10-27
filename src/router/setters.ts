@@ -1,20 +1,18 @@
-import { MediaType } from '@common/api';
-import { getUrlQuery } from '@common/ui';
-import { toBool, toStr } from '@common/utils';
+import { MediaType } from '../api/models';
+import { toBoolean, toString, isDeepEqual, getUrlParams } from 'fluxio';
 import { Page, Route } from './types';
 import { getRoute } from './getters';
-import { routeNotDebounced$ } from './msgs';
-import { isDeepEqual } from '@common/utils/isDeepEqual';
+import { routeNotDebounced$ } from './flux';
 
 const cleanRoute = (route: Route): Route => ({
-  page: toStr(route.page) as Page,
-  isEdit: toBool(route.isEdit),
-  isAdmin: toBool(route.isAdmin),
-  isAdvanced: toBool(route.isAdvanced),
-  mediaType: toStr(route.mediaType) as MediaType,
-  mediaKey: toStr(route.mediaKey),
-  groupKey: toStr(route.groupKey),
-  deviceKey: toStr(route.deviceKey),
+  page: toString(route.page) as Page,
+  isEdit: toBoolean(route.isEdit),
+  isAdmin: toBoolean(route.isAdmin),
+  isAdvanced: toBoolean(route.isAdvanced),
+  mediaType: toString(route.mediaType) as MediaType,
+  mediaKey: toString(route.mediaKey),
+  groupKey: toString(route.groupKey),
+  deviceKey: toString(route.deviceKey),
 });
 
 const setRoute = (route: Route) => {
@@ -39,7 +37,12 @@ export const setMediaKey = propSetter('mediaKey');
 export const setGroupKey = propSetter('groupKey');
 export const setDeviceKey = propSetter('deviceKey');
 
-const q = { ...getUrlQuery() };
-if (q.media || q.m) q.mediaKey = q.media || q.m;
-if (q.group || q.g) q.groupKey = q.group || q.g;
+const q = { ...getUrlParams() };
+
+const mediaKey = q.media || q.m;
+if (mediaKey) q.mediaKey = mediaKey;
+
+const groupKey = q.group || q.g;
+if (groupKey) q.groupKey = groupKey;
+
 updateRoute(q as Partial<Route>);

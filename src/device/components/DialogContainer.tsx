@@ -1,5 +1,5 @@
 import { Css } from '@common/ui';
-import { useMsg } from '@common/hooks';
+import { useFlux } from '@common/hooks';
 import { dialog$ } from '../messages/dialog$';
 
 const c = Css('DialogContainer', {
@@ -34,7 +34,7 @@ const c = Css('DialogContainer', {
 });
 
 export const DialogContainer = () => {
-  const dialog = useMsg(dialog$);
+  const dialog = useFlux(dialog$);
 
   if (!dialog) return null;
 

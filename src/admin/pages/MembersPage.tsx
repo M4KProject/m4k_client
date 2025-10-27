@@ -1,12 +1,11 @@
 import { Css } from '@common/ui';
-import { randKey, ReqError } from '@common/utils';
+import { randString, ReqError } from 'fluxio';
 import { Field, Button, Page, Toolbar, PageBody, showDialog, Form } from '@common/components';
 import { Plus } from 'lucide-react';
 import { useState } from 'preact/hooks';
 import { MemberGrid } from '../components/MemberGrid';
 import { SearchField } from '../components/SearchField';
-import { Role, needGroupId } from '@common/api';
-import { memberSync, userSync } from '@/api/sync';
+import { Role, needGroupId, memberSync, userColl } from '@/api';
 
 const c = Css('MembersPage', {});
 
@@ -28,7 +27,7 @@ const CreateMemberForm = ({ onClose }: { onClose: () => void }) => {
     setError('');
     try {
       if (isNew) {
-        await userSync.create({ email, password, passwordConfirm: password });
+        await userColl.create({ email, password, passwordConfirm: password });
         await memberSync.create({ email, group: needGroupId(), role: Role.editor });
       } else {
         await memberSync.create({ email, group: needGroupId(), role: Role.editor });
@@ -39,7 +38,7 @@ const CreateMemberForm = ({ onClose }: { onClose: () => void }) => {
       if (e instanceof ReqError) {
         if (e.status === 404 && !isNew) {
           setIsNewField(true);
-          setPassword(randKey(10));
+          setPassword(randString(10));
           return;
         }
       }

@@ -1,5 +1,5 @@
-import { Msg } from '@common/utils/Msg';
-import { getUrlParams } from '@common/ui/urlParams';
+import { flux } from 'fluxio';
+import { getUrlParams } from 'fluxio';
 
 export type PageName =
   | 'codePin'
@@ -14,4 +14,4 @@ export type PageName =
   | 'pairing'
   | '';
 
-export const page$ = new Msg<PageName>((getUrlParams(location.href).page as PageName) || 'kiosk');
+export const page$ = flux<PageName>((getUrlParams(location.href).page as PageName) || 'kiosk');

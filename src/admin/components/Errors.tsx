@@ -1,9 +1,9 @@
 import { Css } from '@common/ui';
-import { isItem, removeItem, ReqError, toError } from '@common/utils';
+import { isItem, removeItem, ReqError, toError } from 'fluxio';
 import { Button, tooltip, GridCols, Grid } from '@common/components';
 import { Trash2 } from 'lucide-react';
-import { apiError$ } from '@common/api';
 import { useEffect, useState } from 'preact/hooks';
+import { getPbClient } from 'pocketbase-lite';
 
 const c = Css('Errors', {
   '': {
@@ -76,7 +76,7 @@ const useErrorItems = () => {
   };
 
   useEffect(() =>
-    apiError$.on((e) => {
+    getPbClient().error$.on((e) => {
       pushItem(errorToItem(e));
     })
   );

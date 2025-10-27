@@ -1,21 +1,19 @@
 import { setCss } from '@common/ui';
-import { appGlobal, repeat } from '@common/utils';
-import { newMsg } from '@common/utils/Msg';
+import { fluxStored, glb, repeat } from 'fluxio';
 
 export type ContentRotation = 0 | 90 | 180 | 270;
 export const isContentRotation = (v: number) => v === 0 || v === 90 || v === 180 || v === 270;
-export const contentRotation$ = newMsg<0 | 90 | 180 | 270>(
-  0,
+export const contentRotation$ = fluxStored<0 | 90 | 180 | 270>(
   'contentRotation',
-  true,
+  0,
   isContentRotation
 );
 
 const applyContentRotation = () => {
-  const v = contentRotation$.v;
+  const v = contentRotation$.get();
 
-  let w = appGlobal.innerWidth;
-  let h = appGlobal.innerHeight;
+  let w = glb.innerWidth;
+  let h = glb.innerHeight;
 
   if (v === 90 || v === 270) {
     const t = w;
@@ -70,7 +68,7 @@ const resetZoom = () => {
 
 // Also listen to window resize events
 if (typeof window !== 'undefined') {
-  appGlobal.addEventListener('resize', () => {
+  glb.addEventListener('resize', () => {
     setTimeout(resetZoom, 100);
     setTimeout(applyContentRotation, 200);
   });

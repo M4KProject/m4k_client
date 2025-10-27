@@ -4,8 +4,8 @@ import { useEffect, useState } from 'preact/hooks';
 import { RefreshCw, Power, LogOut } from 'lucide-react';
 import { DeviceScreen } from '../components/devices/DeviceScreen';
 import { DeviceConsole } from '../components/devices/DeviceConsole';
-import { getUrl } from '@common/api';
-import { appGlobal, stringify } from '@common/utils';
+import { getUrl } from '@/api';
+import { glb, jsonStringify } from 'fluxio';
 import { deviceSync } from '@/api/sync';
 import { useDevice } from '@/api/hooks';
 
@@ -28,7 +28,7 @@ export const DevicePage = () => {
 
   useEffect(() => {
     if (device?.result) {
-      setConsoleOutput((p) => p + stringify(device.result) + '\n');
+      setConsoleOutput((p) => p + jsonStringify(device.result) + '\n');
     }
   }, [device?.result]);
 
@@ -58,8 +58,8 @@ export const DevicePage = () => {
   const aspectRatio = deviceWidth / deviceHeight;
 
   // Calcul de la taille d'affichage (max 80% de la fenêtre)
-  const maxWidth = appGlobal.innerWidth * 0.8;
-  const maxHeight = appGlobal.innerHeight * 0.6;
+  const maxWidth = glb.innerWidth * 0.8;
+  const maxHeight = glb.innerHeight * 0.6;
 
   let displayWidth = Math.min(maxWidth, deviceWidth * 0.5);
   let displayHeight = displayWidth / aspectRatio;

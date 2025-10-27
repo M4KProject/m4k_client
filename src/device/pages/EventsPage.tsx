@@ -1,6 +1,6 @@
 import { Page, Toolbar, PageBody } from '@common/components';
 import { Css } from '@common/ui';
-import { stringify } from '@common/utils';
+import { jsonStringify } from 'fluxio';
 import { m4k, M4kSignalEvent } from '@common/m4k';
 import { useEffect, useState } from 'preact/hooks';
 
@@ -30,7 +30,7 @@ export const EventsPage = () => {
       <Toolbar title="Liste des événements" />
       <PageBody>
         {events.map((e, i) => (
-          <pre key={i}>{stringify(e)}</pre>
+          <pre key={i}>{jsonStringify(e)}</pre>
         ))}
       </PageBody>
     </Page>

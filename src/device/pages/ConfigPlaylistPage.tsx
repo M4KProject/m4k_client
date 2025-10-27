@@ -1,5 +1,5 @@
 import { Field, Form, Page, PageBody, Toolbar } from '@common/components';
-import { useAsyncEffect, useMsgState } from '@common/hooks';
+import { useAsyncEffect, useFluxState } from '@common/hooks';
 import {
   copyDir$,
   hasVideoMuted$,
@@ -11,7 +11,7 @@ import {
   url$,
   bgColor$,
 } from '../messages';
-import { isNil, round, toBool, toNbr } from '@common/utils';
+import { isNil, round, toBoolean, toNumber } from 'fluxio';
 import { useState } from 'preact/hooks';
 import { m4k } from '@common/m4k';
 
@@ -33,7 +33,7 @@ const useBooleanSetting = (
   const [value, setValue] = useSetting(key);
 
   return [
-    toBool(value, defVal),
+    toBoolean(value, defVal),
     (next) =>
       setValue(
         isNil(next) ? null
@@ -49,19 +49,19 @@ const useNumberSetting = (
 ): [number, (next: number | null) => Promise<void>] => {
   const [value, setValue] = useSetting(key);
 
-  return [toNbr(value, defVal), (next) => setValue(isNil(next) ? null : String(next))];
+  return [toNumber(value, defVal), (next) => setValue(isNil(next) ? null : String(next))];
 };
 
 export const ConfigPlaylistPage = () => {
-  const [codePin, setCodePin] = useMsgState(codePin$);
-  const [url, setUrl] = useMsgState(url$);
-  const [bgColor, setBgColor] = useMsgState(bgColor$);
-  const [copyDir, setCopyDir] = useMsgState(copyDir$);
-  const [itemDurationMs, setItemDurationMs] = useMsgState(itemDurationMs$);
-  const [itemFit, setItemFit] = useMsgState(itemFit$);
-  const [itemAnim, setItemAnim] = useMsgState(itemAnim$);
-  const [hasVideoMuted, setHasVideoMuted] = useMsgState(hasVideoMuted$);
-  const [contentRotation, setContentRotation] = useMsgState(contentRotation$);
+  const [codePin, setCodePin] = useFluxState(codePin$);
+  const [url, setUrl] = useFluxState(url$);
+  const [bgColor, setBgColor] = useFluxState(bgColor$);
+  const [copyDir, setCopyDir] = useFluxState(copyDir$);
+  const [itemDurationMs, setItemDurationMs] = useFluxState(itemDurationMs$);
+  const [itemFit, setItemFit] = useFluxState(itemFit$);
+  const [itemAnim, setItemAnim] = useFluxState(itemAnim$);
+  const [hasVideoMuted, setHasVideoMuted] = useFluxState(hasVideoMuted$);
+  const [contentRotation, setContentRotation] = useFluxState(contentRotation$);
 
   const [isAutoPermissions, setIsAutoPermissions] = useBooleanSetting('isAutoPermissions', true);
   const [idleSeconds, setIdleSeconds] = useNumberSetting('idleSeconds', 600);
