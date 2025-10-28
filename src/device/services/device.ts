@@ -17,13 +17,13 @@ import {
 import { DeviceModel, deviceSync, userColl } from '@/api';
 import { getPbClient, PbAuth } from 'pocketbase-lite';
 
-export const deviceEmail$ = fluxStored<string>('deviceEmail', '', isString);
-export const devicePassword$ = fluxStored<string>('devicePassword', '', isString);
-export const deviceAuth$ = fluxStored<PbAuth | undefined>('deviceAuth', undefined, isItem);
-export const device$ = fluxStored<DeviceModel | null>('device', null, isItem);
-export const deviceAction$ = fluxStored<DeviceModel['action'] | undefined>('deviceAction', undefined, isItem);
+export const deviceEmail$ = fluxStored<string>('deviceEmail$', '', isString);
+export const devicePassword$ = fluxStored<string>('devicePassword$', '', isString);
+export const deviceAuth$ = fluxStored<PbAuth | undefined>('deviceAuth$', undefined, isItem);
+export const device$ = fluxStored<DeviceModel | null>('device$', null, isItem);
+export const deviceAction$ = fluxStored<DeviceModel['action'] | undefined>('deviceAction$', undefined, isItem);
 
-const serverDate = () => getPbClient().serverDate();
+const serverDate = () => getPbClient().getDate();
 
 const deviceLogin = async (): Promise<DeviceModel> => {
   let email = deviceEmail$.get();

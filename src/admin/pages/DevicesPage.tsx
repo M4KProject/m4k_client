@@ -166,7 +166,7 @@ export const DevicesPage = () => {
 
   // search ? devices.filter((d) => isSearched(d.name, search)) : devices;
 
-  const onlineMin = getPbClient().serverTime() - 10 * 1000;
+  const onlineMin = getPbClient().getTime() - 10 * 1000;
 
   const handleAdd = async () => {
     showDialog('Pairer un nouvel écran', (open$) => {

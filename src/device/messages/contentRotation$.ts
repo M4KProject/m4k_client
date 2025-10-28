@@ -4,7 +4,7 @@ import { fluxStored, glb, repeat } from 'fluxio';
 export type ContentRotation = 0 | 90 | 180 | 270;
 export const isContentRotation = (v: number) => v === 0 || v === 90 || v === 180 || v === 270;
 export const contentRotation$ = fluxStored<0 | 90 | 180 | 270>(
-  'contentRotation',
+  'contentRotation$',
   0,
   isContentRotation
 );

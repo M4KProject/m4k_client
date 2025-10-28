@@ -84,7 +84,7 @@ export class Sync<T extends PbModel> {
     this.log = firstUpper(name).replace(/s$/, '') + 'Sync';
     this.name = name;
     this.coll = new PbColl<T>(name);
-    this.cache = fluxDictionary<T>(fluxStored(name + 'Cache', {}, isDictionaryOfItem));
+    this.cache = fluxDictionary<T>(fluxStored(name + 'Cache$', {}, isDictionaryOfItem));
     this.up$ = this.cache.throttle(100);
 
     this.cache.on((next) => console.debug(this.log, 'cache next', { next }));

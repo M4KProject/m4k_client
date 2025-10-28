@@ -1,6 +1,6 @@
-import { fluxStored, isStringValid, toError } from 'fluxio';
+import { fluxStored, isString, isStringValid, toError } from 'fluxio';
 
-export const groupId$ = fluxStored<string>('groupId', '', isStringValid);
+export const groupId$ = fluxStored<string>('groupId$', '', isString);
 
 export const getGroupId = () => groupId$.get();
 

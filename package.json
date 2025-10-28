@@ -15,7 +15,8 @@
   },
   "dependencies": {
     "lucide-react": "^0.542.0",
-    "preact": "^10.26.9"
+    "preact": "^10.26.9",
+    "localforage": "^1.10.0"
   },
   "devDependencies": {
     "@babel/core": "^7.28.4",

@@ -7,4 +7,4 @@ export interface Playlist {
 
 export const isPlaylist = (playlist: Playlist) => isItem(playlist) && isItems(playlist.items);
 
-export const playlist$ = fluxStored<Playlist>('playlist', { items: [] }, isPlaylist);
+export const playlist$ = fluxStored<Playlist>('playlist$', { items: [] }, isPlaylist);

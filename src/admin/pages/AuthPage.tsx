@@ -1,11 +1,12 @@
 import { useState } from 'preact/hooks';
 import { Css } from '@common/ui';
-import { AuthForm, Button } from '@common/components';
+import { Button } from '@common/components';
 import logoUrl from '@/assets/logo.svg';
 import loginUrl from '@/assets/login.svg';
 import { Download, Monitor } from 'lucide-react';
 import { Apps } from '../components/Apps';
-import { isDevice$ } from '@/index';
+import { isDevice$ } from '@/router';
+import { AuthForm } from '@/components/AuthForm';
 
 const c = Css('AuthPage', {
   '': {

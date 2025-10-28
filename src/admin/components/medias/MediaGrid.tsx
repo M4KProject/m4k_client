@@ -1,5 +1,5 @@
 import { Css } from '@common/ui';
-import { byId, groupBy, FluxDictionary, sortItems } from 'fluxio';
+import { byId, groupBy, FluxDictionary, sortItems, fluxDictionary } from 'fluxio';
 import { addTr, useFlux } from '@common/hooks';
 import { MediaModel } from '@/api';
 import { Grid, GridCols } from '@common/components';
@@ -162,7 +162,7 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
   ],
 };
 
-const openById$ = new FluxDictionary<boolean>({});
+const openById$ = fluxDictionary<boolean>();
 
 export const getMediasByParent = (medias: MediaModel[]) => {
   const mediaById = byId(medias);
