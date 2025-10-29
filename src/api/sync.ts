@@ -1,5 +1,5 @@
 import { PbColl, PbOptions, PbWhere, PbModel, PbCreate, PbUpdate, PbAuthColl } from 'pocketbase-lite';
-import { byId, fluxDictionary, fluxStored } from 'fluxio';
+import { byId, fluxDictionary, fluxStored, isDictionary, isItem, keepIf, logger, Logger } from 'fluxio';
 import { isDictionaryOfItem, isEmpty, isArray, isString } from 'fluxio';
 import { notImplemented } from 'fluxio/error';
 import {
@@ -70,7 +70,7 @@ const filter = <T extends PbModel>(items: T[], where?: PbWhere<T>, one?: boolean
 };
 
 export class Sync<T extends PbModel> {
-  readonly log: string;
+  readonly log: Logger;
   readonly name: string;
   readonly up$: Flux<Dictionary<T>>;
   readonly coll: PbColl<T>;
@@ -81,14 +81,26 @@ export class Sync<T extends PbModel> {
   private isInit = false;
 
   constructor(name: string) {
-    this.log = firstUpper(name).replace(/s$/, '') + 'Sync';
+    this.log = logger(firstUpper(name).replace(/s$/, '') + 'Sync');
     this.name = name;
     this.coll = new PbColl<T>(name);
-    this.cache = fluxDictionary<T>(fluxStored(name + 'Cache$', {}, isDictionaryOfItem));
+    this.cache = fluxDictionary<T>(fluxStored(
+      name + 'Cache$',
+      {},
+      isDictionary,
+      items => keepIf(items, item => isItem(item) && isString(item.id))
+    ));
+
+    // const values = 
+    // for (const key in this.cache) {
+    //   const item = this.cache[key];
+    //   if (!isItem(item)) delete this.cache[key];
+    // }
+
     this.up$ = this.cache.throttle(100);
 
-    this.cache.on((next) => console.debug(this.log, 'cache next', { next }));
-    this.up$.on((next) => console.debug(this.log, 'up$ next', { next }));
+    this.cache.on((next) => this.log.d('cache next', { next }));
+    this.up$.on((next) => this.log.d('up$ next', { next }));
   }
 
   byId() {
@@ -97,7 +109,7 @@ export class Sync<T extends PbModel> {
 
   filter(where?: PbWhere<T>, one?: boolean): T[] {
     const results = filter(this.cache.getItems(), where, one);
-    console.debug(this.log, 'filter results', { where, one, results });
+    this.log.d('filter results', { where, one, results });
     return results;
   }
 
@@ -106,25 +118,29 @@ export class Sync<T extends PbModel> {
     if (!where) {
     } else if (isString(where)) result = this.cache.getItem(where);
     else result = this.filter(where, true)[0];
-    console.debug(this.log, 'get', { where, result });
+    this.log.d('get', { where, result });
     return result;
   }
 
-  async load() {
-    console.debug(this.log, 'loading');
+  async load(reset = false) {
+    this.log.d('loading', { reset });
     const items = await this.coll.all();
     const changes: Dictionary<T | null> = byId(items);
-    const prev = this.filter();
-    const deletedIds = prev.filter((i) => i && !changes[i.id]).map((r) => r!.id);
-    for (const id of deletedIds) changes[id] = null;
+    if (!reset) {
+      const prev = this.filter();
+      const deletedIds = prev
+        .filter((i) => i && !changes[i.id])
+        .map((r) => r!.id);
+      for (const id of deletedIds) changes[id] = null;
+    }
     this.cache.update(changes as Dictionary<T>);
-    console.debug(this.log, 'loaded', { items, changes, deletedIds });
+    this.log.d('loaded', { reset, items, changes });
   }
 
   init() {
     if (!this.isInit) {
       this.isInit = true;
-      console.debug(this.log, 'init');
+      this.log.d('init');
       this.coll.on((item, action) => {
         this.set(item.id, action === 'delete' ? null : item);
       });
@@ -134,27 +150,27 @@ export class Sync<T extends PbModel> {
 
   filter$(where?: PbWhere<T>): Flux<T[]> {
     const key = isString(where) ? where : jsonStringify(where);
-    console.debug(this.log, 'filter$', { where, key });
+    this.log.d('filter$', { where, key });
     this.init();
 
     const cache = this.filterMap;
     const prev = cache[key];
     if (prev) return prev;
 
-    console.debug(this.log, 'find$ new', { where, key });
+    this.log.d('find$ new', { where, key });
     return (cache[key] = this.up$.map(() => this.filter(where)));
   }
 
   find$(where?: IdOrWhere<T>): Flux<T> {
     const key = isString(where) ? where : jsonStringify(where);
-    console.debug(this.log, 'find$', { where, key });
+    this.log.d('find$', { where, key });
     this.init();
 
     const cache = this.findMap;
     const prev = cache[key];
     if (prev) return prev;
 
-    console.debug(this.log, 'find$ new', { where, key });
+    this.log.d('find$ new', { where, key });
     return (cache[key] = this.up$.map(() => this.get(where) as T));
   }
 
@@ -163,14 +179,14 @@ export class Sync<T extends PbModel> {
   }
 
   async create(item: PbCreate<T>, o?: PbOptions<T>): Promise<T> {
-    console.debug(this.log, 'create', item, o);
+    this.log.d('create', item, o);
     const result = await this.coll.create(item, o);
     this.set(result.id, result);
     return result;
   }
 
   async update(id: string, changes: PbUpdate<T>, o?: PbOptions<T>): Promise<T | null> {
-    console.debug(this.log, 'update', id, changes, o);
+    this.log.d('update', id, changes, o);
     const prev = this.get(id);
     if (!prev) return null;
     this.set(id, { ...prev, ...changes } as T);
@@ -186,7 +202,7 @@ export class Sync<T extends PbModel> {
   }
 
   async apply(id: string, cb: (next: T) => void, o?: PbOptions<T>): Promise<T | null> {
-    console.debug(this.log, 'apply', id, o);
+    this.log.d('apply', id, o);
     const prev = this.get(id);
     if (!prev) return null;
     const next = deepClone(prev) as T;
@@ -206,7 +222,7 @@ export class Sync<T extends PbModel> {
   }
 
   async delete(id: string, o?: PbOptions<T>): Promise<void> {
-    console.debug(this.log, 'delete', id, o);
+    this.log.d('delete', id, o);
     const prev = this.get(id);
     this.set(id, null);
     try {

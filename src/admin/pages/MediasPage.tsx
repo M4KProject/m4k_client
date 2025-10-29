@@ -13,8 +13,8 @@ import { SearchField } from '../components/SearchField';
 import { getNextTitle, uploadMedia } from '../controllers';
 import { mediaSync } from '@/api/sync';
 import { AddPlaylistItemButton, EditPlaylist } from '../components/medias/EditPlaylist';
-import { needAuthId, needGroupId, PlaylistModel } from '@/api';
-import { Edit, FolderPlus, MapPlus, Play, Upload } from 'lucide-react';
+import { MediaModel, needAuthId, needGroupId, PlaylistModel } from '@/api';
+import { Edit, FolderPlus, MapPlus, FilePlus, Play, Upload } from 'lucide-react';
 import { useIsEdit, useMediaType } from '@/router/hooks';
 import { setIsEdit, setMediaKey, setMediaType } from '@/router/setters';
 import { useMedia, useMediaById } from '@/api/hooks';
@@ -24,17 +24,19 @@ const c = Css('MediasPage', {});
 
 const handleAddToPlaylist = async () => {};
 
-const handleCreatePlaylist = async () => {
-  const playlist = await mediaSync.create({
-    title: getNextTitle('Playlist'),
-    mime: 'application/playlist',
-    type: 'playlist',
+const addMedia = async (type: MediaModel['type'], title: string) => {
+  const media = await mediaSync.create({
+    title: getNextTitle(title),
+    type,
     user: needAuthId(),
     group: needGroupId(),
   });
-  setMediaType('playlist');
-  setMediaKey(playlist.key);
-};
+  setMediaType(type);
+  setMediaKey(media.key);
+}
+
+const addPlaylist = () => addMedia('playlist', 'Playlist');
+const addPage = () => addMedia('page', 'Page');
 
 export const MediasPage = () => {
   const type = useMediaType();
@@ -64,22 +66,31 @@ export const MediasPage = () => {
             <Button icon={<Play />} title="Afficher le media" onClick={() => setIsEdit(false)} />
           : <Button icon={<Edit />} title="Éditer le media" onClick={() => setIsEdit(true)} />)}
 
-        {media?.type === 'playlist' ?
+        {/* <Button
+          icon={<MapPlus />}
+          {...tooltip('Ajouter à la playlist')}
+          onClick={handleAddToPlaylist}
+        >
+          Ajouter à la Playlist
+        </Button> */}
+
+        {type === 'playlist' && (
           <Button
             icon={<MapPlus />}
-            {...tooltip('Ajouter à la playlist')}
-            onClick={handleAddToPlaylist}
-          >
-            Ajouter à la Playlist
-          </Button>
-        : <Button
-            icon={<MapPlus />}
             {...tooltip('Créer une playlist')}
-            onClick={handleCreatePlaylist}
+            onClick={addPlaylist}
           >
             Crée une Playlist
           </Button>
-        }
+        )}
+
+        {type === 'page' && (
+          <Button
+            icon={<FilePlus />}
+            {...tooltip('Créer une page')}
+            onClick={addPage}
+          />
+        )}
 
         {type === '' && (
           <Button
@@ -100,7 +111,6 @@ export const MediasPage = () => {
         )}
 
         <UploadButton
-          title="Téléverser"
           {...tooltip('Téléverser des medias')}
           icon={<Upload />}
           color="primary"
@@ -117,7 +127,7 @@ export const MediasPage = () => {
           }}
         />
 
-        <SearchField />
+        {/* <SearchField /> */}
       </Toolbar>
       <PageBody>{content}</PageBody>
     </Page>
