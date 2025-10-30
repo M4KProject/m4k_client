@@ -56,7 +56,7 @@ const AppRouter = () => {
 
 const AppContent = () => {
   const auth = useFlux(getPbClient().auth$);
-  
+
   // console.debug("AppContent", { c, auth });
   if (!auth) {
     return <AuthPage />;

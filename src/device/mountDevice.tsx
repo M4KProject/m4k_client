@@ -37,7 +37,7 @@ export const mountDevice = () => {
   });
 
   log.d('device mounted');
-  
+
   return () => {
     log.d('unmount device');
 

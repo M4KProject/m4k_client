@@ -1,5 +1,22 @@
-import { PbColl, PbOptions, PbWhere, PbModel, PbCreate, PbUpdate, PbAuthColl } from 'pocketbase-lite';
-import { byId, fluxDictionary, fluxStored, isDictionary, isItem, keepIf, logger, Logger } from 'fluxio';
+import {
+  PbColl,
+  PbOptions,
+  PbWhere,
+  PbModel,
+  PbCreate,
+  PbUpdate,
+  PbAuthColl,
+} from 'pocketbase-lite';
+import {
+  byId,
+  fluxDictionary,
+  fluxStored,
+  isDictionary,
+  isItem,
+  keepIf,
+  logger,
+  Logger,
+} from 'fluxio';
 import { isDictionaryOfItem, isEmpty, isArray, isString } from 'fluxio';
 import { notImplemented } from 'fluxio/error';
 import {
@@ -84,14 +101,13 @@ export class Sync<T extends PbModel> {
     this.log = logger(firstUpper(name).replace(/s$/, '') + 'Sync');
     this.name = name;
     this.coll = new PbColl<T>(name);
-    this.cache = fluxDictionary<T>(fluxStored(
-      name + 'Cache$',
-      {},
-      isDictionary,
-      items => keepIf(items, item => isItem(item) && isString(item.id))
-    ));
+    this.cache = fluxDictionary<T>(
+      fluxStored(name + 'Cache$', {}, isDictionary, (items) =>
+        keepIf(items, (item) => isItem(item) && isString(item.id))
+      )
+    );
 
-    // const values = 
+    // const values =
     // for (const key in this.cache) {
     //   const item = this.cache[key];
     //   if (!isItem(item)) delete this.cache[key];
@@ -128,9 +144,7 @@ export class Sync<T extends PbModel> {
     const changes: Dictionary<T | null> = byId(items);
     if (!reset) {
       const prev = this.filter();
-      const deletedIds = prev
-        .filter((i) => i && !changes[i.id])
-        .map((r) => r!.id);
+      const deletedIds = prev.filter((i) => i && !changes[i.id]).map((r) => r!.id);
       for (const id of deletedIds) changes[id] = null;
     }
     this.cache.update(changes as Dictionary<T>);

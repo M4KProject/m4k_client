@@ -23,7 +23,7 @@ const initPbUrl = () => {
       pbClient.setApiUrl(nextApiUrl);
     }
   }
-}
+};
 
 const main = async () => {
   log.d('start');

@@ -5,14 +5,7 @@ import { usePromise, useFlux } from '@common/hooks';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { openCodePinDialog } from '../components/CodePinView';
 import { device$ } from '../services/device';
-import {
-  bgColor$,
-  itemAnim$,
-  itemDurationMs$,
-  itemFit$,
-  playlist$,
-  url$,
-} from '../messages';
+import { bgColor$, itemAnim$, itemDurationMs$, itemFit$, playlist$, url$ } from '../messages';
 import { m4k } from '@common/m4k';
 import { logger } from 'fluxio';
 import { KioskVideo } from '../components/KioskVideo';

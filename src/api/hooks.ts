@@ -6,15 +6,20 @@ import { useDeviceKey, useGroupKey, useMediaKey, useIsAdvanced } from '../router
 import { useMemo } from 'preact/hooks';
 import { PbModel, PbWhere } from 'pocketbase-lite';
 
-const useItemKey = <T extends PbModel & { key?: string }>(sync: Sync<T>, key?: string): T | undefined =>
-  useFlux(key ? sync.find$({ key }) : undefined) as T | undefined;
+const useItemKey = <T extends PbModel & { key?: string }>(
+  sync: Sync<T>,
+  key?: string
+): T | undefined => useFlux(key ? sync.find$({ key }) : undefined) as T | undefined;
 
 const useItems = <T extends PbModel>(sync: Sync<T>, whereOrId?: PbWhere<T>): T[] => {
   const items = useFlux(sync.filter$(whereOrId));
   return items || [];
 };
 
-const useGroupItems = <T extends PbModel & { group?: string }>(sync: Sync<T>, where?: PbWhere<T>): T[] => {
+const useGroupItems = <T extends PbModel & { group?: string }>(
+  sync: Sync<T>,
+  where?: PbWhere<T>
+): T[] => {
   const group = useFlux(groupId$);
   const items = useFlux(sync.filter$(group ? ({ ...where, group } as PbWhere<T>) : where));
   return items || [];

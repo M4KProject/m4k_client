@@ -1,6 +1,14 @@
 import { PageModel } from '@/api';
 import { Css } from '@common/ui';
-import { addItem, deepClone, moveIndex, getPath, isDictionary, removeItem, Dictionary } from 'fluxio';
+import {
+  addItem,
+  deepClone,
+  moveIndex,
+  getPath,
+  isDictionary,
+  removeItem,
+  Dictionary,
+} from 'fluxio';
 import { Grid } from '@common/components';
 import { updateMedia, updatePlaylist } from '@/admin/controllers';
 import { JobGrid } from '../jobs/JobGrid';
@@ -22,10 +30,10 @@ const updateBox = (boxes: Dictionary<BoxData>, id: string, changes: BoxData) => 
 };
 
 const deleteBox = (boxes: Dictionary<BoxData>, id: string) => {
-  Object.values(boxes).forEach(b => removeItem(b.children, id));
+  Object.values(boxes).forEach((b) => removeItem(b.children, id));
   const item = boxes[id];
   if (item) {
-    item.children?.forEach(child => deleteBox(boxes, child));
+    item.children?.forEach((child) => deleteBox(boxes, child));
     delete boxes[id];
   }
 };
@@ -33,20 +41,22 @@ const deleteBox = (boxes: Dictionary<BoxData>, id: string) => {
 export const EditPage = ({ page }: { page: PageModel }) => {
   const medias = useGroupMedias();
 
-  const updateBox = (page: PageModel, id: string, changes: BoxData) => updateMedia<PageModel>(page.id, (page) => {
-    const boxes = getBoxes(page);
-    boxes[id] = { ...boxes[id], ...changes };
-  });
+  const updateBox = (page: PageModel, id: string, changes: BoxData) =>
+    updateMedia<PageModel>(page.id, (page) => {
+      const boxes = getBoxes(page);
+      boxes[id] = { ...boxes[id], ...changes };
+    });
 
-  const deleteBox = (page: PageModel, id: string) => updateMedia<PageModel>(page.id, (page) => {
-    const boxes = getBoxes(page);
-    Object.values(boxes).forEach(b => removeItem(b.children, id));
-    const item = boxes[id];
-    if (item) {
-      item.children?.forEach(b => removeItem(b.children, id));
-      delete boxes[id];
-    }
-  });
+  const deleteBox = (page: PageModel, id: string) =>
+    updateMedia<PageModel>(page.id, (page) => {
+      const boxes = getBoxes(page);
+      Object.values(boxes).forEach((b) => removeItem(b.children, id));
+      const item = boxes[id];
+      if (item) {
+        item.children?.forEach((b) => removeItem(b.children, id));
+        delete boxes[id];
+      }
+    });
 
   const duplicateItem = (index: number) => {
     updatePlaylist(playlist.id, ({ data }) => {

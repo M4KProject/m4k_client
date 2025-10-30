@@ -33,7 +33,7 @@ const addMedia = async (type: MediaModel['type'], title: string) => {
   });
   setMediaType(type);
   setMediaKey(media.key);
-}
+};
 
 const addPlaylist = () => addMedia('playlist', 'Playlist');
 const addPage = () => addMedia('page', 'Page');
@@ -75,21 +75,13 @@ export const MediasPage = () => {
         </Button> */}
 
         {type === 'playlist' && (
-          <Button
-            icon={<MapPlus />}
-            {...tooltip('Créer une playlist')}
-            onClick={addPlaylist}
-          >
+          <Button icon={<MapPlus />} {...tooltip('Créer une playlist')} onClick={addPlaylist}>
             Crée une Playlist
           </Button>
         )}
 
         {type === 'page' && (
-          <Button
-            icon={<FilePlus />}
-            {...tooltip('Créer une page')}
-            onClick={addPage}
-          />
+          <Button icon={<FilePlus />} {...tooltip('Créer une page')} onClick={addPage} />
         )}
 
         {type === '' && (
