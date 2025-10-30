@@ -80,7 +80,7 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
     ({ width, height }) => (width || height ? `${width || 0}x${height || 0}` : ''),
     { w: 20 },
   ],
-  seconds: ['Durée', ({ seconds }) => (isPositive(seconds) ? round(seconds) + 's' : ''), { w: 10 }],
+  seconds: ['Durée', ({ seconds }) => (isUFloat(seconds) ? round(seconds) + 's' : ''), { w: 10 }],
   actions: [
     '',
     ({ id, key, type }, { selectedIds, getChildren }) => (

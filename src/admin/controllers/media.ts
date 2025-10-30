@@ -1,4 +1,4 @@
-import { JobModel, MediaModel, needAuthId, needGroupId, PlaylistModel } from '@/api';
+import { BaseMediaModel, JobModel, MediaModel, needAuthId, needGroupId, PageModel, PlaylistModel } from '@/api';
 import { mediaSync } from '@/api/sync';
 import {
   deepClone,
@@ -12,6 +12,7 @@ import {
   fluxDictionary,
   toError,
   uuid,
+  randString,
 } from 'fluxio';
 
 const MAX_CONCURRENT_UPLOADS = 3;
@@ -181,4 +182,15 @@ export const updatePlaylist = async (id: string, apply: (next: PlaylistModel) =>
     apply(next);
 
     cleanPlaylist(next);
+  });
+
+export const getMediaData = <T extends BaseMediaModel>(media: T): T['data'] => isItem(media.data) ? media.data : (media.data = {});
+
+export const updatePage = async (id: string, apply: (next: PageModel) => void) =>
+  updateMedia<PageModel>(id, (next) => {
+    if (next.type !== 'page') {
+      console.warn('not a page', id);
+      return;
+    }
+    apply(next);
   });

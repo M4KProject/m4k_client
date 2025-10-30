@@ -1,3 +1,4 @@
+import { BoxData, BoxDataReadonly } from '@common/box/types';
 import {
   _DeviceModel,
   _MediaModel,
@@ -9,6 +10,7 @@ import {
   _SuperuserModel,
   _ApplicationModel,
 } from './models.generated';
+import { Dictionary } from 'fluxio';
 
 export * from './models.generated';
 
@@ -125,7 +127,9 @@ export interface PlaylistData {
   items?: PlaylistEntry[];
 }
 
-export interface PageData {}
+export interface PageData {
+  boxes?: Dictionary<BoxData>;
+}
 
 export interface BaseMediaModel extends _MediaModel {
   // paths?: string[];
@@ -163,7 +167,7 @@ export interface PageModel extends BaseMediaModel {
 }
 
 export interface MediaModel extends BaseMediaModel {
-  data?: VideoData & ImageData & PdfData & PlaylistData;
+  data?: VideoData & ImageData & PdfData & PlaylistData & PageData;
 }
 
 export type MediaType = MediaModel['type'] & string;
