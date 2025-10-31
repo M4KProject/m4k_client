@@ -1,35 +1,3 @@
-import Box from '@mui/material/Box';
-import IconButton, { IconButtonProps } from '@mui/material/IconButton';
-import CutIcon from '@mui/icons-material/ContentCutTwoTone';
-import CopyIcon from '@mui/icons-material/ContentCopyTwoTone';
-import PasteIcon from '@mui/icons-material/ContentPasteTwoTone';
-import PasteChildIcon from '@mui/icons-material/ContentPasteGoTwoTone';
-import AddIcon from '@mui/icons-material/AddBoxTwoTone';
-import AddToPhotosTwoTone from '@mui/icons-material/AddToPhotosTwoTone';
-import RemoveIcon from '@mui/icons-material/DeleteTwoTone';
-import HideIcon from '@mui/icons-material/VisibilityOffTwoTone';
-import ShowIcon from '@mui/icons-material/VisibilityTwoTone';
-import LeftIcon from '@mui/icons-material/ArrowCircleLeftTwoTone';
-import UpIcon from '@mui/icons-material/ArrowCircleUpTwoTone';
-import DownIcon from '@mui/icons-material/ArrowCircleDownTwoTone';
-import RightIcon from '@mui/icons-material/ArrowCircleRightTwoTone';
-import HorizontalLeftIcon from '@mui/icons-material/AlignHorizontalLeftTwoTone';
-import HorizontalCenterIcon from '@mui/icons-material/AlignHorizontalCenterTwoTone';
-import HorizontalRightIcon from '@mui/icons-material/AlignHorizontalRightTwoTone';
-import VerticalTopIcon from '@mui/icons-material/AlignVerticalTopTwoTone';
-import VerticalMiddleIcon from '@mui/icons-material/AlignVerticalCenterTwoTone';
-import VerticalBottomIcon from '@mui/icons-material/AlignVerticalBottomTwoTone';
-import TextLeftIcon from '@mui/icons-material/FormatAlignLeftTwoTone';
-import TextCenterIcon from '@mui/icons-material/FormatAlignCenterTwoTone';
-import TextRightIcon from '@mui/icons-material/FormatAlignRightTwoTone';
-import TextJustifyIcon from '@mui/icons-material/FormatAlignJustifyTwoTone';
-import JsonIcon from '@mui/icons-material/DataObjectTwoTone';
-import HtmlIcon from '@mui/icons-material/HtmlTwoTone';
-import CssIcon from '@mui/icons-material/CssTwoTone';
-import JsIcon from '@mui/icons-material/JavascriptTwoTone';
-import SvgIcon from '@mui/material/SvgIcon';
-import { editorCtrl } from '../../controllers/EditorController';
-import { useMsg } from 'vegi';
 import {
   getSelect,
   setSelect,
@@ -43,11 +11,12 @@ import {
   addIn,
   remove,
   rmProp,
-} from '../../../helpers/bEdit';
-import { D, DStyle } from '../../../site/D';
-import { moveItem } from 'vegi';
-import Tooltip from '../Tooltip';
-import B from '../../../site/B';
+} from './bEdit';
+import { D, DStyle } from './D';
+import B from './B';
+import { panel$, terminal$ } from './flux';
+import { moveItem } from 'fluxio';
+import { useFlux } from '@common/hooks';
 
 function AddChildIcon(props: any) {
   return <AddToPhotosTwoTone {...props} style={{ transform: 'rotate(90deg)' }} />;
@@ -89,7 +58,7 @@ function flexRow() {
 }
 
 function setPanel(name: string) {
-  editorCtrl.panel$.set(name);
+  panel$.set(name);
 }
 
 function move(addIndex: number) {
@@ -139,14 +108,15 @@ function right() {
   b.parent.update({ children: parentChildren });
 
   const sibling = b.parent.children[i === 0 ? 0 : i - 1];
+  if (!sibling) return;
+
   const siblingChildren = [...(sibling.d.children || [])];
   siblingChildren.push(b.d);
   sibling.update({ children: siblingChildren });
-
   setSelect(sibling.children[sibling.children.length - 1]);
 }
 
-const setTerminal = (val: string) => editorCtrl.terminal$.set(editorCtrl.terminal$.val === val ? '' : val);
+const setTerminal = (val: string) => terminal$.set(terminal$.get() === val ? '' : val);
 
 const actionMap: Record<string, () => any> = {
   undo: () => undo(),
@@ -288,8 +258,8 @@ function Action({ name, ...props }: IconButtonProps & { name: string }) {
 }
 
 export default function Props() {
-  const select = useMsg(B.select$) || B.root;
-  useMsg(select.update$);
+  const select = useFlux(B.select$) || B.root;
+  useFlux(select.update$);
   return (
     <Box
       className="Action"

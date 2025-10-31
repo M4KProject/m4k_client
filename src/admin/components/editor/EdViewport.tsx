@@ -1,10 +1,10 @@
 import Box from '@mui/material/Box';
 import { useEffect, useRef } from 'react';
-import { add, addIn, exportData, importData, getSelect, setSelect } from '../../../helpers/bEdit';
+import { add, addIn, exportData, importData, getSelect, setSelect } from './bEdit';
 import { editorCtrl } from '../../controllers/EditorController';
-import { useMsg } from 'vegi';
+import { useFlux } from 'vegi';
 import { toNumber, cloneJson } from 'vegi';
-import B, { BElement } from '../../../site/B';
+import B, { BElement } from './B';
 import DuplicateIcon from '@mui/icons-material/ContentCopyTwoTone';
 import AddToPhotosTwoTone from '@mui/icons-material/AddToPhotosTwoTone';
 import MouseIcon from '@mui/icons-material/MouseTwoTone';
@@ -250,12 +250,12 @@ const onResizeList = Object.entries(onResizeDico);
 
 function EdViewportPan() {
   const ref = useRef<HTMLDivElement>(null);
-  const rootUpdated = useMsg(B.root.update$);
+  const rootUpdated = useFlux(B.root.update$);
   const rootEl = B.root.el;
-  const zoom = useMsg(editorCtrl.zoom$);
-  const screenSize = useMsg(editorCtrl.screenSize$);
-  const screenPos = useMsg(editorCtrl.screenPos$);
-  const panel = useMsg(editorCtrl.panel$);
+  const zoom = useFlux(editorCtrl.zoom$);
+  const screenSize = useFlux(editorCtrl.screenSize$);
+  const screenPos = useFlux(editorCtrl.screenPos$);
+  const panel = useFlux(editorCtrl.panel$);
 
   console.debug('ViewportPan', rootUpdated);
 
@@ -314,7 +314,7 @@ function EdViewportPan() {
 
 function EdSelect(): JSX.Element {
   console.debug('EdSelect');
-  const pos = useMsg(editorCtrl.pos$);
+  const pos = useFlux(editorCtrl.pos$);
 
   const b = getSelect();
   const el = b?.el;

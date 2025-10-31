@@ -2,8 +2,8 @@ import type { PProps } from './interfaces';
 import { SketchPicker } from 'react-color';
 import { CSSProperties, useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
-import { getColors } from '../../../helpers/bEdit';
-import B from '../../../site/B';
+import { getColors } from './bEdit';
+import B from './B';
 
 function toHex(c: number) {
   const hex = Math.round(c).toString(16);

@@ -1,18 +1,14 @@
+import { deepClone, flux, isDeepEqual, toArray, toItem, toNumber, toVoid, toString } from 'fluxio';
 import { D, DCall, DRoot, DStyle } from './D';
-import app from '../app';
-import config from '../config';
-import addFont from '../../helpers/addFont';
-import router from '../../helpers/router';
-import calcBodyClass from '../../helpers/calcBodyClass';
-import getCallCb from '../../helpers/getCallCb';
-import createEl from '../../helpers/createEl';
-import tPriceToHtml from '../../helpers/tPriceToHtml';
-import priceToHtml from '../../helpers/priceToHtml';
-import { clone } from '../../helpers/json';
+import { addCssFile, addFont, addJsFile, Cls, createEl, setAttrs, setCls, tPriceToHtml } from '@common/ui';
+import { app } from '@/app';
 
 const body = document.body;
 const bodyClass = body.classList;
 const lSource = 'fr';
+
+const getCallCb = toVoid;
+const priceToHtml = toString;
 
 ///// Data Interfaces /////
 
@@ -23,13 +19,13 @@ export type RenderProp = (el: BElement, value: any, b: B) => void;
 
 type ViewWidth = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
-calcBodyClass();
-window.addEventListener('resize', calcBodyClass);
+// calcBodyClass();
+// window.addEventListener('resize', calcBodyClass);
 
 function styleProp(viewWidth?: ViewWidth) {
   return (el: BElement, style: CSSStyleDeclaration) => {
     if (viewWidth && !bodyClass.contains(viewWidth)) return;
-    Object.assign(el.style, toRecord(style));
+    Object.assign(el.style, toItem(style));
   };
 }
 
@@ -62,7 +58,7 @@ const props: Partial<Record<keyof D, RenderProp>> = {
     String(page)
       .split('+')
       .forEach((p) => {
-        if (B.page$.val.split('+').includes(p)) cls.curr = true;
+        if (B.page$.get().split('+').includes(p)) cls.curr = true;
         cls['page-' + p] = true;
       });
     setCls(el, cls, true);
@@ -184,12 +180,12 @@ export default class B {
   static bCls = 'box';
   static l = lSource;
   static lSource = lSource;
-  static page$ = new Msg('home');
+  static page$ = flux('home');
   static hasCart?: boolean;
   static templates: Record<string, D> = { ...defaultTemplates };
-  static select$ = new Msg<B | null>(null);
-  static click$ = new Msg<B | null>(null);
-  static update$ = new Msg<BUpdate>({ b: B.root });
+  static select$ = flux<B | null>(null);
+  static click$ = flux<B | null>(null);
+  static update$ = flux<BUpdate>({ b: B.root });
   static renders: Record<string, (el: BElement, b: B) => void> = {
     video: (el: BElement) => {
       console.debug('B render video', el);
@@ -299,15 +295,16 @@ export default class B {
       el.innerHTML = String(count);
     },
     filter: (el: BElement, b: B) => {
-      if (b.off) b.off();
-      b.off = B.update$.on(() => b.render(true));
+      // TODO
+      // if (b.off) b.off();
+      // b.off = B.update$.on(() => b.render(true));
 
-      const cb = getCallCb(b.d.filter);
-      const list = query(cb as (b: B) => boolean);
+      // const cb = getCallCb(b.d.filter);
+      // const list = query(cb as (b: B) => boolean);
 
-      b.el.innerHTML = '';
-      b.children.forEach((b) => b.dispose());
-      b.children = list.map((b) => new B(b.d, b).render(true));
+      // b.el.innerHTML = '';
+      // b.children.forEach((b) => b.dispose());
+      // b.children = list.map((b) => new B(b.d, b).render(true));
     }
   };
 
@@ -338,15 +335,16 @@ export default class B {
       key = key.replace('/sd.', '/720x720.');
       // return `${config.assetUrl}/${key}?v=${BUILD_HASH}`;
     }
-    return `${config.mediaUrl}/${key}?v=${BUILD_HASH}`;
+    return 'todoURL'
+    // return `${config.mediaUrl}/${key}?v=${BUILD_HASH}`;
   }
 
   static importRoot(d: DRoot) {
-    const root = clone(d) || {};
+    const root = deepClone(d) || {};
     root.id = 'root';
     root.t = 'root';
     
-    const isPageHome = !B.page$.val || B.page$.val === B.home;
+    const isPageHome = !B.page$.get() || B.page$.get() === B.home;
 
     B.templates = { ...defaultTemplates, ...root.templates };
     B.hTag = root.boxTag || 'div';
@@ -402,7 +400,7 @@ export default class B {
   /** Product Add to Cart */
   count?: number;
 
-  update$ = new Msg<BUpdate>({ b: this });
+  update$ = flux<BUpdate>({ b: this });
 
   /** Filter */
   off?: () => void;
@@ -410,7 +408,7 @@ export default class B {
   _id = (_idGen++).toString(16);
 
   protected constructor(d: D, parent?: B) {
-    this.d = d = toRecord(d, {});
+    this.d = d = toItem(d, {});
     this.el = this.reset(d.hTag || B.hTag);
     this.parent = parent;
     this.children = d.children ? d.children.map((d) => new B(d, this)) : [];
@@ -428,7 +426,7 @@ export default class B {
 
   setData(d: D) {
     this.dispose();
-    this.d = toRecord(d, {});
+    this.d = toItem(d, {});
     const parent = this.parent;
     if (parent) {
       const index = parent.children.indexOf(this);
@@ -524,7 +522,7 @@ export default class B {
           this.children = dChildren.map((d) => new B(d, this).render());
         } else {
           dChildren.forEach((d, i) => {
-            if (bChildren[i].d !== d) bChildren[i] = new B(d, this);
+            if (bChildren[i]?.d !== d) bChildren[i] = new B(d, this);
             bChildren[i].render();
           });
         }
@@ -535,7 +533,7 @@ export default class B {
         const el = this.reset(tpl.hTag || data.hTag || B.hTag);
         this.apply(el, tpl);
         this.apply(el, data);
-        this.applyTpl(el, tplName, cloneJson(tpl.children));
+        this.applyTpl(el, tplName, deepClone(tpl.children));
         if (tpl.render) this.callRender(el, tpl.render);
         if (data.render) this.callRender(el, data.render);
         this.children.forEach((b) => (this.cEl || this.el).appendChild(b.el));
@@ -581,7 +579,7 @@ export default class B {
   call(el: BElement | null, script?: DCall) {
     try {
       app.callEl = el || B.root.el;
-      getCallCb(script)(this, el || this.el, app);
+      // getCallCb(script)(this, el || this.el, app); // TODO
     } catch (error) {
       console.error('B.call', this, script, error);
       return this;
@@ -597,11 +595,11 @@ export default class B {
 
   find(cb: string|((b: B) => any)): B | undefined {
     if (typeof cb !== 'function') {
-      const o: any = toRecord(cb, { id: cb });
+      const o: any = toItem(cb, { id: cb });
       cb = (b: B) => {
         const d = b.d as any;
         for (const prop in o) {
-          if (!isEqual(d[prop], o[prop])) return false;
+          if (!isDeepEqual(d[prop], o[prop])) return false;
         }
         return true;
       };
@@ -672,17 +670,17 @@ function setLang(lang: string) {
   return lang;
 }
 
-function setPage(page: string) {
-  const isAdmin = !!router.current.params.adminPage;
-  const siteKey = router.current.params.siteKey;
-  const path = page ? `/${siteKey}/${page}` : `/${siteKey}`;
-  router.push(isAdmin ? `/admin${path}` : path);
-  return page;
-}
+// function setPage(page: string) {
+//   const isAdmin = !!router.current.params.adminPage;
+//   const siteKey = router.current.params.siteKey;
+//   const path = page ? `/${siteKey}/${page}` : `/${siteKey}`;
+//   router.push(isAdmin ? `/admin${path}` : path);
+//   return page;
+// }
 
 app.query = query;
 app.setLang = setLang;
-app.setPage = setPage;
+// app.setPage = setPage;
 app.find = (cb: string|((b: B) => any)) => app.B.root.find(cb);
 
 app.playPause = (b: B) => {
@@ -700,31 +698,31 @@ app.playPause = (b: B) => {
 bodyClass.add('l-' + B.l);
 app.B = B;
 
-const bodyClasses: string[] = [];
+// const bodyClasses: string[] = [];
 
-B.page$.on((newPage, oldPage) => {
-  // oldPage.split('+').forEach((p) => bodyClass.remove('page-' + p));
-  // newPage.split('+').forEach((p) => bodyClass.add('page-' + p));
-  B.root.forEach((b) => b.d.page && b.render(true));
-  app.page = newPage;
+// B.page$.on((newPage, oldPage) => {
+//   // oldPage.split('+').forEach((p) => bodyClass.remove('page-' + p));
+//   // newPage.split('+').forEach((p) => bodyClass.add('page-' + p));
+//   B.root.forEach((b) => b.d.page && b.render(true));
+//   app.page = newPage;
 
-  const classList = document.body.classList;
-  bodyClasses.forEach((cls) => classList.remove(cls));
+//   const classList = document.body.classList;
+//   bodyClasses.forEach((cls) => classList.remove(cls));
 
-  bodyClasses.length = 0;
+//   bodyClasses.length = 0;
 
-  const siteKey = router.current.params.siteKey;
-  if (siteKey) bodyClasses.push(siteKey);
-  // bodyClasses.push('site');
+//   const siteKey = router.current.params.siteKey;
+//   if (siteKey) bodyClasses.push(siteKey);
+//   // bodyClasses.push('site');
 
-  newPage.split('+').forEach(page => bodyClasses.push('page-' + page));
+//   newPage.split('+').forEach(page => bodyClasses.push('page-' + page));
 
-  bodyClasses.forEach((cls) => classList.add(cls));
-});
+//   bodyClasses.forEach((cls) => classList.add(cls));
+// });
 
-const onRouterUpdated = () => {
-  B.page$.set(router.current.params.sitePage || B.home);
-};
+// const onRouterUpdated = () => {
+//   B.page$.set(router.current.params.sitePage || B.home);
+// };
 
-onRouterUpdated();
-router.updated$.on(onRouterUpdated);
+// onRouterUpdated();
+// router.updated$.on(onRouterUpdated);

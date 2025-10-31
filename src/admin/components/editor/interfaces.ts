@@ -1,5 +1,5 @@
-import B from '../../../site/B';
-import { D } from '../../../site/D';
+import B from './B';
+import { D } from './D';
 
 export interface PProps {
   b?: B;

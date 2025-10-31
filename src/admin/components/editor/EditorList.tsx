@@ -9,14 +9,14 @@ export {};
 // import DeleteIcon from '@mui/icons-material/Delete';
 // import TextField from '@mui/material/TextField';
 // import IconButton from '@mui/material/IconButton';
-// import { useMsg } from 'vegi';
+// import { useFlux } from 'vegi';
 // import { auth } from '../api/Auth';
 
 // export default function EditorList() {
-//   const { userId } = useMsg(auth.session$);
-//   const projectId = useMsg(projectCtrl.projectId$);
-//   const editors = useMsg(editorCtrl.editors$);
-//   const loadingDico = useMsg(editorCtrl.loadingDico$);
+//   const { userId } = useFlux(auth.session$);
+//   const projectId = useFlux(projectCtrl.projectId$);
+//   const editors = useFlux(editorCtrl.editors$);
+//   const loadingDico = useFlux(editorCtrl.loadingDico$);
 
 //   const [email, setEmail] = useState('');
 

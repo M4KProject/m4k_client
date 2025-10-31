@@ -1,4 +1,5 @@
 import Fab, { FabProps } from '@mui/material/Fab';
+
 import TranslateIcon from '@mui/icons-material/TranslateTwoTone';
 import AddIcon from '@mui/icons-material/AddBoxTwoTone';
 import ScreenRotationIcon from '@mui/icons-material/ScreenRotationTwoTone';
@@ -12,17 +13,18 @@ import SideIcon from '@mui/icons-material/ViewSidebar';
 import SaveIcon from '@mui/icons-material/SaveTwoTone';
 import BackIcon from '@mui/icons-material/ArrowBackTwoTone';
 import FullscreenIcon from '@mui/icons-material/Fullscreen';
+
 import Box from '@mui/material/Box';
 import { editorCtrl } from '../../controllers/EditorController';
-import { useMsg } from 'vegi';
-import { addIn, getLangs, setSelect } from '../../../helpers/bEdit';
-import { DRoot } from '../../../site/D';
+import { useFlux } from 'vegi';
+import { addIn, getLangs, setSelect } from './bEdit';
+import { DRoot } from './D';
 import tinycolor2 from 'tinycolor2';
 import app from '../../../app';
 import clsx from 'clsx';
 import router from '../../../helpers/router';
 import Tooltip from '../Tooltip';
-import B from '../../../site/B';
+import B from './B';
 import { translateAll } from '../../../api/translate';
 
 app.tinycolor2 = tinycolor2;
@@ -56,7 +58,7 @@ function addBox() {
 }
 
 function EdFab({ cls, tooltip, ...props }: FabProps & { cls: string; tooltip: string }) {
-  const panel = useMsg(editorCtrl.panel$);
+  const panel = useFlux(editorCtrl.panel$);
   const getCls = (name: string) => clsx('EdFab EdFab-' + name, panel === name && 'EdFab-active');
 
   return (
@@ -67,8 +69,8 @@ function EdFab({ cls, tooltip, ...props }: FabProps & { cls: string; tooltip: st
 }
 
 export default function EdFabs() {
-  const panel = useMsg(editorCtrl.panel$);
-  useMsg(B.root.update$);
+  const panel = useFlux(editorCtrl.panel$);
+  useFlux(B.root.update$);
   const dEditor = (B.root.d as DRoot).editor;
 
   const zoomAdd = (add: number) => {

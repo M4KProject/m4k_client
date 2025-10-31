@@ -11,11 +11,11 @@ import LinearProgress from '@mui/material/LinearProgress';
 import { ChangeEventHandler, useEffect, useRef, useMemo } from 'react';
 import { PProps } from './interfaces';
 import Box from '@mui/material/Box';
-import { Msg, toString, useMsg } from 'vegi';
+import { Msg, toString, useFlux } from 'vegi';
 import { addAlert } from '../AlertList';
 import { MediaData } from '../../../common';
 import { api } from '../../../api/ApiRest';
-import B from '../../../site/B';
+import B from './B';
 import { editorCtrl } from '../../controllers/EditorController';
 
 // import * as UpChunk from '@mux/upchunk';
@@ -72,7 +72,7 @@ const resolutions = {
 };
 
 function FileInputProgress({ progress$, color }: { progress$: Msg<number>, color: 'primary' | 'secondary' }) {
-  const progress = useMsg(progress$);
+  const progress = useFlux(progress$);
   if (progress === 0 || progress === 1) return null;
   return <LinearProgress variant="determinate" value={progress * 100} color={color} />
 }
@@ -86,19 +86,19 @@ function FileInput({ v, setV, b, p }: PProps) {
 
   const values = toString(v).split('/');
 
-  const progress1$ = useMemo(() => new Msg(0), [b, p]);
-  const progress2$ = useMemo(() => new Msg(0), [b, p]);
-  const mediaId$ = useMemo(() => new Msg(values[0] || ''), [b, p]);
-  const output$ = useMemo(() => new Msg(values[1] || ''), [b, p]);
-  const media$ = useMemo(() => new Msg<MediaData | null>(null), [b, p]);
-  const value$ = useMemo(() => new Msg(v), [b, p]);
+  const progress1$ = useMemo(() => flux(0), [b, p]);
+  const progress2$ = useMemo(() => flux(0), [b, p]);
+  const mediaId$ = useMemo(() => flux(values[0] || ''), [b, p]);
+  const output$ = useMemo(() => flux(values[1] || ''), [b, p]);
+  const media$ = useMemo(() => flux<MediaData | null>(null), [b, p]);
+  const value$ = useMemo(() => flux(v), [b, p]);
 
-  const progress1 = useMsg(progress1$);
-  const progress2 = useMsg(progress2$);
-  const mediaId = useMsg(mediaId$);
-  const output = useMsg(output$);
-  const media = useMsg(media$);
-  const value = useMsg(value$);
+  const progress1 = useFlux(progress1$);
+  const progress2 = useFlux(progress2$);
+  const mediaId = useFlux(mediaId$);
+  const output = useFlux(output$);
+  const media = useFlux(media$);
+  const value = useFlux(value$);
 
   useEffect(() => {
     if (v !== value) {

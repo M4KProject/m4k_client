@@ -4,14 +4,14 @@
 // import { html } from '@codemirror/lang-html';
 // import { css } from '@codemirror/lang-css';
 // import { javascript } from '@codemirror/lang-javascript';
-import { Msg, useMsg } from 'vegi';
-import { editorCtrl } from '../../controllers/EditorController';
-import B from '../../../site/B';
-import { exportData, importData } from '../../../helpers/bEdit';
-import Box from '@mui/material/Box';
-import { getJson, parseJson } from 'vegi';
-import { D } from '../../../site/D';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from 'preact/hooks';
+import B from './B';
+import { exportData, importData } from './bEdit';
+import { D } from './D';
+import { flux, jsonParse, jsonStringify } from 'fluxio';
+import { useFlux } from '@common/hooks';
+import { css$, js$, terminal$ } from './flux';
+import { Css } from '@common/ui';
 
 function formatHtml(html: string) {
   const tab = '\t';
@@ -46,8 +46,8 @@ interface MyCodeMirrorProps {
 }
 
 function MyCodeMirror({ value, type, onChange }: MyCodeMirrorProps) {
-  const text$ = useMemo(() => new Msg(value), [type]);
-  const text = useMsg(text$);
+  const text$ = useMemo(() => flux(value), [type]);
+  const text = useFlux(text$);
 
   useEffect(() => onChange && text$.throttle(400).on(onChange), [text$, onChange]);
 
@@ -56,7 +56,7 @@ function MyCodeMirror({ value, type, onChange }: MyCodeMirrorProps) {
       className="MyCodeMirror"
       value={text}
       onChange={(e) => {
-        const newText = e.target.value;
+        const newText = e.currentTarget?.value;
         console.debug('textarea onChange', newText);
         text$.set(newText);
       }}
@@ -65,11 +65,11 @@ function MyCodeMirror({ value, type, onChange }: MyCodeMirrorProps) {
 }
 
 function EdJsonData() {
-  const select = useMsg(B.select$) || B.root;
-  useMsg(select.update$);
+  const select = useFlux(B.select$) || B.root;
+  useFlux(select.update$);
 
   const data = exportData(select);
-  const dataJson = getJson(data, '{}', true);
+  const dataJson = jsonStringify(data) || '{}';
 
   return (
     <MyCodeMirror
@@ -79,7 +79,7 @@ function EdJsonData() {
         clearTimeout(timer);
         timer = setTimeout(() => {
           console.log('CodeMirror data');
-          const newData = parseJson<D>(newDataJson);
+          const newData = jsonParse<D>(newDataJson);
           if (newData) {
             importData(select, newData);
           }
@@ -90,7 +90,7 @@ function EdJsonData() {
 }
 
 function EdCodeHtml() {
-  const select = useMsg(B.select$) || B.root;
+  const select = useFlux(B.select$) || B.root;
   return (
     <MyCodeMirror
       value={formatHtml(select.el.outerHTML)}
@@ -100,54 +100,53 @@ function EdCodeHtml() {
 }
 
 function EdCodeCss() {
-  const val = useMsg(editorCtrl.css$);
+  const val = useFlux(css$);
   return (
     <MyCodeMirror
       value={val}
       type="css"
       onChange={(newVal) => {
         clearTimeout(timer);
-        timer = setTimeout(() => editorCtrl.css$.set(newVal), 100);
+        timer = setTimeout(() => css$.set(newVal), 100);
       }}
     />
   );
 }
 
 function EdCodeJs() {
-  const val = useMsg(editorCtrl.js$);
+  const val = useFlux(js$);
   return (
     <MyCodeMirror
       value={val}
       type="javascript"
       onChange={(newVal) => {
         clearTimeout(timer);
-        timer = setTimeout(() => editorCtrl.js$.set(newVal), 100);
+        timer = setTimeout(() => js$.set(newVal), 100);
       }}
     />
   );
 }
 
-const compMap: Record<string, () => JSX.Element> = {
+const compMap: Record<string, typeof EdJsonData> = {
   json: EdJsonData,
   html: EdCodeHtml,
   css: EdCodeCss,
   js: EdCodeJs,
 };
 
+const c = Css('EdCode', {
+  ' .MyCodeMirror': {
+    width: '100%',
+    height: '100%',
+  },
+});
+
 export default function EdCode() {
-  const terminal = useMsg(editorCtrl.terminal$);
+  const terminal = useFlux(terminal$);
   const Comp = compMap[terminal];
   return (
-    <Box
-      className={`EdCode EdCode-${terminal}`}
-      sx={{
-        '& .MyCodeMirror': {
-          width: '100%',
-          height: '100%',
-        },
-      }}
-    >
+    <div class={c('', `-${terminal}`)}>
       {Comp && <Comp />}
-    </Box>
+    </div>
   );
 }

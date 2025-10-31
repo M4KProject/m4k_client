@@ -2,9 +2,9 @@ import Switch from '@mui/material/Switch';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import { useEffect, useState } from 'react';
-import { getSelect, rmProp, rmStyleProp, setSelect } from '../../../helpers/bEdit';
-import { useMsg } from 'vegi';
-import { D, DRoot, DStyle } from '../../../site/D';
+import { getSelect, rmProp, rmStyleProp, setSelect } from './bEdit';
+import { useFlux } from 'vegi';
+import { D, DRoot, DStyle } from './D';
 import type { PProps } from './interfaces';
 import PHtml from './PHtml';
 import MenuItem from '@mui/material/MenuItem';
@@ -15,7 +15,7 @@ import PType from './PType';
 import { cloneJson, toNumber, deleteKey } from 'vegi';
 import PPrices from './PPrices';
 import PStrArr from './PStrArr';
-import B from '../../../site/B';
+import B from './B';
 
 function PStr({ v, setV }: PProps) {
   return <TextField className="PInput" size="small" value={v || ''} onChange={(e) => setV(e.target.value)} />;
@@ -317,7 +317,7 @@ function PAdd({ b }: { b: B }) {
 }
 
 function PFactory({ pName, sName, b }: { pName?: keyof D; sName?: keyof DStyle; b: B }) {
-  useMsg(b.update$);
+  useFlux(b.update$);
 
   const [_v, _setV] = useState<any>(undefined);
   const [_text, setText] = useState<string>('');
@@ -396,8 +396,8 @@ function PFactory({ pName, sName, b }: { pName?: keyof D; sName?: keyof DStyle; 
 }
 
 function PList() {
-  const b = useMsg(B.select$) || B.root;
-  useMsg(b.update$);
+  const b = useFlux(B.select$) || B.root;
+  useFlux(b.update$);
 
   if (!b) return null;
 

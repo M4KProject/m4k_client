@@ -1,7 +1,7 @@
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import { PProps } from './interfaces';
-import B from '../../../site/B';
+import B from './B';
 
 const labelDico: Record<string, string> = {
   '': 'Élément',

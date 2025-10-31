@@ -19,11 +19,11 @@ import CarouselIcon from '@mui/icons-material/ViewCarousel';
 import PdfIcon from '@mui/icons-material/PictureAsPdf';
 import BtnIcon from '@mui/icons-material/Mouse';
 import { useEffect, useRef } from 'react';
-import { useMsg } from 'vegi';
-import { getSelect } from '../../../helpers/bEdit';
+import { useFlux } from 'vegi';
+import { getSelect } from './bEdit';
 import { editorCtrl } from '../../controllers/EditorController';
 import clsx from 'clsx';
-import B from '../../../site/B';
+import B from './B';
 
 const iconByT: Record<string, OverridableComponent<SvgIconTypeMap<{}, 'svg'>>> = {
   root: RootIcon,
@@ -75,8 +75,8 @@ function hasChildSelected(b?: B) {
 function EdItem(props: { b?: B }) {
   const ref = useRef<HTMLDivElement>(null);
   const b = props.b || B.root;
-  const select = useMsg(B.select$);
-  useMsg(b.update$);
+  const select = useFlux(B.select$);
+  useFlux(b.update$);
 
   const d = b.d;
   const Icon = iconByT[d.t || (!b.parent ? 'root' : d.ctn ? 'ctn' : '')] || BoxIcon;

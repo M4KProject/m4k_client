@@ -1,7 +1,7 @@
 import { PProps } from './interfaces';
 import ReactQuill from 'react-quill';
-import B from '../../../site/B';
-import { getColors } from '../../../helpers/bEdit';
+import B from './B';
+import { getColors } from './bEdit';
 import useConstant from '../../hooks/useConstant';
 import Box from '@mui/material/Box';
 import { useEffect, useMemo, useRef } from 'react';

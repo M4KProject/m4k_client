@@ -1,13 +1,13 @@
 import Box from '@mui/material/Box';
 import { editorCtrl } from '../../controllers/EditorController';
-import { useMsg } from 'vegi';
+import { useFlux } from 'vegi';
 import Lazy from '../Lazy';
 import EdActions from './EdActions';
 import EdProps from './EdProps';
 import EdTree from './EdTree';
 
 function EdTerminalSwitch() {
-  const terminal = useMsg(editorCtrl.terminal$);
+  const terminal = useFlux(editorCtrl.terminal$);
   console.debug('EdTerminalSwitch', terminal);
   switch (terminal) {
     case 'json':
@@ -21,7 +21,7 @@ function EdTerminalSwitch() {
 }
 
 export default function EdTerminal() {
-  const panel = useMsg(editorCtrl.panel$);
+  const panel = useFlux(editorCtrl.panel$);
   if (panel !== 'terminal') return null;
   return (
     <Box

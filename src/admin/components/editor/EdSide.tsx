@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box';
 import { editorCtrl } from '../../controllers/EditorController';
-import { useMsg } from 'vegi';
+import { useFlux } from 'vegi';
 // import Lazy from "../Lazy";
 import EdActions from './EdActions';
 // import Code from "./EdCode";
@@ -8,7 +8,7 @@ import EdProps from './EdProps';
 import EdTree from './EdTree';
 
 // function TerminalSwitch({ name }: { name: string }) {
-//     const curr = useMsg(editorCtrl.panel$);
+//     const curr = useFlux(editorCtrl.panel$);
 //     if (curr !== name) return null;
 //     switch(name) {
 //         case 'props':
@@ -25,7 +25,7 @@ import EdTree from './EdTree';
 // }
 
 export default function Side() {
-  const panel = useMsg(editorCtrl.panel$);
+  const panel = useFlux(editorCtrl.panel$);
   if (panel !== 'side') return null;
   return (
     <Box
