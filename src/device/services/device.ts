@@ -15,7 +15,7 @@ import {
   base64toBlob,
 } from 'fluxio';
 import { DeviceModel, deviceSync, userColl } from '@/api';
-import { getPbClient, PbAuth } from 'pocketbase-lite';
+import { getPbClient, PbAuth } from 'pblite';
 
 export const deviceEmail$ = fluxStored<string>('deviceEmail$', '', isString);
 export const devicePassword$ = fluxStored<string>('devicePassword$', '', isString);

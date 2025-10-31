@@ -4,7 +4,7 @@ import { useFlux } from '@common/hooks';
 import { deviceSync, groupSync, jobSync, mediaSync, memberSync, Sync } from './sync';
 import { useDeviceKey, useGroupKey, useMediaKey, useIsAdvanced } from '../router/hooks';
 import { useMemo } from 'preact/hooks';
-import { PbModel, PbWhere } from 'pocketbase-lite';
+import { PbModel, PbWhere } from 'pblite';
 
 const useItemKey = <T extends PbModel & { key?: string }>(
   sync: Sync<T>,

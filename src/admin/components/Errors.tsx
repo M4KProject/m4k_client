@@ -3,7 +3,7 @@ import { isItem, removeItem, ReqError, toError } from 'fluxio';
 import { Button, tooltip, GridCols, Grid } from '@common/components';
 import { Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'preact/hooks';
-import { getPbClient } from 'pocketbase-lite';
+import { getPbClient } from 'pblite';
 
 const c = Css('Errors', {
   '': {

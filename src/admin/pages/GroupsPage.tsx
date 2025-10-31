@@ -5,7 +5,7 @@ import { SearchField } from '../components/SearchField';
 import { Role } from '@/api';
 import { groupSync, memberSync } from '@/api/sync';
 import { GroupGrid } from '../components/GroupGrid';
-import { getPbClient } from 'pocketbase-lite';
+import { getPbClient } from 'pblite';
 
 const c = Css('GroupsPage', {
   Color: {

@@ -6,7 +6,7 @@ import {
   PbCreate,
   PbUpdate,
   PbAuthColl,
-} from 'pocketbase-lite';
+} from 'pblite';
 import {
   byId,
   fluxDictionary,

@@ -1,5 +1,5 @@
 import { isStringValid, toError } from 'fluxio';
-import { getPbClient } from 'pocketbase-lite';
+import { getPbClient } from 'pblite';
 
 export const needAuthId = () => {
   const id = getPbClient().getAuthId();

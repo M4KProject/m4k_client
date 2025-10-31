@@ -1,6 +1,9 @@
 [submodule "common"]
 	path = common
-	url = https://github.com/M4KProject/m4k_common.git
-[submodule "pocketbase-lite"]
-	path = pocketbase-lite
+	url = https://github.com/baveg/m4k_common.git
+[submodule "pblite"]
+	path = pblite
 	url = https://github.com/baveg/pocketbase-lite.git
+[submodule "fluxio"]
+	path = fluxio
+	url = https://github.com/baveg/fluxio.git

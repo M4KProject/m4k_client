@@ -31,17 +31,18 @@
     "paths": {
       "@/*": ["./src/*"],
       "@common/*": ["./common/*"],
-      "pocketbase-lite": ["./pocketbase-lite/src"],
-      "pocketbase-lite/*": ["./pocketbase-lite/src/*"],
-      "fluxio": ["./pocketbase-lite/fluxio/src/index"],
-      "fluxio/*": ["./pocketbase-lite/fluxio/src/*"]
+      "pblite": ["./pblite/src"],
+      "pblite/*": ["./pblite/src/*"],
+      "fluxio": ["./fluxio/src/index"],
+      "fluxio/*": ["./fluxio/src/*"]
     }
   },
   "include": [
     "node_modules/vite/client.d",
     "vite.config",
     "common/**/*",
-    "pocketbase-lite/**/*",
+    "pblite/**/*",
+    "fluxio/**/*",
     "src/**/*"
   ]
 }

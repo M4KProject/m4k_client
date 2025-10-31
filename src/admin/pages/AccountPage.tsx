@@ -10,7 +10,7 @@ import { LoadingPage } from './LoadingPage';
 import { useIsAdvanced } from '@/router/hooks';
 import { setIsAdvanced } from '@/router/setters';
 import { Branding } from '@/device/components/Branding';
-import { getPbClient } from 'pocketbase-lite';
+import { getPbClient } from 'pblite';
 import { userColl } from '@/api';
 
 const c = Css('AccountPage', {

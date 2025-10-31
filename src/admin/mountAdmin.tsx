@@ -1,7 +1,7 @@
 import { render } from 'preact';
 import { App } from './components/App';
 import { addFont, refreshTheme, addEl, addResponsiveListener, setCss } from '@common/ui';
-import { getPbClient } from 'pocketbase-lite';
+import { getPbClient } from 'pblite';
 
 console.debug('loaded');
 

@@ -6,7 +6,7 @@ import { mountDevice } from './device/mountDevice';
 import { mountAdmin } from './admin/mountAdmin';
 import { initServiceWorker } from './initServiceWorker';
 import { isDevice$ } from './router/isDevice$';
-import { getPbClient } from 'pocketbase-lite';
+import { getPbClient } from 'pblite';
 
 const log = logger('main');
 

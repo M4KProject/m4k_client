@@ -22,7 +22,7 @@ import { setDeviceKey, setPage } from '../../router/setters';
 import { useIsAdvanced } from '@/router/hooks';
 import { useGroupDevices, useGroupMedias } from '@/api/hooks';
 import { formatDate, formatDateTime } from '@common/utils/date';
-import { getPbClient } from 'pocketbase-lite';
+import { getPbClient } from 'pblite';
 
 const c = Css('DevicesPage', {
   Buttons: {

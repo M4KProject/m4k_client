@@ -15,7 +15,7 @@ import { Page } from '@/router/types';
 import { useGroupKey, usePage } from '@/router/hooks';
 import { useGroup } from '@/api/hooks';
 import { Errors } from './Errors';
-import { getPbClient } from 'pocketbase-lite';
+import { getPbClient } from 'pblite';
 
 const c = Css('App', {
   '': {

@@ -31,8 +31,8 @@ export default defineConfig(({ mode }) => {
       alias: {
         '@': path.resolve(__dirname, './src'),
         '@common': path.resolve(__dirname, './common'),
-        'pocketbase-lite': path.resolve(__dirname, './pocketbase-lite/src'),
-        fluxio: path.resolve(__dirname, './pocketbase-lite/fluxio/src'),
+        pblite: path.resolve(__dirname, './pblite/src'),
+        fluxio: path.resolve(__dirname, './fluxio/src'),
 
         // Map React imports from common library to Preact
         react: 'preact/compat',

@@ -4,7 +4,7 @@ cd "${dirname $0}"
 
 npm run format
 
-cd ./pocketbase-lite/fluxio
+cd ./fluxio
 git add .
 git commit -m "sync"
 sleep 1
@@ -13,7 +13,7 @@ git push
 
 sleep 1
 
-cd ../
+cd ../pblite
 git add .
 git commit -m "sync"
 sleep 1

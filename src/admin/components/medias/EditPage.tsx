@@ -15,7 +15,7 @@
 // import { useGroupMedias } from '@/api/hooks';
 // import { isArray } from 'fluxio';
 // import { BoxData, Boxes } from '@common/box/types';
-// import { getPbClient } from 'pocketbase-lite';
+// import { getPbClient } from 'pblite';
 
 // const c = Css('EditPlaylist', {
 //   '': {
