@@ -1,7 +1,5 @@
-import EdViewport from './EdViewport';
-import EdFabs from './EdFabs';
-import EdTerminal from './EdTerminal';
-import EdSide from './EdSide';
+import { EdFabs } from './EdFabs';
+import { EdSide } from './EdSide';
 import { Css } from '@common/ui';
 
 const c = Css('Editor', {
@@ -15,11 +13,11 @@ export const Editor = () => {
   console.debug('Editor');
 
   return (
-    <div class={c('')}>
-      <EdViewport />
-      <EdTerminal />
+    <div {...c()}>
+      {/* <EdViewport /> */}
+      {/* <EdTerminal /> */}
       <EdSide />
       <EdFabs />
     </div>
   );
-}
+};

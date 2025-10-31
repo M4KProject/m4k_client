@@ -31,8 +31,8 @@ export interface BrandingProps {}
 const BrandingContent = ({}: BrandingProps) => {
   log.d('Content');
   return (
-    <div class={c('Content')}>
-      <img src={logoSvg} alt="Mediactil" class={c('Logo')} />
+    <div {...c('Content')}>
+      <img src={logoSvg} alt="Mediactil" {...c('Logo')} />
     </div>
   );
 };
@@ -40,5 +40,5 @@ const BrandingContent = ({}: BrandingProps) => {
 export const Branding = () => {
   log.d('Branding');
   useEffect(() => portal(<BrandingContent />), []);
-  return <div class={c()} />;
+  return <div {...c()} />;
 };

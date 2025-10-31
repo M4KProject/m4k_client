@@ -80,11 +80,11 @@ export const PdfView = ({ media, divProps }: PdfViewProps) => {
   };
 
   return (
-    <div {...divProps} class={c(divProps)}>
-      <PanZoom class={c('Container')}>
+    <div {...divProps} {...c(divProps)}>
+      <PanZoom {...c('Container')}>
         {currentImage && (
           <div
-            class={c('Page')}
+            {...c('Page')}
             style={{
               backgroundImage: `url('${getMediaUrl(currentImage)}')`,
             }}
@@ -92,13 +92,13 @@ export const PdfView = ({ media, divProps }: PdfViewProps) => {
         )}
       </PanZoom>
 
-      <div class={c('Toolbar')}>
+      <div {...c('Toolbar')}>
         <Button
           icon={<ChevronLeft />}
           color={currentPage <= 0 ? 'secondary' : 'primary'}
           onClick={currentPage <= 0 ? undefined : handlePreviousPage}
         />
-        <div class={c('PageNbr')}>
+        <div {...c('PageNbr')}>
           {currentPage + 1} / {totalPages}
         </div>
         <Button

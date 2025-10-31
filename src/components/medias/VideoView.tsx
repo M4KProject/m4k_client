@@ -34,14 +34,14 @@
 //   return (
 //     <div
 //       {...props}
-//       class={c('', props)}
+//       {...c('', props)}
 //       style={{
 //         backgroundImage: posterImage ? `url('${getMediaUrl(posterImage)}')` : undefined,
 //         ...props.style,
 //       }}
 //     >
 //       <video
-//         class={c('Video', fit && `Video-${fit}`)}
+//         {...c('Video', fit && `Video-${fit}`)}
 //         controls={false}
 //         autoPlay={true}
 //         muted={true}

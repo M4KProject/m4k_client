@@ -19,7 +19,7 @@ export const SearchField = () => {
   const isSearchOpen = useFlux(isSearchOpen$);
 
   return (
-    <div class={c()}>
+    <div {...c()}>
       {isSearchOpen && <Field name="search" value={search} onValue={search$.setter()} />}
       <Button
         icon={<Search />}

@@ -53,11 +53,11 @@ export const CodePinView = ({ open$ }: { open$: Flux<boolean> }) => {
   }, [codePin]);
 
   return (
-    <Form class={c()}>
+    <Form {...c()}>
       <Field type="password" label="Code PIN" value={codePin} onValue={setCodePin} />
-      <div class={c('Buttons')}>
+      <div {...c('Buttons')}>
         <Button title="Valider" color="primary" icon={<Lock />} onClick={handleClose} />
-        <div class={c('Sep')} />
+        <div {...c('Sep')} />
         <Button
           title="Online"
           icon={<Globe />}
@@ -66,7 +66,7 @@ export const CodePinView = ({ open$ }: { open$: Flux<boolean> }) => {
           }}
         />
       </div>
-      <div class={c('Code')}>{device?.key}</div>
+      <div {...c('Code')}>{device?.key}</div>
       <Branding />
     </Form>
     // <>

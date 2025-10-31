@@ -56,15 +56,15 @@ export const PairingPage = () => {
   const pairingCode = device?.key || device?.id || 'Chargement...';
 
   return (
-    <div class={c()}>
-      <div class={c('Container')}>
+    <div {...c()}>
+      <div {...c('Container')}>
         <LoadingSpinner />
-        <div class={c('Title')}>En attente de pairage</div>
-        <div class={c('Subtitle')}>Saisissez cette clé dans l'interface d'administration</div>
-        <div class={c('Code')}>
-          <div class={c('CodeText')}>{pairingCode.toUpperCase()}</div>
+        <div {...c('Title')}>En attente de pairage</div>
+        <div {...c('Subtitle')}>Saisissez cette clé dans l'interface d'administration</div>
+        <div {...c('Code')}>
+          <div {...c('CodeText')}>{pairingCode.toUpperCase()}</div>
         </div>
-        <div class={c('Buttons')}>
+        <div {...c('Buttons')}>
           <Button
             title="Mode Offline"
             color="secondary"

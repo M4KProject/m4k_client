@@ -134,8 +134,8 @@ export const ActionsPage = () => {
   const [info] = usePromise(() => m4k.deviceInfo(), []);
 
   return (
-    <div class={c()}>
-      <div class={c('Info')}>
+    <div {...c()}>
+      <div {...c('Info')}>
         {Object.entries(info || {}).map(([k, v], i) => (
           <div key={i}>
             {k}: <b>{v}</b>
@@ -143,7 +143,7 @@ export const ActionsPage = () => {
         ))}
       </div>
 
-      <div class={c('Buttons')}>
+      <div {...c('Buttons')}>
         <Button color="primary" onClick={() => installApk('m4k.apk')}>
           Installer la derniére version du Kiosk
         </Button>
@@ -160,7 +160,7 @@ export const ActionsPage = () => {
         <Button onClick={() => m4k.exit()}>Quitter</Button>
       </div>
 
-      <div class={c('Buttons')}>
+      <div {...c('Buttons')}>
         <h3>Installer :</h3>
         <Button onClick={() => installApk('autostart22.apk')}>AutoStart</Button>
         <Button onClick={() => installApk('RawBT609.apk')}>RawBt Printer V6.0.9</Button>
@@ -170,7 +170,7 @@ export const ActionsPage = () => {
         <Button onClick={() => installApk('WebView132.apk')}>WebView 132</Button>
       </div>
 
-      <div class={c('Buttons')}>
+      <div {...c('Buttons')}>
         <h3>Installer WebView :</h3>
         {/* https://www.apkmirror.com/apk/google-inc/android-system-webview/ */}
         <Button onClick={() => installApk('webview134_arm64_a8.apk')}>
@@ -178,7 +178,7 @@ export const ActionsPage = () => {
         </Button>
       </div>
 
-      <div class={c('Buttons')}>
+      <div {...c('Buttons')}>
         <h3>Ouvrir :</h3>
         <Button onClick={testPrint}>Test Impression</Button>
         <Button
@@ -223,7 +223,7 @@ export const ActionsPage = () => {
                 <Button onClick={() => m4k.set("screenOrientation", "reverse_portrait")}>Reverse Portrait</Button>
             </div> */}
 
-      <div class={c('Buttons')}>
+      <div {...c('Buttons')}>
         <h3>Autre :</h3>
         <Button
           onClick={async () => {

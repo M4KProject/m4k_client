@@ -44,7 +44,7 @@ export const DevicePage = () => {
 
   if (!device) {
     return (
-      <Page class={c()}>
+      <Page {...c()}>
         <Toolbar title="Mode Remote"></Toolbar>
         <PageBody>
           <div>Device non trouvé</div>
@@ -72,7 +72,7 @@ export const DevicePage = () => {
   const captureUrl = device.capture ? getUrl('devices', device.id, device.capture) : '';
 
   return (
-    <Page class={c()}>
+    <Page {...c()}>
       <Toolbar title={device.name || device.key}>
         <Button
           icon={<RefreshCw />}
@@ -90,8 +90,8 @@ export const DevicePage = () => {
           onClick={() => executeAction('exit')}
         />
       </Toolbar>
-      <PageBody class={c('Body')}>
-        <div class={c('Screen')}>
+      <PageBody {...c('Body')}>
+        <div {...c('Screen')}>
           <DeviceScreen
             captureUrl={captureUrl}
             deviceWidth={deviceWidth}

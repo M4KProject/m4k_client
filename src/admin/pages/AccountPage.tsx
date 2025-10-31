@@ -22,7 +22,7 @@ const c = Css('AccountPage', {
 });
 
 export const Color = ({ color }: { color: string }) => (
-  <div {...tooltip(color)} class={c('Color')} style={{ background: getColor(color) }} />
+  <div {...tooltip(color)} {...c('Color')} style={{ background: getColor(color) }} />
 );
 
 export const AccountPage = () => {
@@ -46,7 +46,7 @@ export const AccountPage = () => {
   };
 
   return (
-    <Page class={c()}>
+    <Page {...c()}>
       <Toolbar title="Account">
         <Button
           color="primary"

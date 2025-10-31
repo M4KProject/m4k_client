@@ -17,7 +17,7 @@ export const ImageView = ({ media, divProps }: ImageViewProps) => {
   return (
     <div
       {...divProps}
-      class={c('', divProps)}
+      {...c('', divProps)}
       style={{
         backgroundImage: image ? `url('${imageUrl}')` : undefined,
         ...divProps?.style,

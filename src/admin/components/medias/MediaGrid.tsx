@@ -1,5 +1,5 @@
 import { Css } from '@common/ui';
-import { byId, groupBy, FluxDictionary, sortItems, fluxDictionary } from 'fluxio';
+import { byId, groupBy, sortItems, fluxDictionary, isUFloat } from 'fluxio';
 import { addTr, useFlux } from '@common/hooks';
 import { MediaModel } from '@/api';
 import { Grid, GridCols } from '@common/components';
@@ -7,7 +7,7 @@ import { JobGrid } from '../jobs/JobGrid';
 import { selectedById$ } from '@/admin/controllers/selected';
 import { useGroupMedias } from '@/api/hooks';
 import { useIsAdvanced } from '@/router/hooks';
-import { Dictionary, isPositive, round } from 'fluxio';
+import { Dictionary, round } from 'fluxio';
 import { Trash2, FolderInput, PlusSquare, Edit, Eye, Download } from 'lucide-react';
 import { tooltip, Button, Field } from '@common/components';
 import { SelectedField } from '../SelectedField';

@@ -70,7 +70,7 @@
 //   )
 
 //   return (
-//     <div class={c()}>
+//     <div {...c()}>
 //       <Grid
 //         cols={playlistCols}
 //         ctx={{

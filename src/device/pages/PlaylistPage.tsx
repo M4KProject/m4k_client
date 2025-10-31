@@ -68,7 +68,7 @@ const playlistItemCols: GridCols<
     (item) =>
       item.mimeType?.startsWith('image/') && (
         <div
-          class={c('Preview')}
+          {...c('Preview')}
           style={{
             backgroundImage: `url("${item.path}")`,
           }}

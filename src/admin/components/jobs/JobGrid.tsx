@@ -73,13 +73,13 @@ export const JobGrid = ({ filter, panel, ...props }: JobGridProps) => {
   const mediaById = byId(medias.filter((m): m is MediaModel => m !== undefined));
 
   if (panel && allJobs.length === 0) {
-    return <div class={c('Panel', 'Panel-close', props)} />;
+    return <div {...c('Panel', 'Panel-close', props)} />;
   }
 
   const table = <Grid cols={cols} ctx={{ mediaById }} items={jobs} />;
 
   if (panel) {
-    return <div class={c('Panel', 'Panel-open', props)}>{table}</div>;
+    return <div {...c('Panel', 'Panel-open', props)}>{table}</div>;
   }
 
   return table;

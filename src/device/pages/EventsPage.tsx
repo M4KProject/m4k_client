@@ -26,7 +26,7 @@ export const EventsPage = () => {
   }, [m4k]);
 
   return (
-    <Page class={c()}>
+    <Page {...c()}>
       <Toolbar title="Liste des événements" />
       <PageBody>
         {events.map((e, i) => (

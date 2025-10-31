@@ -80,13 +80,13 @@ export const Popover = ({ id, children, class: className = '', title }: PopoverP
 
   return (
     <div
-      class={c('', isOver && `-over`, className)}
+      {...c('', isOver && `-over`, className)}
       onMouseOver={() => setIsOver(overId, true)}
       onMouseLeave={() => setIsOver(overId, false)}
     >
-      <div ref={floatRef} class={c('Float')}>
+      <div ref={floatRef} {...c('Float')}>
         {children}
-        {title && <span class={c('Title')}>{title}</span>}
+        {title && <span {...c('Title')}>{title}</span>}
       </div>
     </div>
   );

@@ -1,7 +1,6 @@
-import MenuItem from '@mui/material/MenuItem';
-import TextField from '@mui/material/TextField';
 import { PProps } from './interfaces';
 import B from './B';
+import { Field } from '@common/components';
 
 const labelDico: Record<string, string> = {
   '': 'Élément',
@@ -42,9 +41,8 @@ export default function PType({ v, setV, b }: PProps) {
   const types = getTypes();
   return (
     <div className="PInput">
-      <TextField
-        size="small"
-        select
+      <Field
+        type="select"
         value={v || ''}
         onChange={(e) => {
           let type = String(e.target.value);

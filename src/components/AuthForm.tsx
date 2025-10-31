@@ -51,7 +51,7 @@ export const AuthForm = () => {
   );
 
   return (
-    <div class={c()}>
+    <div {...c()}>
       <Form>
         {isAuthLoading ?
           <Loading />
@@ -68,7 +68,7 @@ export const AuthForm = () => {
               props={{ autoComplete: 'current-password' }}
               error={passwordError}
             />
-            <div class={c('Col')}>
+            <div {...c('Col')}>
               <Button
                 icon={<LogIn />}
                 title="Se connecter"
@@ -108,7 +108,7 @@ export const AuthForm = () => {
               label="Votre mot de passe"
               props={{ autoComplete: 'new-password' }}
             />
-            <div class={c('Col')}>
+            <div {...c('Col')}>
               <Button
                 title="S'inscrire"
                 onClick={async () => {
@@ -129,7 +129,7 @@ export const AuthForm = () => {
         : page === 'forgot-password' ?
           <>
             {emailField}
-            <div class={c('Col')}>
+            <div {...c('Col')}>
               <Button
                 title="Réinitialiser le mot de passe par email"
                 onClick={async () => {
@@ -152,7 +152,7 @@ export const AuthForm = () => {
           <>
             {emailField}
             <Field col value={password} onValue={setPassword} label="Le CODE reçu par email" />
-            <div class={c('Col')}>
+            <div {...c('Col')}>
               <Button
                 title="Connexion avec le CODE"
                 onClick={() => {

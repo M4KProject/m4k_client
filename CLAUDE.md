@@ -160,8 +160,8 @@ const css = Css('ComponentName', {
 const Component = () => {
   const c = useCss('ComponentName', css);
   return (
-    <div class={c()}>           {/* Root component class */}
-      <div class={c('Container')}>Content</div>  {/* Nested element */}
+    <div {...c()}>           {/* Root component class */}
+      <div {...c('Container')}>Content</div>  {/* Nested element */}
     </div>
   );
 };
@@ -342,8 +342,8 @@ const c = Css('', {
 export const MyComponent = ({ children }: { children?: any }) => {
   const c = useCss('MyComponent', css);
   return (
-    <div  class={c()}>
-      <div class={c('Item')}>
+    <div  {...c()}>
+      <div {...c('Item')}>
         {children}
       </div>
     </div>

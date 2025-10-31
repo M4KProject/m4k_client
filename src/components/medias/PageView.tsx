@@ -41,9 +41,9 @@
 //   const getMediaById = (id: string) => allMedias.find((m) => m.id === id);
 
 //   return (
-//     <div {...props} class={c(props)}>
+//     <div {...props} {...c(props)}>
 //       {/* HTML content */}
-//       {html && <div class={c('HtmlContent')} dangerouslySetInnerHTML={{ __html: html }} />}
+//       {html && <div {...c('HtmlContent')} dangerouslySetInnerHTML={{ __html: html }} />}
 
 //       {/* Positioned media items */}
 //       {items.map((item: any, index: number) => {
@@ -55,7 +55,7 @@
 //         return (
 //           <div
 //             key={index}
-//             class={c('MediaItem')}
+//             {...c('MediaItem')}
 //             style={{
 //               left: `${x}%`,
 //               top: `${y}%`,

@@ -43,7 +43,7 @@ export const AppButton = ({
   const url = applicationColl.getDownloadUrl(id, file);
   return (
     <Button
-      class={c('AppButton')}
+      {...c('AppButton')}
       icon={<Download />}
       color="primary"
       onClick={(e) => {
@@ -69,12 +69,12 @@ export const Apps = () => {
   sortItems(applications, (a) => (a.name || '') + a.version);
 
   return (
-    <div class={c('')}>
+    <div {...c()}>
       {applications.map((app) => (
-        <div key={app.id} class={c('App')}>
-          <div class={c('AppInfo')}>
-            <div class={c('AppName')}>{app.name}</div>
-            {app.version && <div class={c('AppVersion')}>Version: {app.version}</div>}
+        <div key={app.id} {...c('App')}>
+          <div {...c('AppInfo')}>
+            <div {...c('AppName')}>{app.name}</div>
+            {app.version && <div {...c('AppVersion')}>Version: {app.version}</div>}
           </div>
           <AppButton id={app.id} file={String(app.file)} filename={app.name || ''} />
         </div>

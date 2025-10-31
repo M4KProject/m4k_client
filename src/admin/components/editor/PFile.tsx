@@ -39,7 +39,6 @@ import { editorCtrl } from '../../controllers/EditorController';
 //   console.log("Wrap it up, we're done here. 👋");
 // });
 
-
 const formatSx: SxProps = {
   display: 'flex',
   justifyContent: 'space-between',
@@ -71,10 +70,16 @@ const resolutions = {
   '2160': '4K',
 };
 
-function FileInputProgress({ progress$, color }: { progress$: Msg<number>, color: 'primary' | 'secondary' }) {
+function FileInputProgress({
+  progress$,
+  color,
+}: {
+  progress$: Msg<number>;
+  color: 'primary' | 'secondary';
+}) {
   const progress = useFlux(progress$);
   if (progress === 0 || progress === 1) return null;
-  return <LinearProgress variant="determinate" value={progress * 100} color={color} />
+  return <LinearProgress variant="determinate" value={progress * 100} color={color} />;
 }
 
 function isPdf(p: string | undefined) {
@@ -138,34 +143,31 @@ function FileInput({ v, setV, b, p }: PProps) {
         if (b && b.children.length === 0) {
           b.update({
             children: Object.keys(outputs)
-              .filter(name => !name.includes('.hd.jpg'))
-              .map(name => ({
-                t: "img",
+              .filter((name) => !name.includes('.hd.jpg'))
+              .map((name) => ({
+                t: 'img',
                 bgImg: `${mediaId}/${name}`,
-              }))
+              })),
           });
         }
-      }
-      else if (p === 'video') {
+      } else if (p === 'video') {
         output$.set('video');
-      }
-      else if (Object.keys(outputs).length > 0 && !outputs[output$.val]) {
+      } else if (Object.keys(outputs).length > 0 && !outputs[output$.val]) {
         output$.set(Object.keys(outputs)[0]);
       }
 
       const newValue = outputs[output$.val] ? `${mediaId}/${output$.val}` : `${mediaId}/source`;
       value$.set(newValue);
-    }
-    catch (error) {
+    } catch (error) {
       console.error('FileInput interval', mediaId, error);
     }
-  }
+  };
 
   useEffect(() => {
     refreshMedia();
     const interval = setInterval(refreshMedia, 5000);
     return () => clearInterval(interval);
-  }, [mediaId])
+  }, [mediaId]);
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = async (e) => {
     console.debug('PFileInput onChange', e);
@@ -259,7 +261,7 @@ function FileInput({ v, setV, b, p }: PProps) {
         },
         '& .PFileFormat': {
           flex: 1,
-        }
+        },
       }}
     >
       {/*<TextField size="small" label="URL" value={value} onChange={(e) => setV(e.target.value)} />*/}
@@ -275,9 +277,13 @@ function FileInput({ v, setV, b, p }: PProps) {
           }}
         >
           <MenuItem value={output}>{output}</MenuItem>
-          {Object.keys(outputs).filter(name => name !== output).map((name) => (
-            <MenuItem key={name} value={name}>{name}</MenuItem>
-          ))}
+          {Object.keys(outputs)
+            .filter((name) => name !== output)
+            .map((name) => (
+              <MenuItem key={name} value={name}>
+                {name}
+              </MenuItem>
+            ))}
         </TextField>
         <input
           className="PInputFile"

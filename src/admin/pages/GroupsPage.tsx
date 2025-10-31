@@ -16,7 +16,7 @@ const c = Css('GroupsPage', {
 });
 
 export const Color = ({ color }: { color: string }) => (
-  <div {...tooltip(color)} class={c('Color')} style={{ background: getColor(color) }} />
+  <div {...tooltip(color)} {...c('Color')} style={{ background: getColor(color) }} />
 );
 
 export const GroupsPage = () => {
@@ -33,7 +33,7 @@ export const GroupsPage = () => {
   console.debug('GroupsPage');
 
   return (
-    <Page class={c()}>
+    <Page {...c()}>
       <Toolbar title="Gestionnaire de groupes">
         <Button title="Ajouter" icon={<Plus />} color="primary" onClick={handleAdd} />
         <SearchField />

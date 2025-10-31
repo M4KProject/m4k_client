@@ -85,12 +85,7 @@ function EdJsonData() {
 
 function EdCodeHtml() {
   const select = useFlux(B.select$) || B.root;
-  return (
-    <MyCodeMirror
-      value={formatHtml(select.el.outerHTML)}
-      type="html"
-    />
-  );
+  return <MyCodeMirror value={formatHtml(select.el.outerHTML)} type="html" />;
 }
 
 function EdCodeCss() {
@@ -135,12 +130,8 @@ const c = Css('EdCode', {
   },
 });
 
-export default function EdCode() {
+export const EdCode = () => {
   const terminal = useFlux(terminal$);
   const Comp = compMap[terminal];
-  return (
-    <div class={c('', `-${terminal}`)}>
-      {Comp && <Comp />}
-    </div>
-  );
-}
+  return <div {...c('', `-${terminal}`)}>{Comp && <Comp />}</div>;
+};

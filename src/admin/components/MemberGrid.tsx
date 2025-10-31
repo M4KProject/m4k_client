@@ -56,5 +56,5 @@ export const MemberGrid = () => {
   const members = useGroupMembers();
   const deviceById = useDeviceById();
 
-  return <Grid class={c()} cols={cols} items={members} ctx={{ deviceById }} />;
+  return <Grid {...c()} cols={cols} items={members} ctx={{ deviceById }} />;
 };

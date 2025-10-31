@@ -39,10 +39,10 @@ export const DialogContainer = () => {
   if (!dialog) return null;
 
   return (
-    <div class={c()} onClick={() => dialog.onClose?.()}>
-      <div class={c('Window')} onClick={(e) => e.stopPropagation()}>
-        <div class={c('Header')}>{dialog.title}</div>
-        <div class={c('Content')}>
+    <div {...c()} onClick={() => dialog.onClose?.()}>
+      <div {...c('Window')} onClick={(e) => e.stopPropagation()}>
+        <div {...c('Header')}>{dialog.title}</div>
+        <div {...c('Content')}>
           <dialog.content />
         </div>
       </div>

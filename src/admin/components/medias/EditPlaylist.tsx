@@ -182,7 +182,7 @@ export const EditPlaylist = ({ playlist }: { playlist: PlaylistModel }) => {
   };
 
   return (
-    <div class={c()}>
+    <div {...c()}>
       <Grid
         cols={playlistCols}
         ctx={{

@@ -19,7 +19,33 @@ import { moveItem } from 'fluxio';
 import { useFlux } from '@common/hooks';
 import { Button, ButtonProps, tooltip, Tooltip } from '@common/components';
 import { Css } from '@common/ui';
-import { FilePlus, ClipboardCopy, ClipboardX, ClipboardPaste, CopyPlus, Trash, Eye, EyeOff, AlignLeft, AlignCenter, AlignRight, AlignJustify, AlignStartHorizontal, AlignCenterHorizontal, AlignEndHorizontal, MoveUp, MoveDown, MoveLeft, MoveRight, Braces, Code, Italic, AlignHorizontalJustifyStart, AlignHorizontalJustifyCenter, AlignHorizontalJustifyEnd } from 'lucide-react';
+import {
+  FilePlus,
+  ClipboardCopy,
+  ClipboardX,
+  ClipboardPaste,
+  CopyPlus,
+  Trash,
+  Eye,
+  EyeOff,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
+  AlignJustify,
+  AlignStartHorizontal,
+  AlignCenterHorizontal,
+  AlignEndHorizontal,
+  MoveUp,
+  MoveDown,
+  MoveLeft,
+  MoveRight,
+  Braces,
+  Code,
+  Italic,
+  AlignHorizontalJustifyStart,
+  AlignHorizontalJustifyCenter,
+  AlignHorizontalJustifyEnd,
+} from 'lucide-react';
 
 function AddChildIcon(props: any) {
   return <FilePlus {...props} style={{ transform: 'rotate(90deg)' }} />;
@@ -147,15 +173,21 @@ const actionMap: Record<string, () => any> = {
   left: () => left(),
   right: () => right(),
 
-  hLeft: () => updateStyle(flexRow() ? { justifyContent: 'flex-start' } : { alignItems: 'flex-start' }),
+  hLeft: () =>
+    updateStyle(flexRow() ? { justifyContent: 'flex-start' } : { alignItems: 'flex-start' }),
   hCenter: () => updateStyle(flexRow() ? { justifyContent: 'center' } : { alignItems: 'center' }),
-  hRight: () => updateStyle(flexRow() ? { justifyContent: 'flex-end' } : { alignItems: 'flex-end' }),
-  hStretch: () => updateStyle(flexRow() ? { justifyContent: 'stretch' } : { alignItems: 'stretch' }),
+  hRight: () =>
+    updateStyle(flexRow() ? { justifyContent: 'flex-end' } : { alignItems: 'flex-end' }),
+  hStretch: () =>
+    updateStyle(flexRow() ? { justifyContent: 'stretch' } : { alignItems: 'stretch' }),
 
-  vTop: () => updateStyle(flexRow() ? { alignItems: 'flex-start' } : { justifyContent: 'flex-start' }),
+  vTop: () =>
+    updateStyle(flexRow() ? { alignItems: 'flex-start' } : { justifyContent: 'flex-start' }),
   vMiddle: () => updateStyle(flexRow() ? { alignItems: 'center' } : { justifyContent: 'center' }),
-  vBottom: () => updateStyle(flexRow() ? { alignItems: 'flex-end' } : { justifyContent: 'flex-end' }),
-  vStretch: () => updateStyle(flexRow() ? { alignItems: 'stretch' } : { justifyContent: 'stretch' }),
+  vBottom: () =>
+    updateStyle(flexRow() ? { alignItems: 'flex-end' } : { justifyContent: 'flex-end' }),
+  vStretch: () =>
+    updateStyle(flexRow() ? { alignItems: 'stretch' } : { justifyContent: 'stretch' }),
 
   tLeft: () => updateStyle({ textAlign: 'left' }),
   tCenter: () => updateStyle({ textAlign: 'center' }),
@@ -270,7 +302,7 @@ const c = Css('EdActions', {
     justifyContent: 'space-around',
     p: 1,
   },
-  'Row': {
+  Row: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
@@ -282,8 +314,8 @@ export const EdActions = () => {
   const select = useFlux(B.select$) || B.root;
   useFlux(select.update$);
   return (
-    <div class={c('')}>
-      <div class={c('Row')}>
+    <div {...c()}>
+      <div {...c('Row')}>
         <Action name="cut">
           <ClipboardX />
         </Action>
@@ -297,7 +329,7 @@ export const EdActions = () => {
           <ClipboardPaste />
         </Action>
       </div>
-      <div class={c('Row')}>
+      <div {...c('Row')}>
         <Action name="add">
           <CopyPlus />
         </Action>
@@ -307,17 +339,16 @@ export const EdActions = () => {
         <Action name="remove">
           <Trash />
         </Action>
-        {select?.d.hide ? (
+        {select?.d.hide ?
           <Action name="show">
             <Eye />
           </Action>
-        ) : (
-          <Action name="hide">
+        : <Action name="hide">
             <EyeOff />
           </Action>
-        )}
+        }
       </div>
-      <div class={c('Row')}>
+      <div {...c('Row')}>
         <Action name="tLeft">
           <AlignLeft />
         </Action>
@@ -331,7 +362,7 @@ export const EdActions = () => {
           <AlignJustify />
         </Action>
       </div>
-      <div class={c('Row')}>
+      <div {...c('Row')}>
         <Action name="vTop">
           <AlignStartHorizontal />
         </Action>
@@ -345,7 +376,7 @@ export const EdActions = () => {
           <VerticalStretchIcon />
         </Action>
       </div>
-      <div class={c('Row')}>
+      <div {...c('Row')}>
         <Action name="up">
           <MoveUp />
         </Action>
@@ -359,7 +390,7 @@ export const EdActions = () => {
           <MoveRight />
         </Action>
       </div>
-      <div class={c('Row')}>
+      <div {...c('Row')}>
         <Action name="hLeft">
           <AlignHorizontalJustifyStart />
         </Action>
@@ -373,7 +404,7 @@ export const EdActions = () => {
           <HorizontalStretchIcon />
         </Action>
       </div>
-      <div class={c('Row')}>
+      <div {...c('Row')}>
         <Action name="json">
           <Braces />
         </Action>
@@ -389,4 +420,4 @@ export const EdActions = () => {
       </div>
     </div>
   );
-}
+};

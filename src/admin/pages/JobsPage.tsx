@@ -7,7 +7,7 @@ const c = Css('Jobs', {});
 
 export const JobsPage = () => {
   return (
-    <Page class={c('Page')}>
+    <Page {...c('Page')}>
       <Toolbar title="Les jobs">
         <SearchField />
       </Toolbar>

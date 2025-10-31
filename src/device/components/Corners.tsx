@@ -36,7 +36,7 @@ export const Corners = () => {
       {repeat(4, (i) => (
         <div
           key={i}
-          class={c('', `-${i}`)}
+          {...c('', `-${i}`)}
           style={{
             [i < 2 ? 'top' : 'bottom']: 0,
             [i % 2 === 0 ? 'left' : 'right']: 0,

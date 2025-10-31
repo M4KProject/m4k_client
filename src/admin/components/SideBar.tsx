@@ -106,7 +106,7 @@ export const SideBar = () => {
         </>
       : null}
       <SideSep />
-      <div class={c('Version')}>2.1.0</div>
+      <div {...c('Version')}>2.1.0</div>
       <SideButton
         title="Account"
         icon={<User />}

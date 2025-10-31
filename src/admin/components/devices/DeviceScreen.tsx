@@ -32,15 +32,15 @@ interface DeviceScreenProps {
 export const DeviceScreen = ({ captureUrl, deviceWidth, deviceHeight }: DeviceScreenProps) => {
   return (
     <div
-      class={c()}
+      {...c()}
       style={{
         backgroundImage: captureUrl,
       }}
     >
-      <div class={c('WH')}>
+      <div {...c('WH')}>
         {deviceWidth} × {deviceHeight}
       </div>
-      {!captureUrl && <div class={c('NoCapture')}>Aucune capture disponible</div>}
+      {!captureUrl && <div {...c('NoCapture')}>Aucune capture disponible</div>}
     </div>
   );
 };

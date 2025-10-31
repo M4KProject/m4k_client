@@ -51,7 +51,7 @@ export const PlaylistView = ({ media, mediaById, fit, anim, divProps }: Playlist
   if (!media || length === 0) return null;
 
   return (
-    <div {...divProps} class={c('', divProps)}>
+    <div {...divProps} {...c('', divProps)}>
       {items.map((item: any, i: number) => {
         return <MediaView key={item.id} {...item} onNext={gotoNext} />;
       })}

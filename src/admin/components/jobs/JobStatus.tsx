@@ -49,7 +49,7 @@ export const JobStatus = ({ job }: JobStatusProps) => {
 
   if (status === 'processing') {
     return (
-      <div class={c('', '-processing')}>
+      <div {...c('', '-processing')}>
         <Progress progress={job.progress || 0} />
       </div>
     );
@@ -57,14 +57,14 @@ export const JobStatus = ({ job }: JobStatusProps) => {
 
   if (status === 'failed') {
     return (
-      <div class={c('', '-failed')}>
+      <div {...c('', '-failed')}>
         <Tr>{job.error || ''}</Tr>
       </div>
     );
   }
 
   return (
-    <div class={c('', `-${status}`)}>
+    <div {...c('', `-${status}`)}>
       <Icon size={16} />
       <Tr>{status}</Tr>
     </div>

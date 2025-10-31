@@ -65,7 +65,7 @@ export const MembersPage = () => {
   };
 
   return (
-    <Page class={c()}>
+    <Page {...c()}>
       <Toolbar title="Les membres">
         <Button title="Ajouter un membre" icon={<Plus />} color="primary" onClick={handleCreate} />
         <SearchField />

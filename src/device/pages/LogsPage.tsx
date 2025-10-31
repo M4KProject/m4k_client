@@ -44,7 +44,7 @@
 
 // const Log = ({ log, c } : { log: M4kLog, c: string }) => {
 //     return (
-//         <div class={c(' ${c}-${(log.level||'info').toLowerCase()}')}>
+//         <div {...c(' ${c}-${(log.level||'info').toLowerCase()}')}>
 //             <span>{log.level}</span>
 //             <pre>{log.message}</pre>
 //             <pre>{showValue(log)}</pre>

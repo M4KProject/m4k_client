@@ -1,24 +1,88 @@
-import Switch from '@mui/material/Switch';
-import TextField from '@mui/material/TextField';
-import Box from '@mui/material/Box';
-import { useEffect, useState } from 'react';
 import { getSelect, rmProp, rmStyleProp, setSelect } from './bEdit';
-import { useFlux } from 'vegi';
 import { D, DRoot, DStyle } from './D';
 import type { PProps } from './interfaces';
 import PHtml from './PHtml';
-import MenuItem from '@mui/material/MenuItem';
-import RemoveIcon from '@mui/icons-material/RemoveCircleTwoTone';
 import PColor from './PColor';
 import PFile, { PFiles } from './PFile';
 import PType from './PType';
-import { cloneJson, toNumber, deleteKey } from 'vegi';
 import PPrices from './PPrices';
 import PStrArr from './PStrArr';
 import B from './B';
+import { Field } from '@common/components';
+import { Css } from '@common/ui';
+import { useFlux } from '@common/hooks';
+import { Trash } from 'lucide-react';
+import { useEffect, useState } from 'preact/hooks';
+import { deepClone, deleteKey } from 'fluxio';
+
+const c = Css('Editor', {
+  '': {
+    p: 1,
+    flex: 4,
+    border: '1px solid grey',
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'stretch',
+    overflowY: 'auto',
+  },
+  Input: {
+    flex: 1,
+    m: 0.5,
+    display: 'flex',
+    flexDirection: 'column',
+  },
+
+  // '& .Prop': {
+  //   display: 'flex',
+  //   alignItems: 'center',
+  // },
+  // '& .Prop-add': {
+  //   marginBottom: '40px',
+  // },
+  // '& .PLabel': {
+  //   width: 160,
+  //   display: 'flex',
+  //   alignItems: 'center',
+  //   justifyContent: 'space-between',
+  //   // mr: 1,
+  //   '& b': {
+  //     position: 'relative',
+  //   },
+  //   '& i': {
+  //     opacity: 0.5,
+  //     fontSize: '0.6em',
+  //     overflow: 'visible',
+  //     position: 'absolute',
+  //     left: 0,
+  //     bottom: '-8px',
+  //     width: '100%',
+  //     textAlign: 'center',
+  //   },
+  // },
+  // '& .PRemove': {
+  //   cursor: 'pointer',
+  //   display: 'flex',
+  //   flexDirection: 'row',
+  //   alignItems: 'center',
+  //   color: '#8d0000',
+  //   marginLeft: '-5px',
+  // },
+  // '& .PInput-row': {
+  //   flexDirection: 'row',
+  // },
+  // '& .PTPrices, & .PPrices': {
+  //   flexDirection: 'row',
+  // },
+  // '& .PTPrices input, & .PPrices input': {
+  //   paddingLeft: '2px',
+  //   paddingRight: '2px',
+  //   textAlign: 'center',
+  // },
+});
 
 function PStr({ v, setV }: PProps) {
-  return <TextField className="PInput" size="small" value={v || ''} onChange={(e) => setV(e.target.value)} />;
+  return <Field {...c('Input')} value={v || ''} onValue={setV} />;
 }
 
 function PCls(props: PProps) {
@@ -26,55 +90,16 @@ function PCls(props: PProps) {
 }
 
 function PKey({ v, setV }: PProps) {
-  return (
-    <TextField
-      className="PInput"
-      size="small"
-      inputProps={{ inputMode: 'text', pattern: '[a-zA-Z0-9\\-_]*' }}
-      value={v}
-      onChange={(e) => setV(e.target.value)}
-    />
-  );
+  return <Field {...c('Input')} value={v} onValue={setV} />;
 }
 
 function PBool({ v, setV }: PProps) {
-  return <Switch size="small" checked={!!v} onChange={(e) => setV(e.target.checked)} />;
+  return <Field {...c('Input')} type="switch" value={v} onValue={setV} />;
 }
 
-function PNbr({ v, setV, text, setText }: PProps) {
-  return (
-    <TextField
-      className="PInput"
-      size="small"
-      inputProps={{ inputMode: 'numeric' }}
-      value={text}
-      onChange={(e) => {
-        setText(e.target.value);
-        setV(toNumber(e.target.value, 0));
-      }}
-    />
-  );
+function PNbr({ v, setV }: PProps) {
+  return <Field {...c('Input')} type="number" value={v} onValue={setV} />;
 }
-
-// function PPrices({ v, setV, b }: PProps) {
-//     return (
-//         <>
-//             <TextField className="PInput" size="small" inputProps={{ inputMode: 'numeric' }} value={v||''} onChange={e => setV(e.target.value)} />
-//             <TextField className="PInput" size="small" inputProps={{ inputMode: 'numeric' }} value={v||''} onChange={e => setV(e.target.value)} />
-//             <TextField className="PInput" size="small" inputProps={{ inputMode: 'numeric' }} value={v||''} onChange={e => setV(e.target.value)} />
-//         </>
-//     );
-// }
-
-// function PStyle(props: PProps) {
-//     return (
-//         <>
-//             <PStr {...props} />
-//             <PStr {...props} />
-//             <PStr {...props} />
-//         </>
-//     );
-// }
 
 function PAuto(props: PProps) {
   return <PStr {...props} />;
@@ -86,19 +111,19 @@ function PUnit({ v, setV }: PProps) {
   const setU = (u: string) => setV(n + (u || '%'));
   return (
     <>
-      <TextField
-        className="PInput"
-        size="small"
-        inputProps={{ inputMode: 'numeric' }}
-        value={n || ''}
-        onChange={(e) => setN(e.target.value)}
+      <Field {...c('Input')} type="number" value={n || ''} onValue={setN} />
+      <Field
+        {...c('Input')}
+        type="select"
+        value={u || '%'}
+        onValue={setU}
+        items={[
+          ['rem', 'rem'],
+          ['em', 'em'],
+          ['px', 'px'],
+          ['%', '%'],
+        ]}
       />
-      <TextField className="PInput" size="small" value={u || '%'} onChange={(e) => setU(e.target.value)} select>
-        <MenuItem value="rem">rem</MenuItem>
-        <MenuItem value="em">em</MenuItem>
-        <MenuItem value="px">px</MenuItem>
-        <MenuItem value="%">%</MenuItem>
-      </TextField>
     </>
   );
 }
@@ -113,7 +138,7 @@ type POptions = {
   vs?: string[];
 };
 
-type PInfo = [(props: PProps) => JSX.Element | null, string, POptions];
+type PInfo = [typeof PUnit | null, string, POptions];
 
 const pDico: Record<keyof DRoot, PInfo | null> = {
   home: [PKey, 'Page d’accueil', { if: ['root'] }],
@@ -123,7 +148,11 @@ const pDico: Record<keyof DRoot, PInfo | null> = {
   jsFs: [PFiles, 'Fichiers JS', { if: ['root'] }],
   id: [PKey, 'Id élément', { notIf: ['root'] }],
   hide: [PBool, 'Cacher', { notIf: ['root'] }],
-  stock: [PNbr, 'Quantité', { order: 75, if: ['dish', 'drink', 'product'], showIf: ['dish', 'drink', 'product'] }],
+  stock: [
+    PNbr,
+    'Quantité',
+    { order: 75, if: ['dish', 'drink', 'product'], showIf: ['dish', 'drink', 'product'] },
+  ],
   t: [PType, 'Type', { order: 100, notIf: ['root'], notShowIf: ['root'] }],
   ctn: [PHtml, 'Contenu', { order: 10, showIf: ['ctn'] }],
   cls: [PCls, 'Classe', {}],
@@ -136,15 +165,51 @@ const pDico: Record<keyof DRoot, PInfo | null> = {
   duration: [PNbr, 'Durée (sec)', { if: ['carousel', 'pdf'], showIf: ['carousel', 'pdf'] }],
   lang: [PKey, 'Langue ISO', { if: ['lang'] }],
   alt: [PStr, 'Nom du fichier', { if: ['img', 'video'] }],
-  title: [PHtml, 'Titre', { order: 89, if: ['cat', 'dish', 'drink', 'product'], showIf: ['cat', 'dish', 'drink', 'product'] }],
-  desc: [PHtml, 'Description', { order: 88, if: ['cat', 'dish', 'drink', 'product'], showIf: ['cat', 'dish', 'drink', 'product'] }],
-  info: [PHtml, 'Information', { order: 87, if: ['cat', 'dish', 'drink', 'product'], showIf: ['cat', 'dish', 'drink', 'product'] }],
+  title: [
+    PHtml,
+    'Titre',
+    {
+      order: 89,
+      if: ['cat', 'dish', 'drink', 'product'],
+      showIf: ['cat', 'dish', 'drink', 'product'],
+    },
+  ],
+  desc: [
+    PHtml,
+    'Description',
+    {
+      order: 88,
+      if: ['cat', 'dish', 'drink', 'product'],
+      showIf: ['cat', 'dish', 'drink', 'product'],
+    },
+  ],
+  info: [
+    PHtml,
+    'Information',
+    {
+      order: 87,
+      if: ['cat', 'dish', 'drink', 'product'],
+      showIf: ['cat', 'dish', 'drink', 'product'],
+    },
+  ],
   // info2: [PHtml, 'Information', {order: 86}],
   cl: [PNbr, 'Volume cl', { order: 79, if: ['drink'], showIf: ['drink'] }],
-  prices: [PPrices, 'Prix', { order: 78, if: ['dish', 'drink', 'product'], showIf: ['dish', 'drink', 'product'] }],
+  prices: [
+    PPrices,
+    'Prix',
+    { order: 78, if: ['dish', 'drink', 'product'], showIf: ['dish', 'drink', 'product'] },
+  ],
   tPrices: [PStrArr, 'Type Prix', { order: 78, if: ['cat'], showIf: ['cat'] }],
-  icons: [PStrArr, 'Icons', { order: 29, if: ['dish', 'drink', 'product'], showIf: ['dish', 'drink', 'product'] }],
-  tags: [PStrArr, 'Mots clés', { order: 28, if: ['dish', 'drink', 'product'], showIf: ['dish', 'drink', 'product'] }],
+  icons: [
+    PStrArr,
+    'Icons',
+    { order: 29, if: ['dish', 'drink', 'product'], showIf: ['dish', 'drink', 'product'] },
+  ],
+  tags: [
+    PStrArr,
+    'Mots clés',
+    { order: 28, if: ['dish', 'drink', 'product'], showIf: ['dish', 'drink', 'product'] },
+  ],
   allergens: [PStrArr, 'Allergènes', { order: 27, if: ['cat', 'dish', 'drink'] }],
   // src: [PFile, 'Fichier', {if: ['img']}],
   editor: null,
@@ -184,8 +249,16 @@ const sDico: Partial<Record<keyof DStyle, PInfo | null>> = {
   // top: [PUnit, 'Y', {}],
   // width: [PUnit, 'Width', {}],
   // height: [PUnit, 'Height', {}],
-  backgroundPosition: [PAuto, 'Position fond', { vs: ['center', 'right', 'left', 'top', 'bottom'] }],
-  backgroundRepeat: [PAuto, 'Répétition fond', { vs: ['no-repeat', 'repeat', 'repeat-x', 'repeat-y'] }],
+  backgroundPosition: [
+    PAuto,
+    'Position fond',
+    { vs: ['center', 'right', 'left', 'top', 'bottom'] },
+  ],
+  backgroundRepeat: [
+    PAuto,
+    'Répétition fond',
+    { vs: ['no-repeat', 'repeat', 'repeat-x', 'repeat-y'] },
+  ],
   backgroundSize: [PAuto, 'Taille fond', { vs: ['auto', 'contain', 'cover'] }],
   display: [PAuto, 'Affichage', { vs: ['inline', 'block', 'flex', 'inline-flex', 'none'] }],
   overflow: [PAuto, 'Débordement', { vs: ['hidden', 'auto'] }],
@@ -193,24 +266,62 @@ const sDico: Partial<Record<keyof DStyle, PInfo | null>> = {
   visibility: [PAuto, 'Visibilité', { vs: ['visible', 'hidden'] }],
   whiteSpace: [PAuto, 'Espace blanc', { vs: ['nowrap', 'normal'] }],
   position: [PAuto, 'Position', { vs: ['absolute', 'fixed', 'relative'] }],
-  flexDirection: [PAuto, 'Flex Direction', { vs: ['row', 'row-reverse', 'column', 'column-reverse'] }],
+  flexDirection: [
+    PAuto,
+    'Flex Direction',
+    { vs: ['row', 'row-reverse', 'column', 'column-reverse'] },
+  ],
   flexWrap: [PAuto, 'Flex Wrap', { vs: ['nowrap', 'wrap', 'wrap-reverse'] }],
   justifyContent: [
     PAuto,
     'Justifier',
-    { vs: ['flex-start', 'flex-end', 'center', 'space-between', 'space-around', 'baseline', 'stretch'] },
+    {
+      vs: [
+        'flex-start',
+        'flex-end',
+        'center',
+        'space-between',
+        'space-around',
+        'baseline',
+        'stretch',
+      ],
+    },
   ],
   alignItems: [
     PAuto,
     'Aligner',
-    { vs: ['flex-start', 'flex-end', 'center', 'space-between', 'space-around', 'baseline', 'stretch'] },
+    {
+      vs: [
+        'flex-start',
+        'flex-end',
+        'center',
+        'space-between',
+        'space-around',
+        'baseline',
+        'stretch',
+      ],
+    },
   ],
   alignContent: [
     PAuto,
     'Aligner contenu',
-    { vs: ['flex-start', 'flex-end', 'center', 'space-between', 'space-around', 'baseline', 'stretch'] },
+    {
+      vs: [
+        'flex-start',
+        'flex-end',
+        'center',
+        'space-between',
+        'space-around',
+        'baseline',
+        'stretch',
+      ],
+    },
   ],
-  alignSelf: [PAuto, 'Aligner', { vs: ['flex-start', 'flex-end', 'center', 'baseline', 'stretch'] }],
+  alignSelf: [
+    PAuto,
+    'Aligner',
+    { vs: ['flex-start', 'flex-end', 'center', 'baseline', 'stretch'] },
+  ],
   fontStyle: [PAuto, 'Style police', { vs: ['normal', 'italic', 'oblique'] }],
   fontWeight: [PAuto, 'Poids police', { vs: ['light', 'regular', 'medium', 'bold'] }],
   textAlign: [PAuto, 'Aligner texte', { vs: ['left', 'center', 'right', 'justify'] }],
@@ -226,7 +337,11 @@ interface PropInfo {
   isStyle: boolean;
 }
 
-function pDicoToList(props: PropInfo[], pDico: Record<any, PInfo | undefined | null>, isStyle = false) {
+function pDicoToList(
+  props: PropInfo[],
+  pDico: Record<any, PInfo | undefined | null>,
+  isStyle = false
+) {
   Object.entries(pDico).forEach(([key, v]) => {
     if (!v) return;
     key = String(key);
@@ -288,21 +403,7 @@ function PAdd({ b }: { b: B }) {
       <div className="PLabel">
         <b>Autre propriété :</b>
       </div>
-      <TextField
-        className="PInput"
-        SelectProps={{
-          MenuProps: {
-            sx: {
-              '& li': {
-                display: 'flex',
-                justifyContent: 'space-between',
-              },
-            },
-          },
-        }}
-        size="small"
-        value={''}
-        onChange={(e) => addProp(e.target.value)}
+      {/* <Field {...c('Input')} type="select" value={''} onChange={(e) => addProp(e.target.value)}
         select
       >
         {filteredProps.map(({ path, label }) => (
@@ -311,7 +412,7 @@ function PAdd({ b }: { b: B }) {
             <i>{path}</i>
           </MenuItem>
         ))}
-      </TextField>
+      </TextField> */}
     </div>
   );
 }
@@ -340,8 +441,15 @@ function PFactory({ pName, sName, b }: { pName?: keyof D; sName?: keyof DStyle; 
     v = style[sName];
   }
 
-  const text = _text === '' ? (v ? String(v) : '') : _text;
-  const p = pName ? pDico[pName] : sName ? sDico[sName] : null;
+  const text =
+    _text === '' ?
+      v ? String(v)
+      : ''
+    : _text;
+  const p =
+    pName ? pDico[pName]
+    : sName ? sDico[sName]
+    : null;
   if (!p) return null;
 
   const P = p[0];
@@ -353,9 +461,10 @@ function PFactory({ pName, sName, b }: { pName?: keyof D; sName?: keyof DStyle; 
       const tr = b.d.tr || {};
       let nextTr: Record<string, D> | undefined = undefined;
       Object.keys(tr).forEach((lang) => {
-        if (tr[lang][pName]) {
-          if (!nextTr) nextTr = cloneJson(tr) || {};
-          delete nextTr[lang][pName];
+        const trLang = tr[lang];
+        if (trLang && trLang[pName]) {
+          if (!nextTr) nextTr = deepClone(tr) || {};
+          delete trLang[pName];
         }
       });
       if (nextTr) changes.tr = nextTr;
@@ -384,13 +493,13 @@ function PFactory({ pName, sName, b }: { pName?: keyof D; sName?: keyof DStyle; 
             setSelect(b);
           }}
         >
-          <RemoveIcon />
+          <Trash />
         </div>
         <b>
           {p[1]} :<i>{pName}</i>
         </b>
       </div>
-      <P b={b} v={v} setV={setV} p={pName} text={text} setText={setText} />
+      {P && <P b={b} v={v} setV={setV} p={pName} text={text} setText={setText} />}
     </div>
   );
 }
@@ -417,85 +526,19 @@ function PList() {
   return (
     <>
       {filteredProps.map(({ isStyle, path, key }) =>
-        isStyle ? (
+        isStyle ?
           <PFactory key={path + b._id} sName={key as keyof DStyle} b={b} />
-        ) : (
-          <PFactory key={path + b._id} pName={key as keyof D} b={b} />
-        ),
+        : <PFactory key={path + b._id} pName={key as keyof D} b={b} />
       )}
       <PAdd b={b} />
     </>
   );
 }
 
-export default function EdProps() {
+export const EdProps = () => {
   return (
-    <Box
-      className="EdProps"
-      sx={{
-        p: 1,
-        flex: 4,
-        border: '1px solid grey',
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'stretch',
-        overflowY: 'auto',
-        '& .Prop': {
-          display: 'flex',
-          alignItems: 'center',
-        },
-        '& .Prop-add': {
-          marginBottom: '40px',
-        },
-        '& .PLabel': {
-          width: 160,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          // mr: 1,
-          '& b': {
-            position: 'relative',
-          },
-          '& i': {
-            opacity: 0.5,
-            fontSize: '0.6em',
-            overflow: 'visible',
-            position: 'absolute',
-            left: 0,
-            bottom: '-8px',
-            width: '100%',
-            textAlign: 'center',
-          },
-        },
-        '& .PRemove': {
-          cursor: 'pointer',
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          color: '#8d0000',
-          marginLeft: '-5px',
-        },
-        '& .PInput': {
-          flex: 1,
-          m: 0.5,
-          display: 'flex',
-          flexDirection: 'column',
-        },
-        '& .PInput-row': {
-          flexDirection: 'row',
-        },
-        '& .PTPrices, & .PPrices': {
-          flexDirection: 'row',
-        },
-        '& .PTPrices input, & .PPrices input': {
-          paddingLeft: '2px',
-          paddingRight: '2px',
-          textAlign: 'center',
-        },
-      }}
-    >
+    <div {...c('EdProps')}>
       <PList />
-    </Box>
+    </div>
   );
-}
+};

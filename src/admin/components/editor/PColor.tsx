@@ -1,8 +1,5 @@
 import type { PProps } from './interfaces';
-import { SketchPicker } from 'react-color';
-import { CSSProperties, useEffect, useState } from 'react';
-import Button from '@mui/material/Button';
-import { getColors } from './bEdit';
+// import { SketchPicker } from 'react-color';
 import B from './B';
 
 function toHex(c: number) {
@@ -12,7 +9,11 @@ function toHex(c: number) {
 
 function rgbToHex(rgb: { r: number; g: number; b: number; a?: number }) {
   return (
-    '#' + toHex(rgb.r) + toHex(rgb.g) + toHex(rgb.b) + (rgb.a !== undefined && rgb.a < 1 ? toHex(rgb.a * 255) : '')
+    '#' +
+    toHex(rgb.r) +
+    toHex(rgb.g) +
+    toHex(rgb.b) +
+    (rgb.a !== undefined && rgb.a < 1 ? toHex(rgb.a * 255) : '')
   );
 }
 
@@ -56,13 +57,22 @@ export default function PColor({ v, setV, b }: PProps) {
   const btnStyle: CSSProperties = {
     flex: 1,
     background: rgb ? rgbToHex(rgb) : '#FFF',
-    color: (rgb ? rgb.r + rgb.g + rgb.b < 128 * 3 : false) ? '#FFF' : '#000',
+    color:
+      (
+        rgb ? rgb.r + rgb.g + rgb.b < 128 * 3 : false
+      ) ?
+        '#FFF'
+      : '#000',
   };
 
   if (show) {
     return (
       <div className="PInput PInput-row">
-        <SketchPicker color={v} presetColors={presetColors} onChange={(color) => setV(rgbToHex(color.rgb))} />
+        <SketchPicker
+          color={v}
+          presetColors={presetColors}
+          onChange={(color) => setV(rgbToHex(color.rgb))}
+        />
         <Button
           style={btnStyle}
           onClick={() => {

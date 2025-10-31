@@ -65,7 +65,7 @@ const AppContent = () => {
   // console.debug("Div", { c, auth });
 
   return (
-    <div class={c()}>
+    <div {...c()}>
       <SideBar />
       <AppRouter />
       <Errors />

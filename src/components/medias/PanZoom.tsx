@@ -229,8 +229,8 @@ export const PanZoom = ({ children, ...props }: PanZoomProps) => {
   }, [container]);
 
   return (
-    <div {...props} ref={containerRef} class={c('', isAnimating && '-animating', props)}>
-      <div ref={contentRef} class={c('Content')} style={style}>
+    <div {...props} ref={containerRef} {...c('', isAnimating && '-animating', props)}>
+      <div ref={contentRef} {...c('Content')} style={style}>
         {children}
       </div>
     </div>

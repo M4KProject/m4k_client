@@ -53,15 +53,15 @@ export const AuthPage = () => {
   const [showApplications, setShowApplications] = useState(false);
 
   return (
-    <div class={c()}>
-      <div class={c('Content')}>
-        <div class={c('Logo')} />
+    <div {...c()}>
+      <div {...c('Content')}>
+        <div {...c('Logo')} />
         {!showApplications ?
           <>
-            <div class={c('Title')}>
+            <div {...c('Title')}>
               PLV DIGITALE - BORNES ET ECRANS INTERACTIFS - CONTENUS NUMERIQUES
             </div>
-            <div class={c('Illu')} />
+            <div {...c('Illu')} />
           </>
         : <>
             <Apps />
@@ -70,7 +70,7 @@ export const AuthPage = () => {
         }
       </div>
       <AuthForm />
-      <div class={c('BottomButtons')}>
+      <div {...c('BottomButtons')}>
         <Button
           icon={<Download />}
           color="secondary"

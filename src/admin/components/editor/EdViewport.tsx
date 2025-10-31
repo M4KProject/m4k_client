@@ -1,13 +1,5 @@
-import Box from '@mui/material/Box';
-import { useEffect, useRef } from 'react';
 import { add, addIn, exportData, importData, getSelect, setSelect } from './bEdit';
-import { editorCtrl } from '../../controllers/EditorController';
-import { useFlux } from 'vegi';
-import { toNumber, cloneJson } from 'vegi';
 import B, { BElement } from './B';
-import DuplicateIcon from '@mui/icons-material/ContentCopyTwoTone';
-import AddToPhotosTwoTone from '@mui/icons-material/AddToPhotosTwoTone';
-import MouseIcon from '@mui/icons-material/MouseTwoTone';
 
 function AddInIcon(props: any) {
   return <AddToPhotosTwoTone {...props} style={{ transform: 'rotate(90deg)' }} />;
@@ -27,7 +19,11 @@ const getComputedStyleCache = (() => {
 
 let ctrlKey = false;
 
-function mouseDown(e: MouseEvent, move: (x: number, y: number) => void, end?: (x: number, y: number) => void) {
+function mouseDown(
+  e: MouseEvent,
+  move: (x: number, y: number) => void,
+  end?: (x: number, y: number) => void
+) {
   e.preventDefault();
   e.stopPropagation();
   const iX = e.clientX;
@@ -111,7 +107,8 @@ function moveAndResize(e: any, aX: -1 | 1 | 0, aY: -1 | 1 | 0, aW: -1 | 1 | 0, a
   if (!parentStyle) return null;
 
   const isAbsolute =
-    elStyle.position === 'absolute' && (parentStyle.position === 'absolute' || parentStyle.position === 'relative');
+    elStyle.position === 'absolute' &&
+    (parentStyle.position === 'absolute' || parentStyle.position === 'relative');
 
   const ratio = 1 / editorCtrl.zoom$.val;
   let ratioX = ratio; //-100 / (testRect.x - elRect.x);
@@ -190,7 +187,7 @@ function moveAndResize(e: any, aX: -1 | 1 | 0, aY: -1 | 1 | 0, aW: -1 | 1 | 0, a
           height: s.height,
         });
       }
-    },
+    }
   );
 }
 
@@ -225,7 +222,7 @@ const onAddIn = () => {
 };
 
 const _onClick = B.prototype.onClick;
-let _lastClick = { t: Date.now(), b: null as (B|null) };
+let _lastClick = { t: Date.now(), b: null as B | null };
 B.prototype.onClick = function (event?: MouseEvent) {
   console.debug('onClick', this, event);
   const last = _lastClick;
@@ -236,15 +233,15 @@ B.prototype.onClick = function (event?: MouseEvent) {
   }
   B.select$.set(this);
   if (last.b !== this) return;
-  if ((last.t+200) < Date.now()) return;
+  if (last.t + 200 < Date.now()) return;
   _onClick.call(this, event);
-}
+};
 
 const onClick = () => {
   const b = getSelect();
   _lastClick = { b, t: Date.now() };
   b.onClick();
-}
+};
 
 const onResizeList = Object.entries(onResizeDico);
 
@@ -439,7 +436,7 @@ export default function EdViewport(): JSX.Element {
           '& .MuiSvgIcon-root': {
             width: '18px',
             height: '18px',
-          }
+          },
         },
 
         // '& .EdAction-Duplicate': { color: '#9c27b0' },
@@ -464,19 +461,3 @@ export default function EdViewport(): JSX.Element {
     </Box>
   );
 }
-
-//
-//       {/* <Box
-
-//         className="viewport_pan"
-//         onClick={(e) => {
-//           console.debug('Viewport click', e.target);
-//           const b = B.byEl(e.target as any);
-//           console.debug('Viewport click b', b);
-//           // const id = findElId(e.target as HTMLElement);
-//           // console.debug('Editor handleClick', e.target, (e.target as any).id, id);
-//           // setSelectId(id || ROOT_ID);
-//         }}
-//       /> */}
-//       {/* <EditorSelected /> */}
-//     </Box>

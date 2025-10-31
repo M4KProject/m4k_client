@@ -59,9 +59,30 @@ export interface DStyle extends Partial<Record<keyof CSSStyleDeclaration, string
   position?: 'absolute' | 'fixed' | 'relative';
   flexDirection?: 'row' | 'row-reverse' | 'column' | 'column-reverse';
   flexWrap?: 'nowrap' | 'wrap' | 'wrap-reverse';
-  justifyContent?: 'flex-start' | 'flex-end' | 'center' | 'space-between' | 'space-around' | 'baseline' | 'stretch';
-  alignItems?: 'flex-start' | 'flex-end' | 'center' | 'space-between' | 'space-around' | 'baseline' | 'stretch';
-  alignContent?: 'flex-start' | 'flex-end' | 'center' | 'space-between' | 'space-around' | 'baseline' | 'stretch';
+  justifyContent?:
+    | 'flex-start'
+    | 'flex-end'
+    | 'center'
+    | 'space-between'
+    | 'space-around'
+    | 'baseline'
+    | 'stretch';
+  alignItems?:
+    | 'flex-start'
+    | 'flex-end'
+    | 'center'
+    | 'space-between'
+    | 'space-around'
+    | 'baseline'
+    | 'stretch';
+  alignContent?:
+    | 'flex-start'
+    | 'flex-end'
+    | 'center'
+    | 'space-between'
+    | 'space-around'
+    | 'baseline'
+    | 'stretch';
   alignSelf?: 'flex-start' | 'flex-end' | 'center' | 'baseline' | 'stretch';
   fontFamily?: string;
   fontSize?: string;
@@ -157,7 +178,7 @@ export interface D {
 
   /** Source for video */
   video?: DFile;
-  
+
   /** Template : Prop */
   prop?: keyof D;
 

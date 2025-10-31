@@ -50,7 +50,7 @@ export interface MediaViewProps<T extends MediaModel = any> {
 
 export const EmptyView = ({ media, divProps }: MediaViewProps) => {
   return (
-    <div {...divProps} class={c(divProps)}>
+    <div {...divProps} {...c(divProps)}>
       Type de média non supporté: {media.type}
     </div>
   );

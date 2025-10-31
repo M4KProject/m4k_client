@@ -9,7 +9,7 @@ const c = Css('LoadingPage', {
 
 export const LoadingPage = () => {
   return (
-    <Page class={c()}>
+    <Page {...c()}>
       <Loading />
     </Page>
   );

@@ -98,5 +98,5 @@ export const Errors = () => {
 
   if (items.length === 0) return null;
 
-  return <Grid class={c()} cols={cols} ctx={{ deleteItem }} items={items} />;
+  return <Grid {...c()} cols={cols} ctx={{ deleteItem }} items={items} />;
 };

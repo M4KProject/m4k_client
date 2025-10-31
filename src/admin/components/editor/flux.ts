@@ -1,4 +1,4 @@
-import { flux } from "fluxio";
+import { flux } from 'fluxio';
 
 export const siteKey$ = flux('');
 export const panel$ = flux('');

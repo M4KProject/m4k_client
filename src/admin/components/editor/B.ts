@@ -1,6 +1,15 @@
 import { deepClone, flux, isDeepEqual, toArray, toItem, toNumber, toVoid, toString } from 'fluxio';
 import { D, DCall, DRoot, DStyle } from './D';
-import { addCssFile, addFont, addJsFile, Cls, createEl, setAttrs, setCls, tPriceToHtml } from '@common/ui';
+import {
+  addCssFile,
+  addFont,
+  addJsFile,
+  Cls,
+  createEl,
+  setAttrs,
+  setCls,
+  tPriceToHtml,
+} from '@common/ui';
 import { app } from '@/app';
 
 const body = document.body;
@@ -202,7 +211,7 @@ export default class B {
       const mp4Url = B.url(mediaId + '/video.mp4');
 
       videoEl.style.backgroundImage = `url('${coverUrl}')`;
-      
+
       const webm = createEl('source');
       webm.src = webmUrl;
       webm.type = 'video/webm';
@@ -298,14 +307,12 @@ export default class B {
       // TODO
       // if (b.off) b.off();
       // b.off = B.update$.on(() => b.render(true));
-
       // const cb = getCallCb(b.d.filter);
       // const list = query(cb as (b: B) => boolean);
-
       // b.el.innerHTML = '';
       // b.children.forEach((b) => b.dispose());
       // b.children = list.map((b) => new B(b.d, b).render(true));
-    }
+    },
   };
 
   static readonly props = props;
@@ -322,8 +329,7 @@ export default class B {
           }
         }
       }
-    }
-    catch (error) {
+    } catch (error) {
       console.error('dLang', d, lang, error);
     }
   }
@@ -335,7 +341,7 @@ export default class B {
       key = key.replace('/sd.', '/720x720.');
       // return `${config.assetUrl}/${key}?v=${BUILD_HASH}`;
     }
-    return 'todoURL'
+    return 'todoURL';
     // return `${config.mediaUrl}/${key}?v=${BUILD_HASH}`;
   }
 
@@ -343,7 +349,7 @@ export default class B {
     const root = deepClone(d) || {};
     root.id = 'root';
     root.t = 'root';
-    
+
     const isPageHome = !B.page$.get() || B.page$.get() === B.home;
 
     B.templates = { ...defaultTemplates, ...root.templates };
@@ -353,7 +359,7 @@ export default class B {
     B.hasCart = root.hasCart;
     B.l = B.lSource = root.lang || lSource;
 
-    console.debug('isPageHome', isPageHome)
+    console.debug('isPageHome', isPageHome);
     if (isPageHome) B.page$.set(B.home);
 
     B.root.setData(root);
@@ -455,7 +461,7 @@ export default class B {
         }
         el.innerHTML = '';
         el.onclick = this._onClick;
-        el.ontouchend= this._onClick;
+        el.ontouchend = this._onClick;
         if (B.bCls) el.className = B.bCls;
         return el;
       }
@@ -463,7 +469,7 @@ export default class B {
     }
     el = createEl(hTag);
     el.onclick = this._onClick;
-    el.ontouchend= this._onClick;
+    el.ontouchend = this._onClick;
     // el.ontouchstart = this.onClick.bind(this);
     if (B.bCls) el.className = B.bCls;
     el._b = this;
@@ -554,7 +560,7 @@ export default class B {
   _onClick: typeof this.onClick;
 
   click?: DCall;
-  onClick(event?: MouseEvent|TouchEvent) {
+  onClick(event?: MouseEvent | TouchEvent) {
     console.debug('onClick', event);
     if (event) {
       event.preventDefault();
@@ -593,7 +599,7 @@ export default class B {
     this.children.length = 0;
   }
 
-  find(cb: string|((b: B) => any)): B | undefined {
+  find(cb: string | ((b: B) => any)): B | undefined {
     if (typeof cb !== 'function') {
       const o: any = toItem(cb, { id: cb });
       cb = (b: B) => {
@@ -681,7 +687,7 @@ function setLang(lang: string) {
 app.query = query;
 app.setLang = setLang;
 // app.setPage = setPage;
-app.find = (cb: string|((b: B) => any)) => app.B.root.find(cb);
+app.find = (cb: string | ((b: B) => any)) => app.B.root.find(cb);
 
 app.playPause = (b: B) => {
   try {
@@ -689,11 +695,10 @@ app.playPause = (b: B) => {
     if (!el.play) return;
     if (el.paused) el.play();
     else el.pause();
-  }
-  catch (error) {
+  } catch (error) {
     console.warn('playPause', error);
   }
-}
+};
 
 bodyClass.add('l-' + B.l);
 app.B = B;

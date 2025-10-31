@@ -152,7 +152,7 @@ export const PairingForm = ({ onClose }: { onClose: () => void }) => {
   return (
     <Form>
       <Field label="Code de pairage" value={key} onValue={setKey} />
-      <div class={c('Buttons')}>
+      <div {...c('Buttons')}>
         <Button title="Pairer l'écran" color="primary" onClick={handlePairing} />
       </div>
     </Form>
@@ -190,7 +190,7 @@ export const DevicesPage = () => {
   // };
 
   return (
-    <Page class={c()}>
+    <Page {...c()}>
       <Toolbar title="Les écrans">
         <Button icon={<Plus />} color="primary" onClick={handleAdd}>
           Ajouter

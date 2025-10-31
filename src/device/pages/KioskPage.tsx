@@ -122,7 +122,7 @@ const KioskItem = ({
   }, [isCurr, isVideo, isImage, duration, onNext]);
 
   return (
-    <div class={c('', itemFit && `-${itemFit}`, itemAnim && `-${itemAnim}`, `-${pos}`)}>
+    <div {...c('', itemFit && `-${itemFit}`, itemAnim && `-${itemAnim}`, `-${pos}`)}>
       {isVideo && info && info.url ?
         <KioskVideo isCurr={isCurr} url={info.url} onNext={onNext} />
       : isImage ?
@@ -170,9 +170,7 @@ export const KioskPage = () => {
   // Si un contenu est associé au device, l'afficher via ContentViewer
   if (device?.media) {
     return (
-      <div class={c('Container')}>
-        {/* TODO media <ContentViewer contentKey={device?.media} /> */}
-      </div>
+      <div {...c('Container')}>{/* TODO media <ContentViewer contentKey={device?.media} /> */}</div>
     );
   }
 
@@ -186,7 +184,7 @@ export const KioskPage = () => {
 
   if (length === 0) {
     return (
-      <div class={c('Container', 'Container-center')}>
+      <div {...c('Container', 'Container-center')}>
         Aucun élément dans la playlist
         <Button color="primary" onClick={() => openCodePinDialog()}>
           Configurer
@@ -197,7 +195,7 @@ export const KioskPage = () => {
 
   if (url && open) {
     return (
-      <div class={c('Container')}>
+      <div {...c('Container')}>
         <iframe src={url.startsWith('http') ? url : `https://${url}`} />
       </div>
     );
@@ -205,7 +203,7 @@ export const KioskPage = () => {
 
   return (
     <div
-      class={c('Container')}
+      {...c('Container')}
       style={bgColor ? { backgroundColor: bgColor } : {}}
       onClick={() => setOpen(true)}
     >
