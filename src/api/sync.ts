@@ -17,7 +17,7 @@ import {
   logger,
   Logger,
 } from 'fluxio';
-import { isDictionaryOfItem, isEmpty, isArray, isString } from 'fluxio';
+import { isEmpty, isArray, isString } from 'fluxio';
 import { notImplemented } from 'fluxio/error';
 import {
   ApplicationModel,
