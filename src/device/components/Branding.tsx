@@ -28,7 +28,7 @@ const c = Css('Branding', {
 
 export interface BrandingProps {}
 
-const BrandingContent = ({}: BrandingProps) => {
+const BrandingContent = (_props: BrandingProps) => {
   log.d('Content');
   return (
     <div {...c('Content')}>

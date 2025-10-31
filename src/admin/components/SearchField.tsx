@@ -24,7 +24,7 @@ export const SearchField = () => {
       <Button
         icon={<Search />}
         color="primary"
-        onClick={() => isSearchOpen$.next((prev) => !prev)}
+        onClick={() => isSearchOpen$.set((prev) => !prev)}
       />
     </div>
   );

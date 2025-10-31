@@ -49,7 +49,7 @@ const c = Css('Popover', {
 export const useIsOver = (id: string) => useFlux(over$) === id;
 
 export const setIsOver = (id: string, next: boolean) =>
-  next ? over$.set(id) : over$.next((p) => (p === id ? '' : p));
+  next ? over$.set(id) : over$.set((p) => (p === id ? '' : p));
 
 interface PopoverProps {
   id?: string;

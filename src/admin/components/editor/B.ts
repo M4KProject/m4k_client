@@ -303,7 +303,7 @@ export default class B {
       setCls(el, { count: 1, count0: !count }, true);
       el.innerHTML = String(count);
     },
-    filter: (el: BElement, b: B) => {
+    filter: (_el: BElement, _b: B) => {
       // TODO
       // if (b.off) b.off();
       // b.off = B.update$.on(() => b.render(true));

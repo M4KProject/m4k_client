@@ -1,9 +1,6 @@
 import { useFlux } from '@common/hooks';
 import { panel$ } from './flux';
 import { Css } from '@common/ui';
-import { EdProps } from './EdProps';
-import { EdActions } from './EdActions';
-import EdTree from './EdTree';
 
 const c = Css('EdEdSideitor', {
   '': {

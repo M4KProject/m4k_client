@@ -130,10 +130,7 @@ export class Sync<T extends PbModel> {
   }
 
   get(where?: IdOrWhere<T>) {
-    let result: T | undefined = undefined;
-    if (!where) {
-    } else if (isString(where)) result = this.cache.getItem(where);
-    else result = this.filter(where, true)[0];
+    const result = isString(where) ? this.cache.getItem(where) : this.filter(where, true)[0];
     this.log.d('get', { where, result });
     return result;
   }

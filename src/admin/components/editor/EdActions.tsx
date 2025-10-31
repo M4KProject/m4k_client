@@ -17,7 +17,7 @@ import B from './B';
 import { panel$, terminal$ } from './flux';
 import { moveItem } from 'fluxio';
 import { useFlux } from '@common/hooks';
-import { Button, ButtonProps, tooltip, Tooltip } from '@common/components';
+import { Button, ButtonProps, tooltip } from '@common/components';
 import { Css } from '@common/ui';
 import {
   FilePlus,
@@ -86,9 +86,9 @@ function flexRow() {
   return s.flexDirection === 'row';
 }
 
-function setPanel(name: string) {
-  panel$.set(name);
-}
+// function setPanel(name: string) {
+//   panel$.set(name);
+// }
 
 function move(addIndex: number) {
   const b = getSelect();

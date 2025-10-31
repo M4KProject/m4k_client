@@ -257,7 +257,7 @@ export const TestPage = () => {
         <Grid
           cols={testCols}
           ctx={{ play }}
-          rowProps={(test, _, index) => {
+          rowProps={(test) => {
             const result = test.result || {};
             const mode =
               result.success ? 'success'

@@ -1,4 +1,4 @@
-import { getSelect, rmProp, rmStyleProp, setSelect } from './bEdit';
+import { rmProp, rmStyleProp, setSelect } from './bEdit';
 import { D, DRoot, DStyle } from './D';
 import type { PProps } from './interfaces';
 import PHtml from './PHtml';
@@ -106,7 +106,7 @@ function PAuto(props: PProps) {
 }
 
 function PUnit({ v, setV }: PProps) {
-  const [_, n, u] = String(v).match(/([0-9\.]+)(.+)/) || [];
+  const [_, n, u] = String(v).match(/([0-9.]+)(.+)/) || [];
   const setN = (n: string) => setV(n + (u || '%'));
   const setU = (u: string) => setV(n + (u || '%'));
   return (
@@ -363,7 +363,7 @@ const props: PropInfo[] = [
     label: 'Position',
     Input: PUnit,
     options: {
-      showFun: (b: B) => true,
+      showFun: (_b: B) => true,
     },
     isStyle: false,
   },
@@ -378,25 +378,25 @@ props.sort((a, b) => {
 });
 
 function PAdd({ b }: { b: B }) {
-  const addProp = (path: string) => {
-    console.debug('addProp', path);
-    if (path.startsWith('s.')) {
-      b.updateStyle({ [path.substring(2)]: '' });
-    } else {
-      b.update({ [path]: null });
-    }
-    setSelect(null);
-    setSelect(b);
-  };
+  // const addProp = (path: string) => {
+  //   console.debug('addProp', path);
+  //   if (path.startsWith('s.')) {
+  //     b.updateStyle({ [path.substring(2)]: '' });
+  //   } else {
+  //     b.update({ [path]: null });
+  //   }
+  //   setSelect(null);
+  //   setSelect(b);
+  // };
 
-  const filteredProps = props.filter((info) => {
-    const o = info.options;
-    if (o) {
-      if (o.if && !o.if.includes(b.d.t || 'box')) return false;
-      if (o.notIf && o.notIf.includes(b.d.t || 'box')) return false;
-    }
-    return true;
-  });
+  // const filteredProps = props.filter((info) => {
+  //   const o = info.options;
+  //   if (o) {
+  //     if (o.if && !o.if.includes(b.d.t || 'box')) return false;
+  //     if (o.notIf && o.notIf.includes(b.d.t || 'box')) return false;
+  //   }
+  //   return true;
+  // });
 
   return (
     <div className="Prop Prop-add">

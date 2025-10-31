@@ -1,9 +1,9 @@
 import { add, addIn, exportData, importData, getSelect, setSelect } from './bEdit';
 import B, { BElement } from './B';
 
-function AddInIcon(props: any) {
-  return <AddToPhotosTwoTone {...props} style={{ transform: 'rotate(90deg)' }} />;
-}
+// function AddInIcon(props: any) {
+//   return <AddToPhotosTwoTone {...props} style={{ transform: 'rotate(90deg)' }} />;
+// }
 
 const getComputedStyleCache = (() => {
   let lastEl: BElement | undefined = undefined;

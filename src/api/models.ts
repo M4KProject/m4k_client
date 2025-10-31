@@ -95,8 +95,6 @@ export interface PlaylistEntry {
 //   };
 // }
 
-export interface DeviceModel extends _DeviceModel {}
-
 export interface FileInfo {
   mime: string;
   type: MediaType;

@@ -68,8 +68,8 @@ export const KioskVideo = ({
       v.onNext();
     };
 
-    el.onerror = (e) => {
-      log.e(`onerror`, v);
+    el.onerror = (error) => {
+      log.e(`onerror`, v, error);
       v.onNext();
     };
 

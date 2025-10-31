@@ -33,7 +33,7 @@ const cols: GridCols<
         onValue={(key) => groupSync.update(item.id, { key })}
       />
     ),
-    { if: ({}, { isAdvanced }) => isAdvanced },
+    { if: (_, { isAdvanced }) => isAdvanced },
   ],
   name: [
     'Nom',
@@ -97,7 +97,7 @@ const cols: GridCols<
 
 export interface GroupGridProps {}
 
-export const GroupGrid = ({}: GroupGridProps) => {
+export const GroupGrid = (_: GroupGridProps) => {
   const groups = useGroups();
   const groupKey = useGroupKey();
   const isAdvanced = useIsAdvanced();

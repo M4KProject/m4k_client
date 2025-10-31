@@ -67,7 +67,7 @@ const iconByT: Record<string, typeof BoxIcon> = {
 function labelClean(html: string) {
   const txt = decodeURIComponent(html.replace(/(<([^>]+)>)/gi, ''));
   const txtShort = txt.length > 13 ? txt.substring(0, 10).trimEnd() + '...' : txt;
-  return txt;
+  return txtShort;
 }
 
 function getLabel(b: B) {

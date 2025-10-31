@@ -23,7 +23,7 @@ function formatHtml(html: string) {
 
     result += indent + '<' + el + '>\r\n';
 
-    if (el.match(/^<?\w[^>]*[^\/]$/) && !el.startsWith('input')) {
+    if (el.match(/^<?\w[^>]*[^/]$/) && !el.startsWith('input')) {
       indent += tab;
     }
   });
