@@ -1,9 +1,3 @@
-// import CodeMirror from '@uiw/react-codemirror';
-// import { EditorView, basicSetup } from "codemirror"
-// import { json } from '@codemirror/lang-json';
-// import { html } from '@codemirror/lang-html';
-// import { css } from '@codemirror/lang-css';
-// import { javascript } from '@codemirror/lang-javascript';
 import { useEffect, useMemo } from 'preact/hooks';
 import B from './B';
 import { exportData, importData } from './bEdit';
@@ -79,7 +73,7 @@ function EdJsonData() {
         clearTimeout(timer);
         timer = setTimeout(() => {
           console.log('CodeMirror data');
-          const newData = jsonParse<D>(newDataJson);
+          const newData = jsonParse(newDataJson) as D;
           if (newData) {
             importData(select, newData);
           }

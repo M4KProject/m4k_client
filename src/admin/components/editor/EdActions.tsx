@@ -17,24 +17,27 @@ import B from './B';
 import { panel$, terminal$ } from './flux';
 import { moveItem } from 'fluxio';
 import { useFlux } from '@common/hooks';
+import { Button, ButtonProps, tooltip, Tooltip } from '@common/components';
+import { Css } from '@common/ui';
+import { FilePlus, ClipboardCopy, ClipboardX, ClipboardPaste, CopyPlus, Trash, Eye, EyeOff, AlignLeft, AlignCenter, AlignRight, AlignJustify, AlignStartHorizontal, AlignCenterHorizontal, AlignEndHorizontal, MoveUp, MoveDown, MoveLeft, MoveRight, Braces, Code, Italic, AlignHorizontalJustifyStart, AlignHorizontalJustifyCenter, AlignHorizontalJustifyEnd } from 'lucide-react';
 
 function AddChildIcon(props: any) {
-  return <AddToPhotosTwoTone {...props} style={{ transform: 'rotate(90deg)' }} />;
+  return <FilePlus {...props} style={{ transform: 'rotate(90deg)' }} />;
 }
 
 function HorizontalStretchIcon() {
   return (
-    <SvgIcon>
+    <svg>
       <path d="M2 2v20h2V2Zm18 0v20h2V2ZM6 7v3h12V7Zm0 7v3h12v-3z"></path>
-    </SvgIcon>
+    </svg>
   );
 }
 
 function VerticalStretchIcon() {
   return (
-    <SvgIcon>
+    <svg>
       <path d="M2 2v2h20V2Zm5 4v12h3V6Zm7 0v12h3V6ZM2 20v2h20v-2z"></path>
-    </SvgIcon>
+    </svg>
   );
 }
 
@@ -202,7 +205,8 @@ document.addEventListener('keydown', (event) => {
   }
 
   if (actionName) {
-    actionMap[actionName]();
+    const action = actionMap[actionName];
+    if (action) action();
     event.stopPropagation();
     event.preventDefault();
   }
@@ -240,164 +244,149 @@ const titleByAction: Record<string, string> = {
   js: 'JavaScript',
 };
 
-function Action({ name, ...props }: IconButtonProps & { name: string }) {
+function Action({ name, ...props }: ButtonProps & { name: string }) {
   return (
-    <Tooltip title={titleByAction[name] || ''}>
-      <IconButton
-        {...props}
-        onClick={() => {
-          try {
-            actionMap[name]();
-          } catch (error) {
-            console.error('actionMap', name, error);
-          }
-        }}
-      />
-    </Tooltip>
+    <Button
+      {...tooltip(titleByAction[name] || '')}
+      {...props}
+      onClick={() => {
+        try {
+          const action = actionMap[name];
+          if (action) action();
+        } catch (error) {
+          console.error('actionMap', name, error);
+        }
+      }}
+    />
   );
 }
 
-export default function Props() {
+const c = Css('EdActions', {
+  '': {
+    border: '1px solid grey',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'stretch',
+    justifyContent: 'space-around',
+    p: 1,
+  },
+  'Row': {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+  },
+});
+
+export const EdActions = () => {
   const select = useFlux(B.select$) || B.root;
   useFlux(select.update$);
   return (
-    <Box
-      className="Action"
-      sx={{
-        border: '1px solid grey',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'stretch',
-        justifyContent: 'space-around',
-        p: 1,
-        '& .ActionRow': {
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-around',
-        },
-        '& .ActionRow-primary .MuiIconButton-root': {
-          color: 'primary.main',
-        },
-        '& .MuiIconButton-root': {
-          p: 0.5,
-          '& svg': {
-            width: '0.8em',
-            height: '0.8em',
-          },
-        },
-      }}
-    >
-      <div className="ActionRow ActionRow-primary">
+    <div class={c('')}>
+      <div class={c('Row')}>
         <Action name="cut">
-          <CutIcon />
+          <ClipboardX />
         </Action>
         <Action name="copy">
-          <CopyIcon />
+          <ClipboardCopy />
         </Action>
         <Action name="paste">
-          <PasteIcon />
+          <ClipboardPaste />
         </Action>
         <Action name="pasteIn">
-          <PasteChildIcon />
+          <ClipboardPaste />
         </Action>
       </div>
-      <div className="ActionRow ActionRow-primary">
+      <div class={c('Row')}>
         <Action name="add">
-          <AddIcon />
+          <CopyPlus />
         </Action>
         <Action name="addIn">
           <AddChildIcon />
         </Action>
         <Action name="remove">
-          <RemoveIcon />
+          <Trash />
         </Action>
         {select?.d.hide ? (
           <Action name="show">
-            <ShowIcon />
+            <Eye />
           </Action>
         ) : (
           <Action name="hide">
-            <HideIcon />
+            <EyeOff />
           </Action>
         )}
       </div>
-      <div className="ActionRow ActionRow-primary">
+      <div class={c('Row')}>
         <Action name="tLeft">
-          <TextLeftIcon />
+          <AlignLeft />
         </Action>
         <Action name="tCenter">
-          <TextCenterIcon />
+          <AlignCenter />
         </Action>
         <Action name="tRight">
-          <TextRightIcon />
+          <AlignRight />
         </Action>
         <Action name="tJustify">
-          <TextJustifyIcon />
+          <AlignJustify />
         </Action>
       </div>
-      <div className="ActionRow ActionRow-primary">
+      <div class={c('Row')}>
         <Action name="vTop">
-          <VerticalTopIcon />
+          <AlignStartHorizontal />
         </Action>
         <Action name="vMiddle">
-          <VerticalMiddleIcon />
+          <AlignCenterHorizontal />
         </Action>
         <Action name="vBottom">
-          <VerticalBottomIcon />
+          <AlignEndHorizontal />
         </Action>
         <Action name="vStretch">
           <VerticalStretchIcon />
         </Action>
       </div>
-      <div className="ActionRow">
+      <div class={c('Row')}>
         <Action name="up">
-          <UpIcon />
+          <MoveUp />
         </Action>
         <Action name="down">
-          <DownIcon />
+          <MoveDown />
         </Action>
         <Action name="left">
-          <LeftIcon />
+          <MoveLeft />
         </Action>
         <Action name="right">
-          <RightIcon />
+          <MoveRight />
         </Action>
       </div>
-      <div className="ActionRow">
+      <div class={c('Row')}>
         <Action name="hLeft">
-          <HorizontalLeftIcon />
+          <AlignHorizontalJustifyStart />
         </Action>
         <Action name="hCenter">
-          <HorizontalCenterIcon />
+          <AlignHorizontalJustifyCenter />
         </Action>
         <Action name="hRight">
-          <HorizontalRightIcon />
+          <AlignHorizontalJustifyEnd />
         </Action>
         <Action name="hStretch">
           <HorizontalStretchIcon />
         </Action>
       </div>
-      <div className="ActionRow">
+      <div class={c('Row')}>
         <Action name="json">
-          <JsonIcon />
+          <Braces />
         </Action>
         <Action name="html">
-          <HtmlIcon />
+          <Code />
         </Action>
         <Action name="css">
-          <CssIcon />
+          <Italic />
         </Action>
         <Action name="js">
-          <JsIcon />
+          <Braces />
         </Action>
       </div>
-      {/* <div className="PropsActionRow">
-                <IconButton><ReorderIcon /></Action>
-                <IconButton><ColorLensIcon /></Action>
-                <IconButton><ColorizeIcon /></Action>
-                <IconButton><FavoriteIcon /></Action>
-            </div> */}
-    </Box>
+    </div>
   );
 }

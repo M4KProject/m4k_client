@@ -1,37 +1,15 @@
-import Fab, { FabProps } from '@mui/material/Fab';
-
-import TranslateIcon from '@mui/icons-material/TranslateTwoTone';
-import AddIcon from '@mui/icons-material/AddBoxTwoTone';
-import ScreenRotationIcon from '@mui/icons-material/ScreenRotationTwoTone';
-import TvIcon from '@mui/icons-material/TvTwoTone';
-import SmartphoneIcon from '@mui/icons-material/SmartphoneTwoTone';
-import TabletMacIcon from '@mui/icons-material/TabletMacTwoTone';
-import ZoomInIcon from '@mui/icons-material/ZoomInTwoTone';
-import ZoomOutIcon from '@mui/icons-material/ZoomOutTwoTone';
-import TerminalIcon from '@mui/icons-material/Terminal';
-import SideIcon from '@mui/icons-material/ViewSidebar';
-import SaveIcon from '@mui/icons-material/SaveTwoTone';
-import BackIcon from '@mui/icons-material/ArrowBackTwoTone';
-import FullscreenIcon from '@mui/icons-material/Fullscreen';
-
-import Box from '@mui/material/Box';
-import { editorCtrl } from '../../controllers/EditorController';
-import { useFlux } from 'vegi';
 import { addIn, getLangs, setSelect } from './bEdit';
 import { DRoot } from './D';
-import tinycolor2 from 'tinycolor2';
-import app from '../../../app';
-import clsx from 'clsx';
-import router from '../../../helpers/router';
-import Tooltip from '../Tooltip';
 import B from './B';
-import { translateAll } from '../../../api/translate';
-
-app.tinycolor2 = tinycolor2;
+import { panel$, screenSize$, terminal$, zoom$ } from './flux';
+import { randColor } from 'fluxio';
+import { useFlux } from '@common/hooks';
+import { Css } from '@common/ui';
+import { DivProps, tooltip } from '@common/components';
 
 function setPanel(name: string) {
-  editorCtrl.terminal$.set('');
-  editorCtrl.panel$.set(name);
+  terminal$.set('');
+  panel$.set(name);
 }
 
 function addBox() {
@@ -44,80 +22,68 @@ function addBox() {
     top: 10 + Math.round(Math.random() * 20) + '%',
     width: 20 + Math.round(Math.random() * 20) + '%',
     height: 20 + Math.round(Math.random() * 20) + '%',
-    backgroundColor:
-      '#' +
-      app
-        .tinycolor2({
-          h: 240 * Math.random(),
-          s: 0.25 + 0.5 * Math.random(),
-          l: 0.25 + 0.5 * Math.random(),
-        })
-        .toHex(),
+    backgroundColor: randColor(),
   });
   setSelect(b);
 }
 
-function EdFab({ cls, tooltip, ...props }: FabProps & { cls: string; tooltip: string }) {
-  const panel = useFlux(editorCtrl.panel$);
-  const getCls = (name: string) => clsx('EdFab EdFab-' + name, panel === name && 'EdFab-active');
+const c = Css('EdFab', {
+  '': {
+    m: 0.5,
+    width: '100%',
+    height: '100%',
+  },
+  's': {
+    position: 'absolute',
+    bottom: 0,
+    right: 10,
+    m: 1,
+    display: 'flex',
+    flexDirection: 'row',
+    zIndex: 10100,
+  },
+  'Space': {
+    width: 20,
+  },
+});
+
+function EdFab({ title, name, ...props }: DivProps & { title: string, name: string }) {
+  const panel = useFlux(panel$);
 
   return (
-    <Tooltip title={tooltip}>
-      <Fab size="small" className={getCls(cls)} {...props} />
-    </Tooltip>
+    <div {...tooltip(title)} {...props} class={c('', `-${name}`, panel === name && '-active', props)} />
   );
 }
 
-export default function EdFabs() {
-  const panel = useFlux(editorCtrl.panel$);
+export const EdFabs = () => {
+  const panel = useFlux(panel$);
   useFlux(B.root.update$);
   const dEditor = (B.root.d as DRoot).editor;
 
   const zoomAdd = (add: number) => {
-    editorCtrl.zoom$.set(editorCtrl.zoom$.val + add);
+    zoom$.set(zoom$.get() + add);
   };
 
   const setScreen = (w: number, h: number) => {
-    editorCtrl.screenSize$.set({ w, h });
+    screenSize$.set({ w, h });
   };
 
   const screenRotation = () => {
-    const { w, h } = editorCtrl.screenSize$.val;
+    const { w, h } = screenSize$.get();
     setScreen(h, w);
   };
 
   return (
-    <Box
-      className="EdFabs"
-      sx={{
-        position: 'absolute',
-        bottom: 0,
-        right: 10,
-        m: 1,
-        display: 'flex',
-        flexDirection: 'row',
-        zIndex: 10100,
-        '& .EdFab': {
-          m: 0.5,
-        },
-        '& .EdFab-active': {
-          // color: 'white',
-          // backgroundColor: '#7b1fa2',
-        },
-        '& .EdSpace': {
-          width: 20,
-        },
-      }}
-    >
-      {getLangs().length > 0 && (
+    <div class={c('s')}>
+      {/* {getLangs().length > 0 && (
         <EdFab cls="translate" tooltip="Traduire le site" onClick={() => translateAll()}>
           <TranslateIcon />
         </EdFab>
-      )}
+      )} */}
       <EdFab cls="add" tooltip="Ajouter un bloc" onClick={() => addBox()}>
         <AddIcon />
       </EdFab>
-      <div className="EdSpace" />
+      <div class={c('Space')} />
       {!dEditor?.screen && (
         <>
           <EdFab cls="rotation" tooltip="Tourner l'écran" onClick={() => screenRotation()}>
@@ -134,14 +100,14 @@ export default function EdFabs() {
           </EdFab>
         </>
       )}
-      <div className="EdSpace" />
+      <div class={c('Space')} />
       <EdFab cls="zoom-out" tooltip="Zoom +" onClick={() => zoomAdd(+0.1)}>
         <ZoomInIcon />
       </EdFab>
       <EdFab cls="zoom-in" tooltip="Zoom -" onClick={() => zoomAdd(-0.1)}>
         <ZoomOutIcon />
       </EdFab>
-      <div className="EdSpace" />
+      <div class={c('Space')} />
       <EdFab cls="fullscreen" tooltip="Affichage en plein écran" color="secondary" onClick={() => setPanel('')}>
         <FullscreenIcon />
       </EdFab>
@@ -159,7 +125,7 @@ export default function EdFabs() {
       >
         {panel === 'side' ? <TerminalIcon /> : <SideIcon />}
       </EdFab>
-      <div className="EdSpace" />
+      <div class={c('Space')} />
       <EdFab
         cls="save"
         tooltip="Enregistrer les modifications"
@@ -180,6 +146,6 @@ export default function EdFabs() {
       >
         <BackIcon />
       </EdFab>
-    </Box>
+    </div>
   );
 }
