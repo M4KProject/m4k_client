@@ -131,6 +131,20 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
             )}
           </>
         )}
+        {type === 'page' && (
+          <Button
+            icon={<Edit />}
+            {...tooltip(`Éditer la page`)}
+            onClick={() => {
+              updateRoute({
+                page: 'medias',
+                mediaType: 'page',
+                mediaKey: key,
+                isEdit: true,
+              });
+            }}
+          />
+        )}
         <Button
           icon={<Eye />}
           {...tooltip('Afficher le media')}
@@ -179,7 +193,7 @@ export const getMediasByParent = (medias: MediaModel[]) => {
   return mediasByParent;
 };
 
-export const MediaTable = ({ type }: { type?: MediaModel['type'] }) => {
+export const MediaGrid = ({ type }: { type?: MediaModel['type'] }) => {
   const medias = useGroupMedias(type);
   const openById = useFlux(openById$);
   const isAdvanced = useIsAdvanced();

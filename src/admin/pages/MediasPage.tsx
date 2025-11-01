@@ -8,12 +8,13 @@ import {
   tooltip,
   UploadButton,
 } from '@common/components';
-import { MediaTable } from '../components/medias/MediaGrid';
+import { MediaGrid } from '../components/medias/MediaGrid';
 import { SearchField } from '../components/SearchField';
 import { getNextTitle, uploadMedia } from '../controllers';
 import { mediaSync } from '@/api/sync';
 import { AddPlaylistItemButton, EditPlaylist } from '../components/medias/EditPlaylist';
-import { MediaModel, needAuthId, needGroupId, PlaylistModel } from '@/api';
+import { AddPageBoxButton, EditPage } from '../components/medias/EditPage';
+import { MediaModel, needAuthId, needGroupId, PlaylistModel, PageModel } from '@/api';
 import { Edit, FolderPlus, MapPlus, FilePlus, Play, Upload } from 'lucide-react';
 import { useIsEdit, useMediaType } from '@/router/hooks';
 import { setIsEdit, setMediaKey, setMediaType } from '@/router/setters';
@@ -48,10 +49,12 @@ export const MediasPage = () => {
 
   if (type === 'playlist' && media?.type === 'playlist' && isEdit) {
     content = <EditPlaylist playlist={media as PlaylistModel} />;
+  } else if (type === 'page' && media?.type === 'page' && isEdit) {
+    content = <EditPage page={media as PageModel} />;
   } else if (media && !isEdit) {
     content = <MediaView media={media} mediaById={mediaById} />;
   } else {
-    content = <MediaTable type={type} />;
+    content = <MediaGrid type={type} />;
   }
 
   return (
@@ -60,6 +63,7 @@ export const MediasPage = () => {
         {/* {media && <BackButton onClick={() => setMediaKey('')} />} */}
 
         {media?.type === 'playlist' && <AddPlaylistItemButton playlist={media as PlaylistModel} />}
+        {media?.type === 'page' && <AddPageBoxButton page={media as PageModel} />}
 
         {media &&
           (isEdit ?
