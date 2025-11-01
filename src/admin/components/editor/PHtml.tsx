@@ -1,11 +1,8 @@
 import { PProps } from './interfaces';
-import ReactQuill from 'react-quill';
-import B from './B';
+import { B } from './B';
 import { getColors } from './bEdit';
-import useConstant from '../../hooks/useConstant';
-import Box from '@mui/material/Box';
-import { useEffect, useMemo, useRef } from 'react';
-import app from '../../../app';
+import { useConstant } from '@common/hooks';
+import { useEffect, useMemo, useRef } from 'preact/hooks';
 
 // function PHtmlToolbar({ id }: { id: string }) {
 //     return (
@@ -32,7 +29,7 @@ import app from '../../../app';
 //     ['clean'],
 // ]
 
-function newTagName(oldEl: HTMLElement, newTagName: string): HTMLElement {
+const newTagName = (oldEl: HTMLElement, newTagName: string): HTMLElement => {
   const newEl = document.createElement(newTagName);
   while (oldEl.firstChild) {
     newEl.appendChild(oldEl.firstChild);
@@ -42,9 +39,9 @@ function newTagName(oldEl: HTMLElement, newTagName: string): HTMLElement {
   });
   oldEl.parentNode?.replaceChild(newEl, oldEl);
   return newEl;
-}
+};
 
-function cleanNode(node: ChildNode) {
+const cleanNode = (node: ChildNode) => {
   node.childNodes.forEach(cleanNode);
   if (node instanceof HTMLElement) {
     let el = node;
@@ -52,9 +49,9 @@ function cleanNode(node: ChildNode) {
     if (tagName === 'EM') el = newTagName(el, 'I');
     if (tagName === 'STRONG') el = newTagName(el, 'B');
   }
-}
+};
 
-function cleanHtml(text: string) {
+const cleanHtml = (text: string) => {
   console.debug('cleanHtml', text);
   const ctnEl = document.createElement('div');
   ctnEl.innerHTML = String(text);
@@ -63,12 +60,9 @@ function cleanHtml(text: string) {
   if (nodes.length === 0) return '';
   if (nodes.length === 1) return (nodes[0] as HTMLElement).innerHTML || '';
   return ctnEl.innerHTML.replace(/<div><\/div>/g, '');
-}
+};
 
-app.cleanHtml = cleanHtml;
-app.cleanNode = cleanNode;
-
-export default function PHtml({ v, setV, b, setText, text }: PProps) {
+export const PHtml = ({ v, setV, b, setText, text }: PProps) => {
   const toolbarContainerRef = useRef<HTMLDivElement>(null);
   const info = useConstant<{ b?: B }>(() => ({}));
   // v = (v && !String(v).startsWith('<p>')) ? '<p>' + v + '</p>' : v;
@@ -148,4 +142,4 @@ export default function PHtml({ v, setV, b, setText, text }: PProps) {
       />
     </Box>
   );
-}
+};

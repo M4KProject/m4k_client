@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from 'preact/hooks';
-import B from './B';
+import { B } from './B';
 import { exportData, importData } from './bEdit';
 import { D } from './D';
 import { flux, jsonParse, jsonStringify } from 'fluxio';
@@ -7,7 +7,7 @@ import { useFlux } from '@common/hooks';
 import { css$, js$, terminal$ } from './flux';
 import { Css } from '@common/ui';
 
-function formatHtml(html: string) {
+const formatHtml = (html: string) => {
   const tab = '\t';
   let result = '';
   let indent = '';
@@ -29,7 +29,7 @@ function formatHtml(html: string) {
   });
 
   return result.substring(1, result.length - 3);
-}
+};
 
 let timer: any;
 
@@ -39,7 +39,7 @@ interface MyCodeMirrorProps {
   onChange?: (newValue: string) => void;
 }
 
-function MyCodeMirror({ value, type, onChange }: MyCodeMirrorProps) {
+const MyCodeMirror = ({ value, type, onChange }: MyCodeMirrorProps) => {
   const text$ = useMemo(() => flux(value), [type]);
   const text = useFlux(text$);
 
@@ -56,9 +56,9 @@ function MyCodeMirror({ value, type, onChange }: MyCodeMirrorProps) {
       }}
     />
   );
-}
+};
 
-function EdJsonData() {
+const EdJsonData = () => {
   const select = useFlux(B.select$) || B.root;
   useFlux(select.update$);
 
@@ -81,14 +81,14 @@ function EdJsonData() {
       }}
     />
   );
-}
+};
 
-function EdCodeHtml() {
+const EdCodeHtml = () => {
   const select = useFlux(B.select$) || B.root;
   return <MyCodeMirror value={formatHtml(select.el.outerHTML)} type="html" />;
-}
+};
 
-function EdCodeCss() {
+const EdCodeCss = () => {
   const val = useFlux(css$);
   return (
     <MyCodeMirror
@@ -100,9 +100,9 @@ function EdCodeCss() {
       }}
     />
   );
-}
+};
 
-function EdCodeJs() {
+const EdCodeJs = () => {
   const val = useFlux(js$);
   return (
     <MyCodeMirror
@@ -114,7 +114,7 @@ function EdCodeJs() {
       }}
     />
   );
-}
+};
 
 const compMap: Record<string, typeof EdJsonData> = {
   json: EdJsonData,

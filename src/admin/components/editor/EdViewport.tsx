@@ -1,5 +1,5 @@
 import { add, addIn, exportData, importData, getSelect, setSelect } from './bEdit';
-import B, { BElement } from './B';
+import { B, BElement } from './B';
 import { panel$, pos$, screenPos$, screenSize$, zoom$ } from './flux';
 import { deepClone, toNumber } from 'fluxio';
 import { useEffect, useRef } from 'preact/hooks';
@@ -25,11 +25,11 @@ const getComputedStyleCache = (() => {
 
 let ctrlKey = false;
 
-function mouseDown(
+const mouseDown = (
   e: MouseEvent,
   move: (x: number, y: number) => void,
   end?: (x: number, y: number) => void
-) {
+) => {
   e.preventDefault();
   e.stopPropagation();
   const iX = e.clientX;
@@ -46,9 +46,9 @@ function mouseDown(
   };
   document.addEventListener('mousemove', hMove);
   document.addEventListener('mouseup', hEnd);
-}
+};
 
-function onViewportMouseDown(e: any) {
+const onViewportMouseDown = (e: any) => {
   console.debug('onViewportMouseDown', e);
 
   const el: HTMLDivElement = e.target;
@@ -63,16 +63,16 @@ function onViewportMouseDown(e: any) {
       y: init.y + y,
     });
   });
-}
+};
 
 type UnitType = 'rem' | 'em' | 'px' | '%';
 
-function unitDecompose(unit: string): [number, UnitType] {
+const unitDecompose = (unit: string): [number, UnitType] => {
   const m = unit.match(/([0-9\.]+) ?([a-z%]+)/);
   return m ? [toNumber(m[1], 0), (m[2] as any) || 'px'] : [0, 'px'];
-}
+};
 
-function getResizeBox(): B | null {
+const getResizeBox = (): B | null => {
   const b = getSelect();
   if (!b) return null;
 
@@ -85,17 +85,17 @@ function getResizeBox(): B | null {
   }
 
   return b;
-}
+};
 
-function toUnit(v: number, type: string, size: number) {
+const toUnit = (v: number, type: string, size: number) => {
   if (type === '%') v = 100 * (v / size);
   const snap = ctrlKey ? 100 : 48 / 100;
   v = Math.round(v * snap) / snap;
   v = Math.round(v * 1000) / 1000;
   return v + type;
-}
+};
 
-function moveAndResize(e: any, aX: -1 | 1 | 0, aY: -1 | 1 | 0, aW: -1 | 1 | 0, aH: -1 | 1 | 0) {
+const moveAndResize = (e: any, aX: -1 | 1 | 0, aY: -1 | 1 | 0, aW: -1 | 1 | 0, aH: -1 | 1 | 0) => {
   console.debug('move');
   e.stopPropagation();
 
@@ -195,7 +195,7 @@ function moveAndResize(e: any, aX: -1 | 1 | 0, aY: -1 | 1 | 0, aW: -1 | 1 | 0, a
       }
     }
   );
-}
+};
 
 const onResizeDico: Record<string, (e: any) => void> = {
   EdSelect_T: (e) => moveAndResize(e, 0, 1, 0, -1),
@@ -251,7 +251,7 @@ const onClick = () => {
 
 const onResizeList = Object.entries(onResizeDico);
 
-function EdViewportPan() {
+const EdViewportPan = () => {
   const ref = useRef<HTMLDivElement>(null);
   const rootUpdated = useFlux(B.root.update$);
   const rootEl = B.root.el;
@@ -313,7 +313,7 @@ function EdViewportPan() {
       }}
     />
   );
-}
+};
 
 export const EdSelect = () => {
   console.debug('EdSelect');

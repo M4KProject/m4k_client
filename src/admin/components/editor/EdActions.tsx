@@ -13,7 +13,7 @@ import {
   rmProp,
 } from './bEdit';
 import { D, DStyle } from './D';
-import B from './B';
+import { B } from './B';
 import { terminal$ } from './flux';
 import { moveItem } from 'fluxio';
 import { useFlux } from '@common/hooks';
@@ -47,50 +47,50 @@ import {
   AlignHorizontalJustifyEnd,
 } from 'lucide-react';
 
-function AddChildIcon(props: any) {
+const AddChildIcon = (props: any) => {
   return <FilePlus {...props} style={{ transform: 'rotate(90deg)' }} />;
-}
+};
 
-function HorizontalStretchIcon() {
+const HorizontalStretchIcon = () => {
   return (
     <svg>
       <path d="M2 2v20h2V2Zm18 0v20h2V2ZM6 7v3h12V7Zm0 7v3h12v-3z"></path>
     </svg>
   );
-}
+};
 
-function VerticalStretchIcon() {
+const VerticalStretchIcon = () => {
   return (
     <svg>
       <path d="M2 2v2h20V2Zm5 4v12h3V6Zm7 0v12h3V6ZM2 20v2h20v-2z"></path>
     </svg>
   );
-}
+};
 
-function update(changes?: Partial<D> | null) {
+const update = (changes?: Partial<D> | null) => {
   if (!changes) return;
   getSelect().update(changes);
-}
+};
 
-function updateStyle(changes?: Partial<DStyle> | null) {
+const updateStyle = (changes?: Partial<DStyle> | null) => {
   if (!changes) return;
   getSelect().updateStyle(changes);
-}
+};
 
-function flexRow() {
+const flexRow = () => {
   const s = getComputedStyle(getSelect().el);
   if (s.display !== 'flex' || !s.flexDirection) {
     getSelect().updateStyle({ display: 'flex', flexDirection: 'column' });
     return false;
   }
   return s.flexDirection === 'row';
-}
+};
 
 // function setPanel(name: string) {
 //   panel$.set(name);
 // }
 
-function move(addIndex: number) {
+const move = (addIndex: number) => {
   const b = getSelect();
   if (!b.parent) return;
   const children = [...(b.parent.d.children || [])];
@@ -99,9 +99,9 @@ function move(addIndex: number) {
     const index = (b.parent.d.children || []).indexOf(b.d);
     setSelect(b.parent.children[index]);
   }
-}
+};
 
-function left() {
+const left = () => {
   console.debug('left');
   const b = getSelect();
 
@@ -123,9 +123,9 @@ function left() {
   parent2.update({ children: parent2Children });
 
   setSelect(parent2.children[parentIndex + 1]);
-}
+};
 
-function right() {
+const right = () => {
   console.debug('right');
   const b = getSelect();
   if (!b.parent || b.parent.children.length < 2) return;
@@ -143,7 +143,7 @@ function right() {
   siblingChildren.push(b.d);
   sibling.update({ children: siblingChildren });
   setSelect(sibling.children[sibling.children.length - 1]);
-}
+};
 
 const setTerminal = (val: string) => terminal$.set(terminal$.get() === val ? '' : val);
 
@@ -276,7 +276,7 @@ const titleByAction: Record<string, string> = {
   js: 'JavaScript',
 };
 
-function Action({ name, ...props }: ButtonProps & { name: string }) {
+const Action = ({ name, ...props }: ButtonProps & { name: string }) => {
   return (
     <Button
       {...tooltip(titleByAction[name] || '')}
@@ -291,7 +291,7 @@ function Action({ name, ...props }: ButtonProps & { name: string }) {
       }}
     />
   );
-}
+};
 
 const c = Css('EdActions', {
   '': {

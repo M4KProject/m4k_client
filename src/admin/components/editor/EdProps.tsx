@@ -1,13 +1,13 @@
 import { rmProp, rmStyleProp, setSelect } from './bEdit';
 import { D, DRoot, DStyle } from './D';
 import type { PProps } from './interfaces';
-import PHtml from './PHtml';
-import PColor from './PColor';
-import PFile, { PFiles } from './PFile';
-import PType from './PType';
-import PPrices from './PPrices';
-import PStrArr from './PStrArr';
-import B from './B';
+import {PHtml} from './PHtml';
+import {PColor} from './PColor';
+import {PFile, PFiles } from './PFile';
+import {PType} from './PType';
+import {PPrices} from './PPrices';
+import { PStrArr} from './PStrArr';
+import { B } from './B';
 import { Field } from '@common/components';
 import { Css } from '@common/ui';
 import { useFlux } from '@common/hooks';
@@ -81,31 +81,31 @@ const c = Css('Editor', {
   // },
 });
 
-function PStr({ v, setV }: PProps) {
+const PStr = ({ v, setV }: PProps) => {
   return <Field {...c('Input')} value={v || ''} onValue={setV} />;
-}
+};
 
-function PCls(props: PProps) {
+const PCls = (props: PProps) => {
   return <PStr {...props} />;
-}
+};
 
-function PKey({ v, setV }: PProps) {
+const PKey = ({ v, setV }: PProps) => {
   return <Field {...c('Input')} value={v} onValue={setV} />;
-}
+};
 
-function PBool({ v, setV }: PProps) {
+const PBool = ({ v, setV }: PProps) => {
   return <Field {...c('Input')} type="switch" value={v} onValue={setV} />;
-}
+};
 
-function PNbr({ v, setV }: PProps) {
+const PNbr = ({ v, setV }: PProps) => {
   return <Field {...c('Input')} type="number" value={v} onValue={setV} />;
-}
+};
 
-function PAuto(props: PProps) {
+const PAuto = (props: PProps) => {
   return <PStr {...props} />;
-}
+};
 
-function PUnit({ v, setV }: PProps) {
+const PUnit = ({ v, setV }: PProps) => {
   const [_, n, u] = String(v).match(/([0-9.]+)(.+)/) || [];
   const setN = (n: string) => setV(n + (u || '%'));
   const setU = (u: string) => setV(n + (u || '%'));
@@ -126,7 +126,7 @@ function PUnit({ v, setV }: PProps) {
       />
     </>
   );
-}
+};
 
 type POptions = {
   order?: number;
@@ -337,11 +337,11 @@ interface PropInfo {
   isStyle: boolean;
 }
 
-function pDicoToList(
+const pDicoToList = (
   props: PropInfo[],
   pDico: Record<any, PInfo | undefined | null>,
   isStyle = false
-) {
+) => {
   Object.entries(pDico).forEach(([key, v]) => {
     if (!v) return;
     key = String(key);
@@ -354,7 +354,7 @@ function pDicoToList(
       isStyle,
     });
   });
-}
+};
 
 const props: PropInfo[] = [
   {
@@ -377,7 +377,7 @@ props.sort((a, b) => {
   return a.label.localeCompare(b.label);
 });
 
-function PAdd({ b }: { b: B }) {
+const PAdd = ({ b }: { b: B }) => {
   // const addProp = (path: string) => {
   //   console.debug('addProp', path);
   //   if (path.startsWith('s.')) {
@@ -415,9 +415,9 @@ function PAdd({ b }: { b: B }) {
       </TextField> */}
     </div>
   );
-}
+};
 
-function PFactory({ pName, sName, b }: { pName?: keyof D; sName?: keyof DStyle; b: B }) {
+const PFactory = ({ pName, sName, b }: { pName?: keyof D; sName?: keyof DStyle; b: B }) => {
   useFlux(b.update$);
 
   const [_v, _setV] = useState<any>(undefined);
@@ -502,9 +502,9 @@ function PFactory({ pName, sName, b }: { pName?: keyof D; sName?: keyof DStyle; 
       {P && <P b={b} v={v} setV={setV} p={pName} text={text} setText={setText} />}
     </div>
   );
-}
+};
 
-function PList() {
+const PList = () => {
   const b = useFlux(B.select$) || B.root;
   useFlux(b.update$);
 
@@ -533,7 +533,7 @@ function PList() {
       <PAdd b={b} />
     </>
   );
-}
+};
 
 export const EdProps = () => {
   return (

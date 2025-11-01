@@ -1,9 +1,9 @@
-import { toArray, toNumber, last } from 'vegi';
+import { useState } from 'preact/hooks';
 import { PProps } from './interfaces';
-import TextField from '@mui/material/TextField';
-import { useState } from 'react';
+import { Field } from '@common/components';
+import { last, toArray, toNumber } from 'fluxio';
 
-export default function PPrices({ v, setV, b }: PProps) {
+export const PPrices = ({ v, setV, b }: PProps) => {
   const [_texts, setTexts] = useState(['']);
   const prices: (number | null)[] = toArray(v, []).map((p) => toNumber(p, 0));
   const texts = prices.map((p, i) => String(_texts[i] || p || ''));
@@ -23,15 +23,14 @@ export default function PPrices({ v, setV, b }: PProps) {
   return (
     <div className="PInput PPrices">
       {texts.map((text, i) => (
-        <TextField
+        <Field
+          type="number"
           key={i}
           className="PPrice"
-          size="small"
-          inputProps={{ inputMode: 'numeric' }}
           value={text}
           onChange={(e) => onChange(e, i)}
         />
       ))}
     </div>
   );
-}
+};

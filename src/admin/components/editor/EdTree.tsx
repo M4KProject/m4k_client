@@ -1,5 +1,5 @@
 import { getSelect } from './bEdit';
-import B from './B';
+import { B } from './B';
 import { Css } from '@common/ui';
 import { useFlux } from '@common/hooks';
 import { useEffect, useRef } from 'preact/hooks';
@@ -64,13 +64,13 @@ const iconByT: Record<string, typeof BoxIcon> = {
   pdf: BoxIcon,
 };
 
-function labelClean(html: string) {
+const labelClean = (html: string) => {
   const txt = decodeURIComponent(html.replace(/(<([^>]+)>)/gi, ''));
   const txtShort = txt.length > 13 ? txt.substring(0, 10).trimEnd() + '...' : txt;
   return txtShort;
-}
+};
 
-function getLabel(b: B) {
+const getLabel = (b: B) => {
   if (!b.parent) return 'Racine';
   const d = b.d;
   if (d.title) return labelClean(d.title);
@@ -81,18 +81,18 @@ function getLabel(b: B) {
   if (d.cls) return labelClean(d.cls);
   if (d.t) return d.t;
   return 'box';
-}
+};
 
-function hasChildSelected(b?: B) {
+const hasChildSelected = (b?: B) => {
   let n: B | undefined = getSelect();
   while (n) {
     if (b === n) return true;
     n = n.parent;
   }
   return false;
-}
+};
 
-function EdItem(props: { b?: B }) {
+const EdItem = (props: { b?: B }) => {
   const ref = useRef<HTMLDivElement>(null);
   const b = props.b || B.root;
   const select = useFlux(B.select$);
@@ -144,9 +144,9 @@ function EdItem(props: { b?: B }) {
       )}
     </div>
   );
-}
+};
 
-export default function EdTree() {
+export const EdTree = () => {
   console.debug('EdTree');
 
   return (
@@ -154,4 +154,4 @@ export default function EdTree() {
       <EdItem />
     </div>
   );
-}
+};

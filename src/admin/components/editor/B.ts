@@ -181,7 +181,7 @@ let _idGen = 0;
 app.onClick = toVoid;
 app.onRender = toVoid;
 
-export default class B {
+export class B {
   static getCallCb = getCallCb;
   static home: string = 'home';
   static root = new B({});

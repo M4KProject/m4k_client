@@ -1,5 +1,5 @@
 import { PProps } from './interfaces';
-import B from './B';
+import { B } from './B';
 import { Field } from '@common/components';
 
 const labelDico: Record<string, string> = {
@@ -25,7 +25,7 @@ const labelDico: Record<string, string> = {
   btn: 'Bouton'
 };
 
-function getTypes() {
+const getTypes = () => {
   const dico: Record<string, true> = {};
   B.root.forEach((b) => (dico[b.d.t || ''] = true));
   Object.keys(B.templates).forEach((t) => (dico[t || ''] = true));
@@ -35,9 +35,9 @@ function getTypes() {
   types.sort((a, b) => a[1].localeCompare(b[1]));
 
   return types;
-}
+};
 
-export default function PType({ v, setV, b }: PProps) {
+const PType = ({ v, setV, b }: PProps) => {
   const types = getTypes();
   return (
     <div className="PInput">
@@ -86,4 +86,6 @@ export default function PType({ v, setV, b }: PProps) {
       </TextField>
     </div>
   );
-}
+};
+
+export default PType;

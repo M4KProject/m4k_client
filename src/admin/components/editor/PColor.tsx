@@ -1,13 +1,16 @@
 import type { PProps } from './interfaces';
 // import { SketchPicker } from 'react-color';
-import B from './B';
+import { B } from './B';
+import { useEffect, useState } from 'preact/hooks';
+import { CSSProperties } from 'preact/compat';
+import { Button } from '@common/components';
 
-function toHex(c: number) {
+const toHex = (c: number) => {
   const hex = Math.round(c).toString(16);
   return hex.length == 1 ? '0' + hex : hex;
-}
+};
 
-function rgbToHex(rgb: { r: number; g: number; b: number; a?: number }) {
+const rgbToHex = (rgb: { r: number; g: number; b: number; a?: number }) => {
   return (
     '#' +
     toHex(rgb.r) +
@@ -15,14 +18,14 @@ function rgbToHex(rgb: { r: number; g: number; b: number; a?: number }) {
     toHex(rgb.b) +
     (rgb.a !== undefined && rgb.a < 1 ? toHex(rgb.a * 255) : '')
   );
-}
+};
 
-function pH(hex: string, start: number, end: number, mul: number) {
+const pH = (hex: string, start: number, end: number, mul: number) => {
   const p = hex.substring(start, end);
   return p.length ? parseInt(p, 16) * mul : undefined;
-}
+};
 
-function hexToRgb(hex: string) {
+const hexToRgb = (hex: string) => {
   try {
     if (hex.startsWith('#')) {
       if (hex.length === 4 || hex.length === 5) {
@@ -44,9 +47,9 @@ function hexToRgb(hex: string) {
   } catch (error) {
     console.error('hexToRgb', hex, error);
   }
-}
+};
 
-export default function PColor({ v, setV, b }: PProps) {
+export const PColor = ({ v, setV, b }: PProps) => {
   const [show, setShow] = useState(false);
   const [presetColors, setPresetColor] = useState<string[]>([]);
 
@@ -100,4 +103,4 @@ export default function PColor({ v, setV, b }: PProps) {
       </Button>
     </div>
   );
-}
+};

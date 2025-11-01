@@ -1,9 +1,9 @@
 import { deepClone } from 'fluxio';
-import B, { BElement } from './B';
+import { B, BElement } from './B';
 import { D, DRoot, DStyle } from './D';
 import { clipboardCopy, clipboardPaste } from '@common/ui';
 
-function cleanD(d: D) {
+const cleanD = (d: D) => {
   delete d.l;
   if (d.tr) {
     const trFirst = Object.values(d.tr)[0] || {};
@@ -20,9 +20,9 @@ function cleanD(d: D) {
   const templates = (d as DRoot).templates;
   if (templates) Object.values(templates).forEach(cleanD);
   return d;
-}
+};
 
-function contentEditable(_b: B, el: BElement) {
+const contentEditable = (_b: B, el: BElement) => {
   // const elAny = el as any;
   // const clickKey = `_${prop}EditableClic`;
   // const blurKey = `_${prop}EditableBlur`;
@@ -51,7 +51,7 @@ function contentEditable(_b: B, el: BElement) {
   //     b.update({ [prop]: el.innerHTML });
   //   }
   // });
-}
+};
 
 B.props.ctn = (el, v, b) => {
   el.innerHTML = v;
@@ -62,7 +62,7 @@ const histories: DRoot[] = [];
 let historyIndex: number = 0;
 let historyTimer: any = null;
 
-export function addHistory() {
+export const addHistory = () => {
   console.debug('addHistory');
   clearTimeout(historyTimer);
   historyTimer = setTimeout(() => {
@@ -72,9 +72,9 @@ export function addHistory() {
     histories.push(data);
     historyIndex = histories.length;
   }, 1000);
-}
+};
 
-export function undo() {
+export const undo = () => {
   console.debug('undo');
   historyIndex--;
   if (historyIndex >= histories.length) {
@@ -91,9 +91,9 @@ export function undo() {
     B.importRoot(data);
     clearTimeout(historyTimer);
   }
-}
+};
 
-export function redo() {
+export const redo = () => {
   console.debug('redo');
   historyIndex++;
   if (historyIndex < 0) {
@@ -107,38 +107,38 @@ export function redo() {
     B.importRoot(data);
     clearTimeout(historyTimer);
   }
-}
+};
 
-export function selectUp(): void {
+export const selectUp = (): void => {
   const parent = B.select$.v?.parent;
   if (parent) B.select$.set(parent);
-}
+};
 
-export function getLangs() {
+export const getLangs = () => {
   const langDico: Record<string, 1> = {};
   B.root.forEach((b) => b.d.lang && (langDico[b.d.lang] = 1));
   return Object.keys(langDico);
-}
+};
 
-export function rmProp(b: B, prop: keyof D) {
+export const rmProp = (b: B, prop: keyof D) => {
   delete b.d[prop];
   b.setData(b.d);
-}
+};
 
-export function rmStyleProp(b: B, prop: keyof DStyle) {
+export const rmStyleProp = (b: B, prop: keyof DStyle) => {
   if (!b.d.style) return;
   delete b.d.style[prop];
   b.update({ style: b.d.style });
-}
+};
 
-export function exportData(b: B) {
+export const exportData = (b: B) => {
   console.debug('exportData');
   const d = deepClone(b.d);
   cleanD(d);
   return d;
-}
+};
 
-export function importData(b: B, d: DRoot) {
+export const importData = (b: B, d: DRoot) => {
   console.debug('importData', d);
   cleanD(d);
   if (b === B.root) {
@@ -146,9 +146,9 @@ export function importData(b: B, d: DRoot) {
     return;
   }
   b.setData(d);
-}
+};
 
-export function remove(b: B) {
+export const remove = (b: B) => {
   console.debug('remove', b);
   if (!b.parent) return;
   const parentChildren = [...(b.parent.d.children || [])];
@@ -157,9 +157,9 @@ export function remove(b: B) {
   parentChildren.splice(index, 1);
   b.parent.update({ children: parentChildren });
   return b.parent;
-}
+};
 
-export function add(b: B) {
+export const add = (b: B) => {
   console.debug('add');
   if (!b.parent) return;
   const parentChildren = [...(b.parent.d.children || [])];
@@ -168,29 +168,29 @@ export function add(b: B) {
   parentChildren.splice(index + 1, 0, {});
   b.parent.update({ children: parentChildren });
   return b.parent.children[index + 1];
-}
+};
 
-export function addIn(b: B) {
+export const addIn = (b: B) => {
   console.debug('addIn');
   const children = [...(b.d.children || [])];
   children.push({});
   b.update({ children });
   return b.children[b.children.length - 1];
-}
+};
 
-export function cut(b: B) {
+export const cut = (b: B) => {
   console.debug('cut');
   clipboardCopy(exportData(b));
   return remove(b);
-}
+};
 
-export function copy(b: B) {
+export const copy = (b: B) => {
   console.debug('copy');
   clipboardCopy(exportData(b));
   return b;
-}
+};
 
-export async function paste(bParent: B) {
+export const paste = async (bParent: B) => {
   const d = await clipboardPaste();
   console.debug('paste', d);
   if (!d) return;
@@ -198,9 +198,9 @@ export async function paste(bParent: B) {
   if (!b) return;
   importData(b, d);
   return b;
-}
+};
 
-export async function pasteIn(bParent: B) {
+export const pasteIn = async (bParent: B) => {
   const d = await clipboardPaste();
   console.debug('pasteIn', d);
   if (!d) return;
@@ -208,7 +208,7 @@ export async function pasteIn(bParent: B) {
   if (!b) return;
   importData(b, d);
   return b;
-}
+};
 
 // export function getColors(b: B) {
 //   const colorDico: Record<string, boolean> = {};
@@ -260,11 +260,11 @@ B.update$.on(({ b, d }) => {
   }
 });
 
-export function getSelect() {
+export const getSelect = () => {
   return B.select$.v || B.root;
-}
+};
 
-export function setSelect(b?: B | null) {
+export const setSelect = (b?: B | null) => {
   if (!b) return;
   B.select$.set(b);
-}
+};

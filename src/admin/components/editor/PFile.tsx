@@ -1,22 +1,6 @@
-import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import AddIcon from '@mui/icons-material/Add';
-import UploadIcon from '@mui/icons-material/UploadFileTwoTone';
-import DownloadIcon from '@mui/icons-material/DownloadTwoTone';
-import Tooltip from '../Tooltip';
-import { SxProps } from '@mui/material/styles';
-import TextField from '@mui/material/TextField';
-import MenuItem from '@mui/material/MenuItem';
-import LinearProgress from '@mui/material/LinearProgress';
-import { ChangeEventHandler, useEffect, useRef, useMemo } from 'react';
 import { PProps } from './interfaces';
-import Box from '@mui/material/Box';
-import { Msg, toString, useFlux } from 'vegi';
-import { addAlert } from '../AlertList';
-import { MediaData } from '../../../common';
-import { api } from '../../../api/ApiRest';
-import B from './B';
-import { editorCtrl } from '../../controllers/EditorController';
+import { B } from './B';
+import { Button } from '@common/components';
 
 // import * as UpChunk from '@mux/upchunk';
 // const upload = UpChunk.createUpload({
@@ -70,23 +54,23 @@ const resolutions = {
   '2160': '4K',
 };
 
-function FileInputProgress({
+const FileInputProgress = ({
   progress$,
   color,
 }: {
   progress$: Msg<number>;
   color: 'primary' | 'secondary';
-}) {
+}) => {
   const progress = useFlux(progress$);
   if (progress === 0 || progress === 1) return null;
   return <LinearProgress variant="determinate" value={progress * 100} color={color} />;
-}
+};
 
-function isPdf(p: string | undefined) {
+const isPdf = (p: string | undefined) => {
   return p === 'pdf' || p === 'doc';
-}
+};
 
-function FileInput({ v, setV, b, p }: PProps) {
+const FileInput = ({ v, setV, b, p }: PProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const values = toString(v).split('/');
@@ -321,17 +305,17 @@ function FileInput({ v, setV, b, p }: PProps) {
       <div className="PInputFileName">{media?.name}</div>
     </Box>
   );
-}
+};
 
-export default function PFile(props: PProps) {
+export const PFile = (props: PProps) => {
   return (
     <div className="PInput">
       <FileInput {...props} />
     </div>
   );
-}
+};
 
-export function PFiles(props: PProps) {
+export const PFiles = (props: PProps) => {
   return (
     <div className="PInput" style={{ flexDirection: 'column' }}>
       <FileInput {...props} />

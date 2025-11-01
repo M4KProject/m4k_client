@@ -1,7 +1,7 @@
 import { useFlux } from '@common/hooks';
 import { EdActions } from './EdActions';
 import { EdProps } from './EdProps';
-import EdTree from './EdTree';
+import {EdTree} from './EdTree';
 import { panel$, terminal$ } from './flux';
 import { EdCode } from './EdCode';
 import { Css } from '@common/ui';
@@ -30,7 +30,7 @@ const c = Css('EdTerminal', {
   // },
 });
 
-function EdTerminalSwitch() {
+const EdTerminalSwitch = () => {
   const terminal = useFlux(terminal$);
   console.debug('EdTerminalSwitch', terminal);
   switch (terminal) {
@@ -42,7 +42,7 @@ function EdTerminalSwitch() {
     default:
       return <EdProps />;
   }
-}
+};
 
 export const EdTerminal = () => {
   const panel = useFlux(panel$);

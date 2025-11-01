@@ -1,6 +1,6 @@
 import { addIn, setSelect } from './bEdit';
 import { DRoot } from './D';
-import B from './B';
+import { B } from './B';
 import { panel$, screenSize$, terminal$, zoom$ } from './flux';
 import { randColor } from 'fluxio';
 import { useFlux } from '@common/hooks';
@@ -21,12 +21,12 @@ import {
   Backpack,
 } from 'lucide-react';
 
-function setPanel(name: string) {
+const setPanel = (name: string) => {
   terminal$.set('');
   panel$.set(name);
-}
+};
 
-function addBox() {
+const addBox = () => {
   console.debug('addBox');
   const b = addIn(B.root);
   if (!b) return;
@@ -39,7 +39,7 @@ function addBox() {
     backgroundColor: randColor(),
   });
   setSelect(b);
-}
+};
 
 const c = Css('EdFab', {
   '': {
@@ -61,7 +61,7 @@ const c = Css('EdFab', {
   },
 });
 
-function EdFab({ title, name, ...props }: DivProps & { title: string; name?: string }) {
+const EdFab = ({ title, name, ...props }: DivProps & { title: string; name?: string }) => {
   const panel = useFlux(panel$);
 
   return (
@@ -71,7 +71,7 @@ function EdFab({ title, name, ...props }: DivProps & { title: string; name?: str
       {...c('', `-${name}`, panel === name && '-active', props)}
     />
   );
-}
+};
 
 export const EdFabs = () => {
   const panel = useFlux(panel$);

@@ -1,8 +1,8 @@
+import { Field } from '@common/components';
 import { PProps } from './interfaces';
-import TextField from '@mui/material/TextField';
-import { toArray, last } from 'vegi';
+import { last, toArray } from 'fluxio';
 
-export default function PStrArr({ v, setV, b }: PProps) {
+export const PStrArr = ({ v, setV, b }: PProps) => {
   const texts: string[] = [...toArray(v)];
   texts.push('');
 
@@ -18,15 +18,14 @@ export default function PStrArr({ v, setV, b }: PProps) {
   return (
     <div className="PInput PTPrices">
       {texts.map((text, i) => (
-        <TextField
+        <Field
+          type="number"
           key={i}
           className="PTPrice"
-          size="small"
-          inputProps={{ inputMode: 'numeric' }}
           value={text}
           onChange={(e) => onChange(e, i)}
         />
       ))}
     </div>
   );
-}
+};

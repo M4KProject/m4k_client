@@ -1,4 +1,4 @@
-import B from './B';
+import { B } from './B';
 import { D } from './D';
 
 export interface PProps {
