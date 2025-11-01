@@ -14,7 +14,7 @@ import {
 } from './bEdit';
 import { D, DStyle } from './D';
 import B from './B';
-import { panel$, terminal$ } from './flux';
+import { terminal$ } from './flux';
 import { moveItem } from 'fluxio';
 import { useFlux } from '@common/hooks';
 import { Button, ButtonProps, tooltip } from '@common/components';

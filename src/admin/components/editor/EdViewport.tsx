@@ -1,5 +1,11 @@
 import { add, addIn, exportData, importData, getSelect, setSelect } from './bEdit';
 import B, { BElement } from './B';
+import { panel$, pos$, screenPos$, screenSize$, zoom$ } from './flux';
+import { deepClone, toNumber } from 'fluxio';
+import { useEffect, useRef } from 'preact/hooks';
+import { useFlux } from '@common/hooks';
+import { Css } from '@common/ui';
+import { CopyPlus, Eye } from 'lucide-react';
 
 // function AddInIcon(props: any) {
 //   return <AddToPhotosTwoTone {...props} style={{ transform: 'rotate(90deg)' }} />;
@@ -50,9 +56,9 @@ function onViewportMouseDown(e: any) {
   if (typeof el.className !== 'string') return;
   if (!el.className.includes('EdViewport') && el.id !== 'root') return;
 
-  const init = { ...editorCtrl.screenPos$.val };
+  const init = { ...screenPos$.get() };
   mouseDown(e, (x, y) => {
-    editorCtrl.screenPos$.set({
+    screenPos$.set({
       x: init.x + x,
       y: init.y + y,
     });
@@ -110,7 +116,7 @@ function moveAndResize(e: any, aX: -1 | 1 | 0, aY: -1 | 1 | 0, aW: -1 | 1 | 0, a
     elStyle.position === 'absolute' &&
     (parentStyle.position === 'absolute' || parentStyle.position === 'relative');
 
-  const ratio = 1 / editorCtrl.zoom$.val;
+  const ratio = 1 / zoom$.get();
   let ratioX = ratio; //-100 / (testRect.x - elRect.x);
   let ratioY = ratio; //-100 / (testRect.y - elRect.y);
   let ratioW = ratio; //-100 / (testRect.width - elRect.width);
@@ -213,7 +219,7 @@ const onDuplicate = () => {
   const a = add(s);
   if (!a) return;
   const data = exportData(s);
-  importData(a, cloneJson(data, {}));
+  importData(a, deepClone(data));
   setSelect(a);
 };
 
@@ -249,10 +255,10 @@ function EdViewportPan() {
   const ref = useRef<HTMLDivElement>(null);
   const rootUpdated = useFlux(B.root.update$);
   const rootEl = B.root.el;
-  const zoom = useFlux(editorCtrl.zoom$);
-  const screenSize = useFlux(editorCtrl.screenSize$);
-  const screenPos = useFlux(editorCtrl.screenPos$);
-  const panel = useFlux(editorCtrl.panel$);
+  const zoom = useFlux(zoom$);
+  const screenSize = useFlux(screenSize$);
+  const screenPos = useFlux(screenPos$);
+  const panel = useFlux(panel$);
 
   console.debug('ViewportPan', rootUpdated);
 
@@ -278,7 +284,7 @@ function EdViewportPan() {
     const zoom = (zoomW < zoomH ? zoomW : zoomH) * 0.98;
 
     console.debug('bodySize', { bodySize, screenSize, zoomW, zoomH, zoom });
-    editorCtrl.zoom$.set(zoom);
+    zoom$.set(zoom);
 
     const panWidth = screenSize.w * zoom;
     const panHeight = screenSize.h * zoom;
@@ -289,7 +295,7 @@ function EdViewportPan() {
 
     console.debug('bodySize', { panWidth, panHeight, viewportWidth, viewportHeight, x, y });
 
-    editorCtrl.screenPos$.set({ x, y });
+    screenPos$.set({ x, y });
     setSelect(B.root);
   }, [screenSize, panel, rootUpdated]);
 
@@ -309,9 +315,9 @@ function EdViewportPan() {
   );
 }
 
-function EdSelect(): JSX.Element {
+export const EdSelect = () => {
   console.debug('EdSelect');
-  const pos = useFlux(editorCtrl.pos$);
+  const pos = useFlux(pos$);
 
   const b = getSelect();
   const el = b?.el;
@@ -336,10 +342,10 @@ function EdSelect(): JSX.Element {
       {isAbsolute && <div onMouseDown={onMove} className="EdSelect_C" />}
       <div className="EdActions">
         <div onMouseDown={onDuplicate} className="EdAction EdAction-Duplicate">
-          <DuplicateIcon />
+          <CopyPlus />
         </div>
         <div onMouseDown={onClick} className="EdAction EdAction-Click">
-          <MouseIcon />
+          <Eye />
         </div>
       </div>
       {/* <div onMouseDown={onAdd} className="EdAction EdAction-Add">
@@ -352,112 +358,112 @@ function EdSelect(): JSX.Element {
   );
 }
 
-export default function EdViewport(): JSX.Element {
+const c = Css('EdViewport', {
+  '': {
+    position: 'relative',
+    overflow: 'hidden',
+    flex: 1,
+    background: '#000',
+  },
+  // '[contenteditable="true"]': {
+  //   outline: '0px solid transparent',
+  //   caretColor: '#0000FF',
+  // },
+  // '& .price-0': {
+  //   visibility: 'visible',
+  //   opacity: 0.1,
+  // },
+  // '& .EdViewportPan': {
+  //   position: 'absolute',
+  //   overflow: 'auto',
+  //   top: 0,
+  //   left: 0,
+  //   width: '100%',
+  //   height: '100%',
+  //   background: '#FFF',
+  // },
+  // '& .EdSelect': {
+  //   position: 'absolute',
+  //   top: -5,
+  //   left: -5,
+  //   width: 0,
+  //   height: 0,
+  //   border: '2px solid #1976d2',
+  //   pointerEvents: 'none',
+  // },
+  // '& .EdSelect div': {
+  //   position: 'absolute',
+  //   width: '9px',
+  //   height: '9px',
+  //   margin: '-5px',
+  //   border: '2px solid #9c27b0',
+  //   background: '#FFFFFF',
+  //   pointerEvents: 'all',
+  // },
+  // '& .EdSelect_T': { top: 0, left: '50%', cursor: 'n-resize' },
+  // '& .EdSelect_B': { bottom: 0, left: '50%', cursor: 'n-resize' },
+  // '& .EdSelect_R': { top: '50%', right: 0, cursor: 'e-resize' },
+  // '& .EdSelect_L': { top: '50%', left: 0, cursor: 'e-resize' },
+  // '& .EdSelect_C': { top: '50%', left: '50%', borderRadius: '50%', cursor: 'move' },
+  // '& .EdSelect_TR': { top: 0, right: 0, cursor: 'ne-resize' },
+  // '& .EdSelect_TL': { top: 0, left: 0, cursor: 'se-resize' },
+  // '& .EdSelect_BR': { bottom: 0, right: 0, cursor: 'se-resize' },
+  // '& .EdSelect_BL': { bottom: 0, left: 0, cursor: 'ne-resize' },
+
+  // '& .EdSelect .EdActions': {
+  //   bottom: -20,
+  //   right: 0,
+  //   position: 'absolute',
+  //   display: 'flex',
+  //   flexDirection: 'row',
+  //   alignItems: 'center',
+  //   justifyContent: 'flex-end',
+  //   margin: 0,
+  //   border: 0,
+  //   background: 'none',
+  //   height: 18,
+  //   width: '100%',
+  // },
+
+  // '& .EdSelect .EdAction': {
+  //   position: 'relative',
+  //   cursor: 'pointer',
+  //   border: '0',
+  //   background: 'none',
+  //   margin: 0,
+  //   width: '18px',
+  //   height: '18px',
+  //   color: '#9c27b0',
+  //   '& .MuiSvgIcon-root': {
+  //     width: '18px',
+  //     height: '18px',
+  //   },
+  // },
+
+  // // '& .EdAction-Duplicate': { color: '#9c27b0' },
+  // // '& .EdAction-Click': { color: '#9c27b0' },
+
+  // '& .carousel.ed-selected > .box': {
+  //   visibility: 'hidden',
+  //   opacity: 0,
+  //   transform: 'scale(0)',
+  //   zIndex: 0,
+  // },
+  // '& .carousel.ed-selected > .box.ed-selected': {
+  //   visibility: 'visible',
+  //   opacity: 1,
+  //   transform: 'scale(1)',
+  //   zIndex: 1,
+  // },
+});
+
+export const EdViewport = () => {
   console.debug('EdViewport');
 
   return (
-    <Box
-      className="EdViewport"
-      onMouseDown={onViewportMouseDown}
-      sx={{
-        position: 'relative',
-        overflow: 'hidden',
-        flex: 1,
-        background: '#000',
-        '[contenteditable="true"]': {
-          outline: '0px solid transparent',
-          caretColor: '#0000FF',
-        },
-        '& .price-0': {
-          visibility: 'visible',
-          opacity: 0.1,
-        },
-        '& .EdViewportPan': {
-          position: 'absolute',
-          overflow: 'auto',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100%',
-          background: '#FFF',
-        },
-        '& .EdSelect': {
-          position: 'absolute',
-          top: -5,
-          left: -5,
-          width: 0,
-          height: 0,
-          border: '2px solid #1976d2',
-          pointerEvents: 'none',
-        },
-        '& .EdSelect div': {
-          position: 'absolute',
-          width: '9px',
-          height: '9px',
-          margin: '-5px',
-          border: '2px solid #9c27b0',
-          background: '#FFFFFF',
-          pointerEvents: 'all',
-        },
-        '& .EdSelect_T': { top: 0, left: '50%', cursor: 'n-resize' },
-        '& .EdSelect_B': { bottom: 0, left: '50%', cursor: 'n-resize' },
-        '& .EdSelect_R': { top: '50%', right: 0, cursor: 'e-resize' },
-        '& .EdSelect_L': { top: '50%', left: 0, cursor: 'e-resize' },
-        '& .EdSelect_C': { top: '50%', left: '50%', borderRadius: '50%', cursor: 'move' },
-        '& .EdSelect_TR': { top: 0, right: 0, cursor: 'ne-resize' },
-        '& .EdSelect_TL': { top: 0, left: 0, cursor: 'se-resize' },
-        '& .EdSelect_BR': { bottom: 0, right: 0, cursor: 'se-resize' },
-        '& .EdSelect_BL': { bottom: 0, left: 0, cursor: 'ne-resize' },
-
-        '& .EdSelect .EdActions': {
-          bottom: -20,
-          right: 0,
-          position: 'absolute',
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'flex-end',
-          margin: 0,
-          border: 0,
-          background: 'none',
-          height: 18,
-          width: '100%',
-        },
-
-        '& .EdSelect .EdAction': {
-          position: 'relative',
-          cursor: 'pointer',
-          border: '0',
-          background: 'none',
-          margin: 0,
-          width: '18px',
-          height: '18px',
-          color: '#9c27b0',
-          '& .MuiSvgIcon-root': {
-            width: '18px',
-            height: '18px',
-          },
-        },
-
-        // '& .EdAction-Duplicate': { color: '#9c27b0' },
-        // '& .EdAction-Click': { color: '#9c27b0' },
-
-        '& .carousel.ed-selected > .box': {
-          visibility: 'hidden',
-          opacity: 0,
-          transform: 'scale(0)',
-          zIndex: 0,
-        },
-        '& .carousel.ed-selected > .box.ed-selected': {
-          visibility: 'visible',
-          opacity: 1,
-          transform: 'scale(1)',
-          zIndex: 1,
-        },
-      }}
-    >
+    <div {...c()} onMouseDown={onViewportMouseDown}>
       <EdViewportPan />
       <EdSelect />
-    </Box>
+    </div>
   );
 }
