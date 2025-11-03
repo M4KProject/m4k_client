@@ -1,4 +1,4 @@
-import { clean, getExt, isString } from 'fluxio';
+import { getExt, isString, removeAccents } from 'fluxio';
 import { MediaModel } from './models';
 import { mediaSync } from './sync';
 import { getMediaDownloadUrl } from './getMediaDownloadUrl';
@@ -9,6 +9,7 @@ export const startMediaDownload = (mediaOrId?: string | MediaModel) => {
   if (!media) return;
   const url = getMediaDownloadUrl(media);
   const ext = getExt(url);
-  const filename = clean(media.title || String(media.source) || media.id) + '.' + ext;
+  const filename =
+    removeAccents(media.title || String(media.source) || media.id).trim() + '.' + ext;
   startDownload(url, filename);
 };

@@ -1,4 +1,4 @@
-import { Css } from '@common/ui';
+import { Css } from 'fluxio';
 import { PdfModel } from '@/api';
 import { Button } from '@common/components';
 import { groupBy, sortItems } from 'fluxio';
@@ -13,7 +13,7 @@ const c = Css('PdfView', {
   '': {
     position: 'absolute',
     overflow: 'hidden',
-    fCenter: [],
+    fCenter: 1,
     wh: '100%',
     xy: 0,
   },

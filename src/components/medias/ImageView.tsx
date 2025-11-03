@@ -1,4 +1,4 @@
-import { Css } from '@common/ui';
+import { Css } from 'fluxio';
 import { ImageModel } from '@/api';
 import { MediaViewProps } from './MediaView';
 import { getVariants } from '@/api/getVariants';

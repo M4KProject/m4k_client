@@ -1,17 +1,16 @@
-import { Css } from '@common/ui';
+import { Css, toString } from 'fluxio';
 import { Page, PageBody, Button, tooltip, Toolbar } from '@common/components';
 import { useEffect, useState } from 'preact/hooks';
 import { RefreshCw, Power, LogOut } from 'lucide-react';
 import { DeviceScreen } from '../components/devices/DeviceScreen';
 import { DeviceConsole } from '../components/devices/DeviceConsole';
-import { getUrl } from '@/api';
 import { glb, jsonStringify } from 'fluxio';
 import { deviceSync } from '@/api/sync';
 import { useDevice } from '@/api/hooks';
 
 const c = Css('DevicePage', {
   Body: {
-    fRow: ['stretch'],
+    fRow: 'stretch',
     p: 0.5,
   },
   Screen: {
@@ -69,7 +68,8 @@ export const DevicePage = () => {
     displayWidth = displayHeight * aspectRatio;
   }
 
-  const captureUrl = device.capture ? getUrl('devices', device.id, device.capture) : '';
+  const captureUrl =
+    device.capture ? deviceSync.coll.getFileUrl(device.id, toString(device.capture)) : '';
 
   return (
     <Page {...c()}>

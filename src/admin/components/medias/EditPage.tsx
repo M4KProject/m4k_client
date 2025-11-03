@@ -1,11 +1,12 @@
 import { PageModel } from '@/api';
-import { Css } from '@common/ui';
+import { Css } from 'fluxio';
 import { JobGrid } from '../jobs/JobGrid';
 import { Editor } from '../editor/Editor';
 
 const c = Css('EditPage', {
   '': {
-    fCol: [],
+    fCol: 1,
+    flex: 1,
   },
 });
 

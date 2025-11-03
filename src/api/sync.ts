@@ -1,12 +1,4 @@
-import {
-  PbColl,
-  PbOptions,
-  PbWhere,
-  PbModel,
-  PbCreate,
-  PbUpdate,
-  PbAuthColl,
-} from 'pblite';
+import { PbColl, PbOptions, PbWhere, PbModel, PbCreate, PbUpdate, PbAuthColl } from 'pblite';
 import {
   byId,
   fluxDictionary,

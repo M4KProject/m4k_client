@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'preact/hooks';
-import { Css } from '@common/ui';
+import { Css } from 'fluxio';
 import { Button } from '@common/components';
 import { Download } from 'lucide-react';
 import { ApplicationModel, applicationColl } from '@/api';
@@ -20,7 +20,7 @@ const c = Css('Apps', {
     rounded: 2,
   },
   AppInfo: {
-    fCol: [],
+    fCol: 1,
   },
   AppName: {
     bold: 1,

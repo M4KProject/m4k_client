@@ -1,4 +1,4 @@
-import { Css } from '@common/ui';
+import { Css } from 'fluxio';
 import logoSvg from '@/assets/logo.svg';
 import { useEffect } from 'preact/hooks';
 import { logger } from 'fluxio';
@@ -14,7 +14,7 @@ const c = Css('Branding', {
     position: 'fixed',
     r: 2,
     b: 2,
-    fRow: ['center', 'center'],
+    fCenter: 1,
     gap: 0.5,
     opacity: 0.7,
     zIndex: 9998,

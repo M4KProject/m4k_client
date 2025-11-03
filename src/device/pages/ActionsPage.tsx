@@ -1,4 +1,4 @@
-import { Css } from '@common/ui';
+import { Css } from 'fluxio';
 import { getStorage, glb, toError } from 'fluxio';
 import { m4k } from '@common/m4k';
 import { usePromise } from '@common/hooks';

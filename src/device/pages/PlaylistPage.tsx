@@ -1,6 +1,6 @@
 import { Button, Field, Grid, Page, PageBody, Toolbar, tooltip } from '@common/components';
 import { GridCols } from '@common/components/Grid';
-import { Css } from '@common/ui';
+import { Css } from 'fluxio';
 import { round } from 'fluxio';
 import { useFlux } from '@common/hooks';
 import { ArrowUp, ArrowDown, Copy, Trash2 } from 'lucide-react';

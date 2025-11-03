@@ -1,4 +1,4 @@
-import { Css } from '@common/ui';
+import { Css } from 'fluxio';
 import { addTr } from '@common/hooks';
 import { Tr, Progress } from '@common/components';
 import { JobModel } from '@/api';

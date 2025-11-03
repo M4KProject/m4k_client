@@ -1,4 +1,4 @@
-import { Css } from '@common/ui';
+import { Css } from 'fluxio';
 import { useFlux } from '@common/hooks';
 import { dialog$ } from '../messages/dialog$';
 
@@ -7,11 +7,11 @@ const c = Css('DialogContainer', {
     position: 'fixed',
     inset: 0,
     bg: 'mask',
-    fCenter: [],
+    fCenter: 1,
     zIndex: 10000,
   },
   Window: {
-    fCol: [],
+    fCol: 1,
     elevation: 3,
     rounded: 2,
     maxWidth: '90%',
@@ -20,7 +20,7 @@ const c = Css('DialogContainer', {
     bg: 'b0',
   },
   Header: {
-    fCenter: [],
+    fCenter: 1,
     textAlign: 'center',
     bold: 1,
     p: 1,
@@ -28,7 +28,7 @@ const c = Css('DialogContainer', {
     fg: 'headerTitle',
   },
   Content: {
-    fCol: [],
+    fCol: 1,
     p: 1,
   },
 });

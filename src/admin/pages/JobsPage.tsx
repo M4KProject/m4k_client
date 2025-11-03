@@ -1,4 +1,4 @@
-import { Css } from '@common/ui';
+import { Css } from 'fluxio';
 import { Page, Toolbar, PageBody } from '@common/components';
 import { JobGrid } from '../components/jobs/JobGrid';
 import { SearchField } from '../components/SearchField';

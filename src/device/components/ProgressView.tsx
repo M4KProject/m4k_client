@@ -1,4 +1,4 @@
-import { autoScrollEnd, Css } from '@common/ui';
+import { Css, autoScrollEnd } from 'fluxio';
 import { Progress } from '@common/components';
 import { useFlux } from '@common/hooks';
 import { dialog$ } from '../messages/dialog$';
@@ -7,14 +7,14 @@ import { flux } from 'fluxio';
 
 const c = Css('ProgressView', {
   '': {
-    fCol: ['stretch'],
+    fCol: 'stretch',
     bg: 'b0',
   },
   Logs: {
-    fCol: [],
+    fCol: 1,
     overflow: 'auto',
-    minHeight: '7em',
-    maxHeight: '7em',
+    hMin: '7em',
+    hMax: '7em',
     border: `1px solid black`,
     mt: 1,
     p: 0.5,

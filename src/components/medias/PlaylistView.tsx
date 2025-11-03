@@ -1,4 +1,4 @@
-import { Css } from '@common/ui';
+import { Css } from 'fluxio';
 import { PlaylistEntry, PlaylistModel } from '@/api';
 import { useState } from 'preact/hooks';
 import { useTimeout } from '@common/hooks';

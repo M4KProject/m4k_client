@@ -146,7 +146,7 @@ This codebase uses a custom CSS-in-JS system with powerful utility functions:
 ```typescript
 const css = Css('ComponentName', {
   '': {
-    fCol: [],           // display: flex; flex-direction: column
+    fCol: 1,           // display: flex; flex-direction: column
     p: 2,              // padding: 2em
     bg: 'primary'      // background-color: var(--primary-color)
   },
@@ -215,7 +215,7 @@ const Component = () => {
 ```typescript
 // Simple flex layout
 const css = Css('MyComponent', {
-  '': { fCol: [], p: 2, bg: 'background' },
+  '': { fCol: 1, p: 2, bg: 'background' },
   Header: { fRow: ['center', 'space-between'], pb: 1 },
   Content: { fCol: ['stretch'], flex: 1 },
 });

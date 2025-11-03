@@ -1,5 +1,5 @@
 import { useFlux } from '@common/hooks';
-import { Css } from '@common/ui';
+import { Css } from 'fluxio';
 import { Button, LoadingSpinner } from '@common/components';
 import { device$ } from '../services/device';
 import { page$ } from '../messages/page$';
@@ -8,7 +8,7 @@ import { Branding } from '../components/Branding';
 
 const c = Css('PairingPage', {
   '': {
-    fCenter: [],
+    fCenter: 1,
     wh: '100%',
     bg: 'b3',
   },

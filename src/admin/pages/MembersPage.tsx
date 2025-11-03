@@ -1,4 +1,4 @@
-import { Css } from '@common/ui';
+import { Css } from 'fluxio';
 import { randString, ReqError } from 'fluxio';
 import { Field, Button, Page, Toolbar, PageBody, showDialog, Form } from '@common/components';
 import { Plus } from 'lucide-react';

@@ -1,9 +1,9 @@
-import { Css } from '@common/ui';
+import { Css } from 'fluxio';
 import { Loading, Page } from '@common/components';
 
 const c = Css('LoadingPage', {
   '': {
-    fCenter: [],
+    fCenter: 1,
   },
 });
 

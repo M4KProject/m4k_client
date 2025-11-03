@@ -5,7 +5,7 @@ import { D } from './D';
 import { flux, jsonParse, jsonStringify } from 'fluxio';
 import { useFlux } from '@common/hooks';
 import { css$, js$, terminal$ } from './flux';
-import { Css } from '@common/ui';
+import { Css } from 'fluxio';
 
 const formatHtml = (html: string) => {
   const tab = '\t';

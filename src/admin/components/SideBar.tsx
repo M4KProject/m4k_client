@@ -1,5 +1,5 @@
 import { addTr } from '@common/hooks';
-import { Css } from '@common/ui';
+import { Css } from 'fluxio';
 import { Side, SideButton, SideSep } from '@common/components';
 import { Home, Users, Monitor, User, Zap } from 'lucide-react';
 import { MediaIcon } from './medias/MediaIcon';

@@ -1,4 +1,4 @@
-import { Css } from '@common/ui';
+import { Css } from 'fluxio';
 import { jsonStringify, toDate, toError, toTime } from 'fluxio';
 import { useFlux } from '@common/hooks';
 import {
@@ -21,7 +21,7 @@ import { deviceSync } from '@/api/sync';
 import { setDeviceKey, setPage } from '../../router/setters';
 import { useIsAdvanced } from '@/router/hooks';
 import { useGroupDevices, useGroupMedias } from '@/api/hooks';
-import { formatDate, formatDateTime } from '@common/utils/date';
+import { formatDate, formatDateTime } from 'fluxio';
 import { getPbClient } from 'pblite';
 
 const c = Css('DevicesPage', {

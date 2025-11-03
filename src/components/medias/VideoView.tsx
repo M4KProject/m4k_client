@@ -1,4 +1,4 @@
-// import { Css } from '@common/ui';
+// import { Css } from 'fluxio';
 // import { VideoModel } from '@/api';
 // import { getVariants } from '@/api/getVariants';
 // import { getMediaUrl } from '@/api/getMediaUrl';

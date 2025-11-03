@@ -1,5 +1,5 @@
 import { useState } from 'preact/hooks';
-import { Css } from '@common/ui';
+import { Css } from 'fluxio';
 import { Button } from '@common/components';
 import logoUrl from '@/assets/logo.svg';
 import loginUrl from '@/assets/login.svg';
@@ -41,7 +41,7 @@ const c = Css('AuthPage', {
     w: 30,
   },
   BottomButtons: {
-    fRow: ['center'],
+    fRow: 'center',
     position: 'fixed',
     b: 1,
     l: 1,

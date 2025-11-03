@@ -1,14 +1,14 @@
 import { Field } from '@common/components';
 import { useFlux } from '@common/hooks';
 import { Search } from 'lucide-react';
-import { Css } from '@common/ui';
+import { Css } from 'fluxio';
 import { Button } from '@common/components';
 import { search$ } from '../controllers/search';
 import { Flux } from 'fluxio';
 
 const c = Css('SearchField', {
   '': {
-    fRow: [],
+    fRow: 1,
   },
 });
 

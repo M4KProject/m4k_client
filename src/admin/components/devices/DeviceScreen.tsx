@@ -1,4 +1,4 @@
-import { Css } from '@common/ui';
+import { Css } from 'fluxio';
 
 const c = Css('DeviceScreen', {
   '': {
@@ -10,7 +10,7 @@ const c = Css('DeviceScreen', {
     bgMode: 'contain',
   },
   NoCapture: {
-    fCenter: [],
+    fCenter: 1,
     bg: '#FFF',
     fg: '#000',
     p: 1,

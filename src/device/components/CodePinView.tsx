@@ -1,4 +1,4 @@
-import { Css } from '@common/ui';
+import { Css } from 'fluxio';
 import { Flux } from 'fluxio';
 import { useEffect, useState } from 'preact/hooks';
 import { useInterval, useFlux } from '@common/hooks';
@@ -18,7 +18,7 @@ const c = Css('CodePinView', {
     textAlign: 'right',
   },
   Buttons: {
-    fRow: [],
+    fRow: 1,
   },
   Sep: {
     flex: 1,

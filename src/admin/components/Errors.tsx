@@ -1,4 +1,4 @@
-import { Css } from '@common/ui';
+import { Css } from 'fluxio';
 import { isItem, removeItem, ReqError, toError } from 'fluxio';
 import { Button, tooltip, GridCols, Grid } from '@common/components';
 import { Trash2 } from 'lucide-react';
@@ -15,7 +15,7 @@ const c = Css('Errors', {
     elevation: 3,
     rounded: 2,
     bg: 'b0',
-    fCol: [],
+    fCol: 1,
     transition: 1,
   },
 });

@@ -1,4 +1,4 @@
-import { Css } from '@common/ui';
+import { Css } from 'fluxio';
 import { useFlux } from '@common/hooks';
 import { device$ } from '../services/device';
 import { Side, SideButton, SideSep } from '@common/components';
@@ -30,7 +30,7 @@ const c = Css('DeviceApp', {
     fontFamily: 'Roboto',
   },
   '-loading': {
-    fCenter: [],
+    fCenter: 1,
   },
 });
 

@@ -1,30 +1,20 @@
-import { useFlux } from "@common/hooks";
-import { add, addIn, exportData, getSelect, importData, setSelect } from "./bEdit";
-import { B, BElement } from "./B";
-import { pos$, zoom$ } from "./flux";
-import { Css } from "@common/ui";
-import { CopyPlus, Eye } from 'lucide-react';
-import { deepClone, toNumber } from "fluxio";
-
-const c = Css('EdSelect', {
-  '': {
-    position: 'absolute',
-    xy: '-5px',
-    wh: 0,
-    border: '2px solid #1976d2',
-    pointerEvents: 'none',
-  },
-});
+import { add } from '../helpers/add';
+import { addIn } from '../helpers/addIn';
+import { exportData } from '../helpers/exportData';
+import { importData } from '../helpers/importData';
+import { setSelect } from '../helpers/setSelect';
+import { B, BElement } from '../B';
+import { deepClone, toNumber } from 'fluxio';
 
 type UnitType = 'rem' | 'em' | 'px' | '%';
 
-const unitDecompose = (unit: string): [number, UnitType] => {
+export const unitDecompose = (unit: string): [number, UnitType] => {
   const m = unit.match(/([0-9\.]+) ?([a-z%]+)/);
   return m ? [toNumber(m[1], 0), (m[2] as any) || 'px'] : [0, 'px'];
 };
 
-const getResizeBox = (): B | null => {
-  const b = getSelect();
+export const getResizeBox = (): B | null => {
+  const b = B.select$.get();
   if (!b) return null;
 
   if (b.parent) {
@@ -40,38 +30,13 @@ const getResizeBox = (): B | null => {
 
 let ctrlKey = false;
 
-const mouseDown = (
-  e: MouseEvent,
-  move: (x: number, y: number) => void,
-  end?: (x: number, y: number) => void
+export const moveAndResize = (
+  e: any,
+  aX: -1 | 1 | 0,
+  aY: -1 | 1 | 0,
+  aW: -1 | 1 | 0,
+  aH: -1 | 1 | 0
 ) => {
-  e.preventDefault();
-  e.stopPropagation();
-  const iX = e.clientX;
-  const iY = e.clientY;
-  const hMove = (e: MouseEvent) => {
-    ctrlKey = !!e.ctrlKey;
-    e.stopPropagation();
-    move(e.clientX - iX, e.clientY - iY);
-  };
-  const hEnd = (e: MouseEvent) => {
-    document.removeEventListener('mousemove', hMove);
-    document.removeEventListener('mouseup', hEnd);
-    if (end) end(e.clientX - iX, e.clientY - iY);
-  };
-  document.addEventListener('mousemove', hMove);
-  document.addEventListener('mouseup', hEnd);
-};
-
-const toUnit = (v: number, type: string, size: number) => {
-  if (type === '%') v = 100 * (v / size);
-  const snap = ctrlKey ? 100 : 48 / 100;
-  v = Math.round(v * snap) / snap;
-  v = Math.round(v * 1000) / 1000;
-  return v + type;
-};
-
-const moveAndResize = (e: any, aX: -1 | 1 | 0, aY: -1 | 1 | 0, aW: -1 | 1 | 0, aH: -1 | 1 | 0) => {
   console.debug('move');
   e.stopPropagation();
 
@@ -173,14 +138,16 @@ const moveAndResize = (e: any, aX: -1 | 1 | 0, aY: -1 | 1 | 0, aW: -1 | 1 | 0, a
   );
 };
 
-const onMove = (e: any) => moveAndResize(e, 1, 1, 0, 0);
+export const onMove = (e: any) => moveAndResize(e, 1, 1, 0, 0);
 
-const onAdd = () => {
-  setSelect(add(getSelect()));
+export const getSelectOrRoot = () => B.select$.get() || B.root;
+
+export const onAdd = () => {
+  setSelect(add(getSelectOrRoot()));
 };
 
-const onDuplicate = () => {
-  const s = getSelect();
+export const onDuplicate = () => {
+  const s = getSelectOrRoot();
   const a = add(s);
   if (!a) return;
   const data = exportData(s);
@@ -188,11 +155,11 @@ const onDuplicate = () => {
   setSelect(a);
 };
 
-const onAddIn = () => {
-  setSelect(addIn(getSelect()));
+export const onAddIn = () => {
+  setSelect(addIn(getSelectOrRoot()));
 };
 
-const getComputedStyleCache = (() => {
+export const getComputedStyleCache = (() => {
   let lastEl: BElement | undefined = undefined;
   let style: CSSStyleDeclaration | undefined = undefined;
   return (el: BElement) => {
@@ -204,23 +171,10 @@ const getComputedStyleCache = (() => {
   };
 })();
 
-const onResizeDico: Record<string, (e: any) => void> = {
-  EdSelect_T: (e) => moveAndResize(e, 0, 1, 0, -1),
-  EdSelect_B: (e) => moveAndResize(e, 0, 0, 0, 1),
-  EdSelect_R: (e) => moveAndResize(e, 0, 0, 1, 0),
-  EdSelect_L: (e) => moveAndResize(e, 1, 0, -1, 0),
-  EdSelect_TR: (e) => moveAndResize(e, 0, 1, 1, -1),
-  EdSelect_TL: (e) => moveAndResize(e, 1, 1, -1, -1),
-  EdSelect_BR: (e) => moveAndResize(e, 0, 0, 1, 1),
-  EdSelect_BL: (e) => moveAndResize(e, 1, 0, -1, 1),
-};
-
-const onResizeList = Object.entries(onResizeDico);
-
 let _lastClick = { t: Date.now(), b: null as B | null };
 
-const onClick = () => {
-  const b = getSelect();
+export const onClick = () => {
+  const b = getSelectOrRoot();
   _lastClick = { b, t: Date.now() };
   b.onClick();
 };
@@ -240,46 +194,3 @@ B.prototype.onClick = function (event?: MouseEvent) {
   if (last.t + 200 < Date.now()) return;
   _onClick.call(this, event);
 };
-
-export const EdSelect = () => {
-  console.debug('EdSelect');
-  const pos = useFlux(pos$);
-
-  const b = getSelect();
-  const el = b?.el;
-  if (!el) return <div className="EdSelect" />;
-
-  const computedStyle = getComputedStyleCache(el);
-  const isAbsolute = computedStyle && computedStyle.position === 'absolute';
-
-  return (
-    <div {...c()}
-      className="EdSelect"
-      style={{
-        left: pos[0] - 1,
-        top: pos[1] - 1,
-        width: pos[2] + 2,
-        height: pos[3] + 2,
-      }}
-    >
-      {onResizeList.map(([key, onResize]) => (
-        <div key={key} onMouseDown={onResize} className={key} />
-      ))}
-      {isAbsolute && <div onMouseDown={onMove} className="EdSelect_C" />}
-      <div className="EdActions">
-        <div onMouseDown={onDuplicate} className="EdAction EdAction-Duplicate">
-          <CopyPlus />
-        </div>
-        <div onMouseDown={onClick} className="EdAction EdAction-Click">
-          <Eye />
-        </div>
-      </div>
-      {/* <div onMouseDown={onAdd} className="EdAction EdAction-Add">
-        <AddIcon />
-      </div> */}
-      {/* <div onMouseDown={onAddIn} className="EdAction EdAction-AddIn">
-        <AddInIcon />
-      </div> */}
-    </div>
-  );
-}

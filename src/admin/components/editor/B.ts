@@ -1,15 +1,7 @@
 import { deepClone, flux, isDeepEqual, toArray, toItem, toNumber, toVoid, toString } from 'fluxio';
 import { D, DCall, DRoot, DStyle } from './D';
-import {
-  addCssFile,
-  addFont,
-  addJsFile,
-  Cls,
-  createEl,
-  setAttrs,
-  setCls,
-  tPriceToHtml,
-} from '@common/ui';
+import { addFont, tPriceToHtml } from '@common/ui';
+import { addCssFile, addJsFile, Cls, createEl, setCls, setAttributes } from 'fluxio';
 import { app } from '@/app';
 
 const body = document.body;
@@ -53,7 +45,7 @@ const props: Partial<Record<keyof D, RenderProp>> = {
       .forEach((p) => el.classList.add(p)),
   hide: (el, v) => (v ? el.classList.add('hide') : el.classList.remove('hide')),
   stock: (el, v) => (v === 0 ? el.classList.add('out') : el.classList.remove('out')),
-  attrs: (el, v) => setAttrs(el, v),
+  attrs: (el, v) => setAttributes(el, v),
   jsFs: (_, v) => toArray(v).map((f) => addJsFile(B.url(f))),
   cssFs: (_, v) => toArray(v).map((f) => addCssFile(B.url(f))),
   fonts: (_, v) => toArray(v).map((f) => addFont(f)),
@@ -70,7 +62,7 @@ const props: Partial<Record<keyof D, RenderProp>> = {
         if (B.page$.get().split('+').includes(p)) cls.curr = true;
         cls['page-' + p] = true;
       });
-    setCls(el, cls, true);
+    setCls(el, cls);
   },
   click: (el, v) => (el._b!.click = v),
 };
@@ -279,10 +271,10 @@ export class B {
           const next = (curr + 1) % len;
           const reset = { last: false, curr: false, next: false };
           if (b.d.t === 'pdf') el.classList.add('carousel');
-          setCls(el.children[last2], { ...reset }, true);
-          setCls(el.children[last], { ...reset, last: true }, true);
-          setCls(el.children[next], { ...reset, next: true }, true);
-          setCls(el.children[curr], { ...reset, curr: true }, true);
+          setCls(el.children[last2], { ...reset });
+          setCls(el.children[last], { ...reset, last: true });
+          setCls(el.children[next], { ...reset, next: true });
+          setCls(el.children[curr], { ...reset, curr: true });
         };
         b.timer = setInterval(() => {
           clearInterval(b.timer);
@@ -293,14 +285,14 @@ export class B {
     },
     prd: (el: BElement, b: B) => {
       const count = b.count;
-      setCls(el, { prd: true, 'prd-added': count }, true);
+      setCls(el, { prd: true, 'prd-added': count });
       if (!B.hasCart) return;
       if (b.d.t === 'cat') return;
       b.click = 'b.addToCart()';
     },
     count: (el: BElement, b: B) => {
       const count = b.count || 0;
-      setCls(el, { count: 1, count0: !count }, true);
+      setCls(el, { count: 1, count0: !count });
       el.innerHTML = String(count);
     },
     filter: (_el: BElement, _b: B) => {
@@ -636,7 +628,7 @@ export class B {
 
   cls(cls: Cls | string, active?: boolean | number) {
     if (typeof cls === 'string') cls = { [cls]: active };
-    setCls(this.el, cls, true);
+    setCls(this.el, cls);
     this.update$.set({ b: this, cls });
     return this;
   }

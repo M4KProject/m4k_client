@@ -1,5 +1,5 @@
 // import { Css, addJsFile, addCssFile } from '@common/ui';
-// import { setCss } from '@common/ui/css';
+// import { setCss } from 'fluxio';
 // import { PageModel } from '@/api';
 // import { DivProps } from '@common/components';
 // import { useEffect } from 'preact/hooks';

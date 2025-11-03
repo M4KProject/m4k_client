@@ -1,5 +1,6 @@
 import { SideBar } from './SideBar';
-import { Css, updateTheme } from '@common/ui';
+import { Css } from 'fluxio';
+import { updateTheme } from '@common/ui';
 import { useFlux } from '@common/hooks';
 import { JSX } from 'preact';
 import { GroupsPage } from '../pages/GroupsPage';
@@ -28,7 +29,7 @@ const c = Css('App', {
     fontFamily: 'Roboto',
   },
   '-loading': {
-    fCenter: [],
+    fCenter: 1,
   },
 });
 

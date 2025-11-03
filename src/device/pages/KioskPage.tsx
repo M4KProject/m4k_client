@@ -1,4 +1,4 @@
-import { Css } from '@common/ui';
+import { Css } from 'fluxio';
 import { toNumber } from 'fluxio';
 import { Button } from '@common/components';
 import { usePromise, useFlux } from '@common/hooks';
@@ -22,7 +22,7 @@ const c = Css('Kiosk', {
     bg: '#000',
   },
   'Container-center': {
-    fCenter: [],
+    fCenter: 1,
   },
   'Container iframe': {
     position: 'fixed',
@@ -35,7 +35,7 @@ const c = Css('Kiosk', {
   },
 
   '': {
-    fCenter: [],
+    fCenter: 1,
     position: 'absolute',
     overflow: 'hidden',
     inset: 0,
@@ -67,7 +67,7 @@ const c = Css('Kiosk', {
   '-cover video': { itemFit: 'cover' },
 
   ' span': {
-    fCenter: [],
+    fCenter: 1,
     position: 'absolute',
     inset: 0,
     zIndex: 20,

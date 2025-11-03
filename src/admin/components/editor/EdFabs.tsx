@@ -4,7 +4,7 @@ import { B } from './B';
 import { panel$, screenSize$, terminal$, zoom$ } from './flux';
 import { randColor } from 'fluxio';
 import { useFlux } from '@common/hooks';
-import { Css } from '@common/ui';
+import { Css } from 'fluxio';
 import { DivProps, tooltip } from '@common/components';
 import {
   FilePlus,

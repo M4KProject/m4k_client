@@ -1,4 +1,4 @@
-import { Css } from '@common/ui';
+import { Css } from 'fluxio';
 import { repeat } from 'fluxio';
 import { openCodePinDialog } from './CodePinView';
 

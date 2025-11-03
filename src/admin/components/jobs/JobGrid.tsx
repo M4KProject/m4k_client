@@ -5,7 +5,7 @@ import { JobModel, MediaModel } from '@/api';
 import { uploadMediaJobs$ } from '../../controllers';
 import { jobSync } from '@/api/sync';
 import { useFlux, addTr } from '@common/hooks';
-import { Css } from '@common/ui';
+import { Css } from 'fluxio';
 import { MediaPreview } from '../medias/MediaPreview';
 import { byId } from 'fluxio';
 import { useGroupJobs, useGroupMedias } from '@/api/hooks';
@@ -23,7 +23,7 @@ const c = Css('JobGrid', {
     elevation: 3,
     rounded: 2,
     bg: 'b0',
-    fCol: [],
+    fCol: 1,
     transition: 1,
   },
   'Panel-close': {

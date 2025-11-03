@@ -18,7 +18,7 @@ import { terminal$ } from './flux';
 import { moveItem } from 'fluxio';
 import { useFlux } from '@common/hooks';
 import { Button, ButtonProps, tooltip } from '@common/components';
-import { Css } from '@common/ui';
+import { Css } from 'fluxio';
 import {
   FilePlus,
   ClipboardCopy,

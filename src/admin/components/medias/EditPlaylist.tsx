@@ -1,5 +1,5 @@
 import { PlaylistEntry, PlaylistModel, MediaModel } from '@/api';
-import { Css } from '@common/ui';
+import { Css } from 'fluxio';
 import { addItem, removeIndex, deepClone, moveIndex } from 'fluxio';
 import { Grid, Field, Button, tooltip, Flag } from '@common/components';
 import { GridCols } from '@common/components/Grid';
@@ -11,7 +11,7 @@ import { useGroupMedias } from '@/api/hooks';
 
 const c = Css('EditPlaylist', {
   '': {
-    fCol: [],
+    fCol: 1,
   },
 });
 

@@ -1,6 +1,6 @@
 import { Plus } from 'lucide-react';
 import { Button, Page, Toolbar, PageBody, tooltip } from '@common/components';
-import { Css, getColor } from '@common/ui';
+import { Css, getCssColor } from 'fluxio';
 import { SearchField } from '../components/SearchField';
 import { Role } from '@/api';
 import { groupSync, memberSync } from '@/api/sync';
@@ -16,7 +16,7 @@ const c = Css('GroupsPage', {
 });
 
 export const Color = ({ color }: { color: string }) => (
-  <div {...tooltip(color)} {...c('Color')} style={{ background: getColor(color) }} />
+  <div {...tooltip(color)} {...c('Color')} style={{ background: getCssColor(color) }} />
 );
 
 export const GroupsPage = () => {

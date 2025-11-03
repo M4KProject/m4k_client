@@ -1,4 +1,4 @@
-import { Css } from '@common/ui';
+import { Css } from 'fluxio';
 import { MediaModel } from '@/api';
 import { uuid } from 'fluxio';
 import { useMemo } from 'preact/hooks';

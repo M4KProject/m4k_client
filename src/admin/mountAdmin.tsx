@@ -1,6 +1,7 @@
 import { render } from 'preact';
 import { App } from './components/App';
-import { addFont, refreshTheme, addEl, addResponsiveListener, setCss } from '@common/ui';
+import { addFont, refreshTheme, addResponsiveListener } from '@common/ui';
+import { setEl, setCss } from 'fluxio';
 import { getPbClient } from 'pblite';
 
 console.debug('loaded');
@@ -16,7 +17,7 @@ export const mountAdmin = () => {
 
   setCss('fontFamily', { ',html,body': { fontFamily: 'Roboto' } });
 
-  _rootEl = addEl('div', { id: 'm4kAdmin', parent: 'body' });
+  _rootEl = setEl('div', { id: 'm4kAdmin', parent: 'body' });
   render(<App />, _rootEl);
 
   console.debug('admin mounted');

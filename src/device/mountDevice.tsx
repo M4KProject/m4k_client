@@ -1,11 +1,6 @@
 import { render } from 'preact';
-import {
-  refreshTheme,
-  addAutoHideListener,
-  addResponsiveListener,
-  addEl,
-  addFont,
-} from '@common/ui';
+import { refreshTheme, addAutoHideListener, addResponsiveListener, addFont } from '@common/ui';
+import { setEl } from 'fluxio';
 import copyPlaylist from './copyPlaylist';
 import { deviceInit } from './services/device';
 import { m4k } from '@common/m4k';
@@ -26,7 +21,7 @@ export const mountDevice = () => {
   addFont('Roboto');
   refreshTheme();
 
-  _rootEl = addEl('div', { id: 'm4kDevice', parent: 'body' });
+  _rootEl = setEl('div', { id: 'm4kDevice', parent: 'body' });
   render(<DeviceApp />, _rootEl);
 
   deviceInit();

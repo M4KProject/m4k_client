@@ -1,5 +1,5 @@
 import { Page, Toolbar, PageBody } from '@common/components';
-import { Css } from '@common/ui';
+import { Css } from 'fluxio';
 import { jsonStringify } from 'fluxio';
 import { m4k, M4kSignalEvent } from '@common/m4k';
 import { useEffect, useState } from 'preact/hooks';

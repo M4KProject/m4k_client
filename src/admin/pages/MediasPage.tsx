@@ -1,21 +1,12 @@
-import { Css } from '@common/ui';
-import {
-  BackButton,
-  Button,
-  Page,
-  PageBody,
-  Toolbar,
-  tooltip,
-  UploadButton,
-} from '@common/components';
+import { Css } from 'fluxio';
+import { Button, Page, PageBody, Toolbar, tooltip, UploadButton } from '@common/components';
 import { MediaGrid } from '../components/medias/MediaGrid';
-import { SearchField } from '../components/SearchField';
 import { getNextTitle, uploadMedia } from '../controllers';
 import { mediaSync } from '@/api/sync';
 import { AddPlaylistItemButton, EditPlaylist } from '../components/medias/EditPlaylist';
-import { AddPageBoxButton, EditPage } from '../components/medias/EditPage';
+import { EditPage } from '../components/medias/EditPage';
 import { MediaModel, needAuthId, needGroupId, PlaylistModel, PageModel } from '@/api';
-import { Edit, FolderPlus, MapPlus, FilePlus, Play, Upload } from 'lucide-react';
+import { Edit, FolderPlus, MapPlus, FilePlus, Play, Upload, Plus } from 'lucide-react';
 import { useIsEdit, useMediaType } from '@/router/hooks';
 import { setIsEdit, setMediaKey, setMediaType } from '@/router/setters';
 import { useMedia, useMediaById } from '@/api/hooks';
@@ -63,7 +54,7 @@ export const MediasPage = () => {
         {/* {media && <BackButton onClick={() => setMediaKey('')} />} */}
 
         {media?.type === 'playlist' && <AddPlaylistItemButton playlist={media as PlaylistModel} />}
-        {media?.type === 'page' && <AddPageBoxButton page={media as PageModel} />}
+        {/* {media?.type === 'page' && <AddPageBoxButton page={media as PageModel} />} */}
 
         {media &&
           (isEdit ?

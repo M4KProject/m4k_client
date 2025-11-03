@@ -1,5 +1,5 @@
 import { useState } from 'preact/hooks';
-import { Css } from '@common/ui/css';
+import { Css } from 'fluxio';
 import { Loading } from '@common/components/Loading';
 import { Field } from '@common/components/Field';
 import { Button } from '@common/components/Button';
@@ -23,7 +23,7 @@ const c = Css('AuthForm', {
     elevation: 0,
   },
   Col: {
-    fCol: [],
+    fCol: 1,
   },
   ' .FieldLabel': {
     mt: 0.5,

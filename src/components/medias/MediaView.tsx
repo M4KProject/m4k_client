@@ -1,4 +1,4 @@
-import { Css } from '@common/ui';
+import { Css } from 'fluxio';
 import { MediaAnim, MediaFit, MediaModel } from '@/api';
 import { DivProps } from '@common/components';
 import { Dictionary } from 'fluxio';
@@ -8,7 +8,7 @@ const c = Css('MediaView', {
   '': {
     position: 'absolute',
     overflow: 'hidden',
-    fCenter: [],
+    fCenter: 1,
     wh: '100%',
     xy: 0,
     transition: 0.3,

@@ -1,4 +1,4 @@
-import { Css } from '@common/ui';
+import { Css } from 'fluxio';
 import { Button, Field } from '@common/components';
 import { DeviceModel } from '@/api';
 import { useState } from 'preact/hooks';
@@ -6,7 +6,7 @@ import { Send, RefreshCw, FileJson } from 'lucide-react';
 
 const c = Css('DeviceConsole', {
   '': {
-    fRow: ['stretch'],
+    fRow: 'stretch',
     w: '300px',
     bg: '#1e1e1e',
     border: '1px solid #333',
@@ -24,7 +24,7 @@ const c = Css('DeviceConsole', {
     whiteSpace: 'pre-wrap',
   },
   Actions: {
-    fCenter: [],
+    fCenter: 1,
     gap: 1,
     p: 0.5,
   },

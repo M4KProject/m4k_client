@@ -1,4 +1,4 @@
-import { Css } from '@common/ui';
+import { Css } from 'fluxio';
 import { Dictionary, toNumber, toString } from 'fluxio';
 import { Field, Button, tooltip, GridCols, Grid } from '@common/components';
 import { Trash2 } from 'lucide-react';

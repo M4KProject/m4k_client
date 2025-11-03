@@ -1,4 +1,4 @@
-import { Css } from '@common/ui';
+import { Css } from 'fluxio';
 import { byId, groupBy, sortItems, fluxDictionary, isUFloat } from 'fluxio';
 import { addTr, useFlux } from '@common/hooks';
 import { MediaModel } from '@/api';

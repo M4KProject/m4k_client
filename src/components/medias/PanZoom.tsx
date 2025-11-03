@@ -1,4 +1,4 @@
-import { addListener, Css } from '@common/ui';
+import { onEvent, Css } from 'fluxio';
 import { DivProps } from '@common/components';
 import { useRef, useEffect, useState } from 'preact/hooks';
 
@@ -65,7 +65,7 @@ export const PanZoom = ({ children, ...props }: PanZoomProps) => {
     };
 
     const unsubscribes = [
-      addListener(
+      onEvent(
         container,
         'wheel',
         (event) => {
@@ -84,7 +84,7 @@ export const PanZoom = ({ children, ...props }: PanZoomProps) => {
         { passive: false }
       ),
 
-      addListener(container, 'mousedown', (event) => {
+      onEvent(container, 'mousedown', (event) => {
         console.debug('PanZoom mousedown', event);
 
         event.preventDefault();
@@ -94,7 +94,7 @@ export const PanZoom = ({ children, ...props }: PanZoomProps) => {
         lastPointerXY = getPointerXY(event);
       }),
 
-      addListener(0, 'mousemove', (event) => {
+      onEvent(0, 'mousemove', (event) => {
         console.debug('PanZoom mousemove', event);
 
         if (!isDragging) return;
@@ -112,7 +112,7 @@ export const PanZoom = ({ children, ...props }: PanZoomProps) => {
         lastPointerXY = pointerXY;
       }),
 
-      addListener(0, 'mouseup', (event) => {
+      onEvent(0, 'mouseup', (event) => {
         console.debug('PanZoom mouseup', event);
 
         event.preventDefault();
@@ -120,7 +120,7 @@ export const PanZoom = ({ children, ...props }: PanZoomProps) => {
         isDragging = false;
       }),
 
-      addListener(
+      onEvent(
         container,
         'touchstart',
         (event) => {
@@ -139,7 +139,7 @@ export const PanZoom = ({ children, ...props }: PanZoomProps) => {
         { passive: false }
       ),
 
-      addListener(
+      onEvent(
         container,
         'touchmove',
         (event) => {
@@ -208,7 +208,7 @@ export const PanZoom = ({ children, ...props }: PanZoomProps) => {
         { passive: false }
       ),
 
-      addListener(container, 'touchend', (event) => {
+      onEvent(container, 'touchend', (event) => {
         console.debug('PanZoom touchend', event);
         const touches = event.touches;
 

@@ -1,10 +1,10 @@
 import { useFlux } from '@common/hooks';
 import { EdActions } from './EdActions';
 import { EdProps } from './EdProps';
-import {EdTree} from './EdTree';
+import { EdTree } from './EdTree';
 import { panel$, terminal$ } from './flux';
 import { EdCode } from './EdCode';
-import { Css } from '@common/ui';
+import { Css } from 'fluxio';
 
 const c = Css('EdTerminal', {
   '': {

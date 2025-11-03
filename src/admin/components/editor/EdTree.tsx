@@ -1,6 +1,6 @@
 import { getSelect } from './bEdit';
 import { B } from './B';
-import { Css } from '@common/ui';
+import { Css } from 'fluxio';
 import { useFlux } from '@common/hooks';
 import { useEffect, useRef } from 'preact/hooks';
 import { BoxIcon } from 'lucide-react';

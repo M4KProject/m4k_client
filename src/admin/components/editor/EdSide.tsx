@@ -1,6 +1,6 @@
 import { useFlux } from '@common/hooks';
 import { panel$ } from './flux';
-import { Css } from '@common/ui';
+import { Css } from 'fluxio';
 
 const c = Css('EdEdSideitor', {
   '': {
