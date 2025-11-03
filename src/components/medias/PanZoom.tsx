@@ -83,14 +83,16 @@ export class PanZoomController {
 
   onWheel(event: WheelEvent) {
     const delta = event.deltaY > 0 ? 0.9 : 1.1;
-    const nextScale = this.scale * delta;
-    const eventXY = getEventXY(event);
-    if (!eventXY) return;
+    const prevScale = this.scale;
+    const nextScale = prevScale * delta;
+    const xy = getEventXY(event);
+    if (!xy) return;
     stopEvent(event);
-    const [x, y] = eventXY;
-    const nextX = x - (x - this.x) * (nextScale / this.scale);
-    const nextY = y - (y - this.y) * (nextScale / this.scale);
-    this.eventXY = eventXY;
+    const rect = this.container.getBoundingClientRect();
+    const x = xy[0] - rect.x;
+    const y = xy[1] - rect.y;
+    const nextX = x - (x - this.x) * (nextScale / prevScale);
+    const nextY = y - (y - this.y) * (nextScale / prevScale);
     this.applyTransform(nextX, nextY, nextScale);
   }
 
@@ -114,8 +116,8 @@ export class PanZoomController {
     const [x, y] = eventXY;
     const [lastX, lastY] = this.eventXY;
 
-    const nextX = lastX + x - lastX;
-    const nextY = lastY + y - lastY;
+    const nextX = this.x + (x - lastX);
+    const nextY = this.y + (y - lastY);
 
     this.applyTransform(nextX, nextY, this.scale);
 
@@ -152,8 +154,8 @@ export class PanZoomController {
       const [x, y] = eventXY;
       const [lastX, lastY] = this.eventXY;
 
-      const nextX = lastX + x - lastX;
-      const nextY = lastY + y - lastY;
+      const nextX = this.x + (x - lastX);
+      const nextY = this.y + (y - lastY);
 
       this.applyTransform(nextX, nextY, this.scale);
 
@@ -167,7 +169,6 @@ export class PanZoomController {
     if (touches.length === 2 && this.touches?.length === 2) {
       const last1 = getEventXY(this.touches[0]);
       const last2 = getEventXY(this.touches[1]);
-
       const curr1 = getEventXY(touches[0]);
       const curr2 = getEventXY(touches[1]);
 
