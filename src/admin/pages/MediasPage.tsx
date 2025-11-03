@@ -39,13 +39,21 @@ export const MediasPage = () => {
   let content = null;
 
   if (type === 'playlist' && media?.type === 'playlist' && isEdit) {
-    content = <EditPlaylist playlist={media as PlaylistModel} />;
+    content = (
+      <PageBody>
+        <EditPlaylist playlist={media as PlaylistModel} />
+      </PageBody>
+    );
   } else if (type === 'page' && media?.type === 'page' && isEdit) {
     content = <EditPage page={media as PageModel} />;
   } else if (media && !isEdit) {
     content = <MediaView media={media} mediaById={mediaById} />;
   } else {
-    content = <MediaGrid type={type} />;
+    content = (
+      <PageBody>
+        <MediaGrid type={type} />
+      </PageBody>
+    );
   }
 
   return (
@@ -116,7 +124,7 @@ export const MediasPage = () => {
 
         {/* <SearchField /> */}
       </Toolbar>
-      <PageBody>{content}</PageBody>
+      {content}
     </Page>
   );
 };
