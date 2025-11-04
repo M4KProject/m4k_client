@@ -47,7 +47,7 @@ const c = Css('PairingPage', {
     bold: 1,
   },
   Buttons: {
-    fRow: ['center', 'space-around'],
+    fRow: ['center', 'around'],
   },
 });
 
