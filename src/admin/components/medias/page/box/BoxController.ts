@@ -1,7 +1,7 @@
-import { Dictionary, logger } from "fluxio";
-import { ComponentType } from "preact";
-import { BoxFun, BoxItem } from "./boxTypes";
-import { BoxCarousel } from "./BoxCarousel";
+import { Dictionary, logger } from 'fluxio';
+import { ComponentType } from 'preact';
+import { BoxFun, BoxItem } from './boxTypes';
+import { BoxCarousel } from './BoxCarousel';
 
 const log = logger('BoxController');
 

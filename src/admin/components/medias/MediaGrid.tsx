@@ -42,7 +42,7 @@ interface MediaGridCtx {
 }
 
 const cols: GridCols<MediaModel, MediaGridCtx> = {
-  select: ['', ({ id }) => <SelectedField id={id} />, { w: 10, cls: c('Select') }],
+  select: ['', ({ id }) => <SelectedField id={id} />, { w: 10, cls: c('Select').class }],
   title: [
     'Titre',
     ({ id, type, title }, { isAdvanced, getTab, getIsOpen, setIsOpen, getChildren }) => (
@@ -172,7 +172,7 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
         />
       </>
     ),
-    { w: 20, cls: c('Actions') },
+    { w: 20, cls: c('Actions').class },
   ],
 };
 

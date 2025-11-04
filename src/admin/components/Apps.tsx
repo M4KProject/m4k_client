@@ -13,7 +13,7 @@ const c = Css('Apps', {
     overflow: 'auto',
   },
   App: {
-    fRow: ['center', 'space-between'],
+    fRow: ['center', 'between'],
     m: 0.5,
     p: 0.5,
     bg: 'b1',

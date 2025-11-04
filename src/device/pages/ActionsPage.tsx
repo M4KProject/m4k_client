@@ -16,7 +16,7 @@ const c = Css('Actions', {
   Buttons: {
     flex: 1,
     m: 0.5,
-    fRow: ['center', 'space-around'],
+    fRow: ['center', 'around'],
     flexWrap: 'wrap',
   },
   ' .m4kButton': {
@@ -25,7 +25,7 @@ const c = Css('Actions', {
     m: '0.5em',
   },
   Info: {
-    fRow: ['center', 'space-around'],
+    fRow: ['center', 'around'],
     flexWrap: 'wrap',
     p: 0.5,
   },

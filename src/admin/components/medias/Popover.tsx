@@ -22,7 +22,7 @@ const c = Css('Popover', {
     bgMode: 'contain',
     transition: 0.2,
     userSelect: 'none',
-    fCol: ['center', 'space-around'],
+    fCol: ['center', 'around'],
   },
   Title: {
     opacity: 0,

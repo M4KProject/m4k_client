@@ -219,7 +219,7 @@ const css = Css('ComponentName', {
     bg: 'primary'      // background-color: var(--primary-color)
   },
   'Container': {
-    fRow: ['center', 'space-between'], // flex-row with alignment
+    fRow: ['center', 'between'], // flex-row with alignment
     w: 20,             // width: 20em
     elevation: 2       // box-shadow with depth
   }

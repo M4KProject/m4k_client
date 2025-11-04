@@ -18,7 +18,7 @@ const c = Css('AuthPage', {
     inset: 0,
   },
   Content: {
-    fCol: ['center', 'space-around'],
+    fCol: ['center', 'around'],
     flex: 1,
     textAlign: 'center',
   },

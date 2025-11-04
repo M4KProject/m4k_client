@@ -1,6 +1,6 @@
-import { DivProps } from "@common/components"
+import { DivProps } from '@common/components';
 
 export const BoxCarousel = (props: DivProps) => {
-    console.debug('BoxCarousel render', props);
-    return <div {...(props as any)} />;
-}
+  console.debug('BoxCarousel render', props);
+  return <div {...(props as any)} />;
+};
