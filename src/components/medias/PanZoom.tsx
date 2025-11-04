@@ -1,4 +1,16 @@
-import { onEvent, Css, Flux, flux, stopEvent, getEventXY, onHtmlEvent, XY, clear, setStyle, XYZ } from 'fluxio';
+import {
+  onEvent,
+  Css,
+  Flux,
+  flux,
+  stopEvent,
+  getEventXY,
+  onHtmlEvent,
+  XY,
+  clear,
+  setStyle,
+  XYZ,
+} from 'fluxio';
 import { DivProps } from '@common/components';
 import { useRef, useEffect, useState, useMemo } from 'preact/hooks';
 import { useFlux } from '@common/hooks';
@@ -44,8 +56,8 @@ export interface PanZoomInnerProps extends DivProps {
 }
 
 export class PanZoomController {
-  readonly before$ = flux<Event|undefined>(undefined);
-  readonly after$ = flux<Event|undefined>(undefined);
+  readonly before$ = flux<Event | undefined>(undefined);
+  readonly after$ = flux<Event | undefined>(undefined);
   readonly unsubscribes: (() => void)[];
 
   xy: [number, number] = [0, 0];
@@ -54,14 +66,14 @@ export class PanZoomController {
   scale = 1;
   w = 0;
   h = 0;
-  eventXY: [number, number]|undefined = undefined;
+  eventXY: [number, number] | undefined = undefined;
   touches: TouchList | null = null;
   isDragging = false;
   isAnimating = false;
 
   constructor(
     public readonly container: HTMLDivElement,
-    public readonly content: HTMLDivElement,
+    public readonly content: HTMLDivElement
   ) {
     this.unsubscribes = [
       onHtmlEvent(container, 'wheel', this.bind(this.onWheel)),
@@ -81,7 +93,7 @@ export class PanZoomController {
       this.before$.set(event);
       method(event);
       this.after$.set(event);
-    }
+    };
   }
 
   onWheel(event: WheelEvent) {
@@ -178,13 +190,11 @@ export class PanZoomController {
       if (!curr1 || !curr2 || !last1 || !last2) return;
 
       const currDistance = Math.sqrt(
-        Math.pow(curr2[0] - curr1[0], 2) +
-          Math.pow(curr2[1] - curr1[1], 2)
+        Math.pow(curr2[0] - curr1[0], 2) + Math.pow(curr2[1] - curr1[1], 2)
       );
 
       const lastDistance = Math.sqrt(
-        Math.pow(last2[0] - last1[0], 2) +
-          Math.pow(last2[1] - last1[1], 2)
+        Math.pow(last2[0] - last1[0], 2) + Math.pow(last2[1] - last1[1], 2)
       );
 
       if (lastDistance > 0) {
@@ -209,7 +219,7 @@ export class PanZoomController {
 
   onTouchEnd(event: TouchEvent) {
     if (!this.isDragging) return;
-    
+
     stopEvent(event);
 
     const touches = event.touches;
@@ -222,21 +232,18 @@ export class PanZoomController {
     }
   }
 
-  applyTransform(x: number, y:number, scale:number) {
+  applyTransform(x: number, y: number, scale: number) {
     this.x = x;
     this.y = y;
     this.scale = scale;
 
     setStyle(this.content, {
-      transform: `translate(${x}px, ${y}px) scale(${scale})`
+      transform: `translate(${x}px, ${y}px) scale(${scale})`,
     });
   }
 
   getSize(): [number, number] {
-    return [
-      this.w || this.content.scrollWidth,
-      this.h || this.content.scrollHeight,
-    ];
+    return [this.w || this.content.scrollWidth, this.h || this.content.scrollHeight];
   }
 
   setSize(w: number, h: number) {
@@ -245,7 +252,7 @@ export class PanZoomController {
     setStyle(this.content, { width: `${w}px`, height: `${h}px` });
     this.fitToContainer();
   }
-  
+
   center() {
     const containerRect = this.container.getBoundingClientRect();
     const contentRect = this.content.getBoundingClientRect();
@@ -326,7 +333,7 @@ export const PanZoom = ({ children, onNewController, ...props }: PanZoomProps) =
 
     return () => {
       controller.dispose();
-    }
+    };
   }, [container, content]);
 
   return (

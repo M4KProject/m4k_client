@@ -22,6 +22,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 **Important:** Always run both linting and type checking after significant changes to ensure code quality.
 
 **TypeScript Configuration:**
+
 - Strict mode enabled with comprehensive checks
 - `noUncheckedIndexedAccess: true` - Requires null checks for array/object access
 - `jsx: "react-jsx"` with `jsxImportSource: "preact"` - Preact JSX transform
@@ -60,6 +61,7 @@ The application is split into three main interfaces, with routing determined at 
 #### Routing Logic (`src/index.tsx`)
 
 The main entry point determines which interface to load:
+
 1. Checks `isDevice$` flux message (persisted in localStorage)
 2. If unset, checks `m4k.isInterface` (Android kiosk detection)
 3. Routes to either admin or device interface
@@ -135,15 +137,18 @@ if (isDevice) {
 This project uses three local packages as Git submodules:
 
 **fluxio** - Lightweight reactive state management and CSS-in-JS utilities
+
 - Zero runtime dependencies
 - Exports: `Flux`, `flux`, `Css`, `useCss`, array/string/object utilities, logger, etc.
 - See [fluxio/CLAUDE.md](fluxio/CLAUDE.md) for detailed documentation
 
 **pblite** - PocketBase client for API communication
+
 - Type-safe collection-based API client
 - Real-time subscriptions and authentication
 
 **common** - Shared UI component library and utilities ([@common](common/))
+
 - 18 production-ready Preact components (Button, Field, Dialog, Table, etc.)
 - Custom hooks (useFlux, useAsync, usePromise, etc.)
 - M4K Android kiosk device integration
@@ -151,6 +156,7 @@ This project uses three local packages as Git submodules:
 - See [common/CLAUDE.md](common/CLAUDE.md) for detailed documentation
 
 **Submodule Management:**
+
 ```bash
 # Update submodules
 git submodule update --remote
@@ -354,10 +360,12 @@ await contentColl.delete(id);
 ### PocketBase Client Configuration
 
 The API URL is dynamically configured in `src/index.tsx`:
+
 - **Development** (localhost with port): Uses `https://i.m4k.fr/api/`
 - **Production**: Uses the configured PocketBase URL
 
 Access the client with:
+
 ```typescript
 import { getPbClient } from 'pblite';
 const pbClient = getPbClient();
@@ -366,6 +374,7 @@ const pbClient = getPbClient();
 ### Model Generation System
 
 Models are auto-generated using the `generator.ts` script:
+
 - Run manually when backend schema changes
 - Outputs TypeScript interfaces to appropriate model files
 - **Base interfaces** (prefixed with `_`) contain raw API fields
@@ -430,6 +439,7 @@ export const MyComponent = ({ children, variant, ...props }: MyComponentProps) =
 ```
 
 **Important Notes:**
+
 - Define `css` constant outside component (not inside)
 - Call `useCss` inside component to get class name function
 - Spread `{...props}` first, then `{...c()}` to allow prop overrides
@@ -482,6 +492,7 @@ export interface MyContentModel extends ContentModel {
 **Utility Functions:**
 
 Fluxio provides comprehensive utility functions organized by category:
+
 - **Array**: `addItem`, `removeIndex`, `moveIndex`, `setItemIndex`, `normalizeIndex` (circular indexing support)
 - **Object**: `deepClone`, `deepMerge`, `pick`, `omit`, `mapValues`
 - **String**: `capitalize`, `kebabCase`, `camelCase`, `snakeCase`, `truncate`
@@ -491,6 +502,7 @@ Fluxio provides comprehensive utility functions organized by category:
 - **Logger**: `logger('tag')` creates tagged loggers with automatic instance counting
 
 Import from fluxio:
+
 ```typescript
 import { normalizeIndex, deepClone, debounce, isNil, logger } from 'fluxio';
 ```
@@ -498,6 +510,7 @@ import { normalizeIndex, deepClone, debounce, isNil, logger } from 'fluxio';
 **M4K Android Integration:**
 
 The `@common/m4k` module provides Android kiosk device integration:
+
 ```typescript
 import { m4k } from '@common/m4k';
 

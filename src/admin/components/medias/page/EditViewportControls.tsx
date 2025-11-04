@@ -1,7 +1,17 @@
 import { PanZoomController } from '@/components/medias/PanZoom';
 import { Css, normalizeIndex } from 'fluxio';
 import { Button, tooltip } from '@common/components';
-import { RotateCw, Monitor, Tablet, Maximize2, ZoomIn, ZoomOut, Smartphone, Tv, MonitorSmartphone } from 'lucide-react';
+import {
+  RotateCw,
+  Monitor,
+  Tablet,
+  Maximize2,
+  ZoomIn,
+  ZoomOut,
+  Smartphone,
+  Tv,
+  MonitorSmartphone,
+} from 'lucide-react';
 import { useEffect, useState } from 'preact/hooks';
 
 const c = Css('EditViewportControls', {
@@ -14,7 +24,7 @@ const c = Css('EditViewportControls', {
     elevation: 1,
     zIndex: 20,
     rounded: 2,
-  }
+  },
 });
 
 type ScreenSize = [number, number, string, typeof Monitor];
@@ -68,7 +78,7 @@ export const EditViewportControls = ({ controller }: EditViewportControlsProps) 
         const [w, h] = controller.getSize();
         controller.setSize(h, w);
       }}
-      {...tooltip('Tourner l\'écran')}
+      {...tooltip("Tourner l'écran")}
     />
     <Button
       icon={<ZoomIn />}
