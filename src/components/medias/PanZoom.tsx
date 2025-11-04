@@ -13,7 +13,7 @@ const c = Css('PanZoom', {
   },
   Content: {
     position: 'absolute',
-    inset: 0,
+    // inset: 0,
     transformOrigin: '0 0',
     transition: 'transform 0.05s ease',
   },
@@ -227,6 +227,59 @@ export class PanZoomController {
     setStyle(this.content, {
       transform: `translate(${x}px, ${y}px) scale(${scale})`
     });
+  }
+
+  center() {
+    const containerRect = this.container.getBoundingClientRect();
+    const contentRect = this.content.getBoundingClientRect();
+
+    const x = (containerRect.width - contentRect.width / this.scale) / 2;
+    const y = (containerRect.height - contentRect.height / this.scale) / 2;
+
+    this.applyTransform(x, y, this.scale);
+  }
+
+  fitToContainer() {
+    const containerRect = this.container.getBoundingClientRect();
+    const contentRect = this.content.getBoundingClientRect();
+
+    const scaleX = containerRect.width / contentRect.width;
+    const scaleY = containerRect.height / contentRect.height;
+    const scale = Math.min(scaleX, scaleY);
+
+    const x = (containerRect.width - contentRect.width * scale) / 2;
+    const y = (containerRect.height - contentRect.height * scale) / 2;
+
+    this.applyTransform(x, y, scale);
+  }
+
+  zoomIn() {
+    const containerRect = this.container.getBoundingClientRect();
+    const centerX = containerRect.width / 2;
+    const centerY = containerRect.height / 2;
+
+    const nextScale = this.scale * 1.2;
+    const nextX = centerX - (centerX - this.x) * (nextScale / this.scale);
+    const nextY = centerY - (centerY - this.y) * (nextScale / this.scale);
+
+    this.applyTransform(nextX, nextY, nextScale);
+  }
+
+  zoomOut() {
+    const containerRect = this.container.getBoundingClientRect();
+    const centerX = containerRect.width / 2;
+    const centerY = containerRect.height / 2;
+
+    const nextScale = this.scale / 1.2;
+    const nextX = centerX - (centerX - this.x) * (nextScale / this.scale);
+    const nextY = centerY - (centerY - this.y) * (nextScale / this.scale);
+
+    this.applyTransform(nextX, nextY, nextScale);
+  }
+
+  resetZoom() {
+    this.center();
+    this.applyTransform(this.x, this.y, 1);
   }
 
   dispose() {
