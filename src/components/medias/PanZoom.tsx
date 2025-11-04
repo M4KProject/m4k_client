@@ -48,9 +48,12 @@ export class PanZoomController {
   readonly after$ = flux<Event|undefined>(undefined);
   readonly unsubscribes: (() => void)[];
 
+  xy: [number, number] = [0, 0];
   x = 0;
   y = 0;
   scale = 1;
+  w = 0;
+  h = 0;
   eventXY: [number, number]|undefined = undefined;
   touches: TouchList | null = null;
   isDragging = false;
@@ -229,6 +232,20 @@ export class PanZoomController {
     });
   }
 
+  getSize(): [number, number] {
+    return [
+      this.w || this.content.scrollWidth,
+      this.h || this.content.scrollHeight,
+    ];
+  }
+
+  setSize(w: number, h: number) {
+    this.w = w;
+    this.h = h;
+    setStyle(this.content, { width: `${w}px`, height: `${h}px` });
+    this.fitToContainer();
+  }
+  
   center() {
     const containerRect = this.container.getBoundingClientRect();
     const contentRect = this.content.getBoundingClientRect();
@@ -242,8 +259,7 @@ export class PanZoomController {
   fitToContainer() {
     const containerRect = this.container.getBoundingClientRect();
 
-    const contentWidth = this.content.scrollWidth;
-    const contentHeight = this.content.scrollHeight;
+    const [contentWidth, contentHeight] = this.getSize();
 
     const scaleX = containerRect.width / contentWidth;
     const scaleY = containerRect.height / contentHeight;
