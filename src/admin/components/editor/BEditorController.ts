@@ -1,4 +1,4 @@
-import { combineFlux, first, flux, getEventXY, logger } from 'fluxio';
+import { fluxCombine, first, flux, getEventXY, logger } from 'fluxio';
 import { BUpdate } from './B';
 import { add } from './helpers/add';
 import { addIn } from './helpers/addIn';
@@ -122,7 +122,7 @@ export class BEditorController {
   });
 
   constructor() {
-    combineFlux([this.viewport$, this.update$]).on(([viewport]) => this.onViewportChange(viewport));
+    fluxCombine(this.viewport$, this.update$).on(([viewport]) => this.onViewportChange(viewport));
   }
 
   onViewportChange(viewport: IViewport) {

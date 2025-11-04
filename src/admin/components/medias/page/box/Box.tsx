@@ -40,7 +40,7 @@ export const Box = ({
 
   useEffect(() => {
     if (el) {
-      ctrl.initItem(id, el);
+      ctrl.boxInit(id, el);
     }
   }, [id, el]);
 
@@ -70,10 +70,7 @@ export const Box = ({
     props.dangerouslySetInnerHTML = { __html: item.html };
   }
 
-  const onClick = item.onClick;
-  if (onClick) {
-    props.onClick = (event) => ctrl.call(id, onClick, event);
-  }
+  props.onClick = (event) => ctrl.boxClick(id, event);
 
   const children: ComponentChildren[] = [];
 

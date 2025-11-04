@@ -1,8 +1,9 @@
-import { Style, Dictionary } from 'fluxio';
+import { Style, Dictionary, Item } from 'fluxio';
 
 export interface BoxFun {
-  name: string;
-  js: string;
+  name?: string;
+  target?: string;
+  payload?: Item;
 }
 
 export interface WBoxItem {
