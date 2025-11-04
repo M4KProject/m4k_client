@@ -7,7 +7,6 @@ export interface BoxFun {
 }
 
 export interface WBoxItem {
-  id: string;
   type?: string;
   name?: string;
 

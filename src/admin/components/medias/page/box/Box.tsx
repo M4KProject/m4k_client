@@ -1,14 +1,10 @@
-import { ComponentChildren, ComponentType, createElement, VNode } from 'preact';
+import { ComponentChildren, ComponentType, createContext, createElement, VNode } from 'preact';
 import { DivProps } from '@common/components';
 import { computeStyle, logger } from 'fluxio';
 import { BoxItem } from './boxTypes';
-import { useEffect, useRef } from 'preact/hooks';
+import { useContext, useEffect, useRef, useState } from 'preact/hooks';
 import { BoxController } from './BoxController';
-
-export interface BoxFactoryProps<T = any> {
-  type: string;
-  props: T;
-}
+import { useFlux } from '@common/hooks';
 
 // export interface WBoxData {
 //   mediaId?: string;
@@ -26,17 +22,16 @@ export interface BoxFactoryProps<T = any> {
 //   data?: Dictionary<string>;
 // }
 
-export const Box = ({
-  id,
-  item,
-  ctrl,
-}: {
+export const BoxContext = createContext<BoxController|undefined>(undefined);
+
+export interface BoxProps {
   id: string;
-  item: BoxItem;
-  ctrl: BoxController;
-}): VNode<any> | null => {
-  const ref = useRef<HTMLElement>(null);
+}
+export const Box = ({ id }: BoxProps) => {
+  const ref = useRef<any>(null);
   const el = ref.current;
+  const ctrl = useContext(BoxContext)!;
+  const item = useFlux(ctrl.get$(id));
 
   useEffect(() => {
     if (el) {
@@ -44,10 +39,11 @@ export const Box = ({
     }
   }, [id, el]);
 
-  const type = item.type || 'div';
+  if (!item) return null;
   if (item.hide) return null;
 
-  const Component = ctrl.registry[type] || 'div';
+  const type = item.type || 'div';
+  const Comp = ctrl.getComp(type);
 
   const style = computeStyle(item.style);
   if (item.pos) {
@@ -64,6 +60,7 @@ export const Box = ({
     style,
     ...item.props,
     ['data-id' as any]: id,
+    ref,
   };
 
   if (item.html) {
@@ -76,14 +73,11 @@ export const Box = ({
 
   if (item.children) {
     for (const childId of item.children) {
-      const child = ctrl.items[childId];
-      if (child) {
-        children.push(<Box key={childId} id={childId} item={child} ctrl={ctrl} />);
-      }
+      children.push(<Box key={childId} id={childId} />);
     }
   }
 
   console.debug('render', id, item, ctrl, props, children);
 
-  return createElement(Component, props, ...children);
+  return createElement(Comp, props, ...children);
 };

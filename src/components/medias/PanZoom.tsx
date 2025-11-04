@@ -76,7 +76,7 @@ export class PanZoomController {
   bind<E extends Event>(method: (event: E) => void): (event: E) => void {
     method = method.bind(this);
     return (event) => {
-      console.debug('PanZoom event', event.type, event);
+      // console.debug('PanZoom event', event.type, event);
       this.before$.set(event);
       method(event);
       this.after$.set(event);

@@ -1,5 +1,5 @@
 import { updateTheme, theme$ } from '@common/ui';
-import { Css, getCssColor } from 'fluxio';
+import { computeStyle, Css } from 'fluxio';
 import { Page, PageBody, Toolbar, tooltip } from '@common/components';
 import { Button } from '@common/components';
 import { Form } from '@common/components';
@@ -23,7 +23,7 @@ const c = Css('AccountPage', {
 });
 
 export const Color = ({ color }: { color: string }) => (
-  <div {...tooltip(color)} {...c('Color')} style={{ background: getCssColor(color) }} />
+  <div {...tooltip(color)} {...c('Color')} style={computeStyle({ bg: color })} />
 );
 
 export const AccountPage = () => {

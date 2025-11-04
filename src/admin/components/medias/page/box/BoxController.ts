@@ -1,4 +1,4 @@
-import { fluxCombine, Dictionary, flux, glb, logger, fluxUnion } from 'fluxio';
+import { fluxCombine, Dictionary, flux, glb, logger, fluxUnion, fluxDictionary, fluxStored, isDictionaryOfItem } from 'fluxio';
 import { ComponentType, JSX } from 'preact';
 import { BoxFun, BoxItem } from './boxTypes';
 import { BoxCarousel } from './BoxCarousel';
@@ -15,8 +15,9 @@ export interface BoxEvent {
 };
 
 export class BoxController {
-  items: Dictionary<BoxItem> = {};
-  registry: Dictionary<BoxComponent> = {
+  private readonly items = fluxDictionary<BoxItem>();
+  private readonly els = fluxDictionary<HTMLElement>();
+  private readonly registry: Dictionary<BoxComponent> = {
     div: 'div',
     span: 'span',
     p: 'p',
@@ -24,14 +25,10 @@ export class BoxController {
     article: 'article',
     carousel: BoxCarousel,
   };
-  els: Dictionary<HTMLElement> = {};
-  static current: BoxController;
-
-  funs: Dictionary<(boxEvent: BoxEvent) => void> = {};
-
-  init$ = flux<BoxEvent>({});
-  click$ = flux<BoxEvent>({});
-  event$ = fluxUnion(this.init$, this.click$);
+  readonly funs: Dictionary<(boxEvent: BoxEvent) => void> = {};
+  readonly init$ = flux<BoxEvent>({});
+  readonly click$ = flux<BoxEvent>({});
+  readonly event$ = fluxUnion(this.init$, this.click$);
 
   register(type: string, component: BoxComponent) {
     this.registry[type] = component;
@@ -45,10 +42,10 @@ export class BoxController {
   }
 
   boxInit(id: string, el: HTMLElement) {
-    const item = this.items[id];
+    const item = this.get(id);
     log.d('onInit', id, el, item);
 
-    this.els[id] = el;
+    this.els.setItem(id, el);
 
     const boxEvent: BoxEvent = { id, item, el };
     this.init$.set(boxEvent);
@@ -59,15 +56,39 @@ export class BoxController {
   }
 
   boxClick(id: string, event?: Event): void {
-    const item = this.items[id];
+    const item = this.get(id);
     log.d('onClick', id, event, item);
 
-    const el = this.els[id];
+    const el = this.getEl(id);
     const boxEvent: BoxEvent = { id, item, event, el };
     this.click$.set(boxEvent);
 
     if (item?.onClick) {
       this.funCall(item.onClick, boxEvent);
     }
+  }
+
+  getComp(type: string) {
+    return (type && this.registry[type]) || 'div';
+  }
+
+  getEl(id: string) {
+    return this.els.getItem(id);
+  }
+
+  get(id: string) {
+    return this.items.getItem(id);
+  }
+
+  get$(id: string) {
+    return this.items.getItem$(id);
+  }
+
+  set(id: string, item: BoxItem) {
+    return this.items.setItem(id, item);
+  }
+
+  update(id: string, changes: BoxItem) {
+    return this.set(id, { ...this.get(id), ...changes });
   }
 }

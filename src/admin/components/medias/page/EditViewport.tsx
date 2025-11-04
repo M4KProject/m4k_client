@@ -1,7 +1,9 @@
-import { useState } from 'preact/hooks';
+import { useEffect, useMemo, useState } from 'preact/hooks';
 import { PanZoom, PanZoomController } from '@/components/medias/PanZoom';
 import { Css } from 'fluxio';
 import { EditViewportControls } from './EditViewportControls';
+import { Box, BoxContext } from './box/Box';
+import { BoxController } from './box/BoxController';
 
 const c = Css('EditViewport', {
   '': {
@@ -20,17 +22,33 @@ const c = Css('EditViewport', {
 
 export const EditViewport = () => {
   const [controller, setController] = useState<PanZoomController | undefined>(undefined);
+  const boxController = useMemo(() => new BoxController(), []);
+
+  useEffect(() => {
+    boxController.set('aaa', {
+      pos: [10, 10, 10, 10],
+      style: { bg: '#0000FF' },
+    });
+    boxController.set('bbb', {
+      pos: [20, 10, 10, 10],
+      style: { bg: '#00FF00' },
+    });
+    boxController.set('root', {
+      children: ['aaa', 'bbb']
+    });
+  }, []);
 
   return (
     <div {...c()}>
       <PanZoom onNewController={setController}>
         <div {...c('Body')}>
-          <div style={{ flex: 1, background: '#FF00FF' }}>#FF00FF</div>
-          <div style={{ flex: 2, background: '#0000FF' }}>#0000FF</div>
-          <div style={{ flex: 1, background: '#00FF00' }}>#00FF00</div>
+          <BoxContext.Provider value={boxController}>
+            <Box id="root" />
+          </BoxContext.Provider>
         </div>
       </PanZoom>
       {controller && <EditViewportControls controller={controller} />}
+      <EditSelect />
     </div>
   );
 };
