@@ -1,19 +1,6 @@
-import {
-  onEvent,
-  Css,
-  Flux,
-  flux,
-  stopEvent,
-  getEventXY,
-  onHtmlEvent,
-  XY,
-  clear,
-  setStyle,
-  XYZ,
-} from 'fluxio';
+import { Css, Flux, flux, stopEvent, getEventXY, onHtmlEvent, XY, clear, setStyle } from 'fluxio';
 import { DivProps } from '@common/components';
-import { useRef, useEffect, useState, useMemo } from 'preact/hooks';
-import { useFlux } from '@common/hooks';
+import { useRef, useEffect } from 'preact/hooks';
 
 const c = Css('PanZoom', {
   '': {
