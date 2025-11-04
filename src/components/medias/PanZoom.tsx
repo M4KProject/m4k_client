@@ -241,14 +241,16 @@ export class PanZoomController {
 
   fitToContainer() {
     const containerRect = this.container.getBoundingClientRect();
-    const contentRect = this.content.getBoundingClientRect();
 
-    const scaleX = containerRect.width / contentRect.width;
-    const scaleY = containerRect.height / contentRect.height;
-    const scale = Math.min(scaleX, scaleY);
+    const contentWidth = this.content.scrollWidth;
+    const contentHeight = this.content.scrollHeight;
 
-    const x = (containerRect.width - contentRect.width * scale) / 2;
-    const y = (containerRect.height - contentRect.height * scale) / 2;
+    const scaleX = containerRect.width / contentWidth;
+    const scaleY = containerRect.height / contentHeight;
+    const scale = Math.min(scaleX, scaleY) * 0.95;
+
+    const x = (containerRect.width - contentWidth * scale) / 2;
+    const y = (containerRect.height - contentHeight * scale) / 2;
 
     this.applyTransform(x, y, scale);
   }
