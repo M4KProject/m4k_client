@@ -1,9 +1,8 @@
-import { ComponentChildren, ComponentType, createContext, createElement, VNode } from 'preact';
+import { ComponentChildren, createElement } from 'preact';
 import { DivProps } from '@common/components';
-import { computeStyle, logger } from 'fluxio';
-import { BoxItem } from './boxTypes';
-import { useContext, useEffect, useRef, useState } from 'preact/hooks';
-import { BoxController } from './BoxController';
+import { computeStyle } from 'fluxio';
+import { useEffect, useRef } from 'preact/hooks';
+import { useBoxController } from './BoxController';
 import { useFlux } from '@common/hooks';
 
 // export interface WBoxData {
@@ -22,15 +21,13 @@ import { useFlux } from '@common/hooks';
 //   data?: Dictionary<string>;
 // }
 
-export const BoxContext = createContext<BoxController|undefined>(undefined);
-
 export interface BoxProps {
   id: string;
 }
 export const Box = ({ id }: BoxProps) => {
   const ref = useRef<any>(null);
   const el = ref.current;
-  const ctrl = useContext(BoxContext)!;
+  const ctrl = useBoxController();
   const item = useFlux(ctrl.get$(id));
 
   useEffect(() => {
@@ -63,10 +60,6 @@ export const Box = ({ id }: BoxProps) => {
     ref,
   };
 
-  if (item.html) {
-    props.dangerouslySetInnerHTML = { __html: item.html };
-  }
-
   props.onClick = (event) => ctrl.boxClick(id, event);
 
   const children: ComponentChildren[] = [];
@@ -75,6 +68,10 @@ export const Box = ({ id }: BoxProps) => {
     for (const childId of item.children) {
       children.push(<Box key={childId} id={childId} />);
     }
+  }
+
+  if (item.text) {
+    children.push(item.text);
   }
 
   console.debug('render', id, item, ctrl, props, children);

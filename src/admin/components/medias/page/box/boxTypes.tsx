@@ -1,33 +1,35 @@
 import { Style, Dictionary, Item } from 'fluxio';
 
 export interface BoxFun {
-  name?: string;
-  target?: string;
-  payload?: Item;
+  readonly name?: string;
+  readonly target?: string;
+  readonly payload?: Item;
 }
 
-export interface WBoxItem {
-  type?: string;
-  name?: string;
+export interface BoxData {
+  readonly type?: string;
+  readonly children?: string[];
 
-  hide?: boolean;
-  children?: string[];
+  readonly name?: string;
+  readonly hide?: boolean;
 
-  pos?: [number, number, number, number];
-  cls?: string;
-  style?: Style;
-  props?: Dictionary<any>;
+  readonly pos?: [number, number, number, number];
+  readonly cls?: string;
+  readonly style?: Style;
 
-  html?: string;
-  mediaId?: string;
+  readonly props?: Dictionary<any>;
+
+  readonly text?: string;
+  readonly mediaId?: string;
+
+  readonly onInit?: BoxFun;
+  readonly onClick?: BoxFun;
 
   // // Carousel
   // delay?: number;
   // duration?: number;
 
   // Events
-  onInit?: BoxFun;
-  onClick?: BoxFun;
   // onShow?: BoxFun;
   // onHide?: BoxFun;
 
@@ -39,8 +41,6 @@ export interface WBoxItem {
   // // Data
   // data?: Dictionary<string>;
 }
-
-export type BoxItem = Readonly<WBoxItem>;
 
 // export const cleanBoxData = (d: BoxData) => {
 //   delete d.l;

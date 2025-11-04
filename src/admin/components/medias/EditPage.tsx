@@ -3,8 +3,9 @@ import { Css } from 'fluxio';
 import { JobGrid } from '../jobs/JobGrid';
 import { EditViewport } from './page/EditViewport';
 import { EditSide } from './page/EditSide';
-import { useEffect } from 'preact/hooks';
+import { useEffect, useMemo } from 'preact/hooks';
 import { sideOpen$ } from '@common/components';
+import { BoxContext, BoxController } from './page/box/BoxController';
 
 const c = Css('EditPage', {
   '': {
@@ -14,6 +15,22 @@ const c = Css('EditPage', {
 });
 
 export const EditPage = ({ page }: { page: PageModel }) => {
+  const boxController = useMemo(() => new BoxController(), []);
+
+  useEffect(() => {
+    boxController.update('aaa', {
+      pos: [10, 10, 10, 10],
+      style: { bg: '#0000FF' },
+    });
+    boxController.update('bbb', {
+      pos: [20, 10, 10, 10],
+      style: { bg: '#00FF00' },
+    });
+    boxController.update('root', {
+      children: ['aaa', 'bbb'],
+    });
+  }, []);
+
   useEffect(() => {
     sideOpen$.set(false);
     return () => {
@@ -23,8 +40,10 @@ export const EditPage = ({ page }: { page: PageModel }) => {
 
   return (
     <div {...c()}>
-      <EditViewport />
-      <EditSide />
+      <BoxContext.Provider value={boxController}>
+        <EditViewport />
+        <EditSide />
+      </BoxContext.Provider>
       <JobGrid filter={(job) => job.status !== 'finished'} panel={true} />
     </div>
   );

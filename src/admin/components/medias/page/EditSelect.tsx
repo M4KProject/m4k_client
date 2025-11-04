@@ -1,119 +1,190 @@
 import { useFlux } from '@common/hooks';
-import { Css } from 'fluxio';
-import { CopyPlus, Eye } from 'lucide-react';
-import { useContext } from 'preact/hooks';
-import { BoxContext } from './box/Box';
+import { Css, stopEvent, toError } from 'fluxio';
+import { A1, BoxController, useBoxController } from './box/BoxController';
 
 const c = Css('EditSelect', {
   '': {
     position: 'absolute',
-    xy: '-5px',
-    wh: 0,
-    border: '2px solid #1976d2',
     pointerEvents: 'none',
+    transition: 0.1,
   },
-  ' div': {
+  'Border': {
+    position: 'absolute',
+    inset: 0,
+    pointerEvents: 'none',
+    m: '-1px',
+    // translateX: '-1px',
+    // translateY: '-1px',
+    border: 'primary',
+  },
+  'Border div': {
     position: 'absolute',
     wh: '9px',
     m: '-5px',
-    border: '2px solid #9c27b0',
-    background: '#FFFFFF',
+    border: 'secondary',
+    bg: 'b0',
     pointerEvents: 'all',
   },
-  T: { top: 0, left: '50%', cursor: 'n-resize' },
-  B: { bottom: 0, left: '50%', cursor: 'n-resize' },
-  R: { top: '50%', right: 0, cursor: 'e-resize' },
-  L: { top: '50%', left: 0, cursor: 'e-resize' },
-  C: { top: '50%', left: '50%', borderRadius: '50%', cursor: 'move' },
-  TR: { top: 0, right: 0, cursor: 'ne-resize' },
-  TL: { top: 0, left: 0, cursor: 'se-resize' },
-  BR: { bottom: 0, right: 0, cursor: 'se-resize' },
-  BL: { bottom: 0, left: 0, cursor: 'ne-resize' },
-
-  Actions: {
-    b: -20,
-    r: 0,
-    position: 'absolute',
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
-    m: 0,
-    border: 0,
-    bg: 'none',
-    h: 18,
-    w: '100%',
-  },
-  Action: {
-    position: 'relative',
-    cursor: 'pointer',
-    border: '0',
-    background: 'none',
-    margin: 0,
-    width: '18px',
-    height: '18px',
-    color: '#9c27b0',
-  },
+  Center: { t: '50%', l: '50%', borderRadius: '50%', cursor: 'move' },
+  A: { t: 0, l: '50%', cursor: 'n-resize' },
+  B: { t: 0, r: 0, cursor: 'ne-resize' },
+  C: { t: '50%', r: 0, cursor: 'e-resize' },
+  D: { b: 0, r: 0, cursor: 'se-resize' },
+  E: { b: 0, l: '50%', cursor: 'n-resize' },
+  F: { b: 0, l: 0, cursor: 'ne-resize' },
+  G: { t: '50%', l: 0, cursor: 'e-resize' },
+  H: { t: 0, l: 0, cursor: 'se-resize' },
 });
 
-type A10 = 1|0|-1;
+const die = (message: string) => {
+  throw toError(message);
+}
 
-export const EditSelectResizes = () => {
-  const ctrl = useContext(BoxContext);
+const getOnResize = (ctrl: BoxController, aX: A1, aY: A1, aW: A1, aH: A1) => (event: Event) => {
+  try {
+    console.debug('getOnResize', { ctrl, aX, aY, aW, aH, event });
+    stopEvent(event);
 
-  const getMouseDown = (aX: A10, aY: A10, aW: A10, aH: A10) => (e: Event) => {
-    // ctrl.set
+    const id = ctrl.click$.get().id! || die('no id');
+    const box = ctrl.get(id) || die('no box');
+    const el = ctrl.getEl(id) || die('no el');
+
+    const parent = 
+
+    const elStyle = getComputedStyleCache(el);
+    if (!elStyle) return null;
+
+    const parentStyle = getComputedStyleCache(el.parentElement);
+    if (!parentStyle) return null;
+
+    const isAbsolute =
+      elStyle.position === 'absolute' &&
+      (parentStyle.position === 'absolute' || parentStyle.position === 'relative');
+
+    const ratio = 1 / zoom$.get();
+    let ratioX = ratio; //-100 / (testRect.x - elRect.x);
+    let ratioY = ratio; //-100 / (testRect.y - elRect.y);
+    let ratioW = ratio; //-100 / (testRect.width - elRect.width);
+    let ratioH = ratio; //-100 / (testRect.height - elRect.height);
+
+    // const elRect = el.getBoundingClientRect();
+    const pRect = el.parentElement.getBoundingClientRect();
+
+    const [initX] = unitDecompose(elStyle.left);
+    const [initY] = unitDecompose(elStyle.top);
+    const [initW] = unitDecompose(elStyle.width);
+    const [initH] = unitDecompose(elStyle.height);
+
+    const [parentWidth] = unitDecompose(parentStyle.width);
+    const [parentHeight] = unitDecompose(parentStyle.height);
+
+    // const initX = elRect.x - pRect.x;
+    // const initY = elRect.x - pRect.x;
+    // const initW = elRect.width;
+    // const initH = elRect.height;
+
+    const typeX = el.style.left.includes('px') ? 'px' : '%';
+    const typeY = el.style.top.includes('px') ? 'px' : '%';
+    const typeW = el.style.width.includes('px') ? 'px' : '%';
+    const typeH = el.style.height.includes('px') ? 'px' : '%';
+
+    // const test = document.createElement('div');
+    // test.style.position = 'absolute';
+    // test.style.opacity = '0';
+    // test.style.left = '100' + typeX;
+    // test.style.top = '100' + typeY;
+    // test.style.width = '100' + typeW;
+    // test.style.height = '100' + typeH;
+    // el.parentElement.appendChild(test);
+    // const testRect = test.getBoundingClientRect();
+    // test.remove();
+
+    console.debug('onMove init', {
+      init: [initX, initY, initW, initH],
+      ratio: [ratioX, ratioY, ratioW, ratioH],
+      type: [typeX, typeY, typeW, typeH],
+    });
+
+    this.onPointerDown(
+      e,
+      (mX, mY) => {
+        const x = toUnit(initX + mX * ratioX * aX, '%', parentWidth); // typeX,
+        const y = toUnit(initY + mY * ratioY * aY, '%', parentHeight); // typeY,
+        const w = toUnit(initW + mX * ratioW * aW, '%', parentWidth); // typeW,
+        const h = toUnit(initH + mY * ratioH * aH, '%', parentHeight); // typeH,
+        if (isAbsolute) {
+          if (aX !== 0) el.style.left = x;
+          if (aY !== 0) el.style.top = y;
+          if (aW !== 0) el.style.width = w;
+          if (aH !== 0) el.style.height = h;
+        } else {
+          if (aW !== 0) el.style.width = w;
+          if (aH !== 0) el.style.height = h;
+        }
+        console.debug('onMove move', x, y, w, h);
+      },
+      () => {
+        const s = el.style;
+        if (isAbsolute) {
+          b.updateStyle({
+            left: s.left,
+            top: s.top,
+            width: s.width,
+            height: s.height,
+          });
+        } else {
+          b.updateStyle({
+            width: s.width,
+            height: s.height,
+          });
+        }
+      }
+    );
   }
+  catch (error) {
+    console.error('getOnResize', { ctrl, aX, aY, aW, aH, event }, error);
+  }
+}
 
-  return (
-    <>
-      <div {...c('T')} onMouseDown={getMouseDown(0, 1, 0, -1)} />
-      <div {...c('B')} onMouseDown={getMouseDown(0, 0, 0, 1)} />
-      <div {...c('R')} onMouseDown={getMouseDown(0, 0, 1, 0)} />
-      <div {...c('L')} onMouseDown={getMouseDown(1, 0, -1, 0)} />
-      <div {...c('C')} onMouseDown={getMouseDown(1, 1, 0, 0)} />
-      <div {...c('TR')} onMouseDown={getMouseDown(0, 1, 1, -1)} />
-      <div {...c('TL')} onMouseDown={getMouseDown(1, 1, -1, -1)} />
-      <div {...c('BR')} onMouseDown={getMouseDown(0, 0, 1, 1)} />
-      <div {...c('BL')} onMouseDown={getMouseDown(1, 0, -1, 1)} />
-    </>
-  );
-};
-
-export const EditSelectActions = () => (
-  <div {...c('Actions')}>
-    <div {...c('Action')} onMouseDown={onDuplicate}>
-      <CopyPlus />
-    </div>
-    <div {...c('Action')} onMouseDown={onClick}>
-      <Eye />
-    </div>
+export const EditSelectBorder = ({ ctrl }: { ctrl: BoxController }) => (
+  <div {...c('Border')}>
+    <div {...c('Center')} onMouseDown={getOnResize(ctrl, 1, 1, 0, 0)} />
+    <div {...c('A')} onMouseDown={getOnResize(ctrl, 0, 1, 0, -1)} />
+    <div {...c('B')} onMouseDown={getOnResize(ctrl, 0, 1, 1, -1)} />
+    <div {...c('C')} onMouseDown={getOnResize(ctrl, 0, 0, 1, 0)} />
+    <div {...c('D')} onMouseDown={getOnResize(ctrl, 0, 0, 1, 1)} />
+    <div {...c('E')} onMouseDown={getOnResize(ctrl, 0, 0, 0, 1)} />
+    <div {...c('F')} onMouseDown={getOnResize(ctrl, 1, 0, -1, 1)} />
+    <div {...c('G')} onMouseDown={getOnResize(ctrl, 1, 0, -1, 0)} />
+    <div {...c('H')} onMouseDown={getOnResize(ctrl, 1, 1, -1, -1)} />
   </div>
 );
 
 export const EditSelect = () => {
-  console.debug('EditSelect');
+  const ctrl = useBoxController()!;
+  const select = useFlux(ctrl.click$);
+  const panZoom = useFlux(ctrl.panZoom$);
 
-  const ctrl = useContext(BoxContext);
+  useFlux(panZoom?.changed$);
 
-  const b = useFlux(ctrl?.click$);
-  const el = b?.el;
-  if (!el) return <div {...c()} />;
+  console.debug('EditSelect', panZoom, select);
 
-  const rect = el.getBoundingClientRect();
-  let { left, top, width, height } = rect;
-  left -= 1;
-  top -= 1;
-  width += 2;
-  height += 2;
+  if (!panZoom) return null;
+  if (!select) return null;
 
-  // const computedStyle = getComputedStyleCache(el);
-  // const isAbsolute = computedStyle && computedStyle.position === 'absolute';
+  const { element, count } = select;
+
+  if (!element) return null;
+  if (!count) return null;
+
+  let { left, top, width, height } = element.getBoundingClientRect();
+  const containerRect = panZoom.container.getBoundingClientRect();
+  left -= containerRect.left;
+  top -= containerRect.top;
 
   return (
     <div {...c()} style={{ left, top, width, height }}>
-      <EditSelectResizes />
-      <EditSelectActions />
+      <EditSelectBorder ctrl={ctrl} />
     </div>
   );
 };

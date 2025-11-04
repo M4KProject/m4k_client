@@ -1,4 +1,15 @@
-import { Css, Flux, flux, stopEvent, getEventXY, onHtmlEvent, XY, clear, setStyle } from 'fluxio';
+import {
+  Css,
+  Flux,
+  flux,
+  stopEvent,
+  getEventXY,
+  onHtmlEvent,
+  XY,
+  clear,
+  setStyle,
+  fluxCombine,
+} from 'fluxio';
 import { DivProps } from '@common/components';
 import { useRef, useEffect } from 'preact/hooks';
 
@@ -45,6 +56,7 @@ export interface PanZoomInnerProps extends DivProps {
 export class PanZoomController {
   readonly before$ = flux<Event | undefined>(undefined);
   readonly after$ = flux<Event | undefined>(undefined);
+  readonly changed$ = fluxCombine(this.after$, this.after$.delay(100)).throttle(100);
   readonly unsubscribes: (() => void)[];
 
   xy: [number, number] = [0, 0];
