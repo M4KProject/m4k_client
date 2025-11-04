@@ -16,9 +16,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ### Linting and Type Checking
 
 - `npx eslint .` - Run ESLint on the codebase
+- `npx eslint . --fix` - Run ESLint and auto-fix issues
 - `npx tsc --noEmit` - Type check TypeScript without emitting files
 
 **Important:** Always run both linting and type checking after significant changes to ensure code quality.
+
+**TypeScript Configuration:**
+- Strict mode enabled with comprehensive checks
+- `noUncheckedIndexedAccess: true` - Requires null checks for array/object access
+- `jsx: "react-jsx"` with `jsxImportSource: "preact"` - Preact JSX transform
+- Path aliases configured for `@/`, `@common/`, `fluxio/`, `pblite/`
 
 ### Build Modes
 
@@ -38,53 +45,76 @@ This is a multi-interface content management system with three main applications
 
 - **Framework**: Preact 10.26.9 with Vite 6.0.4 build system and React compatibility layer
 - **Language**: TypeScript with comprehensive type checking and JSX
+- **Workspace**: pnpm workspace with local packages (fluxio, pblite, common as Git submodules)
 - **PWA**: Vite PWA plugin with Workbox for offline-first architecture (disabled in APK mode)
 - **Styling**: Custom CSS-in-JS system using `useCss(componentName, css)` hook with `Css` type objects
 - **State Management**: Custom message-based reactive system (`Flux<T>` class with `useFlux` hook and localStorage persistence)
 - **Routing**: Custom router with lazy loading, pattern matching, and multi-app support
-- **Data Layer**: Collection-based API with TypeScript models, authentication, and real-time updates
+- **Data Layer**: Collection-based API with TypeScript models, authentication, and real-time updates (via `pblite` package)
 - **Build Modes**: Dual build system - PWA mode for web deployment, APK mode for single-file Android packaging
 
 ### Application Structure
 
-The application is split into three main interfaces:
+The application is split into three main interfaces, with routing determined at startup:
+
+#### Routing Logic (`src/index.tsx`)
+
+The main entry point determines which interface to load:
+1. Checks `isDevice$` flux message (persisted in localStorage)
+2. If unset, checks `m4k.isInterface` (Android kiosk detection)
+3. Routes to either admin or device interface
+4. Initializes service worker and responsive listeners
+
+```typescript
+// Routing pattern
+const isDevice = isDevice$.get() || m4k.isInterface;
+if (isDevice) {
+  mountDevice(); // Load device interface
+} else {
+  mountAdmin(); // Load admin interface
+}
+```
 
 #### 1. Admin Interface (`/admin/`)
 
 - **Location**: `src/admin/`
-- **Entry Point**: `src/admin/index.tsx`
+- **Entry Point**: `src/admin/index.tsx` → `mountAdmin()`
 - **Purpose**: Content management system administration
 - **Pages**: Groups, Members, Devices, Contents, Medias, Account, Auth
 - **Key Features**:
   - Device pairing with Dialog-based interface
   - Content management with CRUD operations
   - Group and member management
+  - Media library with upload support
 
 #### 2. Device Interface (`/device/`)
 
 - **Location**: `src/device/`
-- **Entry Point**: `src/device/index.tsx`
+- **Entry Point**: `src/device/index.tsx` → `mountDevice()`
 - **Purpose**: Device control and configuration interface
 - **Key Features**:
   - Automatic pairing mode when device has no group
   - Settings pages: Kiosk, Actions, Password, Playlist, Site, Debug, Events
   - Device key-based pairing system
+  - Content playback and playlist management
 
-#### 3. Contents Viewer (`/:contentKey`)
+#### 3. Contents Viewer (Future/Planned)
 
-- **Location**: `src/contents/`
-- **Entry Point**: `ContentViewer.tsx`
+- **Location**: `src/contents/` (referenced but not fully implemented)
 - **Purpose**: Content visualization for different content types
 - **Supported Types**: empty, form, table, html, playlist, hiboutik
 
 ### Key Directories
 
-- `src/index.tsx` - Main application routing between admin, device, and contents
+- `src/index.tsx` - Main application entry point (routes between admin/device based on `isDevice$`)
 - `src/admin/` - Admin interface components and pages
+  - `components/` - Admin-specific components (Apps, Errors, GroupGrid, MemberGrid, SideBar, etc.)
+  - `pages/` - Admin page components
 - `src/device/` - Device interface components and pages
-- `src/contents/` - Content viewer components for different content types
-- `src/controllers/` - Application logic and routing
-- `src/messages/` - Reactive state management messages
+  - `pages/` - Device pages (KioskPage, PairingPage, PlaylistPage, ActionsPage, etc.)
+- `src/components/` - Shared components used across interfaces (AuthForm, medias/)
+- `src/shared/` - Legacy shared code (prefer `@common` for new shared code)
+- `src/router/` - Custom routing logic
 
 ### Shared Dependencies
 
@@ -95,8 +125,40 @@ The application is split into three main interfaces:
 ### Path Aliases
 
 - `@/*` maps to `./src/*`
-- `@common/*` maps to `./common/*`
-- `react` and `react-dom` map to Preact compatibility layer
+- `@common/*` maps to `./common/*` (Git submodule)
+- `pblite` and `pblite/*` map to `./pblite/src` (Git submodule)
+- `fluxio` and `fluxio/*` map to `./fluxio/src` (Git submodule)
+- `react` and `react-dom` map to Preact compatibility layer (`preact/compat`)
+
+### Local Packages & Git Submodules
+
+This project uses three local packages as Git submodules:
+
+**fluxio** - Lightweight reactive state management and CSS-in-JS utilities
+- Zero runtime dependencies
+- Exports: `Flux`, `flux`, `Css`, `useCss`, array/string/object utilities, logger, etc.
+- See [fluxio/CLAUDE.md](fluxio/CLAUDE.md) for detailed documentation
+
+**pblite** - PocketBase client for API communication
+- Type-safe collection-based API client
+- Real-time subscriptions and authentication
+
+**common** - Shared UI component library and utilities ([@common](common/))
+- 18 production-ready Preact components (Button, Field, Dialog, Table, etc.)
+- Custom hooks (useFlux, useAsync, usePromise, etc.)
+- M4K Android kiosk device integration
+- Theme system and responsive design utilities
+- See [common/CLAUDE.md](common/CLAUDE.md) for detailed documentation
+
+**Submodule Management:**
+```bash
+# Update submodules
+git submodule update --remote
+
+# Update specific submodule
+cd common && git pull origin main && cd ..
+git add common && git commit -m "Update common submodule"
+```
 
 ### Device Pairing System
 
@@ -269,7 +331,7 @@ The application is configured as a Progressive Web App (PWA) using Vite PWA plug
 
 ### API Collection Pattern
 
-The codebase uses a collection-based API system with type-safe operations:
+The codebase uses a collection-based API system with type-safe operations via the `pblite` PocketBase client:
 
 ```typescript
 // Collection usage pattern
@@ -289,10 +351,23 @@ await contentColl.delete(id);
 - `memberColl` - User-group relationships with role-based permissions
 - `userColl` - User management and authentication
 
+### PocketBase Client Configuration
+
+The API URL is dynamically configured in `src/index.tsx`:
+- **Development** (localhost with port): Uses `https://i.m4k.fr/api/`
+- **Production**: Uses the configured PocketBase URL
+
+Access the client with:
+```typescript
+import { getPbClient } from 'pblite';
+const pbClient = getPbClient();
+```
+
 ### Model Generation System
 
-Models are generated in `common/api/models.generated.ts` from backend schema:
-
+Models are auto-generated using the `generator.ts` script:
+- Run manually when backend schema changes
+- Outputs TypeScript interfaces to appropriate model files
 - **Base interfaces** (prefixed with `_`) contain raw API fields
 - **Extended interfaces** add client-specific typing and computed properties
 - **Role-based access** via `Role.admin > Role.editor > Role.viewer` hierarchy
@@ -330,19 +405,22 @@ if (!auth) {
 ### Component Creation Pattern
 
 ```typescript
+import { Css, useCss } from 'fluxio';
+import { DivProps } from '@common/components';
 
-import { Css } from 'fluxio';
-import { Button } from '@common/components';
+const css = Css('MyComponent', {
+  '': { fCol: 1, p: 2 },
+  'Item': { fRow: ['center'], p: 1 }
+});
 
-const c = Css('', {
-  '': { /* component root */ },
-  'Item': { /* nested element */ }
-};
+export interface MyComponentProps extends DivProps {
+  variant?: 'primary' | 'secondary';
+}
 
-export const MyComponent = ({ children }: { children?: any }) => {
+export const MyComponent = ({ children, variant, ...props }: MyComponentProps) => {
   const c = useCss('MyComponent', css);
   return (
-    <div  {...c()}>
+    <div {...props} {...c('', variant)}>
       <div {...c('Item')}>
         {children}
       </div>
@@ -350,6 +428,13 @@ export const MyComponent = ({ children }: { children?: any }) => {
   );
 };
 ```
+
+**Important Notes:**
+- Define `css` constant outside component (not inside)
+- Call `useCss` inside component to get class name function
+- Spread `{...props}` first, then `{...c()}` to allow prop overrides
+- Extend `DivProps` for HTML attributes support
+- Use Preact's `class` prop (not `className`)
 
 ### Adding New Content Types
 
@@ -396,6 +481,40 @@ export interface MyContentModel extends ContentModel {
 
 **Utility Functions:**
 
-- The codebase uses custom utility functions in `common/utils/`
-- List manipulation functions like `addItem`, `removeIndex`, `moveIndex`, `setItemIndex` support circular indexing
-- Use `normalizeIndex` for safe array index calculations with negative values and overflow handling
+Fluxio provides comprehensive utility functions organized by category:
+- **Array**: `addItem`, `removeIndex`, `moveIndex`, `setItemIndex`, `normalizeIndex` (circular indexing support)
+- **Object**: `deepClone`, `deepMerge`, `pick`, `omit`, `mapValues`
+- **String**: `capitalize`, `kebabCase`, `camelCase`, `snakeCase`, `truncate`
+- **Async**: `debounce`, `throttle`, `sleep`, `retry`, `withTimeout`
+- **Type Checking**: `isNil`, `isString`, `isNumber`, `isArray`, `isObject`, etc.
+- **Casting**: `toNumber`, `toString`, `toArray`, `toBool`
+- **Logger**: `logger('tag')` creates tagged loggers with automatic instance counting
+
+Import from fluxio:
+```typescript
+import { normalizeIndex, deepClone, debounce, isNil, logger } from 'fluxio';
+```
+
+**M4K Android Integration:**
+
+The `@common/m4k` module provides Android kiosk device integration:
+```typescript
+import { m4k } from '@common/m4k';
+
+// Logging to Android device
+m4k.d('Debug message');
+m4k.i('Info message');
+m4k.w('Warning');
+m4k.e('Error');
+
+// Device detection
+if (m4k.isInterface) {
+  // Running on M4K Android kiosk
+}
+
+// Event system
+m4k.subscribe((event) => console.log(event));
+m4k.signal({ type: 'custom', data: {} });
+```
+
+Supports M4K Bridge, Fully Kiosk Browser, and fallback for web browsers.
