@@ -2,7 +2,10 @@ import { Css } from 'fluxio';
 
 const c = Css('EditForm', {
   '': {
+    flex: 2,
     fCol: 1,
+    elevation: 1,
+    m: 0.5,
   },
 });
 

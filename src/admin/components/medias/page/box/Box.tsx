@@ -56,11 +56,14 @@ export const Box = ({ id }: BoxProps) => {
     class: item.cls ? `Box Box-${type} ${item.cls}` : `Box Box-${type}`,
     style,
     ...item.props,
-    ['data-id' as any]: id,
+    id,
     ref,
   };
 
-  props.onClick = (event) => ctrl.boxClick(id, event);
+  props.onClick = (event) => {
+    console.debug('onClick', event);
+    ctrl.boxClick(id, event);
+  };
 
   const children: ComponentChildren[] = [];
 

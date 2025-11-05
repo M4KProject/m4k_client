@@ -28,6 +28,10 @@ export const EditPage = ({ page }: { page: PageModel }) => {
     });
     boxController.update('root', {
       children: ['aaa', 'bbb'],
+      style: {
+        bg: '#00FFFF',
+        wh: '100%',
+      },
     });
   }, []);
 

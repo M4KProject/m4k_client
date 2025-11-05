@@ -1,6 +1,6 @@
 import { Css } from 'fluxio';
 
-const c = Css('EditTree', {
+const c = Css('EditMedias', {
   '': {
     flex: 1,
     fCol: 1,
@@ -9,6 +9,6 @@ const c = Css('EditTree', {
   },
 });
 
-export const EditTree = () => {
-  return <div {...c()}>TREE</div>;
+export const EditMedias = () => {
+  return <div {...c()}>MEDIAS</div>;
 };

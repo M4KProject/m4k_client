@@ -1,11 +1,14 @@
 import { Css } from 'fluxio';
+import { EditMedias } from './EditMedias';
 import { EditTree } from './EditTree';
 import { EditForm } from './EditForm';
 
 const c = Css('EditSide', {
   '': {
     position: 'relative',
-    elevation: 3,
+    elevation: 2,
+    borderLeft: 'g3',
+    p: 0.5,
     w: 20,
     bg: 'b0',
     zIndex: 10,
@@ -16,6 +19,7 @@ const c = Css('EditSide', {
 export const EditSide = () => {
   return (
     <div {...c()}>
+      <EditMedias />
       <EditTree />
       <EditForm />
       {/* 

@@ -1,5 +1,20 @@
 import { useFlux, useFluxState } from '@common/hooks';
-import { Css, CssStyle, Dictionary, flux, fluxCombine, fluxEvent, getEventXY, isDeepEqual, onHtmlEvent, round, stopEvent, toError, toNumber, XY } from 'fluxio';
+import {
+  Css,
+  CssStyle,
+  Dictionary,
+  flux,
+  fluxCombine,
+  fluxEvent,
+  getEventXY,
+  isDeepEqual,
+  onHtmlEvent,
+  round,
+  stopEvent,
+  toError,
+  toNumber,
+  XY,
+} from 'fluxio';
 import { A1, BoxController, useBoxController } from './box/BoxController';
 import { useEffect, useMemo, useState } from 'preact/hooks';
 
@@ -8,7 +23,7 @@ const c = Css('EditSelect', {
     position: 'absolute',
     pointerEvents: 'none',
   },
-  'Border': {
+  Border: {
     position: 'absolute',
     inset: 0,
     pointerEvents: 'none',
@@ -92,12 +107,12 @@ const onResize = (ctrl: BoxController, aX: A1, aY: A1, aW: A1, aH: A1) => (event
       const h = toPrct(h0 + eY * ratio * aH, pHeight);
 
       ctrl.update(id, { pos: [x, y, w, h] });
-    }
+    };
 
     const onEnd = (event: Event) => {
       onMove(event);
       for (const off of offs) off();
-    }
+    };
 
     const offs = [
       onHtmlEvent(0, 'mousemove', onMove),
@@ -105,18 +120,17 @@ const onResize = (ctrl: BoxController, aX: A1, aY: A1, aW: A1, aH: A1) => (event
       onHtmlEvent(0, 'touchmove', onMove),
       onHtmlEvent(0, 'touchend', onEnd),
     ];
-  }
-  catch (error) {
+  } catch (error) {
     console.error('getOnResize', { ctrl, aX, aY, aW, aH, event }, error);
   }
-}
+};
 
 export const EditSelectBorder = ({ ctrl }: { ctrl: BoxController }) => {
   const H = 0.5;
   const N = -1;
-  type Pos = 0|0.5|1;
-  type Move = 0|1;
-  type Resize = -1|0|1;
+  type Pos = 0 | 0.5 | 1;
+  type Move = 0 | 1;
+  type Resize = -1 | 0 | 1;
   const resizes: [Pos, Pos, Move, Move, Resize, Resize, string, string, CssStyle][] = [
     [H, 0, 0, 1, 0, N, 'n-resize', '↑', {}],
     [1, 0, 0, 1, 1, N, 'ne-resize', '↗', {}],
@@ -134,8 +148,8 @@ export const EditSelectBorder = ({ ctrl }: { ctrl: BoxController }) => {
         <div
           key={i}
           style={{
-            left: (left*100) + '%',
-            top: (top*100) + '%',
+            left: left * 100 + '%',
+            top: top * 100 + '%',
             cursor,
             ...style,
           }}
@@ -149,25 +163,21 @@ export const EditSelectBorder = ({ ctrl }: { ctrl: BoxController }) => {
 export const EditSelect = () => {
   const ctrl = useBoxController();
   const panZoom = useFlux(ctrl.panZoom$);
-  const [style, setStyle] = useState<CssStyle|undefined>(undefined);
+  const [style, setStyle] = useState<CssStyle | undefined>(undefined);
 
   useEffect(() => {
     if (!ctrl) return;
     if (!panZoom) return;
 
-    const set = (next: CssStyle|undefined) =>
-      setStyle(prev => isDeepEqual(prev, next) ? prev : next);
+    const set = (next: CssStyle | undefined) =>
+      setStyle((prev) => (isDeepEqual(prev, next) ? prev : next));
 
-    return fluxCombine(
-      ctrl.click$,
-      panZoom.after$,
-      panZoom.after$.delay(100),
-    )
+    return fluxCombine(ctrl.click$, panZoom.after$, panZoom.after$.delay(100))
       .throttle(1000 / 60)
       .on(([click]) => {
-        const { element, box, count } = click||{};
+        const { element, box, count } = click || {};
         if (!element || !box) return set(undefined);
-        
+
         const { left, top, width, height } = element.getBoundingClientRect();
         const next = { left, top, width, height };
 
@@ -181,9 +191,9 @@ export const EditSelect = () => {
 
   console.debug('EditSelect render', style);
 
-  return style ? (
-    <div {...c()} style={style}>
-      <EditSelectBorder ctrl={ctrl} />
-    </div>
-  ) : null;
+  return style ?
+      <div {...c()} style={style}>
+        <EditSelectBorder ctrl={ctrl} />
+      </div>
+    : null;
 };
