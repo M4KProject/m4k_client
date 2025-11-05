@@ -56,7 +56,7 @@ export interface PanZoomInnerProps extends DivProps {
 export class PanZoomController {
   readonly before$ = flux<Event | undefined>(undefined);
   readonly after$ = flux<Event | undefined>(undefined);
-  readonly changed$ = fluxCombine(this.after$, this.after$.delay(100)).throttle(100);
+  readonly changed$ = fluxCombine(this.after$, this.after$.delay(100)).throttle(1000 / 60);
   readonly unsubscribes: (() => void)[];
 
   xy: [number, number] = [0, 0];

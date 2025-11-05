@@ -1,12 +1,11 @@
 import { useFlux } from '@common/hooks';
-import { Css, stopEvent, toError } from 'fluxio';
+import { Css, getEventXY, onHtmlEvent, round, stopEvent, toError, toNumber } from 'fluxio';
 import { A1, BoxController, useBoxController } from './box/BoxController';
 
 const c = Css('EditSelect', {
   '': {
     position: 'absolute',
     pointerEvents: 'none',
-    transition: 0.1,
   },
   'Border': {
     position: 'absolute',
@@ -36,110 +35,75 @@ const c = Css('EditSelect', {
   H: { t: 0, l: 0, cursor: 'se-resize' },
 });
 
-const die = (message: string) => {
-  throw toError(message);
-}
+type UnitType = 'rem' | 'em' | 'px' | '%';
+
+const unitDecompose = (unit: string): [number, UnitType] => {
+  const m = unit.match(/([0-9\.]+) ?([a-z%]+)/);
+  return m ? [toNumber(m[1], 0), (m[2] as any) || 'px'] : [0, 'px'];
+};
 
 const getOnResize = (ctrl: BoxController, aX: A1, aY: A1, aW: A1, aH: A1) => (event: Event) => {
   try {
     console.debug('getOnResize', { ctrl, aX, aY, aW, aH, event });
     stopEvent(event);
 
-    const id = ctrl.click$.get().id! || die('no id');
-    const box = ctrl.get(id) || die('no box');
-    const el = ctrl.getEl(id) || die('no el');
+    const panZoom = ctrl.panZoom$.get();
+    if (!panZoom) throw toError('no panZoom');
 
-    const parent = 
+    const select = ctrl.click$.get();
+    if (!select) throw toError('no select');
 
-    const elStyle = getComputedStyleCache(el);
-    if (!elStyle) return null;
+    const { id, box, element } = select;
+    if (!id) throw toError('no id');
+    if (!box) throw toError('no box');
+    if (!element) throw toError('no element');
 
-    const parentStyle = getComputedStyleCache(el.parentElement);
-    if (!parentStyle) return null;
+    const parent = element.parentElement;
+    if (!parent) throw toError('no parent');
 
-    const isAbsolute =
-      elStyle.position === 'absolute' &&
-      (parentStyle.position === 'absolute' || parentStyle.position === 'relative');
+    const pos = box.pos;
+    if (!pos) throw toError('no pos');
 
-    const ratio = 1 / zoom$.get();
-    let ratioX = ratio; //-100 / (testRect.x - elRect.x);
-    let ratioY = ratio; //-100 / (testRect.y - elRect.y);
-    let ratioW = ratio; //-100 / (testRect.width - elRect.width);
-    let ratioH = ratio; //-100 / (testRect.height - elRect.height);
+    const pRect = parent.getBoundingClientRect();
+    const pWidth = pRect.width;
+    const pHeight = pRect.height;
+    const [x0, y0, w0, h0] = pos;
+    const ratio = 1 / panZoom.scale;
 
-    // const elRect = el.getBoundingClientRect();
-    const pRect = el.parentElement.getBoundingClientRect();
+    console.debug('getOnResize init', x0, y0, w0, h0, ratio);
 
-    const [initX] = unitDecompose(elStyle.left);
-    const [initY] = unitDecompose(elStyle.top);
-    const [initW] = unitDecompose(elStyle.width);
-    const [initH] = unitDecompose(elStyle.height);
+    const toPrct = (v: number, size: number) => {
+      v = 100 * (v / size);
+      const snap = 48 / 100;
+      v = round(v * snap) / snap;
+      v = round(v, 3);
+      return v;
+    };
 
-    const [parentWidth] = unitDecompose(parentStyle.width);
-    const [parentHeight] = unitDecompose(parentStyle.height);
+    const onMove = (e: Event) => {
+      const eventXY = getEventXY(e);
+      if (!eventXY) return;
 
-    // const initX = elRect.x - pRect.x;
-    // const initY = elRect.x - pRect.x;
-    // const initW = elRect.width;
-    // const initH = elRect.height;
+      const [eX, eY] = eventXY;
+      const x = toPrct(x0 + eX * ratio * aX, pWidth);
+      const y = toPrct(y0 + eY * ratio * aY, pHeight);
+      const w = toPrct(w0 + eX * ratio * aW, pWidth);
+      const h = toPrct(h0 + eY * ratio * aH, pHeight);
 
-    const typeX = el.style.left.includes('px') ? 'px' : '%';
-    const typeY = el.style.top.includes('px') ? 'px' : '%';
-    const typeW = el.style.width.includes('px') ? 'px' : '%';
-    const typeH = el.style.height.includes('px') ? 'px' : '%';
+      ctrl.update(id, { pos: [x, y, w, h] });
+    }
 
-    // const test = document.createElement('div');
-    // test.style.position = 'absolute';
-    // test.style.opacity = '0';
-    // test.style.left = '100' + typeX;
-    // test.style.top = '100' + typeY;
-    // test.style.width = '100' + typeW;
-    // test.style.height = '100' + typeH;
-    // el.parentElement.appendChild(test);
-    // const testRect = test.getBoundingClientRect();
-    // test.remove();
+    const onEnd = (event: Event) => {
+      onMove(event);
+      for (const off of offs) off();
+    }
 
-    console.debug('onMove init', {
-      init: [initX, initY, initW, initH],
-      ratio: [ratioX, ratioY, ratioW, ratioH],
-      type: [typeX, typeY, typeW, typeH],
-    });
-
-    this.onPointerDown(
-      e,
-      (mX, mY) => {
-        const x = toUnit(initX + mX * ratioX * aX, '%', parentWidth); // typeX,
-        const y = toUnit(initY + mY * ratioY * aY, '%', parentHeight); // typeY,
-        const w = toUnit(initW + mX * ratioW * aW, '%', parentWidth); // typeW,
-        const h = toUnit(initH + mY * ratioH * aH, '%', parentHeight); // typeH,
-        if (isAbsolute) {
-          if (aX !== 0) el.style.left = x;
-          if (aY !== 0) el.style.top = y;
-          if (aW !== 0) el.style.width = w;
-          if (aH !== 0) el.style.height = h;
-        } else {
-          if (aW !== 0) el.style.width = w;
-          if (aH !== 0) el.style.height = h;
-        }
-        console.debug('onMove move', x, y, w, h);
-      },
-      () => {
-        const s = el.style;
-        if (isAbsolute) {
-          b.updateStyle({
-            left: s.left,
-            top: s.top,
-            width: s.width,
-            height: s.height,
-          });
-        } else {
-          b.updateStyle({
-            width: s.width,
-            height: s.height,
-          });
-        }
-      }
-    );
+    const offs = [
+      onHtmlEvent(0, 'mousemove', onMove),
+      onHtmlEvent(0, 'mouseup', onEnd),
+      onHtmlEvent(0, 'touchmove', onMove),
+      onHtmlEvent(0, 'touchend', onEnd),
+    ];
   }
   catch (error) {
     console.error('getOnResize', { ctrl, aX, aY, aW, aH, event }, error);
