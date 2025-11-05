@@ -181,7 +181,7 @@ const testCols: GridCols<TestData, { play: (test: TestData) => void }> = {
   actions: [
     'Actions',
     (item, { play }) => <Button icon={<Play />} onClick={() => play(item)} />,
-    { w: 30 },
+    { w: 240 },
   ],
 };
 

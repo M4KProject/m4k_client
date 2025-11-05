@@ -6,17 +6,17 @@ import { Send, RefreshCw, FileJson } from 'lucide-react';
 
 const c = Css('DeviceConsole', {
   '': {
-    fRow: 'stretch',
+    row: 'stretch',
     w: '300px',
     bg: '#1e1e1e',
     border: '1px solid #333',
     borderRadius: '4px',
     overflow: 'hidden',
-    m: 0.5,
+    m: 4,
   },
   Logs: {
     flex: 1,
-    p: 1,
+    p: 8,
     bg: '#000',
     fg: '#0f0',
     fontFamily: 'monospace',
@@ -24,9 +24,9 @@ const c = Css('DeviceConsole', {
     whiteSpace: 'pre-wrap',
   },
   Actions: {
-    fCenter: 1,
+    center: 1,
     gap: 1,
-    p: 0.5,
+    p: 4,
   },
 });
 

@@ -21,11 +21,11 @@ const c = Css('EditViewportControls', {
     position: 'absolute',
     b: 1,
     r: 1,
-    fRow: 'center',
+    row: 'center',
     bg: 'b0',
     elevation: 1,
     zIndex: 20,
-    rounded: 2,
+    rounded: 5,
   },
 });
 

@@ -10,7 +10,7 @@ const c = Css('MediaPreview', {
   Video: {
     flex: 1,
     w: '100%',
-    m: 0.2,
+    m: 2,
   },
   'Video video': {
     wh: '100%',
@@ -21,7 +21,7 @@ const c = Css('MediaPreview', {
   Image: {
     flex: 1,
     w: '100%',
-    m: 0.2,
+    m: 2,
     bgMode: 'contain',
   },
 });

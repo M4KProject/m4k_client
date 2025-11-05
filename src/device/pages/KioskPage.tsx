@@ -22,7 +22,7 @@ const c = Css('Kiosk', {
     bg: '#000',
   },
   'Container-center': {
-    fCenter: 1,
+    center: 1,
   },
   'Container iframe': {
     position: 'fixed',
@@ -35,7 +35,7 @@ const c = Css('Kiosk', {
   },
 
   '': {
-    fCenter: 1,
+    center: 1,
     position: 'absolute',
     overflow: 'hidden',
     inset: 0,
@@ -67,12 +67,12 @@ const c = Css('Kiosk', {
   '-cover video': { itemFit: 'cover' },
 
   ' span': {
-    fCenter: 1,
+    center: 1,
     position: 'absolute',
     inset: 0,
     zIndex: 20,
     fg: 'warn',
-    m: 1,
+    m: 8,
   },
 });
 

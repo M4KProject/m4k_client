@@ -8,11 +8,11 @@ const c = Css('EditSide', {
     position: 'relative',
     elevation: 2,
     borderLeft: 'g3',
-    p: 0.5,
-    w: 20,
+    p: 4,
+    w: 160,
     bg: 'b0',
     zIndex: 10,
-    fCol: 1,
+    col: 1,
   },
 });
 

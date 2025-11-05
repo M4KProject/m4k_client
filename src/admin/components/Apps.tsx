@@ -8,19 +8,19 @@ import { m4k } from '@common/m4k';
 
 const c = Css('Apps', {
   '': {
-    fRow: ['center', 'center'],
+    row: ['center', 'center'],
     flexWrap: 'wrap',
     overflow: 'auto',
   },
   App: {
-    fRow: ['center', 'between'],
-    m: 0.5,
-    p: 0.5,
+    row: ['center', 'between'],
+    m: 4,
+    p: 4,
     bg: 'b1',
-    rounded: 2,
+    rounded: 5,
   },
   AppInfo: {
-    fCol: 1,
+    col: 1,
   },
   AppName: {
     bold: 1,

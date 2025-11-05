@@ -15,9 +15,10 @@ const c = Css('SideBar', {
     bold: 1,
     borderBottom: 1,
     borderColor: 'p8',
-    opacity: 0.5,
-    p: 0,
-    pl: 0.4,
+    opacity: 0.3,
+    fontSize: '12px',
+    center: 1,
+    w: 34,
   },
 });
 
@@ -106,7 +107,7 @@ export const SideBar = () => {
         </>
       : null}
       <SideSep />
-      <div {...c('Version')}>2.1.0</div>
+      <div {...c('Version')}>2.2</div>
       <SideButton
         title="Account"
         icon={<User />}

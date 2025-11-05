@@ -19,7 +19,7 @@
 //     'Container': {
 //         flex: 1,
 //     },
-//     'Container .Actions': { fRow: ['center', 'around'], p: 0.5 },
+//     'Container .Actions': { row: ['center', 'around'], p: 0.5 },
 //     'Container .Button': { flex: 1, m: 0.5 },
 //     'Container .LoadBtn': { position: 'fixed', bottom: "1em", right: "1em" },
 //     'Logs': {
@@ -28,7 +28,7 @@
 //         overflow: 'auto',
 //     },
 //     '': {
-//         fRow: 1,
+//         row: 1,
 //         minHeight: "1em",
 //         fontSize: "0.5em",
 //         my: 0.1,

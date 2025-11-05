@@ -14,14 +14,14 @@ const c = Css('Branding', {
     position: 'fixed',
     r: 2,
     b: 2,
-    fCenter: 1,
+    center: 1,
     gap: 0.5,
     opacity: 0.7,
     zIndex: 9998,
     pointerEvents: 'none',
   },
   Logo: {
-    h: 1.5,
+    h: 12,
     w: 'auto',
   },
 });

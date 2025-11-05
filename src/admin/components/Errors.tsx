@@ -8,14 +8,14 @@ import { getPbClient } from 'pblite';
 const c = Css('Errors', {
   '': {
     position: 'fixed',
-    p: 1,
+    p: 8,
     r: 0.5,
     b: 0.5,
     w: 40,
     elevation: 3,
-    rounded: 2,
+    rounded: 5,
     bg: 'b0',
-    fCol: 1,
+    col: 1,
     transition: 1,
   },
 });

@@ -26,7 +26,7 @@ import { getPbClient } from 'pblite';
 
 const c = Css('DevicesPage', {
   Buttons: {
-    fRow: ['center', 'around'],
+    row: ['center', 'around'],
   },
 });
 

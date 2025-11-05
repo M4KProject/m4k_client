@@ -51,7 +51,7 @@ const c = Css('EdFab', {
     position: 'absolute',
     bottom: 0,
     right: 10,
-    m: 1,
+    m: 8,
     display: 'flex',
     flexDirection: 'row',
     zIndex: 10100,

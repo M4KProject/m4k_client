@@ -11,12 +11,12 @@ import { Apps } from '@/admin/components/Apps';
 const c = Css('Actions', {
   '': {
     flex: 1,
-    p: 0.5,
+    p: 4,
   },
   Buttons: {
     flex: 1,
-    m: 0.5,
-    fRow: ['center', 'around'],
+    m: 4,
+    row: ['center', 'around'],
     flexWrap: 'wrap',
   },
   ' .m4kButton': {
@@ -25,12 +25,12 @@ const c = Css('Actions', {
     m: '0.5em',
   },
   Info: {
-    fRow: ['center', 'around'],
+    row: ['center', 'around'],
     flexWrap: 'wrap',
-    p: 0.5,
+    p: 4,
   },
   ' .m4kInfo div': {
-    m: 0.5,
+    m: 4,
   },
 });
 

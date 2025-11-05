@@ -214,13 +214,13 @@ This codebase uses a custom CSS-in-JS system with powerful utility functions:
 ```typescript
 const css = Css('ComponentName', {
   '': {
-    fCol: 1,           // display: flex; flex-direction: column
-    p: 2,              // padding: 2em
+    col: 1,           // display: flex; flex-direction: column
+    p: 2,              // padding: 2px
     bg: 'primary'      // background-color: var(--primary-color)
   },
   'Container': {
-    fRow: ['center', 'between'], // flex-row with alignment
-    w: 20,             // width: 20em
+    row: ['center', 'between'], // flex-row with alignment
+    w: 160,             // width: 20px
     elevation: 2       // box-shadow with depth
   }
 });
@@ -248,9 +248,9 @@ const Component = () => {
 
 **Flexbox:**
 
-- `fRow: [] | [] | [align] | [align, justify]` - flex-direction: row
-- `fCol: [] | [] | [align] | [align, justify]` - flex-direction: column
-- `fCenter: [] | [] | [direction]` - centered flex container
+- `row: [] | [] | [align] | [align, justify]` - flex-direction: row
+- `col: [] | [] | [align] | [align, justify]` - flex-direction: column
+- `center: [] | [] | [direction]` - centered flex container
 
 **Spacing:**
 
@@ -283,9 +283,9 @@ const Component = () => {
 ```typescript
 // Simple flex layout
 const css = Css('MyComponent', {
-  '': { fCol: 1, p: 2, bg: 'background' },
-  Header: { fRow: ['center', 'space-between'], pb: 1 },
-  Content: { fCol: ['stretch'], flex: 1 },
+  '': { col: 1, p: 2, bg: 'background' },
+  Header: { row: ['center', 'space-between'], pb: 1 },
+  Content: { col: ['stretch'], flex: 1 },
 });
 
 // Responsive sizing with elevation
@@ -418,8 +418,8 @@ import { Css, useCss } from 'fluxio';
 import { DivProps } from '@common/components';
 
 const css = Css('MyComponent', {
-  '': { fCol: 1, p: 2 },
-  'Item': { fRow: ['center'], p: 1 }
+  '': { col: 1, p: 2 },
+  'Item': { row: ['center'], p: 1 }
 });
 
 export interface MyComponentProps extends DivProps {

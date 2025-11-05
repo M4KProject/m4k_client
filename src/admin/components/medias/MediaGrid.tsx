@@ -42,7 +42,7 @@ interface MediaGridCtx {
 }
 
 const cols: GridCols<MediaModel, MediaGridCtx> = {
-  select: ['', ({ id }) => <SelectedField id={id} />, { w: 10, cls: c('Select').class }],
+  select: ['', ({ id }) => <SelectedField id={id} />, { w: 80, cls: c('Select').class }],
   title: [
     'Titre',
     ({ id, type, title }, { isAdvanced, getTab, getIsOpen, setIsOpen, getChildren }) => (
@@ -58,9 +58,9 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
         <Field value={title} onValue={(title) => mediaSync.update(id, { title })} />
       </>
     ),
-    { w: 100 },
+    { w: 800 },
   ],
-  preview: ['Aperçu', (media) => <MediaPreview media={media} />, { w: 20 }],
+  preview: ['Aperçu', (media) => <MediaPreview media={media} />, { w: 160 }],
   size: [
     'Poids',
     ({ bytes }) => {
@@ -73,14 +73,14 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
       if (kb > 0.95) return round(kb, 2) + 'Ko';
       return bytes + 'o';
     },
-    { w: 20 },
+    { w: 160 },
   ],
   resolution: [
     'Résolution',
     ({ width, height }) => (width || height ? `${width || 0}x${height || 0}` : ''),
-    { w: 20 },
+    { w: 160 },
   ],
-  seconds: ['Durée', ({ seconds }) => (isUFloat(seconds) ? round(seconds) + 's' : ''), { w: 10 }],
+  seconds: ['Durée', ({ seconds }) => (isUFloat(seconds) ? round(seconds) + 's' : ''), { w: 80 }],
   actions: [
     '',
     ({ id, key, type }, { selectedIds, getChildren }) => (
@@ -172,7 +172,7 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
         />
       </>
     ),
-    { w: 20, cls: c('Actions').class },
+    { w: 160, cls: c('Actions').class },
   ],
 };
 

@@ -20,7 +20,7 @@ import { getPbClient } from 'pblite';
 
 const c = Css('App', {
   '': {
-    fRow: 'stretch',
+    row: 'stretch',
     position: 'fixed',
     overflow: 'auto',
     inset: 0,
@@ -29,7 +29,7 @@ const c = Css('App', {
     fontFamily: 'Roboto',
   },
   '-loading': {
-    fCenter: 1,
+    center: 1,
   },
 });
 

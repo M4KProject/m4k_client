@@ -7,18 +7,18 @@ import { flux } from 'fluxio';
 
 const c = Css('ProgressView', {
   '': {
-    fCol: 'stretch',
+    col: 'stretch',
     bg: 'b0',
   },
   Logs: {
-    fCol: 1,
+    col: 1,
     overflow: 'auto',
-    hMin: '7em',
-    hMax: '7em',
+    hMin: 60,
+    hMax: 60,
     border: `1px solid black`,
-    mt: 1,
-    p: 0.5,
-    rounded: 1,
+    mt: 8,
+    p: 4,
+    rounded: 3,
   },
   ' .m4kLog-debug': { fg: 'default' },
   ' .m4kLog-info': { fg: 'info' },

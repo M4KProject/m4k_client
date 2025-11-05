@@ -11,7 +11,7 @@ import { useGroupMedias } from '@/api/hooks';
 
 const c = Css('EditPlaylist', {
   '': {
-    fCol: 1,
+    col: 1,
   },
 });
 
@@ -31,7 +31,7 @@ const playlistCols: GridCols<
     (entry, ctx, index) => (
       <Field value={entry.title} onValue={(title) => ctx.updateItem(index, { title })} />
     ),
-    { w: 30 },
+    { w: 240 },
   ],
   startTime: [
     'Heure début',
@@ -42,7 +42,7 @@ const playlistCols: GridCols<
         onValue={(seconds) => ctx.updateItem(index, { startHours: seconds / 3600 })}
       />
     ),
-    { w: 20 },
+    { w: 160 },
   ],
   endTime: [
     'Heure fin',
@@ -53,7 +53,7 @@ const playlistCols: GridCols<
         onValue={(seconds) => ctx.updateItem(index, { endHours: seconds / 3600 })}
       />
     ),
-    { w: 20 },
+    { w: 160 },
   ],
   language: [
     'Langue',
@@ -70,13 +70,13 @@ const playlistCols: GridCols<
         onValue={(language) => ctx.updateItem(index, { language })}
       />
     ),
-    { w: 20 },
+    { w: 160 },
   ],
   preview: [
     'Aperçu',
     (entry, ctx) =>
       entry.media && <MediaPreview media={ctx.medias.find((m) => m.id === entry.media)} />,
-    { w: 20 },
+    { w: 160 },
   ],
   media: [
     'Media',

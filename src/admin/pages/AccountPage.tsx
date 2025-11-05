@@ -17,7 +17,7 @@ import { userColl } from '@/api';
 const c = Css('AccountPage', {
   Color: {
     h: 1,
-    w: 1,
+    w: 8,
     bg: 'red',
   },
 });

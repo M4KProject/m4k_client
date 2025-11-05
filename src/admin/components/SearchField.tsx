@@ -8,7 +8,7 @@ import { Flux } from 'fluxio';
 
 const c = Css('SearchField', {
   '': {
-    fRow: 1,
+    row: 1,
   },
 });
 

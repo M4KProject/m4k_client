@@ -3,7 +3,7 @@ import { Loading, Page } from '@common/components';
 
 const c = Css('LoadingPage', {
   '': {
-    fCenter: 1,
+    center: 1,
   },
 });
 

@@ -18,7 +18,7 @@ const c = Css('CodePinView', {
     textAlign: 'right',
   },
   Buttons: {
-    fRow: 1,
+    row: 1,
   },
   Sep: {
     flex: 1,

@@ -9,7 +9,7 @@ import { BoxContext, BoxController } from './page/box/BoxController';
 
 const c = Css('EditPage', {
   '': {
-    fRow: 'stretch',
+    row: 'stretch',
     flex: 1,
   },
 });

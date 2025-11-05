@@ -10,11 +10,11 @@ import { useDevice } from '@/api/hooks';
 
 const c = Css('DevicePage', {
   Body: {
-    fRow: 'stretch',
-    p: 0.5,
+    row: 'stretch',
+    p: 4,
   },
   Screen: {
-    fRow: 'stretch',
+    row: 'stretch',
     flex: 1,
     gap: 2,
   },

@@ -10,7 +10,7 @@ import { getPbClient } from 'pblite';
 const c = Css('GroupsPage', {
   Color: {
     h: 1,
-    w: 1,
+    w: 8,
     bg: 'red',
   },
 });

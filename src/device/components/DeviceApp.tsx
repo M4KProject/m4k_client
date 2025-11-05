@@ -21,7 +21,7 @@ import { DialogContainer } from './DialogContainer';
 
 const c = Css('DeviceApp', {
   '': {
-    fRow: 'stretch',
+    row: 'stretch',
     position: 'fixed',
     overflow: 'hidden',
     inset: 0,
@@ -30,7 +30,7 @@ const c = Css('DeviceApp', {
     fontFamily: 'Roboto',
   },
   '-loading': {
-    fCenter: 1,
+    center: 1,
   },
 });
 

@@ -7,7 +7,7 @@ import { useEffect, useState } from 'preact/hooks';
 const c = Css('EventsPage', {
   ' pre': {
     p: 0,
-    m: 0.2,
+    m: 2,
   },
 });
 

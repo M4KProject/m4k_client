@@ -22,7 +22,7 @@ const cols: GridCols<
         onValue={(v) => setGroupKey(v ? item.key : '')}
       />
     ),
-    { w: 30 },
+    { w: 240 },
   ],
   key: [
     'Clé',
@@ -91,7 +91,7 @@ const cols: GridCols<
         onClick={() => groupSync.delete(item.id)}
       />
     ),
-    { w: 30 },
+    { w: 240 },
   ],
 };
 

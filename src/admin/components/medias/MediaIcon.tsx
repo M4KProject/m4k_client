@@ -16,11 +16,11 @@ import { tooltip } from '@common/components';
 
 const c = Css('MediaIcon', {
   '': {
-    fRow: ['center', 'center'],
+    row: ['center', 'center'],
     w: '100%',
   },
   ' span': {
-    ml: 0.5,
+    ml: 4,
   },
 });
 

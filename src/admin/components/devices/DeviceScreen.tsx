@@ -3,23 +3,23 @@ import { Css } from 'fluxio';
 const c = Css('DeviceScreen', {
   '': {
     flex: 1,
-    rounded: 2,
+    rounded: 5,
     bg: '#000',
-    m: 0.5,
+    m: 4,
     position: 'relative',
     bgMode: 'contain',
   },
   NoCapture: {
-    fCenter: 1,
+    center: 1,
     bg: '#FFF',
     fg: '#000',
-    p: 1,
+    p: 8,
   },
   WH: {
     position: 'absolute',
     xy: 0,
     fg: '#FFF',
-    m: 1,
+    m: 8,
   },
 });
 

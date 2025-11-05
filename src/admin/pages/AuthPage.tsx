@@ -10,7 +10,7 @@ import { AuthForm } from '@/components/AuthForm';
 
 const c = Css('AuthPage', {
   '': {
-    fRow: 'stretch',
+    row: 'stretch',
     position: 'fixed',
     overflow: 'auto',
     fg: 't2',
@@ -18,14 +18,14 @@ const c = Css('AuthPage', {
     inset: 0,
   },
   Content: {
-    fCol: ['center', 'around'],
+    col: ['center', 'around'],
     flex: 1,
     textAlign: 'center',
   },
   Logo: {
     bgUrl: logoUrl,
     bgMode: 'contain',
-    w: 20,
+    w: 160,
     h: 5,
   },
   Title: {
@@ -38,10 +38,10 @@ const c = Css('AuthPage', {
     bgUrl: loginUrl,
     bgMode: 'contain',
     h: 15,
-    w: 30,
+    w: 240,
   },
   BottomButtons: {
-    fRow: 'center',
+    row: 'center',
     position: 'fixed',
     b: 1,
     l: 1,

@@ -15,7 +15,7 @@ addTr({
 
 const c = Css('AuthForm', {
   '': {
-    fCol: ['stretch', 'center'],
+    col: ['stretch', 'center'],
     w: 40,
     bg: 'b0',
   },
@@ -23,11 +23,10 @@ const c = Css('AuthForm', {
     elevation: 0,
   },
   Col: {
-    fCol: 1,
+    col: 1,
   },
   ' .FieldLabel': {
-    mt: 0.5,
-    mb: 0.5,
+    my: 4,
   },
 });
 

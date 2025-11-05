@@ -15,14 +15,14 @@ const c = Css('Popover', {
   },
   Float: {
     position: 'absolute',
-    p: 0.2,
+    p: 2,
     xy: '50%',
     wh: '100%',
     translate: '-50%, -50%',
     bgMode: 'contain',
     transition: 0.2,
     userSelect: 'none',
-    fCol: ['center', 'around'],
+    col: ['center', 'around'],
   },
   Title: {
     opacity: 0,
@@ -34,7 +34,7 @@ const c = Css('Popover', {
     wh: 15,
     zIndex: 100,
     translate: '-50%, -50%',
-    rounded: 1,
+    rounded: 3,
     bg: 'b1',
     bgMode: 'contain',
     elevation: 3,
@@ -42,7 +42,7 @@ const c = Css('Popover', {
   '-over &Title': {
     opacity: 1,
     hMax: 3,
-    m: 0.2,
+    m: 2,
   },
 });
 

@@ -8,7 +8,7 @@ import { Branding } from '../components/Branding';
 
 const c = Css('PairingPage', {
   '': {
-    fCenter: 1,
+    center: 1,
     wh: '100%',
     bg: 'b3',
   },
@@ -18,27 +18,27 @@ const c = Css('PairingPage', {
     rounded: 6,
     elevation: 3,
     textAlign: 'center',
-    w: 30,
+    w: 240,
   },
   Title: {
     fg: 't2',
-    m: 0.5,
-    mb: 0.2,
+    m: 4,
+    mb: 2,
     bold: 1,
     fontSize: 2,
   },
   Subtitle: {
     color: 't3',
-    m: 0.5,
+    m: 4,
     mt: 0,
   },
   Code: {
     bg: 'b1',
     border: '2px dashed',
     borderColor: 'p5',
-    rounded: 4,
-    p: 1,
-    m: 1,
+    rounded: 7,
+    p: 8,
+    m: 8,
   },
   CodeText: {
     fg: 'p5',
@@ -47,7 +47,7 @@ const c = Css('PairingPage', {
     bold: 1,
   },
   Buttons: {
-    fRow: ['center', 'around'],
+    row: ['center', 'around'],
   },
 });
 

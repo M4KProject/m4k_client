@@ -7,11 +7,11 @@ import { Dictionary } from 'fluxio';
 
 const c = Css('JobStatus', {
   '': {
-    fRow: ['center', 'start'],
+    row: ['center', 'start'],
     gap: 0.5,
   },
   ' svg': {
-    m: 0.5,
+    m: 4,
   },
   '-pending': { fg: 'secondary' },
   '-processing': {

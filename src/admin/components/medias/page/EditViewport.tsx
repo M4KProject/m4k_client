@@ -15,7 +15,7 @@ const c = Css('EditViewport', {
     inset: 0,
     overflow: 'hidden',
     bg: 'b0',
-    fCol: 1,
+    col: 1,
   },
   'Body div': {},
 });

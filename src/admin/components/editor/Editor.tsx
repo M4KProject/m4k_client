@@ -11,7 +11,7 @@ const c = Css('Editor', {
   '': {
     position: 'relative',
     flex: 1,
-    fCol: 1,
+    col: 1,
   },
 });
 

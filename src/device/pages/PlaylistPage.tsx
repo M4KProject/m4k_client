@@ -22,7 +22,7 @@ const c = Css('Playlist', {
     wh: 15,
     zIndex: 1,
     translate: '-50%, -50%',
-    rounded: 1,
+    rounded: 3,
   },
 });
 

@@ -9,18 +9,18 @@ import { DeviceModel, MemberModel } from '@/api';
 const c = Css('MemberGrid', {});
 
 const cols: GridCols<MemberModel, { deviceById: Dictionary<DeviceModel> }> = {
-  id: ['Appareil', ({ device }) => <Field type="switch" value={!!device} readonly />, { w: 10 }],
+  id: ['Appareil', ({ device }) => <Field type="switch" value={!!device} readonly />, { w: 80 }],
   name: [
     'Email',
     ({ device, email }, { deviceById }) => (device ? deviceById[device]?.name : email),
-    { w: 100 },
+    { w: 800 },
   ],
   desc: [
     'Description',
     ({ id, desc }) => (
       <Field type="text" value={desc} onValue={(desc) => memberSync.update(id, { desc })} />
     ),
-    { w: 100 },
+    { w: 800 },
   ],
   role: [
     'Droit',
@@ -48,7 +48,7 @@ const cols: GridCols<MemberModel, { deviceById: Dictionary<DeviceModel> }> = {
         onClick={() => memberSync.delete(id)}
       />
     ),
-    { w: 20 },
+    { w: 160 },
   ],
 };
 

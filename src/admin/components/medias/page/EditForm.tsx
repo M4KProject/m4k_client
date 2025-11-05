@@ -3,9 +3,9 @@ import { Css } from 'fluxio';
 const c = Css('EditForm', {
   '': {
     flex: 2,
-    fCol: 1,
+    col: 1,
     elevation: 1,
-    m: 0.5,
+    m: 4,
   },
 });
 
@@ -17,7 +17,7 @@ export const EditForm = () => {
 
 // const c = Css('EditButtons', {
 //   '': {
-//     fCol: 1,
+//     col: 1,
 //   },
 // });
 
