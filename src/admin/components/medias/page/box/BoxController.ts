@@ -27,6 +27,7 @@ export interface BoxEvent {
   element?: HTMLElement;
   event?: Event;
   count?: number;
+  timeStamp?: number;
 }
 
 export type A1 = 1 | 0 | -1;
@@ -82,7 +83,7 @@ export class BoxController {
   private newEvent(id: string, type: string, event?: Event): BoxEvent {
     const box = this.get(id);
     const element = this.getElement(id);
-    return { id, box, element, type, event };
+    return { id, box, element, type, event, timeStamp: Date.now() };
   }
 
   boxInit(id: string, element: HTMLElement) {

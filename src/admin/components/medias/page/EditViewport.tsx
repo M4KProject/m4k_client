@@ -1,5 +1,5 @@
 import { PanZoom } from '@/components/medias/PanZoom';
-import { Css } from 'fluxio';
+import { Css, onEvent } from 'fluxio';
 import { EditViewportControls } from './EditViewportControls';
 import { Box } from './box/Box';
 import { EditSelect } from './EditSelect';
@@ -28,6 +28,10 @@ export const EditViewport = () => {
       <PanZoom
         onNewController={(panZoomCtrl) => {
           ctrl.panZoom$.set(panZoomCtrl);
+          const panZoomContainer = panZoomCtrl.container;
+          onEvent(panZoomContainer, 'click', (event) => {
+            ctrl.click$.set({ element: panZoomContainer, event });
+          });
         }}
       >
         <div {...c('Body')}>
