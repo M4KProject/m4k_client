@@ -35,7 +35,7 @@ const c = Css('PairingPage', {
   Code: {
     bg: 'b1',
     border: '2px dashed',
-    bColor: 'p5',
+    borderColor: 'p5',
     rounded: 4,
     p: 1,
     m: 1,

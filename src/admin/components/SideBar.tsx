@@ -13,8 +13,8 @@ const c = Css('SideBar', {
   Version: {
     color: 'p8',
     bold: 1,
-    borderBottom: '1px solid',
-    bColor: 'p8',
+    borderBottom: 1,
+    borderColor: 'p8',
     opacity: 0.5,
     p: 0,
     pl: 0.4,
