@@ -28,8 +28,9 @@ addTr({
 });
 
 const c = Css('MediaTable', {
-  Select: {},
-  Actions: {},
+  Actions: {
+    row: ['center', 'end'],
+  },
 });
 
 interface MediaGridCtx {
@@ -42,12 +43,12 @@ interface MediaGridCtx {
 }
 
 const cols: GridCols<MediaModel, MediaGridCtx> = {
-  select: ['', ({ id }) => <SelectedField id={id} />, { w: 80, cls: c('Select').class }],
+  select: ['', ({ id }) => <SelectedField id={id} />, { w: 30 }],
   title: [
     'Titre',
     ({ id, type, title }, { isAdvanced, getTab, getIsOpen, setIsOpen, getChildren }) => (
       <>
-        <div style={{ width: 2 * getTab(id) + 'em' }} />
+        <div style={{ width: 24 * getTab(id) }} />
         <div onClick={() => setIsOpen(id, !getIsOpen(id))}>
           <MediaIcon
             type={type}
@@ -58,9 +59,8 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
         <Field value={title} onValue={(title) => mediaSync.update(id, { title })} />
       </>
     ),
-    { w: 800 },
   ],
-  preview: ['Aperçu', (media) => <MediaPreview media={media} />, { w: 160 }],
+  preview: ['Aperçu', (media) => <MediaPreview media={media} />, { w: 100 }],
   size: [
     'Poids',
     ({ bytes }) => {
@@ -73,14 +73,18 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
       if (kb > 0.95) return round(kb, 2) + 'Ko';
       return bytes + 'o';
     },
-    { w: 160 },
+    { w: 80 },
   ],
   resolution: [
     'Résolution',
     ({ width, height }) => (width || height ? `${width || 0}x${height || 0}` : ''),
-    { w: 160 },
+    { w: 100 },
   ],
-  seconds: ['Durée', ({ seconds }) => (isUFloat(seconds) ? round(seconds) + 's' : ''), { w: 80 }],
+  seconds: [
+    'Durée',
+    ({ seconds }) => (seconds && isUFloat(seconds) ? round(seconds) + 's' : ''),
+    { w: 80 },
+  ],
   actions: [
     '',
     ({ id, key, type }, { selectedIds, getChildren }) => (
@@ -172,7 +176,7 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
         />
       </>
     ),
-    { w: 160, cls: c('Actions').class },
+    { w: 140, cls: c('Actions') },
   ],
 };
 

@@ -1,6 +1,6 @@
 import { addTr } from '@common/hooks';
 import { Css } from 'fluxio';
-import { Side, SideButton, SideSep } from '@common/components';
+import { Side, SIDE_MIN, SideButton, SideSep } from '@common/components';
 import { Home, Users, Monitor, User, Zap } from 'lucide-react';
 import { MediaIcon } from './medias/MediaIcon';
 import { setGroupKey, setPage, updateRoute } from '../../router/setters';
@@ -18,7 +18,7 @@ const c = Css('SideBar', {
     opacity: 0.3,
     fontSize: '12px',
     center: 1,
-    w: 34,
+    w: SIDE_MIN,
   },
 });
 

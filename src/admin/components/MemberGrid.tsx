@@ -6,21 +6,23 @@ import { memberSync } from '@/api/sync';
 import { useDeviceById, useGroupMembers } from '@/api/hooks';
 import { DeviceModel, MemberModel } from '@/api';
 
-const c = Css('MemberGrid', {});
+const c = Css('MemberGrid', {
+  Actions: {
+    row: ['center', 'center'],
+  },
+});
 
 const cols: GridCols<MemberModel, { deviceById: Dictionary<DeviceModel> }> = {
-  id: ['Appareil', ({ device }) => <Field type="switch" value={!!device} readonly />, { w: 80 }],
+  id: ['Appareil', ({ device }) => <Field type="switch" value={!!device} readonly />, { w: 50 }],
   name: [
     'Email',
     ({ device, email }, { deviceById }) => (device ? deviceById[device]?.name : email),
-    { w: 800 },
   ],
   desc: [
     'Description',
     ({ id, desc }) => (
       <Field type="text" value={desc} onValue={(desc) => memberSync.update(id, { desc })} />
     ),
-    { w: 800 },
   ],
   role: [
     'Droit',
@@ -36,7 +38,7 @@ const cols: GridCols<MemberModel, { deviceById: Dictionary<DeviceModel> }> = {
         onValue={(role) => memberSync.update(id, { role: toNumber(role) })}
       />
     ),
-    { w: 50 },
+    { w: 140 },
   ],
   actions: [
     'Actions',
@@ -48,7 +50,7 @@ const cols: GridCols<MemberModel, { deviceById: Dictionary<DeviceModel> }> = {
         onClick={() => memberSync.delete(id)}
       />
     ),
-    { w: 160 },
+    { w: 120, cls: c('Actions') },
   ],
 };
 
