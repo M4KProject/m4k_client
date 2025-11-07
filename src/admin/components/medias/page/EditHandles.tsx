@@ -38,10 +38,10 @@ type R = -1 | 0 | 1;
 const H: P = 0.5;
 const N: R = -1;
 
-type EditHandleConfig = [M, M, R, R];
-type EditHandleStyleCompressed = [P, P, string] | [P, P, string, CssStyle];
+type HandleDir = [M, M, R, R];
+type HandleStyle = [P, P, string] | [P, P, string, CssStyle];
 
-const compressed: [string, EditHandleConfig, EditHandleStyleCompressed][] = [
+const compressed: [string, HandleDir, HandleStyle][] = [
   ['●', [1, 1, 0, 0], [H, H, 'move', { borderRadius: 99 }]],
   ['↑', [0, 1, 0, N], [H, 0, 'n-resize']],
   ['↗', [0, 1, 1, N], [1, 0, 'ne-resize']],
@@ -53,7 +53,7 @@ const compressed: [string, EditHandleConfig, EditHandleStyleCompressed][] = [
   ['↖', [1, 1, N, N], [0, 0, 'se-resize']],
 ];
 
-const handles: [string, EditHandleConfig, CssStyle][] = compressed.map(
+const handles: [string, HandleDir, CssStyle][] = compressed.map(
   ([name, config, [l, r, cursor, style]]) => [
     name,
     config,
@@ -66,9 +66,9 @@ const handles: [string, EditHandleConfig, CssStyle][] = compressed.map(
   ]
 );
 
-const startResize = (ctrl: BoxCtrl, config: EditHandleConfig, name: string, event: Event) => {
+const startResize = (ctrl: BoxCtrl, dir: HandleDir, name: string, event: Event) => {
   try {
-    console.debug('startResize', config, name, event);
+    console.debug('startResize', dir, name, event);
     stopEvent(event);
 
     const id = mustExist(ctrl.click$.get()?.id, 'id');
@@ -78,40 +78,49 @@ const startResize = (ctrl: BoxCtrl, config: EditHandleConfig, name: string, even
     const ratio = 1 / ctrl.panZoom.scale;
     console.debug('startResize ratio', ratio);
 
-    const [xRatio, yRatio, wRatio, hRatio] = config.map((v) => v * ratio) as typeof config;
+    const [xDir, yDir, wDir, hDir] = dir;
 
     const canvasRect = ctrl.panZoom.canvasRect();
     const canvasW = canvasRect.width;
     const canvasH = canvasRect.height;
 
-    // ctrl.findParent(id, )
-    // ctrl.findChildren(id, )
-    // const parentType = parent.type || '';
-    // if (['carousel', 'pdf'].includes(parentType)) {
-    //   startResize(ctrl, config, name, event, parentId);
-    //   return;
-    // }
-
-    const [startEventX, startEventY] = mustExist(getEventXY(event), 'startEventXY');
-    const [x0, y0, w0, h0] = pos;
-    console.debug('startResize pos', pos);
-
-    const getVal = (v: number, size: number) => {
-      v = 100 * (v / size);
-      const snap = 48 / 100;
-      v = round(v * snap) / snap;
+    const snap = (v: number) => {
+      const snapFactor = 48 / 100;
+      v = round(v * snapFactor) / snapFactor;
       v = round(v, 3);
       return v;
     };
 
+    const prctToPxX = (prct: number) => (prct * canvasW) / 100;
+    const prctToPxY = (prct: number) => (prct * canvasH) / 100;
+    const pxToPrctX = (px: number) => snap((px * 100) / canvasW);
+    const pxToPrctY = (px: number) => snap((px * 100) / canvasH);
+
+    const [startEventX, startEventY] = mustExist(getEventXY(event), 'startEventXY');
+    
+    const x0 = prctToPxX(pos[0]);
+    const y0 = prctToPxY(pos[1]);
+    const w0 = prctToPxX(pos[2]);
+    const h0 = prctToPxY(pos[3]);
+    
+    console.debug('startResize pos', pos, [x0, y0, w0, h0]);
+
     const onMove = (event: Event) => {
       const [eventX, eventY] = mustExist(getEventXY(event), 'eventXY');
-      const xDelta = eventX - startEventX;
-      const yDelta = eventY - startEventY;
-      const x = getVal(x0 + xDelta * xRatio, canvasW);
-      const y = getVal(y0 + yDelta * yRatio, canvasH);
-      const w = getVal(w0 + xDelta * wRatio, canvasW);
-      const h = getVal(h0 + yDelta * hRatio, canvasH);
+
+      const deltaX = (eventX - startEventX) * ratio;
+      const deltaY = (eventY - startEventY) * ratio;
+
+      const xPx = x0 + deltaX * xDir;
+      const yPx = y0 + deltaY * yDir;
+      const wPx = w0 + deltaX * wDir;
+      const hPx = h0 + deltaY * hDir;
+
+      const x = pxToPrctX(xPx);
+      const y = pxToPrctY(yPx);
+      const w = pxToPrctX(wPx);
+      const h = pxToPrctY(hPx);
+
       ctrl.update(id, { pos: [x, y, w, h] });
     };
 
@@ -127,7 +136,7 @@ const startResize = (ctrl: BoxCtrl, config: EditHandleConfig, name: string, even
       onHtmlEvent(0, 'touchend', onEnd),
     ];
   } catch (error) {
-    console.error('startResize', config, name, event, error);
+    console.error('startResize', dir, name, event, error);
   }
 };
 
@@ -144,7 +153,7 @@ export const EditHandles = () => {
     return fluxCombine(ctrl.click$, ctrl.boxes, ctrl.panZoom.after$, ctrl.panZoom.after$.delay(100))
       .throttle(1000 / 60)
       .on(([click]) => {
-        const { element, box, count } = click || {};
+        const { element, box } = click || {};
         if (!element || !box) {
           setStyle(el, { display: 'none' });
           return;
@@ -164,7 +173,7 @@ export const EditHandles = () => {
           height: height + 'px',
         });
       });
-  }, [ctrl, el, setStyle]);
+  }, [ctrl, el]);
 
   console.debug('EditHandles render', ctrl, el);
 
