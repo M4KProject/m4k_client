@@ -74,10 +74,7 @@ const startResize = (ctrl: BoxCtrl, dir: HandleDir, name: string, event: Event) 
     const id = mustExist(ctrl.click$.get()?.id, 'id');
     const box = mustExist(ctrl.get(id), 'box');
     const pos = mustExist(box.pos, 'pos');
-
-    const ratio = 1 / ctrl.panZoom.scale;
-    console.debug('startResize ratio', ratio);
-
+    
     const [xDir, yDir, wDir, hDir] = dir;
 
     const canvasRect = ctrl.panZoom.canvasRect();
@@ -108,8 +105,8 @@ const startResize = (ctrl: BoxCtrl, dir: HandleDir, name: string, event: Event) 
     const onMove = (event: Event) => {
       const [eventX, eventY] = mustExist(getEventXY(event), 'eventXY');
 
-      const deltaX = (eventX - startEventX) * ratio;
-      const deltaY = (eventY - startEventY) * ratio;
+      const deltaX = eventX - startEventX;
+      const deltaY = eventY - startEventY;
 
       const xPx = x0 + deltaX * xDir;
       const yPx = y0 + deltaY * yDir;
