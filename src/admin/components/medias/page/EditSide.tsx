@@ -9,7 +9,7 @@ const c = Css('EditSide', {
     elevation: 2,
     borderLeft: 'g3',
     p: 4,
-    w: 160,
+    w: 250,
     bg: 'b0',
     zIndex: 10,
     col: 1,
