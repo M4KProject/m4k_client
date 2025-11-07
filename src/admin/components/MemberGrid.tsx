@@ -1,10 +1,13 @@
 import { Css } from 'fluxio';
 import { Dictionary, toNumber, toString } from 'fluxio';
-import { Field, Button, tooltip, GridCols, Grid } from '@common/components';
 import { Trash2 } from 'lucide-react';
+import { Grid, GridCols } from '@/components/Grid';
 import { memberSync } from '@/api/sync';
 import { useDeviceById, useGroupMembers } from '@/api/hooks';
-import { DeviceModel, MemberModel } from '@/api';
+import { DeviceModel, MemberModel } from '@/api/models';
+import { Field } from '@/components/Field';
+import { Button } from '@/components/Button';
+import { tooltip } from '@/components/Tooltip';
 
 const c = Css('MemberGrid', {
   Actions: {

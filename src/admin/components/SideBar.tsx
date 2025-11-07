@@ -1,13 +1,13 @@
-import { addTr } from '@common/hooks';
 import { Css } from 'fluxio';
-import { Side, SIDE_MIN, SideButton, SideSep } from '@common/components';
 import { Home, Users, Monitor, User, Zap } from 'lucide-react';
 import { MediaIcon } from './medias/MediaIcon';
 import { setGroupKey, setPage, updateRoute } from '../../router/setters';
 import { useGroup, useGroups } from '../../api/hooks';
-import { MediaType } from '@/api';
 import { useIsAdvanced, useMediaType, usePage } from '@/router/hooks';
 import { Page } from '@/router/types';
+import { Side, SIDE_MIN, SideButton, SideSep } from '@/components/Side';
+import { addTr } from '@/hooks/useTr';
+import { MediaType } from '@/api/models';
 
 const c = Css('SideBar', {
   Version: {

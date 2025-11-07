@@ -1,12 +1,15 @@
 import { render } from 'preact';
-import { refreshTheme, addAutoHideListener, addResponsiveListener, addFont } from '@common/ui';
 import { setEl } from 'fluxio';
 import copyPlaylist from './copyPlaylist';
 import { deviceInit } from './services/device';
-import { m4k } from '@common/m4k';
+import { m4k } from '@/m4kBridge';
 import { DeviceApp } from './components/DeviceApp';
 import { copyDir$ } from './messages';
 import { logger } from 'fluxio';
+import { addResponsiveListener } from '@/utils/responsive';
+import { addAutoHideListener } from '@/utils/autoHide';
+import { addFont } from '@/utils/addFont';
+import { refreshTheme } from '@/utils/theme';
 
 const log = logger('mountDevice');
 log.d('loaded');

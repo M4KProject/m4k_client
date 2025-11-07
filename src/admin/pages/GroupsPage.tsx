@@ -1,11 +1,14 @@
 import { Plus } from 'lucide-react';
-import { Button, Page, Toolbar, PageBody, tooltip } from '@common/components';
 import { computeStyle, Css } from 'fluxio';
 import { SearchField } from '../components/SearchField';
-import { Role } from '@/api';
 import { groupSync, memberSync } from '@/api/sync';
 import { GroupGrid } from '../components/GroupGrid';
 import { getPbClient } from 'pblite';
+import { tooltip } from '@/components/Tooltip';
+import { Role } from '@/api/models';
+import { Page, PageBody } from '@/components/Page';
+import { Toolbar } from '@/components/Toolbar';
+import { Button } from '@/components/Button';
 
 const c = Css('GroupsPage', {
   Color: {
@@ -16,7 +19,7 @@ const c = Css('GroupsPage', {
 });
 
 export const Color = ({ color }: { color: string }) => (
-  <div {...tooltip(color)} {...c('Color')} style={computeStyle({ bg: color })} />
+  <div {...tooltip(color)} {...c('Color')} style={computeStyle({ bg: color }) as any} />
 );
 
 export const GroupsPage = () => {

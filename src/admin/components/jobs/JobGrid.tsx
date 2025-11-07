@@ -1,15 +1,19 @@
-import { tooltip, Button, GridCols, Grid, Tr } from '@common/components';
 import { Trash2 } from 'lucide-react';
 import { JobStatus } from './JobStatus';
-import { JobModel, MediaModel } from '@/api';
-import { uploadMediaJobs$ } from '../../controllers';
+import { UploadItem, uploadMediaJobs$ } from '../../controllers';
 import { jobSync } from '@/api/sync';
-import { useFlux, addTr } from '@common/hooks';
 import { Css } from 'fluxio';
 import { MediaPreview } from '../medias/MediaPreview';
 import { byId } from 'fluxio';
 import { useGroupJobs, useGroupMedias } from '@/api/hooks';
 import { filterItems, Dictionary } from 'fluxio';
+import { addTr } from '@/hooks/useTr';
+import { Grid, GridCols } from '@/components/Grid';
+import { JobModel, MediaModel } from '@/api/models';
+import { Tr } from '@/components/Tr';
+import { Button } from '@/components/Button';
+import { tooltip } from '@/components/Tooltip';
+import { useFlux } from '@/hooks/useFlux';
 
 // Ajout des traductions pour les actions de job
 addTr({ convert: 'Convertion du media', addMember: 'Ajouter membre' });
@@ -57,7 +61,7 @@ const cols: GridCols<JobModel, { mediaById: Dictionary<MediaModel> }> = {
 
 export interface JobGridProps {
   class?: string;
-  filter?: (job: JobModel) => boolean;
+  filter?: (job: JobModel | UploadItem) => boolean;
   panel?: boolean;
 }
 
@@ -65,7 +69,7 @@ export const JobGrid = ({ filter, panel, ...props }: JobGridProps) => {
   const jobs = useGroupJobs();
   const uploadJobs = useFlux(uploadMediaJobs$);
   const uploadJobsList = Object.values(uploadJobs).filter((j) => j !== undefined);
-  const allJobs: JobModel[] = [...jobs, ...uploadJobsList];
+  const allJobs: (JobModel | UploadItem)[] = [...jobs, ...uploadJobsList];
   filterItems(allJobs, filter);
   // sortItems(allJobs, job => -new Date(job.updated).getTime());
 

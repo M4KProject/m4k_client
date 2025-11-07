@@ -1,13 +1,13 @@
 import { useState } from 'preact/hooks';
 import { Css } from 'fluxio';
-import { Loading } from '@common/components/Loading';
-import { Field } from '@common/components/Field';
-import { Button } from '@common/components/Button';
-import { Form } from '@common/components/Form';
+import { Loading } from './Loading';
+import { Field } from './Field';
+import { Button } from './Button';
+import { Form } from './Form';
 import { toError } from 'fluxio';
-import { addTr } from '@common/hooks/useTr';
+import { addTr } from '@/hooks/useTr';
 import { LogIn, UserPlus, Mail, Key, ArrowLeft } from 'lucide-react';
-import { userColl } from '@/api';
+import { userColl } from '@/api/sync';
 
 addTr({
   'Failed to authenticate.': 'Échec, vérifier le mot de passe.',

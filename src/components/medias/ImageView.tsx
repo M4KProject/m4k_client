@@ -1,8 +1,8 @@
 import { Css } from 'fluxio';
-import { ImageModel } from '@/api';
 import { MediaViewProps } from './MediaView';
 import { getVariants } from '@/api/getVariants';
 import { getMediaUrl } from '@/api/getMediaUrl';
+import { ImageModel } from '@/api/models';
 
 const c = Css('ImageView', {});
 

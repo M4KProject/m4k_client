@@ -1,6 +1,6 @@
 import { groupId$ } from './groupId$';
 import { GroupModel, MediaModel } from './models';
-import { useFlux } from '@common/hooks';
+import { useFlux } from '@/hooks/useFlux';
 import { deviceSync, groupSync, jobSync, mediaSync, memberSync, Sync } from './sync';
 import { useDeviceKey, useGroupKey, useMediaKey, useIsAdvanced } from '../router/hooks';
 import { useMemo } from 'preact/hooks';

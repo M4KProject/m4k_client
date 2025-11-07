@@ -1,11 +1,11 @@
-import { PageModel } from '@/api';
 import { Css } from 'fluxio';
 import { JobGrid } from '../jobs/JobGrid';
 import { EditViewport } from './page/EditViewport';
 import { EditSide } from './page/EditSide';
 import { useEffect, useMemo } from 'preact/hooks';
-import { sideOpen$ } from '@common/components';
 import { BoxContext, BoxCtrl } from './page/box/BoxCtrl';
+import { PageModel } from '@/api/models';
+import { sideOpen$ } from '@/components/Side';
 
 const c = Css('EditPage', {
   '': {

@@ -1,8 +1,8 @@
 import { Css } from 'fluxio';
-import { MediaAnim, MediaFit, MediaModel } from '@/api';
-import { DivProps } from '@common/components';
 import { Dictionary } from 'fluxio';
 import { JSX } from 'preact';
+import { DivProps } from '../types';
+import { MediaAnim, MediaFit, MediaModel } from '@/api/models';
 
 const c = Css('MediaView', {
   '': {
@@ -74,7 +74,7 @@ export const MediaView = (props: MediaViewProps) => {
       {...props}
       divProps={{
         ...divProps,
-        class: c(
+        ...c(
           '',
           type && `-${type}`,
           fit && `-${fit}`,

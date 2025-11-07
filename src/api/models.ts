@@ -1,4 +1,4 @@
-import { BoxData, BoxDataReadonly } from '@common/box/types';
+import { BoxData } from '@/admin/components/medias/page/box/boxTypes';
 import {
   _DeviceModel,
   _MediaModel,

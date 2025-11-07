@@ -1,10 +1,13 @@
-import { Field, Button, tooltip, Grid, GridCols } from '@common/components';
 import { Trash2 } from 'lucide-react';
-import { GroupModel } from '@/api';
+import { Grid, GridCols } from '@/components/Grid';
 import { groupSync } from '@/api/sync';
 import { setGroupKey } from '@/router/setters';
 import { useGroupKey, useIsAdvanced } from '@/router/hooks';
 import { useGroups } from '@/api/hooks';
+import { GroupModel } from '@/api/models';
+import { Field } from '@/components/Field';
+import { tooltip } from '@/components/Tooltip';
+import { Button } from '@/components/Button';
 
 const cols: GridCols<
   GroupModel,

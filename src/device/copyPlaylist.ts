@@ -1,7 +1,7 @@
 import { newProgressDialog } from './components/ProgressView';
-import { m4k } from '@common/m4k';
+import { m4k } from '@/m4kBridge';
 import { logger, sleep, jsonStringify, toError } from 'fluxio';
-import { M4kFileInfo } from '@common/m4k/m4kInterface';
+import { M4kFileInfo } from '@/m4kBridge/m4kInterface';
 import { playlist$ } from './messages';
 
 const log = logger('copyPlaylist');

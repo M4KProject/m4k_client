@@ -10,8 +10,8 @@ import {
   setStyle,
   mustExist,
 } from 'fluxio';
-import { DivProps } from '@common/components';
 import { useRef, useEffect } from 'preact/hooks';
+import { DivProps } from '../types';
 
 const c = Css('PanZoom', {
   '': {

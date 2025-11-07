@@ -1,9 +1,11 @@
 import { Css } from 'fluxio';
 import { isItem, removeItem, ReqError, toError } from 'fluxio';
-import { Button, tooltip, GridCols, Grid } from '@common/components';
 import { Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'preact/hooks';
 import { getPbClient } from 'pblite';
+import { Grid, GridCols } from '@/components/Grid';
+import { tooltip } from '@/components/Tooltip';
+import { Button } from '@/components/Button';
 
 const c = Css('Errors', {
   '': {

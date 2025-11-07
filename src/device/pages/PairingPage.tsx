@@ -1,10 +1,11 @@
-import { useFlux } from '@common/hooks';
 import { Css } from 'fluxio';
-import { Button, LoadingSpinner } from '@common/components';
 import { device$ } from '../services/device';
 import { page$ } from '../messages/page$';
 import { offlineMode$ } from '../messages';
 import { Branding } from '../components/Branding';
+import { useFlux } from '@/hooks/useFlux';
+import { LoadingSpinner } from '@/components/Loading';
+import { Button } from '@/components/Button';
 
 const c = Css('PairingPage', {
   '': {

@@ -1,12 +1,12 @@
 import './app';
-import { addResponsiveListener } from '@common/ui';
 import { isNil, logger } from 'fluxio';
-import { m4k } from '@common/m4k';
+import { m4k } from '@/m4kBridge';
 import { mountDevice } from './device/mountDevice';
 import { mountAdmin } from './admin/mountAdmin';
 import { initServiceWorker } from './initServiceWorker';
 import { isDevice$ } from './router/isDevice$';
 import { getPbClient } from 'pblite';
+import { addResponsiveListener } from './utils/responsive';
 
 const log = logger('main');
 

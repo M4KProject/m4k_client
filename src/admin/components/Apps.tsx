@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'preact/hooks';
 import { Css } from 'fluxio';
-import { Button } from '@common/components';
 import { Download } from 'lucide-react';
-import { ApplicationModel, applicationColl } from '@/api';
 import { sortItems } from 'fluxio';
-import { m4k } from '@common/m4k';
+import { m4k } from '@/m4kBridge';
+import { applicationColl } from '@/api/sync';
+import { Button } from '@/components/Button';
+import { ApplicationModel } from '@/api/models';
 
 const c = Css('Apps', {
   '': {

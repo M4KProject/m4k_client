@@ -30,7 +30,6 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@common/*": ["./common/*"],
       "pblite": ["./pblite/src"],
       "pblite/*": ["./pblite/src/*"],
       "fluxio": ["./fluxio/src/index"],
@@ -43,6 +42,7 @@
     "common/**/*",
     "pblite/**/*",
     "fluxio/**/*",
-    "src/**/*"
+    "src/**/*",
+    "tmp/editor"
   ]
 }

@@ -1,10 +1,10 @@
-import { Field } from '@common/components';
-import { useFlux } from '@common/hooks';
 import { Search } from 'lucide-react';
 import { Css } from 'fluxio';
-import { Button } from '@common/components';
 import { search$ } from '../controllers/search';
 import { Flux } from 'fluxio';
+import { useFlux } from '@/hooks/useFlux';
+import { Field } from '@/components/Field';
+import { Button } from '@/components/Button';
 
 const c = Css('SearchField', {
   '': {

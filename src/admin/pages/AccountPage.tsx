@@ -1,10 +1,4 @@
-import { updateTheme, theme$ } from '@common/ui';
 import { computeStyle, Css } from 'fluxio';
-import { Page, PageBody, Toolbar, tooltip } from '@common/components';
-import { Button } from '@common/components';
-import { Form } from '@common/components';
-import { Field } from '@common/components';
-import { useFlux } from '@common/hooks';
 import { LogOut, KeyRound } from 'lucide-react';
 import { useState } from 'preact/hooks';
 import { LoadingPage } from './LoadingPage';
@@ -12,7 +6,15 @@ import { useIsAdvanced } from '@/router/hooks';
 import { setIsAdvanced } from '@/router/setters';
 import { Branding } from '@/device/components/Branding';
 import { getPbClient } from 'pblite';
-import { userColl } from '@/api';
+import { tooltip } from '@/components/Tooltip';
+import { useFlux } from '@/hooks/useFlux';
+import { theme$, updateTheme } from '@/utils/theme';
+import { userColl } from '@/api/sync';
+import { Page, PageBody } from '@/components/Page';
+import { Toolbar } from '@/components/Toolbar';
+import { Button } from '@/components/Button';
+import { Form } from '@/components/Form';
+import { Field } from '@/components/Field';
 
 const c = Css('AccountPage', {
   Color: {
@@ -23,7 +25,7 @@ const c = Css('AccountPage', {
 });
 
 export const Color = ({ color }: { color: string }) => (
-  <div {...tooltip(color)} {...c('Color')} style={computeStyle({ bg: color })} />
+  <div {...tooltip(color)} {...c('Color')} style={computeStyle({ bg: color }) as any} />
 );
 
 export const AccountPage = () => {

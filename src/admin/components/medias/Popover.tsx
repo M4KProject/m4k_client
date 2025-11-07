@@ -1,8 +1,8 @@
 import { useRef, useEffect, useMemo } from 'preact/hooks';
 import { ComponentChildren } from 'preact';
 import { Flux, uuid } from 'fluxio';
-import { useFlux } from '@common/hooks';
 import { Css } from 'fluxio';
+import { useFlux } from '@/hooks/useFlux';
 
 const over$ = new Flux('');
 

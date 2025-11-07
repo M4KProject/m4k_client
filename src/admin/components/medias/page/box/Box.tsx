@@ -1,9 +1,9 @@
 import { ComponentChildren, createElement } from 'preact';
-import { DivProps } from '@common/components';
 import { computeStyle } from 'fluxio';
 import { useEffect, useRef } from 'preact/hooks';
-import { useFlux } from '@common/hooks';
 import { useBoxCtrl } from './BoxCtrl';
+import { useFlux } from '@/hooks/useFlux';
+import { DivProps } from '@/components/types';
 
 // export interface WBoxData {
 //   mediaId?: string;

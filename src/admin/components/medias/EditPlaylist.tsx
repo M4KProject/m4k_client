@@ -1,13 +1,16 @@
-import { PlaylistEntry, PlaylistModel, MediaModel } from '@/api';
 import { Css } from 'fluxio';
 import { addItem, removeIndex, deepClone, moveIndex } from 'fluxio';
-import { Grid, Field, Button, tooltip, Flag } from '@common/components';
-import { GridCols } from '@common/components/Grid';
 import { Plus, Trash2, Copy, ArrowUp, ArrowDown } from 'lucide-react';
 import { updatePlaylist } from '@/admin/controllers';
 import { JobGrid } from '../jobs/JobGrid';
 import { MediaPreview } from './MediaPreview';
 import { useGroupMedias } from '@/api/hooks';
+import { Grid, GridCols } from '@/components/Grid';
+import { JobModel, MediaModel, PlaylistEntry, PlaylistModel } from '@/api/models';
+import { Field } from '@/components/Field';
+import { Flag } from '@/components/Flag';
+import { Button } from '@/components/Button';
+import { tooltip } from '@/components/Tooltip';
 
 const c = Css('EditPlaylist', {
   '': {
@@ -195,7 +198,7 @@ export const EditPlaylist = ({ playlist }: { playlist: PlaylistModel }) => {
         }}
         items={playlist.data?.items || []}
       />
-      <JobGrid filter={(job) => job.status !== 'finished'} panel={true} />
+      <JobGrid filter={(job) => (job as JobModel)?.status !== 'finished'} panel={true} />
     </div>
   );
 };

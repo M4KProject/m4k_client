@@ -1,5 +1,4 @@
 import { Css, normalizeIndex } from 'fluxio';
-import { Button, tooltip } from '@common/components';
 import {
   RotateCw,
   Monitor,
@@ -11,9 +10,10 @@ import {
   Tv,
   MonitorSmartphone,
 } from 'lucide-react';
-import { useEffect, useState } from 'preact/hooks';
+import { useState } from 'preact/hooks';
 import { useBoxCtrl } from './box/BoxCtrl';
-import { useFlux } from '@common/hooks';
+import { Button } from '@/components/Button';
+import { tooltip } from '@/components/Tooltip';
 
 const c = Css('EditViewportControls', {
   '': {

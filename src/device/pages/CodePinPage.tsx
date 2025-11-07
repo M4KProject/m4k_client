@@ -1,7 +1,10 @@
-import { Field, Form, Page, PageBody, Toolbar } from '@common/components';
 import { codePin$ } from '../messages';
 import { useEffect, useState } from 'preact/hooks';
 import { page$ } from '../messages/page$';
+import { Page, PageBody } from '@/components/Page';
+import { Toolbar } from '@/components/Toolbar';
+import { Form } from '@/components/Form';
+import { Field } from '@/components/Field';
 
 export const CodePinPage = () => {
   const [pin, setPin] = useState('');

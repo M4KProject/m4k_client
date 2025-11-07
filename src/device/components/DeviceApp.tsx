@@ -1,7 +1,5 @@
 import { Css } from 'fluxio';
-import { useFlux } from '@common/hooks';
 import { device$ } from '../services/device';
-import { Side, SideButton, SideSep } from '@common/components';
 import { JSX } from 'preact';
 import { page$, PageName } from '../messages/page$';
 import { LoadingPage } from '../pages/LoadingPage';
@@ -18,6 +16,8 @@ import { PairingPage } from '../pages/PairingPage';
 import { useEffect } from 'preact/hooks';
 import { offlineMode$ } from '../messages';
 import { DialogContainer } from './DialogContainer';
+import { useFlux } from '@/hooks/useFlux';
+import { Side, SideButton, SideSep } from '@/components/Side';
 
 const c = Css('DeviceApp', {
   '': {

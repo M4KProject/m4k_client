@@ -1,13 +1,17 @@
 import { Css } from 'fluxio';
 import { Flux } from 'fluxio';
 import { useEffect, useState } from 'preact/hooks';
-import { useInterval, useFlux } from '@common/hooks';
 import { page$ } from '../messages/page$';
-import { Button, Field, Form, showDialog } from '@common/components';
 import { Globe, Lock } from 'lucide-react';
 import { device$ } from '../services/device';
 import { codePin$, offlineMode$ } from '../messages';
 import { Branding } from './Branding';
+import { useFlux } from '@/hooks/useFlux';
+import { useInterval } from '@/hooks/useInterval';
+import { Form } from '@/components/Form';
+import { Field } from '@/components/Field';
+import { Button } from '@/components/Button';
+import { showDialog } from '@/components/Dialog';
 
 const c = Css('CodePinView', {
   '': {

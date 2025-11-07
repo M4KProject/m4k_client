@@ -1,10 +1,15 @@
 import { useState } from 'preact/hooks';
-import { m4k } from '@common/m4k';
+import { m4k } from '@/m4kBridge';
 import { logger, randHex, jsonStringify, toError, truncate, withTimeout } from 'fluxio';
-import { Button, Field, Form, Grid, Page, PageBody, Toolbar } from '@common/components';
-import { GridCols } from '@common/components/Grid';
-import { Play } from 'lucide-react';
-import { useAsyncEffect, useConstant } from '@common/hooks';
+import { Grid, Play } from 'lucide-react';
+import { GridCols } from '@/components/Grid';
+import { Button } from '@/components/Button';
+import { useConstant } from '@/hooks/useConstant';
+import { useAsyncEffect } from '@/hooks/useAsyncEffect';
+import { Page, PageBody } from '@/components/Page';
+import { Toolbar } from '@/components/Toolbar';
+import { Form } from '@/components/Form';
+import { Field } from '@/components/Field';
 
 const log = logger('TestPage');
 
@@ -257,7 +262,7 @@ export const TestPage = () => {
         <Grid
           cols={testCols}
           ctx={{ play }}
-          rowProps={(test) => {
+          rowProps={(test: any) => {
             const result = test.result || {};
             const mode =
               result.success ? 'success'

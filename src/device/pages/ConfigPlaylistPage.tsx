@@ -1,5 +1,3 @@
-import { Field, Form, Page, PageBody, Toolbar } from '@common/components';
-import { useAsyncEffect, useFluxState } from '@common/hooks';
 import {
   copyDir$,
   hasVideoMuted$,
@@ -13,7 +11,13 @@ import {
 } from '../messages';
 import { isNil, round, toBoolean, toNumber } from 'fluxio';
 import { useState } from 'preact/hooks';
-import { m4k } from '@common/m4k';
+import { m4k } from '@/m4kBridge';
+import { useAsyncEffect } from '@/hooks/useAsyncEffect';
+import { useFluxState } from '@/hooks/useFlux';
+import { Page, PageBody } from '@/components/Page';
+import { Toolbar } from '@/components/Toolbar';
+import { Form } from '@/components/Form';
+import { Field } from '@/components/Field';
 
 const useSetting = (key: string): [string | null, (next: string | null) => Promise<void>] => {
   const [value, setValue] = useState<string | null>('');

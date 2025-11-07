@@ -1,6 +1,6 @@
 import { Css } from 'fluxio';
-import { useFlux } from '@common/hooks';
 import { dialog$ } from '../messages/dialog$';
+import { useFlux } from '@/hooks/useFlux';
 
 const c = Css('DialogContainer', {
   '': {

@@ -1,8 +1,10 @@
 import { render } from 'preact';
 import { App } from './components/App';
-import { addFont, refreshTheme, addResponsiveListener } from '@common/ui';
 import { setEl, setCss } from 'fluxio';
 import { getPbClient } from 'pblite';
+import { addResponsiveListener } from '@/utils/responsive';
+import { addFont } from '@/utils/addFont';
+import { refreshTheme } from '@/utils/theme';
 
 console.debug('loaded');
 

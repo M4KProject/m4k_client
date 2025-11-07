@@ -1,4 +1,6 @@
-import { m4k, M4kResizeOptions } from '@common/m4k';
+import { DeviceModel } from '@/api/models';
+import { deviceSync, userColl } from '@/api/sync';
+import { m4k, M4kResizeOptions } from '@/m4kBridge';
 import {
   sleep,
   toString,
@@ -14,7 +16,6 @@ import {
   isBlob,
   base64toBlob,
 } from 'fluxio';
-import { DeviceModel, deviceSync, userColl } from '@/api';
 import { getPbClient, PbAuth } from 'pblite';
 
 export const deviceEmail$ = fluxStored<string>('deviceEmail$', '', isString);

@@ -1,4 +1,4 @@
-import { useFlux } from '@common/hooks/useFlux';
+import { useFlux } from '@/hooks/useFlux';
 import {
   route$,
   page$,

@@ -1,3 +1,5 @@
+import { MediaType } from '@/api/models';
+import { tooltip } from '@/components/Tooltip';
 import { Css } from 'fluxio';
 import {
   FolderOpen,
@@ -11,8 +13,6 @@ import {
   ChevronDown,
   ChevronRight,
 } from 'lucide-react';
-import { MediaType } from '@/api';
-import { tooltip } from '@common/components';
 
 const c = Css('MediaIcon', {
   '': {

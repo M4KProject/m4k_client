@@ -1,9 +1,9 @@
 import { Css, autoScrollEnd } from 'fluxio';
-import { Progress } from '@common/components';
-import { useFlux } from '@common/hooks';
 import { dialog$ } from '../messages/dialog$';
 import { useEffect, useRef } from 'preact/hooks';
 import { flux } from 'fluxio';
+import { useFlux } from '@/hooks/useFlux';
+import { Progress } from '@/components/Progress';
 
 const c = Css('ProgressView', {
   '': {

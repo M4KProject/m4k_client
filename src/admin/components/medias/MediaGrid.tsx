@@ -1,15 +1,11 @@
 import { Css } from 'fluxio';
 import { byId, groupBy, sortItems, fluxDictionary, isUFloat } from 'fluxio';
-import { addTr, useFlux } from '@common/hooks';
-import { MediaModel } from '@/api';
-import { Grid, GridCols } from '@common/components';
 import { JobGrid } from '../jobs/JobGrid';
 import { selectedById$ } from '@/admin/controllers/selected';
 import { useGroupMedias } from '@/api/hooks';
 import { useIsAdvanced } from '@/router/hooks';
 import { Dictionary, round } from 'fluxio';
 import { Trash2, FolderInput, PlusSquare, Edit, Eye, Download } from 'lucide-react';
-import { tooltip, Button, Field } from '@common/components';
 import { SelectedField } from '../SelectedField';
 import { MediaPreview } from './MediaPreview';
 import { updatePlaylist } from '../../controllers';
@@ -18,6 +14,13 @@ import { MediaIcon } from './MediaIcon';
 import { updateRoute } from '@/router/setters';
 import { useMemo } from 'preact/hooks';
 import { startMediaDownload } from '@/api/startMediaDownload';
+import { addTr } from '@/hooks/useTr';
+import { MediaModel } from '@/api/models';
+import { Grid, GridCols } from '@/components/Grid';
+import { Field } from '@/components/Field';
+import { Button } from '@/components/Button';
+import { tooltip } from '@/components/Tooltip';
+import { useFlux } from '@/hooks/useFlux';
 
 addTr({
   pending: 'en attente',

@@ -1,12 +1,6 @@
-import {
-  BaseMediaModel,
-  JobModel,
-  MediaModel,
-  needAuthId,
-  needGroupId,
-  PageModel,
-  PlaylistModel,
-} from '@/api';
+import { needGroupId } from '@/api/groupId$';
+import { BaseMediaModel, JobModel, MediaModel, PageModel, PlaylistModel } from '@/api/models';
+import { needAuthId } from '@/api/needAuthId';
 import { mediaSync } from '@/api/sync';
 import {
   deepClone,
@@ -20,7 +14,6 @@ import {
   fluxDictionary,
   toError,
   uuid,
-  randString,
 } from 'fluxio';
 
 const MAX_CONCURRENT_UPLOADS = 3;

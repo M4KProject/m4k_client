@@ -1,1 +1,1 @@
-import '@common/m4k';
+import '@/m4kBridge';

@@ -1,16 +1,21 @@
 import { Css } from 'fluxio';
-import { Button, Page, PageBody, Toolbar, tooltip, UploadButton } from '@common/components';
 import { MediaGrid } from '../components/medias/MediaGrid';
 import { getNextTitle, uploadMedia } from '../controllers';
 import { mediaSync } from '@/api/sync';
 import { AddPlaylistItemButton, EditPlaylist } from '../components/medias/EditPlaylist';
 import { EditPage } from '../components/medias/EditPage';
-import { MediaModel, needAuthId, needGroupId, PlaylistModel, PageModel } from '@/api';
-import { Edit, FolderPlus, MapPlus, FilePlus, Play, Upload, Plus } from 'lucide-react';
+import { Edit, FolderPlus, MapPlus, FilePlus, Play, Upload } from 'lucide-react';
 import { useIsEdit, useMediaType } from '@/router/hooks';
 import { setIsEdit, setMediaKey, setMediaType } from '@/router/setters';
 import { useMedia, useMediaById } from '@/api/hooks';
-import { MediaView } from '@/components/medias';
+import { MediaModel, PageModel, PlaylistModel } from '@/api/models';
+import { needAuthId } from '@/api/needAuthId';
+import { needGroupId } from '@/api/groupId$';
+import { Page, PageBody } from '@/components/Page';
+import { MediaView } from '@/components/medias/MediaView';
+import { Toolbar } from '@/components/Toolbar';
+import { Button, UploadButton } from '@/components/Button';
+import { tooltip } from '@/components/Tooltip';
 
 const c = Css('MediasPage', {});
 

@@ -1,6 +1,4 @@
 import { Css } from 'fluxio';
-import { PdfModel } from '@/api';
-import { Button } from '@common/components';
 import { groupBy, sortItems } from 'fluxio';
 import { useState } from 'preact/hooks';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
@@ -8,6 +6,8 @@ import { MediaViewProps } from './MediaView';
 import { getVariants } from '@/api/getVariants';
 import { getMediaUrl } from '@/api/getMediaUrl';
 import { PanZoom } from './PanZoom';
+import { PdfModel } from '@/api/models';
+import { Button } from '../Button';
 
 const c = Css('PdfView', {
   '': {

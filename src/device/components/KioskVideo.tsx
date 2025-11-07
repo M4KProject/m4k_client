@@ -1,8 +1,9 @@
 import { useEffect, useRef } from 'preact/hooks';
 import { logger } from 'fluxio';
 import { Css } from 'fluxio';
-import { useConstant, useFlux } from '@common/hooks';
 import { hasVideoMuted$ } from '../messages';
+import { useFlux } from '@/hooks/useFlux';
+import { useConstant } from '@/hooks/useConstant';
 
 const log = logger('KioskVideo');
 

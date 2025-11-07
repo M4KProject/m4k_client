@@ -1,9 +1,10 @@
 import { Css } from 'fluxio';
-import { addTr } from '@common/hooks';
-import { Tr, Progress } from '@common/components';
-import { JobModel } from '@/api';
 import { Play, Square, AlertCircle, CheckCircle, Clock } from 'lucide-react';
 import { Dictionary } from 'fluxio';
+import { addTr } from '@/hooks/useTr';
+import { JobModel } from '@/api/models';
+import { Progress } from '@/components/Progress';
+import { Tr } from '@/components/Tr';
 
 const c = Css('JobStatus', {
   '': {
