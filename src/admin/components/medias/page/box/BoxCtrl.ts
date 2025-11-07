@@ -13,6 +13,7 @@ import { BoxCarousel } from './BoxCarousel';
 import { PanZoomCtrl } from '@/components/medias/PanZoom';
 import { createContext } from 'preact';
 import { useContext } from 'preact/hooks';
+import { SCREEN_SIZES } from '../EditViewportControls';
 
 const log = logger('BoxController');
 
@@ -74,6 +75,9 @@ export class BoxCtrl {
       onHtmlEvent(element, 'click', (event) => {
         this.click$.set({ element, event });
       });
+
+      const [w, h] = SCREEN_SIZES[0]!;
+      this.panZoom.setSize(w, h);
     });
   }
 

@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { useEffect, useState } from 'preact/hooks';
 import { useBoxCtrl } from './box/BoxCtrl';
+import { useFlux } from '@common/hooks';
 
 const c = Css('EditViewportControls', {
   '': {
@@ -29,7 +30,7 @@ const c = Css('EditViewportControls', {
 
 type ScreenSize = [number, number, string, typeof Monitor];
 
-const SIZES: ScreenSize[] = [
+export const SCREEN_SIZES: ScreenSize[] = [
   [1280, 720, 'Monitor HD', MonitorSmartphone],
   [1920, 1080, 'Monitor FHD', Monitor],
   [3840, 2160, 'Monitor 4K', Tv],
@@ -39,17 +40,14 @@ const SIZES: ScreenSize[] = [
 
 const ScreenSizeButton = () => {
   const ctrl = useBoxCtrl();
-  const panZoom = ctrl.panZoom;
   const [index, setIndex] = useState(0);
-  const [w, h, title, Icon] = SIZES[index]!;
-
-  useEffect(() => panZoom.setSize(w, h), [panZoom]);
+  const [w, h, title, Icon] = SCREEN_SIZES[index]!;
 
   const toggleScreenSize = () => {
-    const nextIndex = normalizeIndex(index + 1, SIZES.length);
+    const nextIndex = normalizeIndex(index + 1, SCREEN_SIZES.length);
     setIndex(nextIndex);
-    const [w, h] = SIZES[nextIndex]!;
-    panZoom.setSize(w, h);
+    const [w, h] = SCREEN_SIZES[nextIndex]!;
+    ctrl.panZoom.setSize(w, h);
   };
 
   return (
