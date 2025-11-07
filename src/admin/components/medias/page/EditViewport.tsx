@@ -1,9 +1,9 @@
 import { PanZoom } from '@/components/medias/PanZoom';
-import { Css, onEvent } from 'fluxio';
+import { Css } from 'fluxio';
 import { EditViewportControls } from './EditViewportControls';
 import { Box } from './box/Box';
-import { EditSelect } from './EditSelect';
-import { useBoxController } from './box/BoxController';
+import { useBoxCtrl } from './box/BoxCtrl';
+import { EditHandles } from './EditHandles';
 
 const c = Css('EditViewport', {
   '': {
@@ -21,25 +21,16 @@ const c = Css('EditViewport', {
 });
 
 export const EditViewport = () => {
-  const ctrl = useBoxController();
-
+  const ctrl = useBoxCtrl();
   return (
     <div {...c()}>
-      <PanZoom
-        onNewController={(panZoomCtrl) => {
-          ctrl.panZoom$.set(panZoomCtrl);
-          const panZoomContainer = panZoomCtrl.container;
-          onEvent(panZoomContainer, 'click', (event) => {
-            ctrl.click$.set({ element: panZoomContainer, event });
-          });
-        }}
-      >
+      <PanZoom ctrl={ctrl.panZoom}>
         <div {...c('Body')}>
           <Box id="root" />
         </div>
       </PanZoom>
       <EditViewportControls />
-      <EditSelect />
+      <EditHandles />
     </div>
   );
 };

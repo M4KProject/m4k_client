@@ -8,7 +8,7 @@ import {
   XY,
   clear,
   setStyle,
-  fluxCombine,
+  mustExist,
 } from 'fluxio';
 import { DivProps } from '@common/components';
 import { useRef, useEffect } from 'preact/hooks';
@@ -23,7 +23,6 @@ const c = Css('PanZoom', {
   },
   Content: {
     position: 'absolute',
-    // inset: 0,
     transformOrigin: '0 0',
     transition: 'transform 0.05s ease',
   },
@@ -53,10 +52,14 @@ export interface PanZoomInnerProps extends DivProps {
   event$: Flux<Event | undefined>;
 }
 
-export class PanZoomController {
+export class PanZoomCtrl {
+  private unsubscribes: (() => void)[] = [];
+
+  readonly ready$ = flux<number>(0);
   readonly before$ = flux<Event | undefined>(undefined);
   readonly after$ = flux<Event | undefined>(undefined);
-  readonly unsubscribes: (() => void)[];
+  private _viewport?: HTMLDivElement;
+  private _canvas?: HTMLDivElement;
 
   xy: [number, number] = [0, 0];
   x = 0;
@@ -69,19 +72,36 @@ export class PanZoomController {
   isDragging = false;
   isAnimating = false;
 
-  constructor(
-    public readonly container: HTMLDivElement,
-    public readonly content: HTMLDivElement
-  ) {
+  init(viewport: HTMLDivElement, canvas: HTMLDivElement) {
+    this._viewport = viewport;
+    this._canvas = canvas;
+    this.dispose();
     this.unsubscribes = [
-      onHtmlEvent(container, 'wheel', this.bind(this.onWheel)),
-      onHtmlEvent(container, 'mousedown', this.bind(this.onMouseDown)),
+      onHtmlEvent(viewport, 'wheel', this.bind(this.onWheel)),
+      onHtmlEvent(viewport, 'mousedown', this.bind(this.onMouseDown)),
       onHtmlEvent(0, 'mousemove', this.bind(this.onMouseMove)),
       onHtmlEvent(0, 'mouseup', this.bind(this.onMouseUp)),
-      onHtmlEvent(container, 'touchstart', this.bind(this.onTouchStart)),
-      onHtmlEvent(container, 'touchmove', this.bind(this.onTouchMove)),
-      onHtmlEvent(container, 'touchend', this.bind(this.onTouchEnd)),
+      onHtmlEvent(viewport, 'touchstart', this.bind(this.onTouchStart)),
+      onHtmlEvent(viewport, 'touchmove', this.bind(this.onTouchMove)),
+      onHtmlEvent(viewport, 'touchend', this.bind(this.onTouchEnd)),
     ];
+    this.ready$.set(Date.now());
+  }
+
+  viewport() {
+    return mustExist(this._viewport, 'viewport');
+  }
+
+  canvas() {
+    return mustExist(this._canvas, 'canvas');
+  }
+
+  viewportRect() {
+    return this.viewport().getBoundingClientRect();
+  }
+
+  canvasRect() {
+    return this.canvas().getBoundingClientRect();
   }
 
   bind<E extends Event>(method: (event: E) => void): (event: E) => void {
@@ -101,7 +121,7 @@ export class PanZoomController {
     const xy = getEventXY(event);
     if (!xy) return;
     stopEvent(event);
-    const rect = this.container.getBoundingClientRect();
+    const rect = this.viewportRect();
     const x = xy[0] - rect.x;
     const y = xy[1] - rect.y;
     const nextX = x - (x - this.x) * (nextScale / prevScale);
@@ -231,55 +251,59 @@ export class PanZoomController {
   }
 
   applyTransform(x: number, y: number, scale: number) {
+    const canvas = this.canvas();
+
     this.x = x;
     this.y = y;
     this.scale = scale;
 
-    setStyle(this.content, {
+    setStyle(canvas, {
       transform: `translate(${x}px, ${y}px) scale(${scale})`,
     });
   }
 
   getSize(): [number, number] {
-    return [this.w || this.content.scrollWidth, this.h || this.content.scrollHeight];
+    const canvas = this.canvas();
+    return [this.w || canvas.scrollWidth, this.h || canvas.scrollHeight];
   }
 
   setSize(w: number, h: number) {
+    const canvas = this.canvas();
     this.w = w;
     this.h = h;
-    setStyle(this.content, { width: `${w}px`, height: `${h}px` });
+    setStyle(canvas, { width: `${w}px`, height: `${h}px` });
     this.fitToContainer();
   }
 
   center() {
-    const containerRect = this.container.getBoundingClientRect();
-    const contentRect = this.content.getBoundingClientRect();
+    const viewportRect = this.viewportRect();
+    const canvasRect = this.canvasRect();
 
-    const x = (containerRect.width - contentRect.width / this.scale) / 2;
-    const y = (containerRect.height - contentRect.height / this.scale) / 2;
+    const x = (viewportRect.width - canvasRect.width / this.scale) / 2;
+    const y = (viewportRect.height - canvasRect.height / this.scale) / 2;
 
     this.applyTransform(x, y, this.scale);
   }
 
   fitToContainer() {
-    const containerRect = this.container.getBoundingClientRect();
+    const rect = this.viewportRect();
 
     const [contentWidth, contentHeight] = this.getSize();
 
-    const scaleX = containerRect.width / contentWidth;
-    const scaleY = containerRect.height / contentHeight;
+    const scaleX = rect.width / contentWidth;
+    const scaleY = rect.height / contentHeight;
     const scale = Math.min(scaleX, scaleY) * 0.95;
 
-    const x = (containerRect.width - contentWidth * scale) / 2;
-    const y = (containerRect.height - contentHeight * scale) / 2;
+    const x = (rect.width - contentWidth * scale) / 2;
+    const y = (rect.height - contentHeight * scale) / 2;
 
     this.applyTransform(x, y, scale);
   }
 
   zoomIn() {
-    const containerRect = this.container.getBoundingClientRect();
-    const centerX = containerRect.width / 2;
-    const centerY = containerRect.height / 2;
+    const rect = this.viewportRect();
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
 
     const nextScale = this.scale * 1.2;
     const nextX = centerX - (centerX - this.x) * (nextScale / this.scale);
@@ -289,9 +313,9 @@ export class PanZoomController {
   }
 
   zoomOut() {
-    const containerRect = this.container.getBoundingClientRect();
-    const centerX = containerRect.width / 2;
-    const centerY = containerRect.height / 2;
+    const rect = this.viewportRect();
+    const centerX = rect.width / 2;
+    const centerY = rect.height / 2;
 
     const nextScale = this.scale / 1.2;
     const nextX = centerX - (centerX - this.x) * (nextScale / this.scale);
@@ -312,10 +336,10 @@ export class PanZoomController {
 }
 
 export interface PanZoomProps extends DivProps {
-  onNewController?: (controller: PanZoomController) => void;
+  ctrl?: PanZoomCtrl;
 }
 
-export const PanZoom = ({ children, onNewController, ...props }: PanZoomProps) => {
+export const PanZoom = ({ children, ctrl, ...props }: PanZoomProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const container = containerRef.current;
 
@@ -326,12 +350,10 @@ export const PanZoom = ({ children, onNewController, ...props }: PanZoomProps) =
     if (!container) return;
     if (!content) return;
 
-    const controller = new PanZoomController(container, content);
-    onNewController?.(controller);
+    const c = ctrl || new PanZoomCtrl();
+    c.init(container, content);
 
-    return () => {
-      controller.dispose();
-    };
+    return () => c.dispose();
   }, [container, content]);
 
   return (

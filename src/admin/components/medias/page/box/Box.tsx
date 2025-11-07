@@ -2,8 +2,8 @@ import { ComponentChildren, createElement } from 'preact';
 import { DivProps } from '@common/components';
 import { computeStyle } from 'fluxio';
 import { useEffect, useRef } from 'preact/hooks';
-import { useBoxController } from './BoxController';
 import { useFlux } from '@common/hooks';
+import { useBoxCtrl } from './BoxCtrl';
 
 // export interface WBoxData {
 //   mediaId?: string;
@@ -27,7 +27,7 @@ export interface BoxProps {
 export const Box = ({ id }: BoxProps) => {
   const ref = useRef<any>(null);
   const el = ref.current;
-  const ctrl = useBoxController();
+  const ctrl = useBoxCtrl();
   const item = useFlux(ctrl.get$(id));
 
   useEffect(() => {

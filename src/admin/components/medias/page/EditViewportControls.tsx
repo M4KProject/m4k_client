@@ -1,4 +1,3 @@
-import { PanZoomController } from '@/components/medias/PanZoom';
 import { Css, normalizeIndex } from 'fluxio';
 import { Button, tooltip } from '@common/components';
 import {
@@ -13,8 +12,7 @@ import {
   MonitorSmartphone,
 } from 'lucide-react';
 import { useEffect, useState } from 'preact/hooks';
-import { useFlux } from '@common/hooks';
-import { useBoxController } from './box/BoxController';
+import { useBoxCtrl } from './box/BoxCtrl';
 
 const c = Css('EditViewportControls', {
   '': {
@@ -39,7 +37,9 @@ const SIZES: ScreenSize[] = [
   [360, 640, 'Smartphone', Smartphone],
 ];
 
-const ScreenSizeButton = ({ panZoom }: { panZoom: PanZoomController }) => {
+const ScreenSizeButton = () => {
+  const ctrl = useBoxCtrl();
+  const panZoom = ctrl.panZoom;
   const [index, setIndex] = useState(0);
   const [w, h, title, Icon] = SIZES[index]!;
 
@@ -63,12 +63,11 @@ const ScreenSizeButton = ({ panZoom }: { panZoom: PanZoomController }) => {
 };
 
 export const EditViewportControls = () => {
-  const ctrl = useBoxController();
-  const panZoom = useFlux(ctrl.panZoom$);
-  if (!panZoom) return null;
+  const ctrl = useBoxCtrl();
+  const panZoom = ctrl.panZoom;
   return (
     <div {...c()}>
-      <ScreenSizeButton panZoom={panZoom} />
+      <ScreenSizeButton />
       <Button
         icon={<RotateCw />}
         color="primary"

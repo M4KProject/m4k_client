@@ -5,14 +5,12 @@ import {
   fluxUnion,
   fluxDictionary,
   stopEvent,
-  getChanges,
-  groupBy,
-  removeItem,
+  onHtmlEvent,
 } from 'fluxio';
 import { ComponentType } from 'preact';
 import { BoxFun, BoxData } from './boxTypes';
 import { BoxCarousel } from './BoxCarousel';
-import { PanZoomController } from '@/components/medias/PanZoom';
+import { PanZoomCtrl } from '@/components/medias/PanZoom';
 import { createContext } from 'preact';
 import { useContext } from 'preact/hooks';
 
@@ -45,7 +43,7 @@ export const getParents = (boxes: Dictionary<BoxData>) => {
   return parents;
 };
 
-export class BoxController {
+export class BoxCtrl {
   private readonly registry: Dictionary<BoxComponent> = {
     div: 'div',
     span: 'span',
@@ -56,9 +54,9 @@ export class BoxController {
   };
   readonly funs: Dictionary<(boxEvent: BoxEvent) => void> = {};
 
-  private readonly boxes = fluxDictionary<BoxData>();
-  private readonly elements = fluxDictionary<HTMLElement>();
-  private readonly parents = fluxDictionary(this.boxes.throttle(100).map(getParents));
+  readonly boxes = fluxDictionary<BoxData>();
+  readonly elements = fluxDictionary<HTMLElement>();
+  readonly parents = fluxDictionary(this.boxes.throttle(100).map(getParents));
 
   readonly el?: HTMLElement;
   readonly parentId?: string;
@@ -66,7 +64,18 @@ export class BoxController {
   readonly init$ = flux<BoxEvent>({});
   readonly click$ = flux<BoxEvent>({});
   readonly event$ = fluxUnion(this.init$, this.click$);
-  readonly panZoom$ = flux<PanZoomController | undefined>(undefined);
+
+  readonly panZoom = new PanZoomCtrl();
+  public handlesEl?: HTMLDivElement | null;
+
+  constructor() {
+    this.panZoom.ready$.on(() => {
+      const element = this.panZoom.viewport();
+      onHtmlEvent(element, 'click', (event) => {
+        this.click$.set({ element, event });
+      });
+    });
+  }
 
   register(type: string, component: BoxComponent) {
     this.registry[type] = component;
@@ -156,6 +165,6 @@ export class BoxController {
   }
 }
 
-export const BoxContext = createContext<BoxController | undefined>(undefined);
+export const BoxContext = createContext<BoxCtrl | undefined>(undefined);
 
-export const useBoxController = () => useContext(BoxContext)!;
+export const useBoxCtrl = () => useContext(BoxContext)!;
