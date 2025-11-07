@@ -11,7 +11,7 @@ import {
   mustExist,
 } from 'fluxio';
 import { useRef, useEffect } from 'preact/hooks';
-import { DivProps } from '../types';
+import { DivProps } from './types';
 
 const c = Css('PanZoom', {
   '': {

@@ -1,4 +1,4 @@
-import { PanZoom } from '@/components/medias/PanZoom';
+import { PanZoom } from '@/components/PanZoom';
 import { Css } from 'fluxio';
 import { EditViewportControls } from './EditViewportControls';
 import { Box } from './box/Box';

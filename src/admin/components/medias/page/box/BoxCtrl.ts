@@ -10,7 +10,7 @@ import {
 import { ComponentType } from 'preact';
 import { BoxFun, BoxData } from './boxTypes';
 import { BoxCarousel } from './BoxCarousel';
-import { PanZoomCtrl } from '@/components/medias/PanZoom';
+import { PanZoomCtrl } from '@/components/PanZoom';
 import { createContext } from 'preact';
 import { useContext } from 'preact/hooks';
 import { SCREEN_SIZES } from '../EditViewportControls';
