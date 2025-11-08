@@ -1,7 +1,8 @@
 import { Css } from 'fluxio';
 import { EditMedias } from './EditMedias';
-import { EditTree } from './EditTree';
-import { EditForm } from './EditForm';
+import { EditHierarchy } from './EditHierarchy';
+import { EditProps } from './EditProps';
+import { TabPanel } from '@/components/TabPanel';
 
 const c = Css('EditSide', {
   '': {
@@ -9,7 +10,7 @@ const c = Css('EditSide', {
     elevation: 2,
     borderLeft: 'g3',
     p: 4,
-    w: 250,
+    w: 300,
     bg: 'b0',
     zIndex: 10,
     col: 1,
@@ -18,13 +19,13 @@ const c = Css('EditSide', {
 
 export const EditSide = () => {
   return (
-    <div {...c()}>
-      <EditMedias />
-      <EditTree />
-      <EditForm />
-      {/* 
-      <EdActions />
-      <EdProps /> */}
-    </div>
+    <TabPanel
+      {...c()}
+      tabs={[
+        ['Propriétés', <EditProps />],
+        ['Hiérarchie', <EditHierarchy />],
+        ['Medias', <EditMedias />],
+      ]}
+    />
   );
 };

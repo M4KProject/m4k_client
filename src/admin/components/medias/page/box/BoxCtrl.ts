@@ -6,6 +6,10 @@ import {
   fluxDictionary,
   stopEvent,
   onHtmlEvent,
+  Style,
+  NextState,
+  isFunction,
+  Pipe,
 } from 'fluxio';
 import { ComponentType } from 'preact';
 import { BoxFun, BoxData } from './boxTypes';
@@ -14,6 +18,7 @@ import { PanZoomCtrl } from '@/components/PanZoom';
 import { createContext } from 'preact';
 import { useContext } from 'preact/hooks';
 import { SCREEN_SIZES } from '../EditViewportControls';
+import { fluxUndefined } from 'fluxio/flux/fluxUndefined';
 
 const log = logger('BoxController');
 
@@ -45,7 +50,7 @@ export const getParents = (boxes: Dictionary<BoxData>) => {
 };
 
 export class BoxCtrl {
-  private readonly registry: Dictionary<BoxComponent> = {
+  readonly registry: Dictionary<BoxComponent> = {
     div: 'div',
     span: 'span',
     p: 'p',
@@ -133,39 +138,69 @@ export class BoxCtrl {
   }
 
   get(id?: string) {
-    return id ? this.boxes.getItem(id) : undefined;
+    if (id) return this.boxes.getItem(id);
   }
 
-  getElement(id: string) {
-    return this.elements.getItem(id);
+  getElement(id?: string) {
+    if (id) return this.elements.getItem(id);
   }
 
-  getParentId(id: string) {
-    return this.parents.getItem(id);
+  getParentId(id?: string) {
+    if (id) return this.parents.getItem(id);
   }
 
-  update(id: string, changes: BoxData, replace: boolean = false) {
-    if (replace) {
-      this.boxes.setItem(id, changes);
-      return changes;
-    } else {
-      const prev = this.get(id);
-      const next = { ...prev, ...changes };
-      this.boxes.setItem(id, next);
-      return next;
-    }
+  set(id?: string, replace?: NextState<BoxData | undefined>) {
+    if (!id) return;
+    const prev = this.get(id);
+    const next = isFunction(replace) ? replace(prev) : replace;
+    this.boxes.setItem(id, next);
+    return next;
   }
 
-  get$(id: string) {
-    return this.boxes.getItem$(id);
+  update(id?: string, changes?: NextState<BoxData>) {
+    if (!id) return;
+    const prev = this.get(id);
+    if (!prev) return;
+    const value = isFunction(changes) ? changes(prev) : changes;
+    if (!value) return;
+    const next = { ...prev, ...value };
+    this.boxes.setItem(id, next);
+    return next;
   }
 
-  getElement$(id: string) {
-    return this.elements.getItem$(id);
+  setProp<K extends keyof BoxData>(id: string | undefined, prop: K, value: NextState<BoxData[K]>) {
+    if (!id) return;
+    const prev = this.get(id);
+    if (!prev) return;
+    const val = isFunction(value) ? value(prev[prop]) : value;
+    const next = { ...prev, [prop]: val };
+    this.boxes.setItem(id, next);
+    return next;
   }
 
-  getParentId$(id: string) {
-    return this.parents.getItem$(id);
+  getProp<K extends keyof BoxData>(id: string, prop: K) {
+    return this.get(id)?.[prop];
+  }
+
+  get$(id?: string) {
+    return id ? this.boxes.getItem$(id) : fluxUndefined;
+  }
+
+  getProp$<K extends keyof BoxData>(
+    id: string | undefined,
+    prop: K
+  ): Pipe<BoxData[K] | undefined, any> {
+    return id ?
+        this.get$(id).map((box) => box?.[prop])
+      : (fluxUndefined as Pipe<BoxData[K] | undefined, any>);
+  }
+
+  getElement$(id?: string) {
+    return id ? this.elements.getItem$(id) : fluxUndefined;
+  }
+
+  getParentId$(id?: string) {
+    return id ? this.parents.getItem$(id) : fluxUndefined;
   }
 }
 

@@ -1,54 +1,55 @@
-import { Flux, FluxDictionary } from 'fluxio';
-import { useEffect, useState } from 'preact/hooks';
+import { Flux, FluxDictionary, isFlux } from 'fluxio';
+import { Inputs, useEffect, useMemo, useState } from 'preact/hooks';
 
-type NFlux<T> = Flux<T> | null | undefined;
+type NFlux<T> = Flux<T> | string | number | boolean | false | null | undefined;
 type NFluxDictionary<T> = FluxDictionary<T> | null | undefined;
 
 interface UseFlux {
-  <T = any>(msg: Flux<T>): T;
-  <T = any>(msg: NFlux<T>): T | undefined;
+  <T = any>(flux: Flux<T>): T;
+  <T = any>(flux: NFlux<T>): T | undefined;
 }
-
-interface UseFluxState {
-  <T = any>(msg: Flux<T>): [T, (next: T) => void];
-  <T = any>(msg: NFlux<T>): [T | undefined, (next: T) => void];
-}
-
-export const useFlux = (<T = any>(msg: NFlux<T> | null | undefined): T | undefined => {
-  const [state, setState] = useState(msg ? msg.get() : undefined);
+export const useFlux = (<T = any>(flux: NFlux<T>): T | undefined => {
+  const [state, setState] = useState(isFlux(flux) ? flux.get() : undefined);
   useEffect(() => {
-    if (!msg) {
+    if (!isFlux(flux)) {
       setState(undefined);
       return;
     }
-    setState(msg.get());
-    return msg.on((v) => setState(v));
-  }, [msg]);
+    setState(flux.get());
+    return flux.on((v) => setState(v));
+  }, [flux]);
   return state;
 }) as UseFlux;
 
-export const useFluxState = (<T = any>(msg: Flux<T>): [T, (next: T) => void] => {
-  const [state, setState] = useState(msg && msg.get());
+interface UseFluxState {
+  <T = any>(flux: Flux<T>): [T, (next: T) => void];
+  <T = any>(flux: NFlux<T>): [T | undefined, (next: T) => void];
+}
+export const useFluxState = (<T = any>(flux: Flux<T>): [T, (next: T) => void] => {
+  const [state, setState] = useState(flux && flux.get());
   useEffect(() => {
-    setState(msg && msg.get());
-    return msg && msg.on(setState);
-  }, [msg]);
-  return [state, (next) => msg && msg.set(next)];
+    setState(flux && flux.get());
+    return flux && flux.on(setState);
+  }, [flux]);
+  return [state, (next) => flux && flux.set(next)];
 }) as UseFluxState;
 
 export const useFluxItem = <T = any>(
-  msg: NFluxDictionary<T>,
+  flux: NFluxDictionary<T>,
   key: string
 ): [T | undefined, (next: T) => void] => {
-  const [state, setState] = useState(msg ? msg.getItem(key) : undefined);
+  const [state, setState] = useState(flux ? flux.getItem(key) : undefined);
   useEffect(() => {
-    setState(msg ? msg.getItem(key) : undefined);
-    if (msg) {
-      return msg.on(() => {
-        setState(msg && msg.getItem(key));
+    setState(flux ? flux.getItem(key) : undefined);
+    if (flux) {
+      return flux.on(() => {
+        setState(flux && flux.getItem(key));
       });
     }
     return;
-  }, [msg, key]);
-  return [state, (next) => msg && msg.setItem(key, next)];
+  }, [flux, key]);
+  return [state, (next) => flux && flux.setItem(key, next)];
 };
+
+export const useFluxMemo = <T = any>(factory: () => NFlux<T>, inputs: Inputs) =>
+  useFlux(useMemo(factory, inputs));
