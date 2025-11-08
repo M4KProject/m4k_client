@@ -15,18 +15,20 @@ const c = Css('EditPage', {
 });
 
 export const EditPage = ({ page }: { page: PageModel }) => {
-  const boxController = useMemo(() => new BoxCtrl(), []);
+  const ctrl = useMemo(() => new BoxCtrl(), []);
 
   useEffect(() => {
-    boxController.update('aaa', {
-      pos: [10, 10, 10, 10],
-      style: { bg: '#0000FF' },
+    ctrl.set('aaa', {
+      pos: [10, 10, 30, 10],
+      style: { bg: '#0000FF', fg: '#AAAAFF', center: 1 },
+      text: 'Ma **BOX** aaa',
     });
-    boxController.update('bbb', {
-      pos: [20, 10, 10, 10],
-      style: { bg: '#00FF00' },
+    ctrl.set('bbb', {
+      pos: [20, 18, 50, 10],
+      style: { bg: '#00FF00AA', fg: '#FF0000', col: ['end', 'end'] },
+      text: 'Ma **BOX** bbb',
     });
-    boxController.update('root', {
+    ctrl.set('root', {
       children: ['aaa', 'bbb'],
       style: {
         bg: '#00FFFF',
@@ -44,7 +46,7 @@ export const EditPage = ({ page }: { page: PageModel }) => {
 
   return (
     <div {...c()}>
-      <BoxContext.Provider value={boxController}>
+      <BoxContext.Provider value={ctrl}>
         <EditViewport />
         <EditSide />
       </BoxContext.Provider>

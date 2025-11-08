@@ -61,7 +61,7 @@ export const Box = ({ id }: BoxProps) => {
   };
 
   props.onClick = (event) => {
-    console.debug('onClick', event);
+    console.debug('onClick', id, event, el);
     ctrl.boxClick(id, event);
   };
 

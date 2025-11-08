@@ -183,7 +183,9 @@ export class BoxCtrl {
   }
 
   get$(id?: string) {
-    return id ? this.boxes.getItem$(id) : fluxUndefined;
+    return id ?
+        this.boxes.getItem$(id)
+      : (fluxUndefined as Pipe<BoxData | undefined, Dictionary<BoxData>>);
   }
 
   getProp$<K extends keyof BoxData>(
