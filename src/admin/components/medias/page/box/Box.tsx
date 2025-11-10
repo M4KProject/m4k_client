@@ -74,7 +74,17 @@ export const Box = ({ id }: BoxProps) => {
   }
 
   if (item.text) {
-    children.push(item.text);
+    const parts = item.text.matchAll(/\*\*(?<b>.+?)\*\*|(?<n>\n)|(?<t>[^*\n]+)/g);
+    for (const { groups } of parts) {
+      const { b, n, t } = groups!;
+      if (b) {
+        children.push(<b>{b}</b>);
+      } else if (n) {
+        children.push(<br/>);
+      } else if (t) {
+        children.push(t);
+      }
+    }
   }
 
   console.debug('render', id, item, ctrl, props, children);
