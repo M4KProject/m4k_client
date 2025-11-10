@@ -63,7 +63,7 @@ export const Box = ({ id }: BoxProps) => {
   }
 
   const props: DivProps = {
-    ...c('', `-${type}`, item.cls),
+    ...c('', `-${type}`, { class: item.cls }),
     style,
     id,
     ref,

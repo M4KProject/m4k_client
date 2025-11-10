@@ -64,7 +64,7 @@ export interface BoxConfig {
 
 export class BoxCtrl {
   readonly registry: Dictionary<BoxConfig> = {
-    box: { comp: 'div', label: 'Box', children: 1, pos: 1 },
+    box: { comp: 'div', label: 'Box', children: 1, text: 1, pos: 1 },
     text: { comp: 'span', label: 'Texte', text: 1, pos: 1 },
     carousel: { comp: BoxCarousel, label: 'Carousel', text: 1, children: 1, pos: 1 },
   };
