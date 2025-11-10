@@ -1,4 +1,4 @@
-import { Css, CssStyle, Dictionary, firstUpper, isArray, isString, NextState, pascalCase, SetState, Style, StyleFlexAlign, StyleFlexJustify, toArray } from 'fluxio';
+import { Css, CssStyle, Dictionary, firstUpper, isArray, isDefined, isString, NextState, pascalCase, SetState, Style, StyleFlexAlign, StyleFlexJustify, toArray } from 'fluxio';
 import { BoxConfig, useBoxCtrl } from './box/BoxCtrl';
 import { Field, FieldProps } from '@/components/Field';
 import { Tr } from '@/components/Tr';
@@ -41,6 +41,10 @@ const c = Css('EditProps', {
   ' .FieldLabel': {
     w: 100,
   },
+  AlignRow: {
+    w: '100%',
+    row: ['center', 'between'],
+  }
 });
 
 const useProp = <K extends keyof BoxData>(
@@ -53,23 +57,12 @@ const useProp = <K extends keyof BoxData>(
 };
 
 
-export const EditProp = ({ prop, ...props }: FieldProps & { prop: keyof BoxData }) => {
+export const EditProp = ({ prop, defaultValue, ...props }: FieldProps & { prop: keyof BoxData, defaultValue?: any }) => {
   const [value, setValue] = useProp(prop);
-  return <Field name={prop} value={value} onValue={setValue} {...props} />;
+  return <Field name={prop} value={isDefined(value) ? value : defaultValue} onValue={setValue} {...props} />;
 };
 
-const AlignButton = (Icon: () => ComponentChildren, selected: boolean, onClick: () => void) => {
-  return (
-    <Button
-      icon={<Icon />}
-      color="primary"
-      selected={selected}
-      onClick={onClick}
-    />
-  )
-}
-
-const AlignProp = () => {
+const Align = () => {
   const [style, setStyle] = useProp('style');
   const s = style || {} as Style;
 
@@ -105,7 +98,7 @@ const AlignProp = () => {
   };
 
   const txtBtn = (icon: ComponentChildren, value: Style['textAlign']) => {
-    const selected = align === value;
+    const selected = textAlign === value;
 
     const handleClick = () => {
       setStyle(prev => ({ ...prev, textAlign: value }));
@@ -119,32 +112,32 @@ const AlignProp = () => {
   return (
     <>
       <Field name="row" Comp={() => (
-        <>
+        <div {...c('AlignRow')}>
           {btn(<AlignStartHorizontal />, 1, 0, 'start')}
           {btn(<AlignCenterHorizontal />, 1, 0, 'center')}
           {btn(<AlignEndHorizontal />, 1, 0, 'end')}
           {btn(<AlignHorizontalJustifyStart />, 1, 1, 'start')}
           {btn(<AlignHorizontalJustifyCenter />, 1, 1, 'center')}
           {btn(<AlignHorizontalJustifyEnd />, 1, 1, 'end')}
-        </>
+        </div>
       )} />
       <Field name="col" Comp={() => (
-        <>
+        <div {...c('AlignRow')}>
           {btn(<AlignStartVertical />, 0, 0, 'start')}
           {btn(<AlignCenterVertical />, 0, 0, 'center')}
           {btn(<AlignEndVertical />, 0, 0, 'end')}
           {btn(<AlignVerticalJustifyStart />, 0, 1, 'start')}
           {btn(<AlignVerticalJustifyCenter />, 0, 1, 'center')}
           {btn(<AlignVerticalJustifyEnd />, 0, 1, 'end')}
-        </>
+        </div>
       )} />
       <Field name="textAlign" Comp={() => (
-        <>
+        <div {...c('AlignRow')}>
           {txtBtn(<AlignLeft />, 'left')}
           {txtBtn(<AlignCenter />, 'center')}
           {txtBtn(<AlignJustify />, 'justify')}
           {txtBtn(<AlignRight />, 'right')}
-        </>
+        </div>
       )} />
     </>
   )
@@ -178,24 +171,25 @@ export const EditProps = () => {
   const types = Object.entries(ctrl.registry).map(
     ([type, config]) => [type, <Tr>{config.label}</Tr>] as [string, ComponentChildren]
   );
-  const [type] = useProp('type') || 'box';
-  const config = type && ctrl.registry[type] || {} as Partial<BoxConfig>;
+  const [nType] = useProp('type');
+  const type = nType || 'box';
+  const config = ctrl.registry[type] || {} as Partial<BoxConfig>;
 
   if (!id || !box) return null;
 
   return (
     <div {...c()}>
       <EditProp label="Nom" prop="name" />
-      <EditProp label="Type" prop="type" type="select" items={types} />
+      <EditProp label="Cacher" prop="hide" type="switch" />
+      <EditProp label="Type" prop="type" type="select" defaultValue="box" items={types} />
       <EditProp label="Classe" prop="cls" />
-      <AlignProp />
+      <Align />
       
       {config.text && (
         <>
           <EditProp label="Texte" prop="text" type="multiline" />
         </>
       )}
-      <EditProp label="Cacher" prop="hide" type="switch" />
       <Field label="Couleur" Comp={() => (
         <>
           <EditStyleProp prop="bg" type="color" />
