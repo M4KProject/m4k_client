@@ -1,11 +1,12 @@
-import { Css, Dictionary, firstUpper, NextState, pascalCase, SetState } from 'fluxio';
-import { useBoxCtrl } from './box/BoxCtrl';
+import { Css, CssStyle, Dictionary, firstUpper, NextState, pascalCase, SetState } from 'fluxio';
+import { BoxConfig, useBoxCtrl } from './box/BoxCtrl';
 import { Field, FieldProps } from '@/components/Field';
 import { Tr } from '@/components/Tr';
 import { useFlux, useFluxMemo } from '@/hooks/useFlux';
 import { BoxData } from './box/boxTypes';
 import { ComponentChildren } from 'preact';
 import { isAdvanced$ } from '@/router';
+import { Button } from '@/components/Button';
 
 const c = Css('EditProps', {
   '': {
@@ -15,7 +16,7 @@ const c = Css('EditProps', {
     m: 4,
   },
   ' .FieldLabel': {
-    w: 100,
+    w: 110,
   },
 });
 
@@ -28,25 +29,28 @@ const useProp = <K extends keyof BoxData>(
   return [value, (next: NextState<BoxData[K]>) => ctrl.setProp(id, prop, next)];
 };
 
-const propToLabel: Dictionary<string> = {
-  type: 'Type',
-  text: 'Texte',
-  hide: 'Cacher',
-};
-
-const hasText: Dictionary<boolean> = {
-  '': true,
-  div: true,
-  span: true,
-  p: true,
-  section: true,
-  article: true,
-};
 
 export const EditProp = ({ prop, ...props }: FieldProps & { prop: keyof BoxData }) => {
   const [value, setValue] = useProp(prop);
-  const label = propToLabel[prop] || firstUpper(prop);
-  return <Field name={prop} label={label} value={value} onValue={setValue} {...props} />;
+  return <Field name={prop} value={value} onValue={setValue} {...props} />;
+};
+
+export const AlignProp = (props: FieldProps) => {
+  const [value, setValue] = useProp('style');
+  return <Field name="align" {...props} Comp={() => (
+    <>
+      <Button>Center</Button>
+    </>
+  )} />;
+};
+
+export const EditStyleProp = ({ prop, ...props }: FieldProps & { prop: string }) => {
+  const [style, setStyle] = useProp('style');
+  const value = ((style || {}) as any)[prop] as any;
+  const onValue = (value: any) => {
+    setStyle(prev => ({ ...prev, [prop]: value }));
+  }
+  return <Field name={prop} value={value} onValue={onValue} {...props} />;
 };
 
 export const EditProps = () => {
@@ -58,28 +62,33 @@ export const EditProps = () => {
   const types = Object.keys(ctrl.registry).map(
     (type) => [type, <Tr>{type}</Tr>] as [string, ComponentChildren]
   );
-  const [type] = useProp('type');
+  const [type] = useProp('type') || 'box';
+  const config = type && ctrl.registry[type] || {} as Partial<BoxConfig>;
 
   if (!id || !box) return null;
 
   return (
     <div {...c()}>
-      <EditProp prop="hide" type="switch" />
-      <EditProp prop="mediaId" />
-      {hasText[type || ''] && <EditProp prop="text" type="text" />}
+      <EditProp label="Nom" prop="name" />
+      <AlignProp label="Alignement" />
+      <EditProp label="Type" prop="type" type="select" items={types} />
+      <EditProp label="Cacher" prop="hide" type="switch" />
+      <EditProp label="Media" prop="mediaId" />
+      <EditStyleProp label="Couleur" prop="bg" type="color" />
+      <EditStyleProp label="Style Texte" prop="fg" type="color" />
+      <EditStyleProp label="Bordure" prop="border" type="color" />
+      {config.text && <EditProp label="Texte" prop="text" type="multiline" />}
+      {config.children && <Button>Ajouter un texte</Button>}
       {isAdvanced && (
         <>
-          <EditProp prop="name" />
-          <EditProp prop="type" type="select" items={types} />
-          <EditProp prop="style" />
-          <EditProp prop="cls" />
+          <EditProp label="Position" prop="pos" type="json" col />
+          <EditProp label="Style" prop="style" type="json" col />
+          <EditProp label="Click" prop="onClick" type="json" col />
+          <EditProp label="Init" prop="onInit" type="json" col />
+          <EditProp label="Data" prop="data" type="json" col />
+          <EditProp label="Class" prop="cls" />
         </>
       )}
-      {/* <EditProp prop="onClick" /> */}
-      {/* <EditProp prop="onInit" /> */}
-      {/* <EditProp prop="pos" /> */}
-      {/* <EditProp prop="props" /> */}
-      content : uniquement bold : "Mon Texte **Hello** !" l'alignement ce fait via le align flex
     </div>
   );
 };

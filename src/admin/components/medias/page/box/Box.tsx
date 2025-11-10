@@ -1,7 +1,7 @@
 import { ComponentChildren, createElement } from 'preact';
-import { computeStyle } from 'fluxio';
+import { computeStyle, Css } from 'fluxio';
 import { useEffect, useRef } from 'preact/hooks';
-import { useBoxCtrl } from './BoxCtrl';
+import { BoxConfig, useBoxCtrl } from './BoxCtrl';
 import { useFlux } from '@/hooks/useFlux';
 import { DivProps } from '@/components/types';
 
@@ -21,6 +21,15 @@ import { DivProps } from '@/components/types';
 //   data?: Dictionary<string>;
 // }
 
+const c = Css('Box', {
+  '': {
+    position: 'absolute',
+    col: 1,
+    overflowX: 'hidden',
+    overflowY: 'auto',
+  },
+})
+
 export interface BoxProps {
   id: string;
 }
@@ -39,8 +48,9 @@ export const Box = ({ id }: BoxProps) => {
   if (!item) return null;
   if (item.hide) return null;
 
-  const type = item.type || 'div';
-  const Comp = ctrl.getComp(type);
+  const type = item.type || 'rect';
+  const boxConfig = ctrl.registry[type] || {} as Partial<BoxConfig>;
+  const Comp = boxConfig.comp || 'div';
 
   const style = computeStyle(item.style);
   if (item.pos) {
@@ -53,9 +63,8 @@ export const Box = ({ id }: BoxProps) => {
   }
 
   const props: DivProps = {
-    class: item.cls ? `Box Box-${type} ${item.cls}` : `Box Box-${type}`,
+    ...c('', `-${type}`, item.cls),
     style,
-    ...item.props,
     id,
     ref,
   };
@@ -89,5 +98,5 @@ export const Box = ({ id }: BoxProps) => {
 
   console.debug('render', id, item, ctrl, props, children);
 
-  return createElement(Comp, props, ...children);
+  return (boxConfig.render || createElement)(Comp, props, ...children);
 };

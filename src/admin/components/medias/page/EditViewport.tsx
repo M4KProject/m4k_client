@@ -17,7 +17,6 @@ const c = Css('EditViewport', {
     bg: 'b0',
     col: 1,
   },
-  'Body div': {},
 });
 
 export const EditViewport = () => {

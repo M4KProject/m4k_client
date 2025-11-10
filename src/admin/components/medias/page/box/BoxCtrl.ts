@@ -11,7 +11,7 @@ import {
   isFunction,
   Pipe,
 } from 'fluxio';
-import { ComponentType } from 'preact';
+import { ComponentType, createElement } from 'preact';
 import { BoxFun, BoxData } from './boxTypes';
 import { BoxCarousel } from './BoxCarousel';
 import { PanZoomCtrl } from '@/components/PanZoom';
@@ -49,14 +49,24 @@ export const getParents = (boxes: Dictionary<BoxData>) => {
   return parents;
 };
 
+export type BoxLabel = string;
+
+type On = 1|0
+
+export interface BoxConfig {
+  comp: BoxComponent;
+  label: string;
+  children?: On;
+  text?: On;
+  pos?: On;
+  render?: typeof createElement;
+}
+
 export class BoxCtrl {
-  readonly registry: Dictionary<BoxComponent> = {
-    div: 'div',
-    span: 'span',
-    p: 'p',
-    section: 'section',
-    article: 'article',
-    carousel: BoxCarousel,
+  readonly registry: Dictionary<BoxConfig> = {
+    box: { comp: 'div', label: 'Box', children: 1, pos: 1 },
+    text: { comp: 'span', label: 'Texte', text: 1, pos: 1 },
+    carousel: { comp: BoxCarousel, label: 'Carousel', text: 1, children: 1, pos: 1 },
   };
   readonly funs: Dictionary<(boxEvent: BoxEvent) => void> = {};
 
@@ -86,8 +96,8 @@ export class BoxCtrl {
     });
   }
 
-  register(type: string, component: BoxComponent) {
-    this.registry[type] = component;
+  register(type: string, boxConfig: BoxConfig) {
+    this.registry[type] = boxConfig;
   }
 
   funCall(fun: BoxFun | undefined, boxEvent: BoxEvent) {
@@ -131,10 +141,6 @@ export class BoxCtrl {
     log.d('boxClick event', boxEvent);
     this.funCall(box?.onClick, boxEvent);
     this.click$.set(boxEvent);
-  }
-
-  getComp(type: string) {
-    return (type && this.registry[type]) || 'div';
   }
 
   get(id?: string) {

@@ -1,4 +1,4 @@
-import { Css } from 'fluxio';
+import { Css, jsonParse, jsonStringify } from 'fluxio';
 import { ComponentChildren } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import { toNumber } from 'fluxio';
@@ -28,7 +28,7 @@ const c = Css('Field', {
     row: ['center', 'between'],
   },
   '-col': {
-    col: 'stretch',
+    col: ['stretch', 'start'],
   },
   '-error &Label': { fg: 'error' },
   '-error &Input': { border: 'error' },
@@ -135,7 +135,7 @@ export type FieldType =
   | 'password'
   | 'text'
   | 'multiline'
-  | 'html'
+  | 'json'
   | 'color'
   | 'number'
   | 'select'
@@ -168,9 +168,15 @@ export interface FieldProps<T = any> extends FieldInfo, DivProps {
   cast?: (next: any) => T;
   onValue?: (next: T) => void;
   delay?: number;
+  Comp?: FieldComp,
 }
 
 export const castByType: Dictionary<(next: any) => any> = {
+  json: (next: any) => {
+    const casted = jsonParse(next);
+    if (casted === null) throw toError('not-a-json');
+    return casted;
+  },
   number: (next: any) => {
     const casted = toNumber(next, null);
     if (casted === null) throw toError('not-a-number');
@@ -184,6 +190,7 @@ export const castByType: Dictionary<(next: any) => any> = {
 };
 
 export const formatByType: Dictionary<(value: any) => any> = {
+  json: (value: any) => jsonStringify(value, undefined, 2),
   seconds: (value: any) => {
     if (typeof value === 'number') return formatSeconds(value);
     return value || '';
@@ -273,17 +280,6 @@ const compByType: Record<FieldType, FieldComp> = {
       {...c(cls, fieldProps.props)}
     />
   ),
-  number: ({ cls, name, required, value, onChange, fieldProps }) => (
-    <input
-      type="number"
-      name={name}
-      required={required}
-      value={value || ''}
-      onChange={onChange}
-      {...fieldProps.props}
-      {...c(cls, fieldProps.props)}
-    />
-  ),
   multiline: ({ cls, name, required, value, onChange, fieldProps }) => (
     <textarea
       name={name}
@@ -295,13 +291,24 @@ const compByType: Record<FieldType, FieldComp> = {
       {...c(cls, fieldProps.props)}
     />
   ),
-  html: ({ cls, name, required, value, onChange, fieldProps }) => (
+  json: ({ cls, name, required, value, onChange, fieldProps }) => (
     <textarea
       name={name}
       required={required}
       value={value || ''}
       onChange={onChange}
       rows={5}
+      {...fieldProps.props}
+      {...c(cls, fieldProps.props)}
+    />
+  ),
+  number: ({ cls, name, required, value, onChange, fieldProps }) => (
+    <input
+      type="number"
+      name={name}
+      required={required}
+      value={value || ''}
+      onChange={onChange}
       {...fieldProps.props}
       {...c(cls, fieldProps.props)}
     />
@@ -402,6 +409,8 @@ export const Field = (props: FieldProps) => {
     onValue,
     delay,
     items,
+    Comp,
+    children,
     props: propsProps,
     ...divProps
   } = props;
@@ -488,7 +497,7 @@ export const Field = (props: FieldProps) => {
     }
   };
 
-  const Comp = compByType[type || 'text'] || compByType.text;
+  const FinalComp = Comp || (compByType[type || 'text'] || compByType.text);
 
   const formatValue = (value: any) => {
     const format = type && formatByType[type];
@@ -499,7 +508,7 @@ export const Field = (props: FieldProps) => {
     <div {...divProps} {...c('', col && '-col', type && `-${type}`, err && '-error', divProps)}>
       {label && <div {...c('Label')}>{label} :</div>}
       <div {...c('Content')}>
-        <Comp
+        <FinalComp
           cls={'Input'}
           name={name}
           value={formatValue(changed === undefined ? initiated : changed)}
@@ -508,6 +517,7 @@ export const Field = (props: FieldProps) => {
           required={required}
           fieldProps={props}
         />
+        {children}
         {err ?
           <div {...c('Error')}>
             <Tr>{err}</Tr>

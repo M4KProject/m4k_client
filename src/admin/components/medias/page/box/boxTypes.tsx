@@ -17,7 +17,6 @@ export interface BoxData {
   readonly cls?: string;
   readonly style?: Style;
 
-  readonly props?: Dictionary<any>;
 
   readonly text?: string;
   readonly mediaId?: string;
@@ -38,8 +37,8 @@ export interface BoxData {
   // category?: string;
   // tags?: string;
 
-  // // Data
-  // data?: Dictionary<string>;
+  // Data
+  readonly data?: Dictionary<any>;
 }
 
 // export const cleanBoxData = (d: BoxData) => {
