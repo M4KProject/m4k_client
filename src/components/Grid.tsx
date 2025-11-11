@@ -17,10 +17,10 @@ const c = Css('Grid', {
   Row: {
     row: ['center', 'between'],
     w: '100%',
-    bg: 'b0',
-    fg: 't2',
+    bg: 'bg',
+    fg: 't',
   },
-  'Row:nth-child(even)': { bg: 'b2', rounded: 2 },
+  'Row:nth-child(even)': { bg: 'bg', rounded: 2 },
   'Row:hover': { bg: 'trHover' },
   'Row-success': { fg: 'success' },
   'Row-error': { fg: 'error' },

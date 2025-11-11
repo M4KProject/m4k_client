@@ -14,9 +14,9 @@ const c = Css('JobStatus', {
   ' svg': {
     m: 4,
   },
-  '-pending': { fg: 'secondary' },
+  '-pending': { fg: 's' },
   '-processing': {
-    fg: 'primary',
+    fg: 'p',
     w: '100%',
   },
   '-finished': { fg: 'success' },

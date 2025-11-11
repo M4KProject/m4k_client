@@ -18,13 +18,14 @@ import { tooltip } from '@/components/Tooltip';
 const c = Css('EditViewportControls', {
   '': {
     position: 'absolute',
-    b: 1,
-    r: 1,
+    b: 8,
+    r: '50%',
     row: 'center',
-    bg: 'b0',
+    bg: 'bg',
     elevation: 1,
     zIndex: 20,
     rounded: 5,
+    translateX: '50%',
   },
 });
 

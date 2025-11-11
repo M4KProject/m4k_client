@@ -21,7 +21,7 @@ const c = Css('PdfView', {
     position: 'absolute',
     inset: 0,
     overflow: 'auto',
-    bg: 'b2',
+    bg: 'bg',
   },
   Page: {
     position: 'absolute',
@@ -37,7 +37,7 @@ const c = Css('PdfView', {
     row: ['center', 'center'],
     gap: 0.5,
     zIndex: 10,
-    bg: 'b1',
+    bg: 'bg',
     opacity: 0.9,
     p: 4,
     rounded: 5,

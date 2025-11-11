@@ -13,8 +13,8 @@ const c = Css('AuthPage', {
     row: 'stretch',
     position: 'fixed',
     overflow: 'auto',
-    fg: 't2',
-    bg: 'b2',
+    fg: 't',
+    bg: 'bg0',
     inset: 0,
   },
   Content: {
@@ -25,8 +25,8 @@ const c = Css('AuthPage', {
   Logo: {
     bgUrl: logoUrl,
     bgMode: 'contain',
-    w: 160,
-    h: 5,
+    w: 300,
+    h: 100,
   },
   Title: {
     m: 0,
@@ -37,14 +37,14 @@ const c = Css('AuthPage', {
   Illu: {
     bgUrl: loginUrl,
     bgMode: 'contain',
-    h: 15,
+    h: 200,
     w: 240,
   },
   BottomButtons: {
     row: 'center',
     position: 'fixed',
-    b: 1,
-    l: 1,
+    b: 8,
+    l: 8,
     opacity: 0.7,
   },
 });

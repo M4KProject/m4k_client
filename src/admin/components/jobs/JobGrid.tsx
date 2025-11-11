@@ -26,7 +26,7 @@ const c = Css('JobGrid', {
     w: 40,
     elevation: 3,
     rounded: 5,
-    bg: 'b0',
+    bg: 'bg',
     col: 1,
     transition: 1,
   },

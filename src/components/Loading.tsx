@@ -19,7 +19,7 @@ const c = Css('Loading', {
   SpinnerCircle: {
     w: 5,
     h: 5,
-    bg: 'p5',
+    bg: 'p',
     rounded: 50,
     center: 1,
   },
@@ -27,7 +27,7 @@ const c = Css('Loading', {
     w: 2.5,
     h: 2.5,
     border: 3,
-    borderColor: 'w1',
+    borderColor: 'handle',
     borderTop: 'transparent',
     rounded: 50,
     anim: {

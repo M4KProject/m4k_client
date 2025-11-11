@@ -19,17 +19,17 @@ const c = Css('Select', {
     inset: 0,
     row: 1,
     wh: '100%',
-    border: 'g2',
+    border: 'border',
     rounded: 3,
-    bg: 'b0',
+    bg: 'bg',
     cursor: 'pointer',
   },
   'Container:hover': {
-    borderColor: 'p5',
+    borderColor: 'p',
     elevation: 1,
   },
   'Container:focus-within': {
-    borderColor: 'p5',
+    borderColor: 'p',
     elevation: 1,
   },
   Input: {
@@ -50,9 +50,9 @@ const c = Css('Select', {
     y: '100%',
     w: '100%',
     mt: 2,
-    bg: 'b1',
-    fg: 't1',
-    border: 'g2',
+    bg: 'bg',
+    fg: 't',
+    border: 'border',
     borderTop: 'none',
     rounded: [0, 0, 4, 4],
     hMax: 100,
@@ -67,14 +67,14 @@ const c = Css('Select', {
     transition: 0.2,
   },
   'Option:hover': {
-    bg: 'b2',
+    bg: 'bg',
   },
   'Option-selected': {
-    bg: 'p2',
-    fg: 'p6',
+    bg: 'p',
+    fg: 'p',
   },
   'Option-highlighted': {
-    bg: 'b2',
+    bg: 'bg',
   },
   Arrow: {
     center: 1,

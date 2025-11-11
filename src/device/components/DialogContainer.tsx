@@ -17,7 +17,7 @@ const c = Css('DialogContainer', {
     maxWidth: '90%',
     minWidth: '400px',
     overflow: 'hidden',
-    bg: 'b0',
+    bg: 'bg',
   },
   Header: {
     center: 1,

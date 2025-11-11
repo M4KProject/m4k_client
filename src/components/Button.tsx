@@ -13,7 +13,7 @@ const c = Css('Button', {
     rounded: 5,
     border: 0,
     bg: 'transparent',
-    fg: 'w2',
+    fg: 'handle',
     whMin: 20,
     elevation: 1,
     transition: 0.5,
@@ -23,7 +23,7 @@ const c = Css('Button', {
   Sfx: {
     position: 'absolute',
     inset: 0,
-    bg: 's5',
+    bg: 's',
     transition: 0.5,
     scaleX: 0,
     transformOrigin: 'left',
@@ -47,26 +47,27 @@ const c = Css('Button', {
     rounded: 5,
   },
 
-  '-primary': { bg: 'p5' },
-  '-secondary': { bg: 's4' },
+  '-primary': { bg: 'p' },
+  '-secondary': { bg: 's' },
   '-success': { bg: 'success' },
   '-warn': { bg: 'warn' },
   '-error': { bg: 'error' },
-  '-default': { bg: 'b1', fg: 't2' },
+  '-default': { bg: 'bg', fg: 't' },
 
   '-icon': { m: 0, bg: 'transparent', elevation: 0 },
-  '-icon&-primary': { fg: 'p5' },
-  '-icon&-secondary': { fg: 's4' },
+
+  '-icon&-primary': { fg: 'p' },
+  '-icon&-secondary': { fg: 's' },
   '-icon&-success': { fg: 'success' },
   '-icon&-warn': { fg: 'warn' },
   '-icon&-error': { fg: 'error' },
-  '-icon&-default': { fg: 't2' },
+  '-icon&-default': { fg: 't' },
 
-  ':active': { bg: 'p4', fg: 'w2' },
-  '-selected': { bg: 'p4', fg: 'w2' },
+  ':active': { bg: 'p', fg: 'handle' },
+  '-selected': { bg: 'p', fg: 'handle' },
 
   ':hover &Sfx': { scaleX: 1 },
-  ':hover': { elevation: 0, fg: 'w0' },
+  ':hover': { elevation: 0, fg: 'w' },
 });
 
 type BaseButtonProps = Omit<Props['button'] & Props['a'], 'onClick'> & {

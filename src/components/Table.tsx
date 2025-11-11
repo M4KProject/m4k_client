@@ -11,15 +11,15 @@ const c = Css('Table', {
   Row: {
     borderCollapse: 'collapse',
     w: '100%',
-    bg: 'b0',
-    fg: 't2',
+    bg: 'bg',
+    fg: 't',
     h: 3,
   },
 
   'Row-success': { fg: 'success' },
   'Row-error': { fg: 'error' },
   'Row-selected': { fg: 'selected' },
-  'Row:nth-child(even)': { bg: 'b2', rounded: 2 },
+  'Row:nth-child(even)': { bg: 'bg', rounded: 2 },
   'Row:hover': { bg: 'trHover' },
 
   Cell: {
@@ -60,10 +60,10 @@ const c = Css('Table', {
   },
 
   RowHead: {
-    bg: 'b0',
+    bg: 'bg',
   },
   CellHead: {
-    fg: 't2',
+    fg: 't',
   },
   'CellHead &CellContent': {
     h: 2.5,

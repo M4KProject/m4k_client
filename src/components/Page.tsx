@@ -10,7 +10,7 @@ const c = Css('Page', {
   Container: {
     col: 1,
     overflowY: 'auto',
-    bg: 'b2',
+    bg: 'bg',
     p: 4,
     flex: 1,
   },
@@ -18,7 +18,7 @@ const c = Css('Page', {
     flex: 1,
     col: 1,
     position: 'relative',
-    bg: 'b0',
+    bg: 'bg',
     m: 4,
     rounded: 5,
     elevation: 2,

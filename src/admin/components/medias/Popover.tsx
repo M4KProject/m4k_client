@@ -35,7 +35,7 @@ const c = Css('Popover', {
     zIndex: 100,
     translate: '-50%, -50%',
     rounded: 3,
-    bg: 'b1',
+    bg: 'bg',
     bgMode: 'contain',
     elevation: 3,
   },

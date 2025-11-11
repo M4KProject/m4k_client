@@ -16,8 +16,9 @@ addTr({
 const c = Css('AuthForm', {
   '': {
     col: ['stretch', 'center'],
-    w: 40,
-    bg: 'b0',
+    w: 400,
+    bg: 'bg',
+    elevation: 2,
   },
   ' .Button': {
     elevation: 0,

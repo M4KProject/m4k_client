@@ -10,8 +10,8 @@ const c = Css('TabPanel', {
 
   Tabs: {
     row: ['center', 'start'],
-    bb: 'b2',
-    bg: 'b0',
+    bb: 'bg',
+    bg: 'bg',
   },
 
   Content: {

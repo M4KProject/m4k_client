@@ -8,10 +8,10 @@ const c = Css('EditSide', {
   '': {
     position: 'relative',
     elevation: 2,
-    borderLeft: 'g3',
+    borderLeft: 'border',
     p: 4,
     w: 300,
-    bg: 'b0',
+    bg: 'bg',
     zIndex: 10,
     col: 1,
   },

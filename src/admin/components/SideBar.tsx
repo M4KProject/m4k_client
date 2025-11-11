@@ -11,10 +11,10 @@ import { MediaType } from '@/api/models';
 
 const c = Css('SideBar', {
   Version: {
-    color: 'p8',
+    color: 'p',
     bold: 1,
     borderBottom: 1,
-    borderColor: 'p8',
+    borderColor: 'p',
     opacity: 0.3,
     fontSize: '12px',
     center: 1,

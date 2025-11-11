@@ -19,14 +19,14 @@ const c = Css('EditHandles', {
     inset: 0,
     pointerEvents: 'none',
     m: '-1px',
-    border: 'primary',
+    border: 'p',
   },
   ' div': {
     position: 'absolute',
     wh: '9px',
     m: '-5px',
-    border: 'secondary',
-    bg: 'b0',
+    border: 's',
+    bg: 'bg',
     pointerEvents: 'all',
   },
 });

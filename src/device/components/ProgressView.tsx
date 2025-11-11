@@ -8,7 +8,7 @@ import { Progress } from '@/components/Progress';
 const c = Css('ProgressView', {
   '': {
     col: 'stretch',
-    bg: 'b0',
+    bg: 'bg',
   },
   Logs: {
     col: 1,

@@ -13,7 +13,7 @@ const c = Css('Side', {
     transition: 0.2,
     elevation: 3,
     w: SIDE_MIN,
-    bg: 'b0',
+    bg: 'bg',
     zIndex: 50,
   },
   Mask: {

@@ -10,7 +10,7 @@ const c = Css('Form', {
   Title: {
     col: ['start', 'end'],
     py: 4,
-    color: 'p8',
+    color: 'p',
     bold: 1,
     // borderBottom: '1px solid #0a536f',
   },

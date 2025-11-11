@@ -17,7 +17,7 @@ const c = Css('Apps', {
     row: ['center', 'between'],
     m: 4,
     p: 4,
-    bg: 'b1',
+    bg: 'bg',
     rounded: 5,
   },
   AppInfo: {

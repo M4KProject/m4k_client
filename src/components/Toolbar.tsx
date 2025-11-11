@@ -4,8 +4,8 @@ import { Tr } from './Tr';
 
 const c = Css('Toolbar', {
   '': {
-    bg: 'b1',
-    fg: 't3',
+    bg: 'bg',
+    fg: 't',
     px: 8,
     my: 0,
     elevation: 2,
@@ -14,7 +14,7 @@ const c = Css('Toolbar', {
     zIndex: 20,
   },
   Title: {
-    fg: 't2',
+    fg: 't',
     flex: 1,
     bold: 1,
   },

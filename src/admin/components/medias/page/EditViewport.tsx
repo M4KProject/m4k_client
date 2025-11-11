@@ -14,7 +14,7 @@ const c = Css('EditViewport', {
     position: 'absolute',
     inset: 0,
     overflow: 'hidden',
-    bg: 'b0',
+    bg: 'bg',
     col: 1,
   },
 });

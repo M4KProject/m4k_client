@@ -9,8 +9,8 @@ const c = Css('Progress', {
   '': {
     center: 1,
     position: 'relative',
-    bg: 'b1',
-    border: 'primary',
+    bg: 'bg',
+    border: 'p',
     borderRadius: '0.2em',
     w: '100%',
     overflow: 'hidden',
@@ -20,7 +20,7 @@ const c = Css('Progress', {
     position: 'absolute',
     xy: 0,
     wh: '100%',
-    bg: 'primary',
+    bg: 'p',
     borderRadius: '0.2em 0 0 0.2em',
     overflow: 'hidden',
     transition: 0.5,
@@ -30,11 +30,11 @@ const c = Css('Progress', {
     position: 'absolute',
     xy: 0,
     wh: '100%',
-    fg: 't1',
+    fg: 't',
     zIndex: 1,
   },
   'Text-in': {
-    fg: 'w1',
+    fg: 'handle',
     transition: 0.5,
   },
 });
