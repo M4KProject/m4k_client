@@ -190,7 +190,10 @@ export const castByType: Dictionary<(next: any) => any> = {
 };
 
 export const formatByType: Dictionary<(value: any) => any> = {
-  json: (value: any) => jsonStringify(value, undefined, 2),
+  json: (value: any) => {
+    if (typeof value === 'string') return value;
+    return jsonStringify(value, undefined, 2);
+  },
   seconds: (value: any) => {
     if (typeof value === 'number') return formatSeconds(value);
     return value || '';
