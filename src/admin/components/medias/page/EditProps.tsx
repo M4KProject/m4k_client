@@ -93,7 +93,7 @@ const Align = () => {
     }
     
     return (
-      <Button color="primary" icon={icon} selected={selected} onClick={handleClick} />
+      <Button icon={icon} selected={selected} onClick={handleClick} />
     )
   };
 
@@ -105,7 +105,7 @@ const Align = () => {
     }
     
     return (
-      <Button color="primary" icon={icon} selected={selected} onClick={handleClick} />
+      <Button icon={icon} selected={selected} onClick={handleClick} />
     )
   };
 

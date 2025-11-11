@@ -66,6 +66,7 @@ export const refreshTheme = () => {
   const warn = setHsl(p, { h: 30 });
   const mask = isD ? setRgb(bg, { a: 0.8 }) : setRgb(bg, { a: 0.8 });
   const shadow = isD ? setHsl(p, { l: 10 }) : setHsl(p, { s: 100, l: 20, a: 0.1 });
+  const btn = isD ? setHsl(p, { s: 10, l: 5 }) : setHsl(p, { s: 10, l: 95 });
   
   Object.assign(theme, {
     handle,
@@ -82,6 +83,7 @@ export const refreshTheme = () => {
     warn,
     mask,
     shadow,
+    btn,
   });
 
   setCssColors(theme as Dictionary<string>);
