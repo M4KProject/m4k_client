@@ -179,7 +179,7 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
         />
       </>
     ),
-    { w: 140, cls: c('Actions') },
+    { w: 160, cls: c('Actions') },
   ],
 };
 

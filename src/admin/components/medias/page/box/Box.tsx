@@ -31,19 +31,19 @@ const c = Css('Box', {
 })
 
 export interface BoxProps {
-  id: string;
+  i: number;
 }
-export const Box = ({ id }: BoxProps) => {
+export const Box = ({ i }: BoxProps) => {
   const ref = useRef<any>(null);
   const el = ref.current;
   const ctrl = useBoxCtrl();
-  const item = useFlux(ctrl.get$(id));
+  const item = useFlux(ctrl.item$(i));
 
   useEffect(() => {
     if (el) {
-      ctrl.boxInit(id, el);
+      ctrl.boxInit(i, el);
     }
-  }, [id, el]);
+  }, [i, el]);
 
   if (!item) return null;
   if (item.hide) return null;
@@ -63,22 +63,22 @@ export const Box = ({ id }: BoxProps) => {
   }
 
   const props: DivProps = {
-    ...c('', `-${type}`, { class: item.cls }),
+    ...c('', `-${type}`, item),
     style,
-    id,
+    id: 'Box'+i,
     ref,
   };
 
   props.onClick = (event) => {
-    console.debug('onClick', id, event, el);
-    ctrl.boxClick(id, event);
+    console.debug('onClick', i, event, el);
+    ctrl.boxClick(i, event);
   };
 
   const children: ComponentChildren[] = [];
 
   if (item.children) {
-    for (const childId of item.children) {
-      children.push(<Box key={childId} id={childId} />);
+    for (const c of item.children) {
+      children.push(<Box key={c} i={c} />);
     }
   }
 
@@ -96,7 +96,7 @@ export const Box = ({ id }: BoxProps) => {
     }
   }
 
-  console.debug('render', id, item, ctrl, props, children);
+  console.debug('render', i, item, ctrl, props, children);
 
   return (boxConfig.render || createElement)(Comp, props, ...children);
 };

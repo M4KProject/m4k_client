@@ -1,4 +1,4 @@
-import { Style, Dictionary, Item } from 'fluxio';
+import { Style, Dictionary, Item, NextState } from 'fluxio';
 
 export interface BoxFun {
   readonly name?: string;
@@ -7,39 +7,56 @@ export interface BoxFun {
 }
 
 export interface BoxData {
+  readonly children?: number[]; // children ids
   readonly type?: string;
-  readonly children?: string[];
-
+  readonly class?: string; // html class
   readonly name?: string;
   readonly hide?: boolean;
-
-  readonly pos?: [number, number, number, number];
-  readonly cls?: string;
-  readonly style?: Style;
-
-
-  readonly text?: string;
-  readonly mediaId?: string;
-
-  readonly onInit?: BoxFun;
-  readonly onClick?: BoxFun;
-
-  // // Carousel
-  // delay?: number;
-  // duration?: number;
-
-  // Events
-  // onShow?: BoxFun;
-  // onHide?: BoxFun;
-
-  // // Filter
-  // page?: string;
-  // category?: string;
-  // tags?: string;
-
-  // Data
+  readonly pos?: [number, number, number, number]; // absolute x%, y%, width%, height%
+  readonly style?: Style; // style
+  readonly text?: string; // multiline text content with **bold**
+  readonly media?: string; // media id
+  readonly init?: BoxFun; // on init event
+  readonly click?: BoxFun; // on click event
   readonly data?: Dictionary<any>;
 }
+
+export interface BoxItem extends BoxData {
+  readonly i: number;
+  readonly parent: number; // parent index
+  readonly children: number[]; // children index
+  readonly el?: HTMLElement;
+}
+
+export interface BoxHierarchy {
+  readonly i: number;
+  readonly parent?: BoxHierarchy;
+  readonly children: BoxHierarchy[];
+  readonly depth: number;
+  readonly item: BoxItem;
+}
+
+export type BoxItems = Readonly<BoxItem[]>;
+export type BoxHierarchies = Readonly<BoxHierarchy[]>;
+export type BoxProps = keyof BoxItem;
+export type BoxChanges = Partial<BoxItem>;
+export type BoxPropNext<K extends BoxProps> = NextState<BoxChanges[K]>;
+export type BoxNext = NextState<BoxChanges | undefined>;
+
+// // Carousel
+// delay?: number;
+// duration?: number;
+
+// Events
+// onShow?: BoxFun;
+// onHide?: BoxFun;
+
+// // Filter
+// page?: string;
+// category?: string;
+// tags?: string;
+
+// Data
 
 // export const cleanBoxData = (d: BoxData) => {
 //   delete d.l;

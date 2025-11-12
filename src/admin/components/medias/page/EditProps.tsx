@@ -1,12 +1,12 @@
-import { Css, CssStyle, Dictionary, firstUpper, isArray, isDefined, isString, NextState, pascalCase, SetState, Style, StyleFlexAlign, StyleFlexJustify, toArray } from 'fluxio';
+import { Css, isArray, isDefined, Style, StyleFlexAlign, StyleFlexJustify } from 'fluxio';
 import { BoxConfig, useBoxCtrl } from './box/BoxCtrl';
 import { Field, FieldProps } from '@/components/Field';
 import { Tr } from '@/components/Tr';
 import { useFlux, useFluxMemo } from '@/hooks/useFlux';
-import { BoxData } from './box/boxTypes';
+import { BoxData, BoxItem, BoxPropNext } from './box/boxTypes';
 import { ComponentChildren } from 'preact';
 import { isAdvanced$ } from '@/router';
-import { Button, ButtonProps } from '@/components/Button';
+import { Button } from '@/components/Button';
 import {
   // Texte
   AlignLeft,
@@ -47,15 +47,14 @@ const c = Css('EditProps', {
   }
 });
 
-const useProp = <K extends keyof BoxData>(
+const useProp = <K extends keyof BoxItem>(
   prop: K
-): [BoxData[K] | undefined, SetState<BoxData[K]>] => {
+): [BoxItem[K] | undefined, (next: BoxPropNext<K>) => BoxItem | undefined] => {
   const ctrl = useBoxCtrl();
-  const id = useFlux(ctrl.click$).id;
-  const value = useFluxMemo(() => ctrl.getProp$(id, prop), [id, prop]);
-  return [value, (next: NextState<BoxData[K]>) => ctrl.setProp(id, prop, next)];
+  const i = useFlux(ctrl.click$).i;
+  const value = useFluxMemo(() => ctrl.prop$(i, prop), [i, prop]);
+  return [value, (next: BoxPropNext<K>) => ctrl.setProp(i, prop, next)];
 };
-
 
 export const EditProp = ({ prop, defaultValue, ...props }: FieldProps & { prop: keyof BoxData, defaultValue?: any }) => {
   const [value, setValue] = useProp(prop);
@@ -154,20 +153,20 @@ export const EditStyleProp = ({ prop, ...props }: FieldProps & { prop: string })
 
 export const BoxProp = () => {
   const ctrl = useBoxCtrl();
-  const id = useFlux(ctrl.click$).id;
-  const value = useFluxMemo(() => ctrl.get$(id), [id]);
-  const onValue = (value: any) => {
-    ctrl.set(id, value);
+  const i = useFlux(ctrl.click$).i;
+  const item = useFluxMemo(() => ctrl.item$(i), [i]);
+  const onValue = (next: any) => {
+    ctrl.set(i, next);
   }
-  return <Field label="Box" name="box" type="json" value={value} onValue={onValue} col />;
+  return <Field label="Box" name="box" type="json" value={item} onValue={onValue} col />;
 };
 
 export const EditProps = () => {
   const ctrl = useBoxCtrl();
   const select = useFlux(ctrl.click$);
   const isAdvanced = useFlux(isAdvanced$);
-  const id = select.id;
-  const box = select.box;
+  const i = select.i;
+  const item = select.item;
   const types = Object.entries(ctrl.registry).map(
     ([type, config]) => [type, <Tr>{config.label}</Tr>] as [string, ComponentChildren]
   );
@@ -175,14 +174,14 @@ export const EditProps = () => {
   const type = nType || 'box';
   const config = ctrl.registry[type] || {} as Partial<BoxConfig>;
 
-  if (!id || !box) return null;
+  if (!i || !item) return null;
 
   return (
     <div {...c()}>
       <EditProp label="Nom" prop="name" />
       <EditProp label="Cacher" prop="hide" type="switch" />
       <EditProp label="Type" prop="type" type="select" defaultValue="box" items={types} />
-      <EditProp label="Classe" prop="cls" />
+      <EditProp label="Classe" prop="class" />
       <Align />
       
       {config.text && (
@@ -196,7 +195,7 @@ export const EditProps = () => {
           <EditStyleProp prop="fg" type="color" />
         </>
       )} />
-      <EditProp label="Media" prop="mediaId" />
+      <EditProp label="Media" prop="media" />
       {/* <Field label="Bordure" Comp={() => (
         <>
           <EditStyleProp prop="borderColor" type="color" />
@@ -210,9 +209,9 @@ export const EditProps = () => {
           {/* <EditProp label="Position" prop="pos" type="json" col /> */}
           
           <EditProp label="Style" prop="style" type="json" col />
-          <EditProp label="Click" prop="onClick" type="json" col />
-          <EditProp label="Init" prop="onInit" type="json" col />
-          <EditProp label="Data" prop="data" type="json" col />
+          <EditProp label="Click" prop="click" type="json" col />
+          <EditProp label="Init" prop="init" type="json" col />
+          {/* <EditProp label="Data" prop="data" type="json" col /> */}
           <BoxProp />
         </>
       )}

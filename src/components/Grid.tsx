@@ -76,7 +76,7 @@ export interface GridProps<T extends {} = any, C extends {} = any> extends DivPr
     ctx: C,
     index: number
   ) => DivProps & { mode?: 'success' | 'error' | 'selected' };
-  items: T[];
+  items: Readonly<T[]>;
 }
 
 export interface IGrid {

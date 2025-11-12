@@ -31,7 +31,7 @@ const c = Css('Popover', {
   },
   '-over &Float': {
     xy: '50%',
-    wh: 15,
+    wh: 200,
     zIndex: 100,
     translate: '-50%, -50%',
     rounded: 3,

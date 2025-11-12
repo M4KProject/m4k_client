@@ -1,10 +1,10 @@
 import { Css } from 'fluxio';
-import { MediaModel } from '@/api';
 import { uuid } from 'fluxio';
 import { useMemo } from 'preact/hooks';
 import { Popover, useIsOver } from './Popover';
 import { getVariants } from '@/api/getVariants';
 import { getMediaUrl } from '@/api/getMediaUrl';
+import { MediaModel } from '@/api/models';
 
 const c = Css('MediaPreview', {
   Video: {

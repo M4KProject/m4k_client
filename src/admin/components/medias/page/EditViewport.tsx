@@ -25,7 +25,7 @@ export const EditViewport = () => {
     <div {...c()}>
       <PanZoom ctrl={ctrl.panZoom}>
         <div {...c('Body')}>
-          <Box id="root" />
+          <Box i={0} />
         </div>
       </PanZoom>
       <EditViewportControls />

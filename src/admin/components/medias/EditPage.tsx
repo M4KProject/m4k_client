@@ -18,23 +18,40 @@ export const EditPage = ({ page }: { page: PageModel }) => {
   const ctrl = useMemo(() => new BoxCtrl(), []);
 
   useEffect(() => {
-    ctrl.set('aaa', {
-      pos: [10, 10, 30, 10],
-      style: { bg: '#0000FF', fg: '#AAAAFF', center: 1 },
-      text: 'Ma **BOX** aaa',
-    });
-    ctrl.set('bbb', {
-      pos: [20, 18, 50, 10],
-      style: { bg: '#00FF00AA', fg: '#FF0000', col: ['end', 'end'] },
-      text: 'Ma **BOX** bbb',
-    });
-    ctrl.set('root', {
-      children: ['aaa', 'bbb'],
-      style: {
-        bg: '#00FFFF',
-        wh: '100%',
+    ctrl.setAllData([
+      {
+        style: { bg: "#00FFFF", wh: "100%" },
+        children: [1, 2]
       },
-    });
+      {
+        pos: [10, 10, 30, 10],
+        style: { bg: "#0000FF", fg: "#AAAAFF", center: 1 },
+        text: "Ma **BOX** aaa"
+      },
+      {
+        pos: [20, 18, 50, 10],
+        style: { bg: "#00FF00AA", fg: "#FF0000", col: ["end", "end"] },
+        text: "Ma **BOX** bbb"
+      }
+    ])
+    // ctrl.set('root', {
+    //   style: {
+    //     bg: '#00FFFF',
+    //     wh: '100%',
+    //   },
+    // });
+    // ctrl.set('aaa', {
+    //   parent: 'root',
+    //   pos: [10, 10, 30, 10],
+    //   style: { bg: '#0000FF', fg: '#AAAAFF', center: 1 },
+    //   text: 'Ma **BOX** aaa',
+    // });
+    // ctrl.set('bbb', {
+    //   parent: 'root',
+    //   pos: [20, 18, 50, 10],
+    //   style: { bg: '#00FF00AA', fg: '#FF0000', col: ['end', 'end'] },
+    //   text: 'Ma **BOX** bbb',
+    // });
   }, []);
 
   useEffect(() => {

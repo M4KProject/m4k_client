@@ -2,6 +2,7 @@ import {
   Css,
   CssStyle,
   fluxCombine,
+  fluxTimer,
   getEventXY,
   mustExist,
   onHtmlEvent,
@@ -71,8 +72,8 @@ const startResize = (ctrl: BoxCtrl, dir: HandleDir, name: string, event: Event) 
     console.debug('startResize', dir, name, event);
     stopEvent(event);
 
-    const id = mustExist(ctrl.click$.get()?.id, 'id');
-    const box = mustExist(ctrl.get(id), 'box');
+    const i = mustExist(ctrl.click$.get()?.i, 'i');
+    const box = mustExist(ctrl.get(i), 'box');
     const pos = mustExist(box.pos, 'pos');
 
     const [xDir, yDir, wDir, hDir] = dir;
@@ -118,7 +119,7 @@ const startResize = (ctrl: BoxCtrl, dir: HandleDir, name: string, event: Event) 
       const w = pxToPrctX(wPx);
       const h = pxToPrctY(hPx);
 
-      ctrl.update(id, { pos: [x, y, w, h] });
+      ctrl.update(i, { pos: [x, y, w, h] });
     };
 
     const onEnd = (event: Event) => {
@@ -147,16 +148,22 @@ export const EditHandles = () => {
     if (!ctrl) return;
     if (!el) return;
 
-    return fluxCombine(ctrl.click$, ctrl.boxes, ctrl.panZoom.after$, ctrl.panZoom.after$.delay(100))
+    return fluxCombine(
+      ctrl.click$,
+      ctrl.items$,
+      ctrl.panZoom.after$,
+      ctrl.panZoom.after$.delay(100),
+    )
       .throttle(1000 / 60)
       .on(([click]) => {
-        const { element, box } = click || {};
-        if (!element || !box) {
+        const { el, item } = click || {};
+        if (!el) return;
+        if (!item) {
           setStyle(el, { display: 'none' });
           return;
         }
 
-        let { left, top, width, height } = element.getBoundingClientRect();
+        let { left, top, width, height } = el.getBoundingClientRect();
 
         const viewportRect = ctrl.panZoom.viewportRect();
         left -= viewportRect.left;
