@@ -30,6 +30,9 @@ const c = Css('Box', {
     overflowX: 'hidden',
     overflowY: 'auto',
   },
+  Content: {
+
+  }
 })
 
 export interface BoxProps {

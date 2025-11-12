@@ -23,7 +23,7 @@ export interface BoxData {
 
 export interface BoxItem extends BoxData {
   readonly i: number;
-  readonly parent: number; // parent index
+  readonly parent?: number; // parent index
   readonly children: number[]; // children index
   readonly el?: HTMLElement;
 }

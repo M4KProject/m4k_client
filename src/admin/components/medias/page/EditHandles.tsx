@@ -158,12 +158,12 @@ export const EditHandles = () => {
     )
       .throttle(1000 / 60)
       .on(([click, items, after1, after2]) => {
-        log.d('fluxCombine triggered', {
-          click: click?.i,
-          itemsLength: items.length,
-          after1Type: after1?.type,
-          after2Type: after2?.type
-        });
+        // log.d('fluxCombine triggered', {
+        //   click: click?.i,
+        //   itemsLength: items.length,
+        //   after1Type: after1?.type,
+        //   after2Type: after2?.type
+        // });
 
         const { el, item } = click || {};
         if (!el) return;

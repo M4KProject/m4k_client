@@ -146,7 +146,7 @@ export const Grid = (({ cols, ctx, select, getKey, rowProps, items, ...props }: 
         ))}
       </div>
       <div {...c('Body')}>
-        {items.map((item: any, index: number) => {
+        {(items||[]).map((item: any, index: number) => {
           const { mode, ...props } = rowProps ? rowProps(item, ctx, index) : {};
           return (
             <div key={getKey(item, index)} {...props} {...c('Row', mode && `Row-${mode}`, props)}>

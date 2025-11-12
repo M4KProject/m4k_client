@@ -23,6 +23,7 @@ import { createContext } from 'preact';
 import { useContext } from 'preact/hooks';
 import { SCREEN_SIZES } from '../EditViewportControls';
 import { fluxUndefined } from 'fluxio/flux/fluxUndefined';
+import { BoxIcon } from 'lucide-react';
 import { app } from '@/app';
 
 const log = logger('BoxCtrl');
@@ -51,34 +52,7 @@ export interface BoxConfig {
   text?: On;
   pos?: On;
   render?: typeof createElement;
-}
-
-export const computeHierarchy = (items: BoxItems): BoxHierarchies => {
-  const hierarchies: Writable<BoxHierarchy>[] = [];
-
-  for (let i=0,l=items.length; i<l; i++) {
-    const item = items[i];
-    if (item) hierarchies[i] = { i, depth: 0, children: [], item };
-  }
-
-  const childrenByIndex = groupBy(hierarchies, item => item.parent?.i);
-  for (let i=0,l=hierarchies.length; i<l; i++) {
-    const h = hierarchies[i]!;
-    h.parent = hierarchies[h.item.parent];
-    h.children = childrenByIndex[i] || [];
-  }
-
-  const getDepth = (h: Writable<BoxHierarchy>): number => {
-    if (h.depth !== 0) return h.depth;
-    if (!h.parent) return 0;
-    return h.depth = (getDepth(h.parent) + 1);
-  }
-  for (let i=0,l=hierarchies.length; i<l; i++) {
-    const h = hierarchies[i]!;
-    h.depth = getDepth(h);
-  }
-
-  return hierarchies;
+  icon?: typeof BoxIcon;
 }
 
 const applyChanges = (items: BoxItem[], i: number, prev: BoxItem|undefined, next: BoxItem|undefined) => {
@@ -121,14 +95,13 @@ const applyChanges = (items: BoxItem[], i: number, prev: BoxItem|undefined, next
 
 export class BoxCtrl {
   readonly registry: Dictionary<BoxConfig> = {
-    box: { comp: 'div', label: 'Box', children: 1, text: 1, pos: 1 },
+    box: { comp: 'div', label: 'Box', children: 1, pos: 1, icon: BoxIcon },
     text: { comp: 'span', label: 'Texte', text: 1, pos: 1 },
-    carousel: { comp: BoxCarousel, label: 'Carousel', text: 1, children: 1, pos: 1 },
+    carousel: { comp: BoxCarousel, label: 'Carousel', children: 1, pos: 1 },
   };
   readonly funs: Dictionary<(boxEvent: BoxEvent) => void> = {};
 
   readonly items$ = flux<BoxItems>([]);
-  readonly hierarchies$ = this.items$.throttle(1000).map(computeHierarchy);
 
   readonly el?: HTMLElement;
   readonly parentId?: string;
@@ -152,6 +125,10 @@ export class BoxCtrl {
       const [w, h] = SCREEN_SIZES[0]!;
       this.panZoom.setSize(w, h);
     });
+  }
+
+  getType(type?: string): BoxConfig {
+    return this.registry[type||'box'] || this.registry.box!;
   }
 
   register(type: string, boxConfig: BoxConfig) {
@@ -235,7 +212,7 @@ export class BoxCtrl {
     for (let i=0,l=data.length; i<l; i++) {
       const d = data[i];
       if (!d) continue;
-      items[i] = { ...d, i, parent: 0, children: uniq(d.children||[]) };
+      items[i] = { ...d, i, children: uniq(d.children||[]) };
     }
 
     for (let i=0,l=items.length; i<l; i++) {
@@ -245,7 +222,7 @@ export class BoxCtrl {
       const removed: number[] = [];
       for (const childIndex of children) {
         const child = items[childIndex];
-        if (!child || child.parent !== 0) {
+        if (!child) {
           removed.push(childIndex);
           continue;
         }
@@ -315,13 +292,7 @@ export class BoxCtrl {
         this.items$.map(items => items[i])
       : (fluxUndefined as Pipe<BoxItem | undefined, BoxItems>);
   }
-
-  hierarchy$(i?: number) {
-    return isInt(i) ?
-        this.hierarchies$.map(hierarchies => hierarchies[i])
-      : (fluxUndefined as Pipe<BoxHierarchy | undefined, BoxHierarchies>);
-  }
-
+  
   prop$<K extends BoxProps>(
     i: number | undefined,
     prop: K
