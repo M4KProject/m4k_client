@@ -9,9 +9,12 @@ import {
   clear,
   setStyle,
   mustExist,
+  logger,
 } from 'fluxio';
 import { useRef, useEffect } from 'preact/hooks';
 import { DivProps } from './types';
+
+const log = logger('PanZoom');
 
 const c = Css('PanZoom', {
   '': {
@@ -130,6 +133,9 @@ export class PanZoomCtrl {
   }
 
   onMouseDown(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    log.d('onMouseDown', target, target?.id);
+    
     const eventXY = getEventXY(event);
     if (!eventXY) return;
     stopEvent(event);

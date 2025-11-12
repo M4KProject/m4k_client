@@ -13,8 +13,6 @@ import {
   Writable,
   removeItem,
   uniq,
-  by,
-  randHex,
   isInt,
 } from 'fluxio';
 import { ComponentType, createElement } from 'preact';
@@ -27,7 +25,7 @@ import { SCREEN_SIZES } from '../EditViewportControls';
 import { fluxUndefined } from 'fluxio/flux/fluxUndefined';
 import { app } from '@/app';
 
-const log = logger('BoxController');
+const log = logger('BoxCtrl');
 
 export type BoxComponent = ComponentType<any> | string;
 
@@ -174,22 +172,22 @@ export class BoxCtrl {
     return { i, item, el, type, event, timeStamp: Date.now() };
   }
 
-  boxInit(i: number, el: HTMLElement) {
+  init(i: number, el: HTMLElement) {
     const prev = this.get(i);
-    log.d('boxInit', i, el, prev);
+    log.d('init', i, el, prev);
     if (!prev) return;
 
     const next = this.update(i, { el });
     const boxEvent = this.newEvent(i, 'init');
 
-    log.d('boxInit event', boxEvent);
+    log.d('init event', boxEvent);
     this.funCall(next?.init, boxEvent);
     this.init$.set(boxEvent);
   }
 
-  boxClick(i: number, event?: Event): void {
+  click(i: number, event?: Event): void {
     const box = this.get(i);
-    log.d('boxClick', i, event, box);
+    log.d('click', i, event, box);
 
     stopEvent(event);
 
@@ -197,7 +195,7 @@ export class BoxCtrl {
     const boxEvent = this.newEvent(i, 'click', event);
     boxEvent.count = (lastEvent.i === i ? lastEvent.count || 1 : 0) + 1;
 
-    log.d('boxClick event', boxEvent);
+    log.d('click event', boxEvent);
     this.funCall(box?.click, boxEvent);
     this.click$.set(boxEvent);
   }
@@ -230,6 +228,8 @@ export class BoxCtrl {
   }
 
   setAllData(data: BoxData[]) {
+    log.d('setAllData', data);
+
     const items = [] as Writable<BoxItem>[];
 
     for (let i=0,l=data.length; i<l; i++) {
@@ -260,6 +260,7 @@ export class BoxCtrl {
   }
 
   set(i?: number, replace?: BoxNext) {
+    log.d('set', i, replace);
     if (!i) return;
 
     const items = this.getItems();
@@ -277,12 +278,14 @@ export class BoxCtrl {
     const changes = prev && next && getChanges(prev, next);
     if (changes && isEmpty(changes)) return prev;
 
+    log.d('set changes', i, changes);
     this.items$.set(applyChanges([ ...items ], i, prev, next));
 
     return next;
   }
 
   update(i?: number, changes?: BoxNext) {
+    log.d('update', i, changes);
     return this.set(i, prev => {
       if (!prev) return prev;
       const results = isFunction(changes) ? changes(prev) : changes;
@@ -292,6 +295,7 @@ export class BoxCtrl {
   }
 
   setProp<K extends BoxProps>(i: number | undefined, prop: K, value: BoxPropNext<K>) {
+    log.d('setProp', i, prop, value);
     return this.set(i, prev => {
       if (!prev) return prev;
       const prevValue = prev[prop];

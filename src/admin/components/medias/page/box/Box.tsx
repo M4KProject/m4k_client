@@ -1,9 +1,11 @@
 import { ComponentChildren, createElement } from 'preact';
-import { computeStyle, Css } from 'fluxio';
+import { computeStyle, Css, logger } from 'fluxio';
 import { useEffect, useRef } from 'preact/hooks';
 import { BoxConfig, useBoxCtrl } from './BoxCtrl';
 import { useFlux } from '@/hooks/useFlux';
 import { DivProps } from '@/components/types';
+
+const log = logger('Box');
 
 // export interface WBoxData {
 //   mediaId?: string;
@@ -41,7 +43,7 @@ export const Box = ({ i }: BoxProps) => {
 
   useEffect(() => {
     if (el) {
-      ctrl.boxInit(i, el);
+      ctrl.init(i, el);
     }
   }, [i, el]);
 
@@ -70,8 +72,8 @@ export const Box = ({ i }: BoxProps) => {
   };
 
   props.onClick = (event) => {
-    console.debug('onClick', i, event, el);
-    ctrl.boxClick(i, event);
+    log.d('onClick', i, event, el);
+    ctrl.click(i, event);
   };
 
   const children: ComponentChildren[] = [];
@@ -96,7 +98,7 @@ export const Box = ({ i }: BoxProps) => {
     }
   }
 
-  console.debug('render', i, item, ctrl, props, children);
+  log.d('render', i, item, el, ctrl, props, children);
 
   return (boxConfig.render || createElement)(Comp, props, ...children);
 };

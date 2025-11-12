@@ -2,8 +2,8 @@ import {
   Css,
   CssStyle,
   fluxCombine,
-  fluxTimer,
   getEventXY,
+  logger,
   mustExist,
   onHtmlEvent,
   round,
@@ -12,6 +12,8 @@ import {
 } from 'fluxio';
 import { BoxCtrl, useBoxCtrl } from './box/BoxCtrl';
 import { useEffect, useRef } from 'preact/hooks';
+
+const log = logger('EditHandles');
 
 const c = Css('EditHandles', {
   '': {
@@ -69,7 +71,7 @@ const handles: [string, HandleDir, CssStyle][] = compressed.map(
 
 const startResize = (ctrl: BoxCtrl, dir: HandleDir, name: string, event: Event) => {
   try {
-    console.debug('startResize', dir, name, event);
+    log.d('startResize', dir, name, event);
     stopEvent(event);
 
     const i = mustExist(ctrl.click$.get()?.i, 'i');
@@ -101,7 +103,7 @@ const startResize = (ctrl: BoxCtrl, dir: HandleDir, name: string, event: Event) 
     const w0 = prctToPxX(pos[2]);
     const h0 = prctToPxY(pos[3]);
 
-    console.debug('startResize pos', pos, [x0, y0, w0, h0]);
+    log.d('startResize pos', pos, [x0, y0, w0, h0]);
 
     const onMove = (event: Event) => {
       const [eventX, eventY] = mustExist(getEventXY(event), 'eventXY');
@@ -141,12 +143,12 @@ const startResize = (ctrl: BoxCtrl, dir: HandleDir, name: string, event: Event) 
 export const EditHandles = () => {
   const ctrl = useBoxCtrl();
   const ref = useRef<HTMLDivElement>(null);
-  const el = ref.current;
-  ctrl.handlesEl = el;
+  const handlesEl = ref.current;
+  ctrl.handlesEl = handlesEl;
 
   useEffect(() => {
     if (!ctrl) return;
-    if (!el) return;
+    if (!handlesEl) return;
 
     return fluxCombine(
       ctrl.click$,
@@ -155,11 +157,18 @@ export const EditHandles = () => {
       ctrl.panZoom.after$.delay(100),
     )
       .throttle(1000 / 60)
-      .on(([click]) => {
+      .on(([click, items, after1, after2]) => {
+        log.d('fluxCombine triggered', {
+          click: click?.i,
+          itemsLength: items.length,
+          after1Type: after1?.type,
+          after2Type: after2?.type
+        });
+
         const { el, item } = click || {};
         if (!el) return;
         if (!item) {
-          setStyle(el, { display: 'none' });
+          setStyle(handlesEl, { display: 'none' });
           return;
         }
 
@@ -169,7 +178,9 @@ export const EditHandles = () => {
         left -= viewportRect.left;
         top -= viewportRect.top;
 
-        setStyle(el, {
+        log.d('event', left, top, width, height);
+
+        setStyle(handlesEl, {
           display: 'block',
           left: left + 'px',
           top: top + 'px',
@@ -177,9 +188,9 @@ export const EditHandles = () => {
           height: height + 'px',
         });
       });
-  }, [ctrl, el]);
+  }, [ctrl, handlesEl]);
 
-  console.debug('EditHandles render', ctrl, el);
+  log.d('render', ctrl, handlesEl);
 
   return (
     <div ref={ref} {...c()}>
