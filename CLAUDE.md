@@ -486,6 +486,101 @@ export interface MyContentModel extends ContentModel {
 - **Form validation**: Integrated with `Field` component validation system
 - **Network resilience**: Automatic retry logic and offline queue management
 
+### Box System - Visual Layout Editor
+
+The Box system provides a visual editor for creating layouts with draggable, resizable elements. Used in the media editor interface.
+
+**Core Components:**
+
+- `BoxCtrl` - Main controller class managing box items, events, and hierarchy
+- `Box` - Rendering component for individual box elements
+- `useBoxCtrl()` - Hook to access the BoxCtrl instance from context
+
+**Architecture:**
+
+```typescript
+// Create and provide BoxCtrl instance
+const ctrl = useMemo(() => new BoxCtrl(), []);
+
+return (
+  <BoxContext.Provider value={ctrl}>
+    {/* Box components can now access ctrl via useBoxCtrl() */}
+    <Box i={0} />
+  </BoxContext.Provider>
+);
+```
+
+**BoxCtrl Key Features:**
+
+- **Item management**: `get(i)`, `set(i, data)`, `update(i, changes)`, `delete(i)`
+- **Property updates**: `setProp(i, prop, value)`, `getProp(i, prop)`
+- **Reactive state**: `items$` flux for all items, `item$(i)` for individual items, `prop$(i, prop)` for properties
+- **Event system**: `click$`, `init$`, `event$` flux messages for user interactions
+- **Component registry**: Register custom box types with `register(type, config)`
+- **PanZoom integration**: Built-in `panZoom` controller for viewport control
+- **Hierarchy management**: Automatic parent-child relationships via `parent` and `children` properties
+
+**BoxData Structure:**
+
+```typescript
+interface BoxData {
+  type?: string;              // Box type (default: 'box', also 'text', 'carousel', etc.)
+  pos?: [x, y, w, h];         // Position [x%, y%, width%, height%]
+  style?: Style;              // Style object using cssFunMap
+  text?: string;              // Text content (supports **bold** markdown)
+  children?: number[];        // Child box indices
+  hide?: boolean;             // Hide box
+  init?: BoxFun;              // Function to call on init
+  click?: BoxFun;             // Function to call on click
+  data?: Dictionary<any>;     // Custom data
+}
+```
+
+**Built-in Box Types:**
+
+- `box` - Standard div container with children and positioning
+- `text` - Text span element with markdown support
+- `carousel` - Carousel component with children
+
+**Usage Pattern:**
+
+```typescript
+// In a component within BoxContext
+const ctrl = useBoxCtrl();
+const item = useFlux(ctrl.item$(i));
+
+// Add new box
+ctrl.add(); // Adds box with random color at [25%, 25%, 50%, 50%]
+
+// Update box position
+ctrl.setProp(i, 'pos', [10, 10, 80, 80]);
+
+// Update box style
+ctrl.update(i, {
+  style: { bg: 'primary', p: 2 }
+});
+
+// Listen to clicks
+useEffect(() => {
+  return ctrl.click$.on((event) => {
+    console.log('Box clicked:', event.i, event.item);
+  });
+}, []);
+```
+
+**Custom Box Types:**
+
+```typescript
+ctrl.register('mytype', {
+  comp: MyComponent,          // Component to render
+  label: 'My Type',           // Display label
+  children: 1,                // Supports children
+  text: 1,                    // Supports text
+  pos: 1,                     // Supports positioning
+  icon: MyIcon,               // Icon component
+});
+```
+
 ## Important Development Guidelines
 
 **Code Changes:**
