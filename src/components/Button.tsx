@@ -3,6 +3,7 @@ import { useRef } from 'preact/hooks';
 import { Css } from 'fluxio';
 import { Tr } from './Tr';
 import { Props } from './types';
+import { tooltip } from './Tooltip';
 
 const c = Css('Button', {
   '': {
@@ -86,6 +87,7 @@ export interface ButtonProps extends BaseButtonProps {
   before?: ComponentChildren;
   title?: string;
   link?: boolean;
+  tooltip?: string;
 }
 
 export const Button = ({
@@ -97,6 +99,7 @@ export const Button = ({
   children,
   before,
   link,
+  tooltip: tooltipContent,
   ...props
 }: ButtonProps) => {
   const isIcon = icon && !(children || title);
@@ -131,7 +134,7 @@ export const Button = ({
   }
 
   return (
-    <button {...props} {...clsProps}>
+    <button {...props} {...clsProps} {...tooltip(tooltipContent)}>
       {content}
     </button>
   );

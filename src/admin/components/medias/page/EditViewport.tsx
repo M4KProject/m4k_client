@@ -1,6 +1,6 @@
 import { PanZoom } from '@/components/PanZoom';
 import { Css } from 'fluxio';
-import { EditViewportControls } from './EditViewportControls';
+import { EditButtons } from './EditButtons';
 import { Box } from './box/Box';
 import { useBoxCtrl } from './box/BoxCtrl';
 import { EditHandles } from './EditHandles';
@@ -28,7 +28,7 @@ export const EditViewport = () => {
           <Box i={0} />
         </div>
       </PanZoom>
-      <EditViewportControls />
+      <EditButtons />
       <EditHandles />
     </div>
   );

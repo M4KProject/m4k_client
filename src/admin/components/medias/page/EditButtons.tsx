@@ -9,24 +9,32 @@ import {
   Smartphone,
   Tv,
   MonitorSmartphone,
+  BoxIcon,
 } from 'lucide-react';
 import { useState } from 'preact/hooks';
 import { useBoxCtrl } from './box/BoxCtrl';
-import { Button } from '@/components/Button';
+import { Button, ButtonProps } from '@/components/Button';
 import { tooltip } from '@/components/Tooltip';
 
-const c = Css('EditViewportControls', {
+const c = Css('EditButtons', {
   '': {
     position: 'absolute',
     b: 8,
     r: '50%',
     row: 'center',
+    zIndex: 20,
+    translateX: '50%',
+    // bg: 'bg',
+    // elevation: 1,
+    // rounded: 5,
+  },
+  Sep: {
+    w: 16,
+  },
+  Button: {
     bg: 'bg',
     elevation: 1,
-    zIndex: 20,
-    rounded: 5,
-    translateX: '50%',
-  },
+  }
 });
 
 type ScreenSize = [number, number, string, typeof Monitor];
@@ -39,60 +47,59 @@ export const SCREEN_SIZES: ScreenSize[] = [
   [360, 640, 'Smartphone', Smartphone],
 ];
 
-const ScreenSizeButton = () => {
+const EditButton = (props: ButtonProps) => (
+  <Button {...c('Button')} color="primary" {...props} />
+)
+
+export const EditButtons = () => {
   const ctrl = useBoxCtrl();
-  const [index, setIndex] = useState(0);
-  const [w, h, title, Icon] = SCREEN_SIZES[index]!;
+  const panZoom = ctrl.panZoom;
+  const [sizeIndex, setSizeIndex] = useState(0);
+  const [sizeWidth, sizeHeight, sizeTitle, SizeIcon] = SCREEN_SIZES[sizeIndex]!;
 
   const toggleScreenSize = () => {
-    const nextIndex = normalizeIndex(index + 1, SCREEN_SIZES.length);
-    setIndex(nextIndex);
+    const nextIndex = normalizeIndex(sizeIndex + 1, SCREEN_SIZES.length);
+    setSizeIndex(nextIndex);
     const [w, h] = SCREEN_SIZES[nextIndex]!;
     ctrl.panZoom.setSize(w, h);
   };
 
   return (
-    <Button
-      icon={<Icon />}
-      color="primary"
-      onClick={toggleScreenSize}
-      {...tooltip(`${title} (${w}x${h})`)}
-    />
-  );
-};
-
-export const EditViewportControls = () => {
-  const ctrl = useBoxCtrl();
-  const panZoom = ctrl.panZoom;
-  return (
     <div {...c()}>
-      <ScreenSizeButton />
-      <Button
+      <EditButton
+        icon={<SizeIcon />}
+        onClick={toggleScreenSize}
+        tooltip={`${sizeTitle} (${sizeWidth}x${sizeHeight})`}
+      />
+      <EditButton
         icon={<RotateCw />}
-        color="primary"
         onClick={() => {
           const [w, h] = panZoom.getSize();
           panZoom.setSize(h, w);
         }}
-        {...tooltip("Tourner l'écran")}
+        tooltip="Tourner l'écran"
       />
-      <Button
+      <div {...c('Sep')} />
+      <EditButton
         icon={<ZoomIn />}
-        color="primary"
         onClick={() => panZoom.zoomIn()}
-        {...tooltip('Zoom +')}
+        tooltip="Zoom +"
       />
-      <Button
+      <EditButton
         icon={<ZoomOut />}
-        color="primary"
         onClick={() => panZoom.zoomOut()}
-        {...tooltip('Zoom -')}
+        tooltip="Zoom -"
       />
-      <Button
+      <EditButton
         icon={<Maximize2 />}
-        color="primary"
         onClick={() => panZoom.fitToContainer()}
-        {...tooltip('Ajuster au conteneur')}
+        tooltip="Ajuster au conteneur"
+      />
+      <div {...c('Sep')} />
+      <EditButton
+        icon={<BoxIcon />}
+        onClick={() => ctrl.add()}
+        tooltip="Ajouter un rectangle"
       />
     </div>
   );

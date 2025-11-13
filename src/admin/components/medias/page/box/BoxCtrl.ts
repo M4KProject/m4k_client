@@ -9,19 +9,20 @@ import {
   Pipe,
   isEmpty,
   getChanges,
-  groupBy,
   Writable,
   removeItem,
   uniq,
   isInt,
+  randColor,
+  isUInt,
 } from 'fluxio';
 import { ComponentType, createElement } from 'preact';
-import { BoxFun, BoxData, BoxHierarchy, BoxItem, BoxItems, BoxNext, BoxHierarchies, BoxProps, BoxPropNext } from './boxTypes';
+import { BoxFun, BoxData, BoxItem, BoxItems, BoxNext, BoxProps, BoxPropNext } from './boxTypes';
 import { BoxCarousel } from './BoxCarousel';
 import { PanZoomCtrl } from '@/components/PanZoom';
 import { createContext } from 'preact';
 import { useContext } from 'preact/hooks';
-import { SCREEN_SIZES } from '../EditViewportControls';
+import { SCREEN_SIZES } from '../EditButtons';
 import { fluxUndefined } from 'fluxio/flux/fluxUndefined';
 import { BoxIcon } from 'lucide-react';
 import { app } from '@/app';
@@ -56,11 +57,16 @@ export interface BoxConfig {
 }
 
 const applyChanges = (items: BoxItem[], i: number, prev: BoxItem|undefined, next: BoxItem|undefined) => {
+  console.debug('applyChanges', items, i, prev, next);
+
   if (next) items[i] = next;
   else delete items[i];
 
-  const prevParent = items[prev?.parent || 0];
-  const nextParent = items[next?.parent || 0];
+  const prevParentIndex = prev?.parent;
+  const nextParentIndex = next?.parent;
+
+  const prevParent = isUInt(prevParentIndex) ? items[prevParentIndex] : undefined;
+  const nextParent = isUInt(nextParentIndex) ? items[nextParentIndex] : undefined;
 
   if (prevParent !== nextParent) {
     if (prevParent) {
@@ -247,7 +253,7 @@ export class BoxCtrl {
     const nextData = isFunction(replace) ? replace(prev) : replace;
     const next: BoxItem = {
       ...nextData,
-      parent: nextData?.parent || 0,
+      parent: nextData?.parent || (i === 0 ? undefined : 0),
       children: uniq(nextData?.children || []),
       i,
     };
@@ -280,6 +286,16 @@ export class BoxCtrl {
       if (prevValue === nextValue) return prev;
       const next = { ...prev, [prop]: nextValue };
       return next;
+    });
+  }
+
+  add() {
+    const i = this.getItems().length;
+    this.set(i, {
+      pos: [25, 25, 50, 50],
+      style: {
+        bg: randColor(),
+      },
     });
   }
 
