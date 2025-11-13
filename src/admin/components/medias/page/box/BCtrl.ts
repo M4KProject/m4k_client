@@ -15,10 +15,10 @@ import {
   isInt,
   randColor,
   isUInt,
+  isNotEmpty,
 } from 'fluxio';
-import { ComponentType, createElement } from 'preact';
-import { BoxFun, BoxData, BoxItem, BoxItems, BoxNext, BoxProps, BoxPropNext } from './boxTypes';
-import { BoxCarousel } from './BoxCarousel';
+import { BFun, BData, BItem, BItems, BNext, BKeys, BPropNext, BType, BEvent, BComp } from './bTypes';
+import { BCarousel } from './BCarousel';
 import { PanZoomCtrl } from '@/components/PanZoom';
 import { createContext } from 'preact';
 import { useContext } from 'preact/hooks';
@@ -26,37 +26,14 @@ import { SCREEN_SIZES } from '../EditButtons';
 import { fluxUndefined } from 'fluxio/flux/fluxUndefined';
 import { BoxIcon } from 'lucide-react';
 import { app } from '@/app';
+import { BText } from './BText';
+import { BRect } from './BRect';
+import { BRoot } from './BRoot';
+import { BDoc, BImage, BVideo } from './BMedia';
 
-const log = logger('BoxCtrl');
+const log = logger('BCtrl');
 
-export type BoxComponent = ComponentType<any> | string;
-
-export interface BoxEvent {
-  i?: number;
-  type?: string;
-  item?: BoxItem;
-  el?: HTMLElement;
-  event?: Event;
-  count?: number;
-  timeStamp?: number;
-}
-
-export type A1 = 1 | 0 | -1;
-export type BoxLabel = string;
-
-type On = 1|0
-
-export interface BoxConfig {
-  comp: BoxComponent;
-  label: string;
-  children?: On;
-  text?: On;
-  pos?: On;
-  render?: typeof createElement;
-  icon?: typeof BoxIcon;
-}
-
-const applyChanges = (items: BoxItem[], i: number, prev: BoxItem|undefined, next: BoxItem|undefined) => {
+const applyChanges = (items: BItem[], i: number, prev: BItem|undefined, next: BItem|undefined) => {
   console.debug('applyChanges', items, i, prev, next);
 
   if (next) items[i] = next;
@@ -76,10 +53,10 @@ const applyChanges = (items: BoxItem[], i: number, prev: BoxItem|undefined, next
       };
     }
 
-    if (nextParent && !nextParent.children.includes(i)) {
+    if (nextParent && !nextParent.children?.includes(i)) {
       items[nextParent.i] = {
         ...nextParent,
-        children: uniq([...nextParent.children, i]),
+        children: uniq([...nextParent.children||[], i]),
       };
     }
   }
@@ -99,21 +76,27 @@ const applyChanges = (items: BoxItem[], i: number, prev: BoxItem|undefined, next
   return items;
 }
 
-export class BoxCtrl {
-  readonly registry: Dictionary<BoxConfig> = {
-    box: { comp: 'div', label: 'Box', children: 1, pos: 1, icon: BoxIcon },
-    text: { comp: 'span', label: 'Texte', text: 1, pos: 1 },
-    carousel: { comp: BoxCarousel, label: 'Carousel', children: 1, pos: 1 },
+export class BCtrl {
+  readonly rect: BType = { comp: BRect, label: 'Rectangle', children: 1, pos: 1, icon: BoxIcon };
+  readonly registry: Dictionary<BType> = {
+    rect: this.rect,
+    root: { comp: BRoot, label: 'Root', children: 1, icon: BoxIcon },
+    text: { comp: BText, label: 'Texte', text: 1 },
+    carousel: { comp: BCarousel, label: 'Carousel', children: 1, pos: 1 },
+    video: { comp: BVideo, label: 'Video', pos: 1 },
+    image: { comp: BImage, label: 'Image', pos: 1 },
+    doc: { comp: BDoc, label: 'Doc', pos: 1 },
   };
-  readonly funs: Dictionary<(boxEvent: BoxEvent) => void> = {};
 
-  readonly items$ = flux<BoxItems>([]);
+  readonly funs: Dictionary<(boxEvent: BEvent) => void> = {};
+
+  readonly items$ = flux<BItems>([]);
 
   readonly el?: HTMLElement;
   readonly parentId?: string;
 
-  readonly init$ = flux<BoxEvent>({});
-  readonly click$ = flux<BoxEvent>({});
+  readonly init$ = flux<BEvent>({});
+  readonly click$ = flux<BEvent>({});
   readonly event$ = fluxUnion(this.init$, this.click$);
 
   readonly panZoom = new PanZoomCtrl();
@@ -133,15 +116,16 @@ export class BoxCtrl {
     });
   }
 
-  getType(type?: string): BoxConfig {
-    return this.registry[type||'box'] || this.registry.box!;
-  }
-
-  register(type: string, boxConfig: BoxConfig) {
+  register(type: string, boxConfig: BType) {
     this.registry[type] = boxConfig;
   }
 
-  funCall(fun: BoxFun | undefined, boxEvent: BoxEvent) {
+  getType(type: string|undefined) {
+    if (!type) return this.rect;
+    return this.registry[type] || this.rect;
+  }
+
+  funCall(fun: BFun | undefined, boxEvent: BEvent) {
     if (!fun) return;
     log.d('funCall', fun, boxEvent);
     if (fun.name) {
@@ -149,13 +133,13 @@ export class BoxCtrl {
     }
   }
 
-  private newEvent(i: number, type: string, event?: Event): BoxEvent {
+  private newEvent(i: number, type: string, event?: Event): BEvent {
     const item = this.get(i);
     const el = item?.el;
     return { i, item, el, type, event, timeStamp: Date.now() };
   }
 
-  init(i: number, el: HTMLElement) {
+  init(i: number, el: HTMLElement | undefined) {
     const prev = this.get(i);
     log.d('init', i, el, prev, 'prev.el:', prev?.el);
     if (!prev) return;
@@ -166,6 +150,12 @@ export class BoxCtrl {
     log.d('init event', boxEvent, 'next.el:', next?.el);
     this.funCall(next?.init, boxEvent);
     this.init$.set(boxEvent);
+  }
+
+  getRef(i: number) {
+    return (el: HTMLElement | undefined | null) => {
+      this.init(i, el||undefined);
+    }
   }
 
   click(i: number, event?: Event): void {
@@ -183,6 +173,12 @@ export class BoxCtrl {
     this.click$.set(boxEvent);
   }
 
+  getClick(i: number) {
+    return (event: Event) => {
+      this.click(i, event);
+    }
+  }
+
   getItems() {
     return this.items$.get();
   }
@@ -196,13 +192,13 @@ export class BoxCtrl {
   }
 
   getAllData() {
-    const data = [] as BoxData[];
+    const data = [] as BData[];
     // by(
     //   this.getItems(),
     //   (_, i) => i,
-    //   (item): BoxData => {
+    //   (item): BData => {
     //     const { i, parent, el, children, ...rest } = item;
-    //     const data = rest as Writable<BoxData>;
+    //     const data = rest as Writable<BData>;
     //     if (children.length) data.children = children;
     //     return data;
     //   }
@@ -210,21 +206,28 @@ export class BoxCtrl {
     return data;
   }
 
-  setAllData(data: BoxData[]) {
+  setAllData(data: BData[]) {
     log.d('setAllData', data);
 
-    const items = [] as Writable<BoxItem>[];
+    const items = [] as Writable<BItem>[];
 
     for (let i=0,l=data.length; i<l; i++) {
       const d = data[i];
       if (!d) continue;
-      items[i] = { ...d, i, children: uniq(d.children||[]) };
+      const item = { ...d, i };
+      const children = d.children;
+      if (isNotEmpty(children)) item.children = uniq(children);
+      items[i] = item;
     }
+
+    const root = items[0] || (items[0] = { i:0 });
+    root.type = 'root';
 
     for (let i=0,l=items.length; i<l; i++) {
       const item = items[i];
       if (!item) continue;
       const children = item.children;
+      if (!children) continue;
       const removed: number[] = [];
       for (const childIndex of children) {
         const child = items[childIndex];
@@ -242,7 +245,7 @@ export class BoxCtrl {
     this.items$.set(items);
   }
 
-  set(i?: number, replace?: BoxNext) {
+  set(i?: number, replace?: BNext) {
     log.d('set', i, replace);
     if (!isUInt(i)) return;
 
@@ -251,7 +254,7 @@ export class BoxCtrl {
     const prev = items[i];
 
     const nextData = isFunction(replace) ? replace(prev) : replace;
-    const next: BoxItem = {
+    const next: BItem = {
       ...nextData,
       parent: nextData?.parent || (i === 0 ? undefined : 0),
       children: uniq(nextData?.children || []),
@@ -267,7 +270,7 @@ export class BoxCtrl {
     return next;
   }
 
-  update(i?: number, changes?: BoxNext) {
+  update(i?: number, changes?: BNext) {
     log.d('update', i, changes);
     return this.set(i, prev => {
       if (!prev) return prev;
@@ -277,7 +280,7 @@ export class BoxCtrl {
     });
   }
 
-  setProp<K extends BoxProps>(i: number | undefined, prop: K, value: BoxPropNext<K>) {
+  setProp<K extends BKeys>(i: number | undefined, prop: K, value: BPropNext<K>) {
     log.d('setProp', i, prop, value);
     return this.set(i, prev => {
       if (!prev) return prev;
@@ -299,26 +302,26 @@ export class BoxCtrl {
     });
   }
 
-  getProp<K extends keyof BoxData>(i: number, prop: K) {
+  getProp<K extends keyof BData>(i: number, prop: K) {
     return this.get(i)?.[prop];
   }
 
   item$(i?: number) {
     return isInt(i) ?
         this.items$.map(items => items[i])
-      : (fluxUndefined as Pipe<BoxItem | undefined, BoxItems>);
+      : (fluxUndefined as Pipe<BItem | undefined, BItems>);
   }
-  
-  prop$<K extends BoxProps>(
+
+  prop$<K extends BKeys>(
     i: number | undefined,
     prop: K
-  ): Pipe<BoxItem[K] | undefined, any> {
+  ): Pipe<BItem[K] | undefined, any> {
     return isInt(i) ?
         this.items$.map(items => items[i]?.[prop])
-      : (fluxUndefined as Pipe<BoxItem[K] | undefined, any>);
+      : (fluxUndefined as Pipe<BItem[K] | undefined, any>);
   }
 }
 
-export const BoxContext = createContext<BoxCtrl | undefined>(undefined);
+export const BContext = createContext<BCtrl | undefined>(undefined);
 
-export const useBoxCtrl = () => useContext(BoxContext)!;
+export const useBCtrl = () => useContext(BContext)!;

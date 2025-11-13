@@ -12,7 +12,7 @@ import {
   BoxIcon,
 } from 'lucide-react';
 import { useState } from 'preact/hooks';
-import { useBoxCtrl } from './box/BoxCtrl';
+import { useBCtrl } from './box/BCtrl';
 import { Button, ButtonProps } from '@/components/Button';
 import { tooltip } from '@/components/Tooltip';
 
@@ -52,7 +52,7 @@ const EditButton = (props: ButtonProps) => (
 )
 
 export const EditButtons = () => {
-  const ctrl = useBoxCtrl();
+  const ctrl = useBCtrl();
   const panZoom = ctrl.panZoom;
   const [sizeIndex, setSizeIndex] = useState(0);
   const [sizeWidth, sizeHeight, sizeTitle, SizeIcon] = SCREEN_SIZES[sizeIndex]!;

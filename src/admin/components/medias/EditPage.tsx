@@ -3,7 +3,7 @@ import { JobGrid } from '../jobs/JobGrid';
 import { EditViewport } from './page/EditViewport';
 import { EditSide } from './page/EditSide';
 import { useEffect, useMemo } from 'preact/hooks';
-import { BoxContext, BoxCtrl } from './page/box/BoxCtrl';
+import { BContext, BCtrl } from './page/box/BCtrl';
 import { PageModel } from '@/api/models';
 import { sideOpen$ } from '@/components/Side';
 
@@ -15,7 +15,7 @@ const c = Css('EditPage', {
 });
 
 export const EditPage = ({ page }: { page: PageModel }) => {
-  const ctrl = useMemo(() => new BoxCtrl(), []);
+  const ctrl = useMemo(() => new BCtrl(), []);
 
   useEffect(() => {
     ctrl.setAllData([
@@ -63,10 +63,10 @@ export const EditPage = ({ page }: { page: PageModel }) => {
 
   return (
     <div {...c()}>
-      <BoxContext.Provider value={ctrl}>
+      <BContext.Provider value={ctrl}>
         <EditViewport />
         <EditSide />
-      </BoxContext.Provider>
+      </BContext.Provider>
       <JobGrid filter={(job) => job.status !== 'finished'} panel={true} />
     </div>
   );

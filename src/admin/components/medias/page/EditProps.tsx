@@ -1,9 +1,9 @@
 import { Css, isArray, isDefined, Style, StyleFlexAlign, StyleFlexJustify } from 'fluxio';
-import { BoxConfig, useBoxCtrl } from './box/BoxCtrl';
+import { useBCtrl } from './box/BCtrl';
 import { Field, FieldProps } from '@/components/Field';
 import { Tr } from '@/components/Tr';
 import { useFlux, useFluxMemo } from '@/hooks/useFlux';
-import { BoxData, BoxItem, BoxPropNext } from './box/boxTypes';
+import { BType, BData, BItem, BPropNext } from './box/bTypes';
 import { ComponentChildren } from 'preact';
 import { isAdvanced$ } from '@/router';
 import { Button } from '@/components/Button';
@@ -46,16 +46,16 @@ const c = Css('EditProps', {
   }
 });
 
-const useProp = <K extends keyof BoxItem>(
+const useProp = <K extends keyof BItem>(
   prop: K
-): [BoxItem[K] | undefined, (next: BoxPropNext<K>) => BoxItem | undefined] => {
-  const ctrl = useBoxCtrl();
+): [BItem[K] | undefined, (next: BPropNext<K>) => BItem | undefined] => {
+  const ctrl = useBCtrl();
   const i = useFlux(ctrl.click$).i;
   const value = useFluxMemo(() => ctrl.prop$(i, prop), [i, prop]);
-  return [value, (next: BoxPropNext<K>) => ctrl.setProp(i, prop, next)];
+  return [value, (next: BPropNext<K>) => ctrl.setProp(i, prop, next)];
 };
 
-export const EditProp = ({ prop, defaultValue, ...props }: FieldProps & { prop: keyof BoxData, defaultValue?: any }) => {
+export const EditProp = ({ prop, defaultValue, ...props }: FieldProps & { prop: keyof BData, defaultValue?: any }) => {
   const [value, setValue] = useProp(prop);
   return <Field name={prop} value={isDefined(value) ? value : defaultValue} onValue={setValue} {...props} />;
 };
@@ -150,18 +150,18 @@ export const EditStyleProp = ({ prop, ...props }: FieldProps & { prop: string })
   return <Field name={prop} value={value} onValue={onValue} {...props} />;
 };
 
-export const BoxProp = () => {
-  const ctrl = useBoxCtrl();
+export const BProp = () => {
+  const ctrl = useBCtrl();
   const i = useFlux(ctrl.click$).i;
   const item = useFluxMemo(() => ctrl.item$(i), [i]);
   const onValue = (next: any) => {
     ctrl.set(i, next);
   }
-  return <Field label="Box" name="box" type="json" value={item} onValue={onValue} col />;
+  return <Field label="B" name="box" type="json" value={item} onValue={onValue} col />;
 };
 
 export const EditProps = () => {
-  const ctrl = useBoxCtrl();
+  const ctrl = useBCtrl();
   const select = useFlux(ctrl.click$);
   const isAdvanced = useFlux(isAdvanced$);
   const i = select.i;
@@ -171,7 +171,7 @@ export const EditProps = () => {
   );
   const [nType] = useProp('type');
   const type = nType || 'box';
-  const config = ctrl.registry[type] || {} as Partial<BoxConfig>;
+  const config = ctrl.registry[type] || {} as Partial<BType>;
 
   if (!i || !item) return null;
 
@@ -211,7 +211,7 @@ export const EditProps = () => {
           <EditProp label="Click" prop="click" type="json" col />
           <EditProp label="Init" prop="init" type="json" col />
           {/* <EditProp label="Data" prop="data" type="json" col /> */}
-          <BoxProp />
+          <BProp />
         </>
       )}
     </div>

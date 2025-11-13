@@ -10,7 +10,7 @@ import {
   setStyle,
   stopEvent,
 } from 'fluxio';
-import { BoxCtrl, useBoxCtrl } from './box/BoxCtrl';
+import { BCtrl, useBCtrl } from './box/BCtrl';
 import { useEffect, useRef } from 'preact/hooks';
 
 const log = logger('EditHandles');
@@ -69,7 +69,7 @@ const handles: [string, HandleDir, CssStyle][] = compressed.map(
   ]
 );
 
-const startResize = (ctrl: BoxCtrl, dir: HandleDir, name: string, event: Event) => {
+const startResize = (ctrl: BCtrl, dir: HandleDir, name: string, event: Event) => {
   try {
     log.d('startResize', dir, name, event);
     stopEvent(event);
@@ -141,7 +141,7 @@ const startResize = (ctrl: BoxCtrl, dir: HandleDir, name: string, event: Event) 
 };
 
 export const EditHandles = () => {
-  const ctrl = useBoxCtrl();
+  const ctrl = useBCtrl();
   const ref = useRef<HTMLDivElement>(null);
   const handlesEl = ref.current;
   ctrl.handlesEl = handlesEl;

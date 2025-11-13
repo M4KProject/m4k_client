@@ -1,7 +1,7 @@
 import { Grid, GridCols } from '@/components/Grid';
 import { Css, groupBy, isInt, logger, Writable } from 'fluxio';
-import { BoxHierarchies, BoxHierarchy, BoxItem, BoxItems } from './box/boxTypes';
-import { BoxCtrl, useBoxCtrl } from './box/BoxCtrl';
+import { BHierarchies, BHierarchy, BItem, BItems } from './box/bTypes';
+import { BCtrl, useBCtrl } from './box/BCtrl';
 import { useFlux, useFluxMemo } from '@/hooks/useFlux';
 
 const log = logger('EditHierarchy');
@@ -26,10 +26,10 @@ const c = Css('EditHierarchy', {
   },
 });
 
-const EditHierarchyItem = ({ hierarchy }: { hierarchy: BoxHierarchy }) => {
+const EditHierarchyItem = ({ hierarchy }: { hierarchy: BHierarchy }) => {
   const { i, item, depth } = hierarchy;
   const { name, text, type } = item;
-  const ctrl = useBoxCtrl();
+  const ctrl = useBCtrl();
   const selected = useFluxMemo(() => ctrl.click$.map(click => click.i === i), [ctrl, i]);
   const config = ctrl.getType(type);
   const Icon = config.icon;
@@ -46,19 +46,19 @@ const EditHierarchyItem = ({ hierarchy }: { hierarchy: BoxHierarchy }) => {
         isOpen={getIsOpen(id)}
         hasChildren={type === 'folder' && getChildren(id).length > 0}
       /> */}
-      {name||`Box${i}`}
+      {name||`B${i}`}
     </div>
   )
 }
 
-const getHierarchyDepth = (h: Writable<BoxHierarchy>): number => {
+const getHierarchyDepth = (h: Writable<BHierarchy>): number => {
   if (h.depth !== 0) return h.depth;
   if (!h.parent) return 0;
   return h.depth = (getHierarchyDepth(h.parent) + 1);
 }
 
-const computeHierarchies = (items: BoxItems): BoxHierarchies => {
-  const hierarchies: Writable<BoxHierarchy>[] = [];
+const computeHierarchies = (items: BItems): BHierarchies => {
+  const hierarchies: Writable<BHierarchy>[] = [];
 
   for (let i=0,l=items.length; i<l; i++) {
     const item = items[i];
@@ -84,7 +84,7 @@ const computeHierarchies = (items: BoxItems): BoxHierarchies => {
 }
 
 export const EditHierarchy = () => {
-  const ctrl = useBoxCtrl();
+  const ctrl = useBCtrl();
   const items = useFlux(ctrl.items$);
   const hierarchies = computeHierarchies(items);
 
