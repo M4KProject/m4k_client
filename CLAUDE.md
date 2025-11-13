@@ -209,40 +209,51 @@ message$.set(newValue); // Update from anywhere
 
 ### CSS-in-JS Pattern
 
-This codebase uses a custom CSS-in-JS system with powerful utility functions:
+This codebase uses a custom CSS-in-JS system with powerful utility functions from `cssFunMap`.
+
+**IMPORTANT:** Always prefer using `cssFunMap` utility methods instead of raw CSS properties. These methods provide type safety, automatic unit conversion, and simplified syntax.
 
 ```typescript
-const css = Css('ComponentName', {
+// Call Css() OUTSIDE component - it returns the spreader function directly
+const c = Css('ComponentName', {
   '': {
     col: 1,           // display: flex; flex-direction: column
     p: 2,              // padding: 2px
     bg: 'primary'      // background-color: var(--primary-color)
   },
   'Container': {
-    row: ['center', 'between'], // flex-row with alignment
-    w: 160,             // width: 20px
+    row: ['center', 'between'], // flex-row with alignment shortcuts
+    w: 160,             // width: 160px
     elevation: 2       // box-shadow with depth
   }
 });
 
-const Component = () => {
-  const c = useCss('ComponentName', css);
+const Component = (props) => {
   return (
-    <div {...c()}>           {/* Root component class */}
+    // Apply classes - pass props as last argument to merge classes
+    <div {...c('', props)}>           {/* Root component, merges props.class */}
       <div {...c('Container')}>Content</div>  {/* Nested element */}
     </div>
   );
 };
 ```
 
+**Key CSS Pattern Rules:**
+
+1. **Call `Css()` OUTSIDE component** - Returns the class spreader function `c()` directly
+2. **Apply classes with `{...c()}`** - Use spread syntax to apply className attribute
+3. **Pass `props` as last argument** - `c('', variant, props)` extracts and merges `props.class`
+4. **Use `cssFunMap` utilities** - Prefer `w: 20`, `p: 2`, `bg: 'primary'` over raw CSS
+5. **Spread order matters** - `{...props} {...c()}` allows prop overrides
+
 #### Available CSS Utility Functions
 
 **Layout & Positioning:**
 
-- `x`, `y`, `xy` - left/top positioning (em units)
-- `l`, `t`, `r`, `b` - individual sides (em units)
+- `x`, `y`, `xy` - left/top positioning (px)
+- `l`, `t`, `r`, `b` - individual sides (px)
 - `inset` - all sides positioning
-- `w`, `h`, `wh` - width/height (em units)
+- `w`, `h`, `wh` - width/height (px)
 - `wMax`, `hMax`, `whMax` - max dimensions
 - `wMin`, `hMin`, `whMin` - min dimensions
 
@@ -254,16 +265,16 @@ const Component = () => {
 
 **Spacing:**
 
-- `m`, `mt`, `mb`, `ml`, `mr`, `mx`, `my` - margins (em units)
-- `p`, `pt`, `pb`, `pl`, `pr`, `px`, `py` - padding (em units)
+- `m`, `mt`, `mb`, `ml`, `mr`, `mx`, `my` - margins (px)
+- `p`, `pt`, `pb`, `pl`, `pr`, `px`, `py` - padding (px)
 
 **Visual:**
 
 - `bg: 'colorKey'` - background color from theme
 - `fg: 'colorKey'` - text color from theme
 - `elevation: number` - box-shadow with depth (0-10)
-- `rounded: number` - border-radius (multiplied by 0.2em)
-- `fontSize: number` - font size (em units)
+- `rounded: number` - border-radius (px)
+- `fontSize: number` - font size (rem units)
 - `bold: 1 | 0` - font-weight: bold
 
 **Transforms & Animation:**
@@ -414,12 +425,20 @@ if (!auth) {
 ### Component Creation Pattern
 
 ```typescript
-import { Css, useCss } from 'fluxio';
+import { Css } from 'fluxio';
 import { DivProps } from '@common/components';
 
-const css = Css('MyComponent', {
-  '': { col: 1, p: 2 },
-  'Item': { row: ['center'], p: 1 }
+// Call Css() OUTSIDE component - returns spreader function directly
+const c = Css('MyComponent', {
+  '': {
+    col: 1,      // Use col/row instead of display: flex + flexDirection
+    p: 2,        // Use p instead of padding
+    bg: 'background' // Use bg instead of backgroundColor
+  },
+  'Item': {
+    row: ['center'], // Shorthand for flex-row with centered alignment
+    p: 1
+  }
 });
 
 export interface MyComponentProps extends DivProps {
@@ -427,9 +446,9 @@ export interface MyComponentProps extends DivProps {
 }
 
 export const MyComponent = ({ children, variant, ...props }: MyComponentProps) => {
-  const c = useCss('MyComponent', css);
   return (
-    <div {...props} {...c('', variant)}>
+    // Pass props as last argument to c() - it extracts and merges props.class
+    <div {...props} {...c('', variant, props)}>
       <div {...c('Item')}>
         {children}
       </div>
@@ -440,11 +459,12 @@ export const MyComponent = ({ children, variant, ...props }: MyComponentProps) =
 
 **Important Notes:**
 
-- Define `css` constant outside component (not inside)
-- Call `useCss` inside component to get class name function
-- Spread `{...props}` first, then `{...c()}` to allow prop overrides
-- Extend `DivProps` for HTML attributes support
-- Use Preact's `class` prop (not `className`)
+- **Call `Css()` OUTSIDE component** - Returns the spreader function `c()` directly
+- **Use `{...c()}` spread syntax** - Applies the className attribute
+- **Pass `props` as last argument** - `c('', variant, props)` extracts `props.class` and merges it
+- **Spread order: `{...props} {...c()}`** - props first allows overrides
+- **Prefer `cssFunMap` utilities** (`w`, `p`, `bg`, `col`, `row`) over raw CSS
+- **Extend `DivProps`** for HTML attributes support
 
 ### Adding New Content Types
 
@@ -484,7 +504,10 @@ export interface MyContentModel extends ContentModel {
 
 **Component Patterns:**
 
-- Use `useCss('ComponentName', css)` hook for styling with `Css` objects
+- **Always use `cssFunMap` utilities** in CSS definitions (e.g., `w`, `h`, `p`, `m`, `bg`, `col`, `row`) instead of raw CSS properties
+- **Call `Css()` OUTSIDE component** - It returns the class spreader function `c()` directly
+- **Apply styles using `{...c()}` spread syntax** on JSX elements
+- **Pass `props` as last argument to `c()`** - Automatically extracts and merges `props.class` (e.g., `c('', variant, props)`)
 - Follow the established message-based reactive state management pattern
 - Prefer `preact/hooks` imports over React equivalents due to compatibility layer
 - Use `class` prop instead of `className` for Preact compatibility
