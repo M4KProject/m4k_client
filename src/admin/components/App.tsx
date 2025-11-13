@@ -15,8 +15,9 @@ import { useGroup } from '@/api/hooks';
 import { Errors } from './Errors';
 import { getPbClient } from 'pblite';
 import { useFlux } from '@/hooks/useFlux';
-import { updateTheme } from '@/utils/theme';
+import { refreshTheme, updateTheme } from '@/utils/theme';
 import { groupId$ } from '@/api/groupId$';
+import { addFont } from '@/utils/addFont';
 
 const c = Css('App', {
   '': {
@@ -74,11 +75,15 @@ const AppContent = () => {
   );
 };
 
-export const AppSyncGroup = () => {
+export const AppSync = () => {
   const groupKey = useGroupKey();
   const group = useGroup();
   const groupId = group?.id;
   const { isDark, primary, secondary } = group?.data || {};
+
+  useEffect(() => {
+    getPbClient().authRefresh();
+  }, []);
 
   useEffect(() => {
     groupId$.set(groupId ?? '');
@@ -88,17 +93,23 @@ export const AppSyncGroup = () => {
     updateTheme({ isDark, primary, secondary });
   }, [isDark, primary, secondary]);
 
-  console.debug('AppSyncGroup', { groupKey, group, groupId });
+  console.debug('AppSync', { groupKey, group, groupId });
 
   return null;
 };
 
 export const App = () => {
   console.debug('App');
+
+  useEffect(() => {
+    addFont('Roboto');
+    refreshTheme();
+  }, []);
+
   return (
-    <>
-      <AppSyncGroup />
+    <div id="app" {...c('')}>
+      <AppSync />
       <AppContent />
-    </>
+    </div>
   );
 };

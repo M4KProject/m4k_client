@@ -30,7 +30,6 @@ export default defineConfig(({ mode }) => {
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),
-        '@common': path.resolve(__dirname, './common'),
         pblite: path.resolve(__dirname, './pblite/src'),
         fluxio: path.resolve(__dirname, './fluxio/src'),
 
