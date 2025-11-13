@@ -1,6 +1,5 @@
 import { ComponentChildren, createElement } from 'preact';
 import { computeStyle, Css, logger } from 'fluxio';
-import { useEffect, useRef } from 'preact/hooks';
 import { BoxConfig, useBoxCtrl } from './BoxCtrl';
 import { useFlux } from '@/hooks/useFlux';
 import { DivProps } from '@/components/types';
@@ -39,16 +38,14 @@ export interface BoxProps {
   i: number;
 }
 export const Box = ({ i }: BoxProps) => {
-  const ref = useRef<any>(null);
-  const el = ref.current;
   const ctrl = useBoxCtrl();
   const item = useFlux(ctrl.item$(i));
 
-  useEffect(() => {
+  const ref = (el: HTMLElement | null) => {
     if (el) {
       ctrl.init(i, el);
     }
-  }, [i, el]);
+  };
 
   if (!item) return null;
   if (item.hide) return null;
@@ -75,7 +72,7 @@ export const Box = ({ i }: BoxProps) => {
   };
 
   props.onClick = (event) => {
-    log.d('onClick', i, event, el);
+    log.d('onClick', i, event);
     ctrl.click(i, event);
   };
 
@@ -101,7 +98,7 @@ export const Box = ({ i }: BoxProps) => {
     }
   }
 
-  log.d('render', i, item, el, ctrl, props, children);
+  log.d('render', i, item, ctrl, props, children);
 
   return (boxConfig.render || createElement)(Comp, props, ...children);
 };

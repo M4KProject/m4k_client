@@ -157,13 +157,13 @@ export class BoxCtrl {
 
   init(i: number, el: HTMLElement) {
     const prev = this.get(i);
-    log.d('init', i, el, prev);
+    log.d('init', i, el, prev, 'prev.el:', prev?.el);
     if (!prev) return;
 
     const next = this.update(i, { el });
     const boxEvent = this.newEvent(i, 'init');
 
-    log.d('init event', boxEvent);
+    log.d('init event', boxEvent, 'next.el:', next?.el);
     this.funCall(next?.init, boxEvent);
     this.init$.set(boxEvent);
   }
@@ -178,7 +178,7 @@ export class BoxCtrl {
     const boxEvent = this.newEvent(i, 'click', event);
     boxEvent.count = (lastEvent.i === i ? lastEvent.count || 1 : 0) + 1;
 
-    log.d('click event', boxEvent);
+    log.d('click event', boxEvent, 'el:', boxEvent.el);
     this.funCall(box?.click, boxEvent);
     this.click$.set(boxEvent);
   }
@@ -188,7 +188,7 @@ export class BoxCtrl {
   }
 
   get(i?: number) {
-    if (i) return this.getItems()[i];
+    if (isUInt(i)) return this.getItems()[i];
   }
 
   delete(i?: number) {
@@ -244,7 +244,7 @@ export class BoxCtrl {
 
   set(i?: number, replace?: BoxNext) {
     log.d('set', i, replace);
-    if (!i) return;
+    if (!isUInt(i)) return;
 
     const items = this.getItems();
 
