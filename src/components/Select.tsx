@@ -13,6 +13,7 @@ const c = Css('Select', {
     col: ['stretch', 'start'],
     w: '100%',
     wMax: '100%',
+    hMin: FIELD_HEIGHT,
   },
   Container: {
     position: 'absolute',

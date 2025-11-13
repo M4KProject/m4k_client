@@ -51,6 +51,12 @@ const EditHierarchyItem = ({ hierarchy }: { hierarchy: BoxHierarchy }) => {
   )
 }
 
+const getHierarchyDepth = (h: Writable<BoxHierarchy>): number => {
+  if (h.depth !== 0) return h.depth;
+  if (!h.parent) return 0;
+  return h.depth = (getHierarchyDepth(h.parent) + 1);
+}
+
 const computeHierarchies = (items: BoxItems): BoxHierarchies => {
   const hierarchies: Writable<BoxHierarchy>[] = [];
 
@@ -67,14 +73,9 @@ const computeHierarchies = (items: BoxItems): BoxHierarchies => {
     h.children = childrenByIndex[i] || [];
   }
 
-  const getDepth = (h: Writable<BoxHierarchy>): number => {
-    if (h.depth !== 0) return h.depth;
-    if (!h.parent) return 0;
-    return h.depth = (getDepth(h.parent) + 1);
-  }
   for (let i=0,l=hierarchies.length; i<l; i++) {
     const h = hierarchies[i]!;
-    h.depth = getDepth(h);
+    h.depth = getHierarchyDepth(h);
   }
 
   log.d('computeHierarchies', items, hierarchies);

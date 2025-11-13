@@ -35,7 +35,6 @@ const c = Css('EditProps', {
   '': {
     flex: 2,
     col: 1,
-    elevation: 1,
     m: 4,
   },
   ' .FieldLabel': {

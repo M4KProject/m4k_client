@@ -8,24 +8,32 @@ const c = Css('EditSide', {
   '': {
     position: 'relative',
     elevation: 2,
-    borderLeft: 'border',
-    p: 4,
     w: 300,
-    bg: 'bg',
+    h: '100%',
     zIndex: 10,
-    col: 1,
   },
+  Content: {
+    position: 'absolute',
+    p: 4,
+    wh: '100%',
+    bg: 'bg',
+    overflowX: 'hidden',
+    overflowY: 'auto',
+    col: 1,
+  }
 });
 
 export const EditSide = () => {
   return (
-    <TabPanel
-      {...c()}
-      tabs={[
-        ['Propriétés', <EditProps />],
-        ['Hiérarchie', <EditHierarchy />],
-        ['Medias', <EditMedias />],
-      ]}
-    />
+    <div {...c()}>
+      <TabPanel
+        {...c('Content')}
+        tabs={[
+          ['Propriétés', <EditProps />],
+          ['Hiérarchie', <EditHierarchy />],
+          ['Medias', <EditMedias />],
+        ]}
+      />
+    </div>
   );
 };
