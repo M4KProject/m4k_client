@@ -1,9 +1,9 @@
-import { Css, isArray, isDefined, Style, StyleFlexAlign, StyleFlexJustify } from 'fluxio';
-import { useBCtrl } from './box/BCtrl';
+import { Css, isArray, isDefined, Style, StyleFlexAlign, StyleFlexJustify, Writable } from 'fluxio';
+import { useBCtrl } from '@/components/box/BCtrl';
 import { Field, FieldProps } from '@/components/Field';
 import { Tr } from '@/components/Tr';
 import { useFlux, useFluxMemo } from '@/hooks/useFlux';
-import { BType, BData, BItem, BPropNext } from './box/bTypes';
+import { BType, BData, BItem, BPropNext, BNext } from '@/components/box/bTypes';
 import { ComponentChildren } from 'preact';
 import { isAdvanced$, setIsAdvanced } from '@/router';
 import { Button } from '@/components/Button';
@@ -35,16 +35,19 @@ import {
   Image,
   SquarePlay,
   BookOpen,
+  Square,
 } from 'lucide-react';
 
-const c = Css('EditProps', {
+const c = Css('BProps', {
   '': {
     flex: 2,
-    col: 1,
     m: 4,
+    overflowX: 'hidden',
+    overflowY: 'auto',
+    col: ['stretch', 'start'],
   },
   ' .FieldLabel': {
-    w: 100,
+    w: 80,
   },
   AlignRow: {
     w: '100%',
@@ -68,7 +71,7 @@ const useProp = <K extends keyof BItem>(
   return [value, (next: BPropNext<K>) => ctrl.setProp(i, prop, next)];
 };
 
-export const EditProp = ({ prop, defaultValue, ...props }: FieldProps & { prop: keyof BData, defaultValue?: any }) => {
+export const BField = ({ prop, defaultValue, ...props }: FieldProps & { prop: keyof BData, defaultValue?: any }) => {
   const [value, setValue] = useProp(prop);
   return <Field name={prop} value={isDefined(value) ? value : defaultValue} onValue={setValue} {...props} />;
 };
@@ -161,7 +164,7 @@ const TextAlign = () => {
   )
 };
 
-export const EditStyleProp = ({ prop, ...props }: FieldProps & { prop: string }) => {
+const BStyleField = ({ prop, ...props }: FieldProps & { prop: string }) => {
   const [style, setStyle] = useProp('style');
   const value = ((style || {}) as any)[prop] as any;
   const onValue = (value: any) => {
@@ -170,7 +173,7 @@ export const EditStyleProp = ({ prop, ...props }: FieldProps & { prop: string })
   return <Field name={prop} value={value} onValue={onValue} {...props} />;
 };
 
-export const BProp = () => {
+export const BDataField = () => {
   const ctrl = useBCtrl();
   const i = useFlux(ctrl.click$).i;
   const item = useFluxMemo(() => ctrl.item$(i), [i]);
@@ -180,7 +183,7 @@ export const BProp = () => {
   return <Field label="B" name="box" type="json" value={item} onValue={onValue} col />;
 };
 
-export const EditProps = () => {
+export const BProps = () => {
   const ctrl = useBCtrl();
   const select = useFlux(ctrl.click$);
   const isAdvanced = useFlux(isAdvanced$);
@@ -197,8 +200,9 @@ export const EditProps = () => {
 
   return (
     <div {...c()}>
-      <EditProp label="Nom" prop="name" />
-      <EditStyleProp label="Fond" prop="bg" type="color" />
+      <div {...c('Sep')} />
+      <BField label="Nom" prop="name" />
+      <BStyleField label="Fond" prop="bg" type="color" />
       {config.pos && <FlexAlign />}
 
       {config.text && (
@@ -206,11 +210,11 @@ export const EditProps = () => {
           <div {...c('Sep')} />
           <Field label="Texte" Comp={() => (
             <>
-              <EditStyleProp prop="fontSize" type="number" />
-              <EditStyleProp prop="fg" type="color" />
+              <BStyleField prop="fontSize" type="number" />
+              <BStyleField prop="fg" type="color" />
             </>
           )} />
-          <EditProp prop="text" type="multiline" col />
+          <BField prop="text" type="multiline" col />
           <TextAlign />
         </>
       )}
@@ -218,18 +222,31 @@ export const EditProps = () => {
       
       {/* <Field label="Bordure" Comp={() => (
         <>
-          <EditStyleProp prop="borderColor" type="color" />
-          <EditStyleProp prop="borderWidth" type="number" />
+          <BStyleField prop="borderColor" type="color" />
+          <BStyleField prop="borderWidth" type="number" />
         </>
       )} /> */}
 
       {config.children && (
         <Field label="Ajouter" Comp={() => (
           <div {...c('AlignRow')}>
-            <Button icon={<ALargeSmall />} tooltip="Ajouter un texte" onClick={() => ctrl.add({ parent: i, type: 'text', text: 'Mon texte !' })} />
-            <Button icon={<SquarePlay />} tooltip="Ajouter une video" onClick={() => ctrl.add({ parent: i, type: 'video' })} />
-            <Button icon={<Image />} tooltip="Ajouter une image" onClick={() => ctrl.add({ parent: i, type: 'image' })} />
-            <Button icon={<BookOpen />} tooltip="Ajouter un document" onClick={() => ctrl.add({ parent: i, type: 'doc' })} />
+            {Object.entries(ctrl.registry)
+              .map(([type, config]) => {
+                const Icon = config?.icon || Square;
+                if (type === 'root' || type === 'rect') return null;
+                return (
+                  <Button
+                    icon={<Icon />}
+                    tooltip={config?.label||''}
+                    onClick={() => {
+                      const next: Writable<Partial<BItem>> = { parent: i, type };
+                      if (type === 'text') next.text = "Mon texte !";
+                      ctrl.add(next);
+                    }}
+                  />
+                )
+              })
+            }
           </div>
         )} />
       )}
@@ -243,24 +260,24 @@ export const EditProps = () => {
       />
       {isAdvanced && (
         <>
-          <EditProp label="Type" prop="type" type="select" defaultValue="box" items={types} />
+          <BField label="Type" prop="type" type="select" defaultValue="box" items={types} />
           <Field label="Contour" Comp={() => (
             <>
-              <EditStyleProp prop="border" type="number" />
-              <EditStyleProp prop="rounded" type="number" />
-              <EditStyleProp prop="borderColor" type="color" />
+              <BStyleField prop="border" type="number" />
+              <BStyleField prop="rounded" type="number" />
+              <BStyleField prop="borderColor" type="color" />
             </>
           )} />
-          <EditStyleProp label="Marge" prop="p" type="number" />
-          {/* <EditProp label="Position" prop="pos" type="json" col /> */}
-          <EditProp label="Cacher" prop="hide" type="switch" />
-          <EditProp label="Classe" prop="cls" />
-          <EditProp label="Media ID" prop="media" />
-          <EditProp label="Style" prop="style" type="json" col />
-          <EditProp label="Click" prop="click" type="json" col />
-          <EditProp label="Init" prop="init" type="json" col />
-          {/* <EditProp label="Data" prop="data" type="json" col /> */}
-          <BProp />
+          <BStyleField label="Marge" prop="p" type="number" />
+          {/* <BProp label="Position" prop="pos" type="json" col /> */}
+          <BField label="Cacher" prop="hide" type="switch" />
+          <BField label="Classe" prop="cls" />
+          <BField label="Media ID" prop="media" />
+          <BField label="Style" prop="style" type="json" col />
+          <BField label="Click" prop="click" type="json" col />
+          <BField label="Init" prop="init" type="json" col />
+          {/* <BProp label="Data" prop="data" type="json" col /> */}
+          <BDataField />
         </>
       )}
     </div>
@@ -269,13 +286,13 @@ export const EditProps = () => {
 
 // import { Css } from 'fluxio';
 
-// const c = Css('EditButtons', {
+// const c = Css('BButtons', {
 //   '': {
 //     col: 1,
 //   },
 // });
 
-// export const EditButtons = () => {
+// export const BButtons = () => {
 //   return (
 //     <div {...c()}>
 //       TREE

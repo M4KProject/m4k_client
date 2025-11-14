@@ -4,7 +4,6 @@ import {
   logger,
   fluxUnion,
   stopEvent,
-  onHtmlEvent,
   isFunction,
   Pipe,
   isEmpty,
@@ -13,18 +12,16 @@ import {
   removeItem,
   uniq,
   isInt,
-  randColor,
   isUInt,
   isNotEmpty,
 } from 'fluxio';
-import { BFun, BData, BItem, BItems, BNext, BKeys, BPropNext, BType, BEvent, BComp } from './bTypes';
+import { BFun, BData, BItem, BItems, BNext, BKeys, BPropNext, BType, BEvent } from './bTypes';
 import { BCarousel } from './BCarousel';
 import { PanZoomCtrl } from '@/components/PanZoom';
 import { createContext } from 'preact';
 import { useContext } from 'preact/hooks';
-import { SCREEN_SIZES } from '../EditButtons';
 import { fluxUndefined } from 'fluxio/flux/fluxUndefined';
-import { BoxIcon } from 'lucide-react';
+import { ALargeSmall, BookOpen, GalleryHorizontal, Home, ImageIcon, Square, SquarePlay } from 'lucide-react';
 import { app } from '@/app';
 import { BText } from './BText';
 import { BRect } from './BRect';
@@ -77,15 +74,15 @@ const applyChanges = (items: BItem[], i: number, prev: BItem|undefined, next: BI
 }
 
 export class BCtrl {
-  readonly rect: BType = { comp: BRect, label: 'Rectangle', children: 1, pos: 1, icon: BoxIcon };
+  readonly rect: BType = { comp: BRect, label: 'Rectangle', children: 1, pos: 1, icon: Square };
   readonly registry: Dictionary<BType> = {
     rect: this.rect,
-    root: { comp: BRoot, label: 'Root', children: 1, icon: BoxIcon },
-    text: { comp: BText, label: 'Texte', text: 1 },
-    carousel: { comp: BCarousel, label: 'Carousel', children: 1, pos: 1 },
-    video: { comp: BVideo, label: 'Video', pos: 1 },
-    image: { comp: BImage, label: 'Image', pos: 1 },
-    doc: { comp: BDoc, label: 'Doc', pos: 1 },
+    root: { comp: BRoot, label: 'Root', children: 1, icon: Home },
+    text: { comp: BText, label: 'Texte', text: 1, icon: ALargeSmall },
+    carousel: { comp: BCarousel, label: 'Carousel', children: 1, pos: 1, icon: GalleryHorizontal },
+    video: { comp: BVideo, label: 'Vidéo', pos: 1, icon: SquarePlay },
+    image: { comp: BImage, label: 'Image', pos: 1, icon: ImageIcon },
+    doc: { comp: BDoc, label: 'Doc', pos: 1, icon: BookOpen },
   };
 
   readonly funs: Dictionary<(boxEvent: BEvent) => void> = {};
@@ -103,16 +100,6 @@ export class BCtrl {
 
   constructor() {
     app.boxCtrl = this;
-
-    this.panZoom.ready$.on(() => {
-      const el = this.panZoom.viewport();
-      onHtmlEvent(el, 'click', (event) => {
-        this.click$.set({ el, event });
-      });
-
-      const [w, h] = SCREEN_SIZES[0]!;
-      this.panZoom.setSize(w, h);
-    });
   }
 
   register(type: string, boxConfig: BType) {

@@ -12,11 +12,10 @@ import {
   SquarePlus,
 } from 'lucide-react';
 import { useState } from 'preact/hooks';
-import { useBCtrl } from './box/BCtrl';
+import { useBCtrl } from '@/components/box/BCtrl';
 import { Button, ButtonProps } from '@/components/Button';
-import { tooltip } from '@/components/Tooltip';
 
-const c = Css('EditButtons', {
+const c = Css('BButtons', {
   '': {
     position: 'absolute',
     b: 8,
@@ -47,11 +46,11 @@ export const SCREEN_SIZES: ScreenSize[] = [
   [360, 640, 'Smartphone', Smartphone],
 ];
 
-const EditButton = (props: ButtonProps) => (
+const BButton = (props: ButtonProps) => (
   <Button {...c('Button')} color="primary" {...props} />
 )
 
-export const EditButtons = () => {
+export const BButtons = () => {
   const ctrl = useBCtrl();
   const panZoom = ctrl.panZoom;
   const [sizeIndex, setSizeIndex] = useState(0);
@@ -66,12 +65,12 @@ export const EditButtons = () => {
 
   return (
     <div {...c()}>
-      <EditButton
+      <BButton
         icon={<SizeIcon />}
         onClick={toggleScreenSize}
         tooltip={`${sizeTitle} (${sizeWidth}x${sizeHeight})`}
       />
-      <EditButton
+      <BButton
         icon={<RotateCw />}
         onClick={() => {
           const [w, h] = panZoom.getSize();
@@ -80,23 +79,23 @@ export const EditButtons = () => {
         tooltip="Tourner l'écran"
       />
       <div {...c('Sep')} />
-      <EditButton
+      <BButton
         icon={<ZoomIn />}
         onClick={() => panZoom.zoomIn()}
         tooltip="Zoom +"
       />
-      <EditButton
+      <BButton
         icon={<ZoomOut />}
         onClick={() => panZoom.zoomOut()}
         tooltip="Zoom -"
       />
-      <EditButton
+      <BButton
         icon={<Maximize2 />}
         onClick={() => panZoom.fitToContainer()}
         tooltip="Ajuster au conteneur"
       />
       <div {...c('Sep')} />
-      <EditButton
+      <BButton
         icon={<SquarePlus />}
         onClick={() => ctrl.add({
           type: 'rect',

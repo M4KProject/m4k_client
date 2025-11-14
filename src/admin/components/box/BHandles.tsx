@@ -9,12 +9,12 @@ import {
   round,
   stopEvent,
 } from 'fluxio';
-import { BCtrl, useBCtrl } from './box/BCtrl';
+import { BCtrl, useBCtrl } from '@/components/box/BCtrl';
 import { useFluxMemo } from '@/hooks/useFlux';
 
-const log = logger('EditHandles');
+const log = logger('BHandles');
 
-const c = Css('EditHandles', {
+const c = Css('BHandles', {
   '': {
     display: 'none',
     position: 'absolute',
@@ -147,7 +147,7 @@ const startResize = (ctrl: BCtrl, dir: HandleDir, name: string, event: Event) =>
   }
 };
 
-const EditHandlesContent = () => {
+const BHandlesContent = () => {
   const ctrl = useBCtrl();
   return (
     <>
@@ -162,7 +162,7 @@ const EditHandlesContent = () => {
   )
 }
 
-export const EditHandles = () => {
+export const BHandles = () => {
   const ctrl = useBCtrl();
   const { x, y, w, h, pos, show } = useFluxMemo(() => {
 
@@ -203,7 +203,7 @@ export const EditHandles = () => {
       width: w + 'px',
       height: h + 'px',
     }}>
-      <EditHandlesContent />
+      <BHandlesContent />
     </div>
   );
 };

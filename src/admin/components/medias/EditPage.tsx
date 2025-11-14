@@ -1,11 +1,11 @@
 import { Css } from 'fluxio';
 import { JobGrid } from '../jobs/JobGrid';
-import { EditViewport } from './page/EditViewport';
-import { EditSide } from './page/EditSide';
 import { useEffect, useMemo } from 'preact/hooks';
-import { BContext, BCtrl } from './page/box/BCtrl';
+import { BContext, BCtrl } from '../../../components/box/BCtrl';
 import { PageModel } from '@/api/models';
 import { sideOpen$ } from '@/components/Side';
+import { BViewport } from '../box/BViewport';
+import { BSide } from '../box/BSide';
 
 const c = Css('EditPage', {
   '': {
@@ -73,8 +73,8 @@ export const EditPage = ({ page }: { page: PageModel }) => {
   return (
     <div {...c()}>
       <BContext.Provider value={ctrl}>
-        <EditViewport />
-        <EditSide />
+        <BViewport />
+        <BSide />
       </BContext.Provider>
       <JobGrid filter={(job) => job.status !== 'finished'} panel={true} />
     </div>

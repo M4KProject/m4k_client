@@ -41,7 +41,6 @@ export interface BHierarchy {
 }
 
 export type BItems = Readonly<BItem[]>;
-export type BHierarchies = Readonly<BHierarchy[]>;
 export type BKeys = keyof BItem;
 export type BChanges = Partial<BItem>;
 export type BPropNext<K extends BKeys> = NextState<BChanges[K]>;

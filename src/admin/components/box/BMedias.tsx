@@ -3,11 +3,11 @@ import { Css } from 'fluxio';
 import { MediaModel } from '@/api/models';
 import { getMediaUrl } from '@/api/getMediaUrl';
 import { getVariants } from '@/api/getVariants';
-import { useBCtrl } from './box/BCtrl';
+import { useBCtrl } from '@/components/box/BCtrl';
 import { useFlux } from '@/hooks/useFlux';
 import { Button } from '@/components/Button';
 
-const c = Css('EditMedias', {
+const c = Css('BMedias', {
   '': {
     flex: 1,
     elevation: 1,
@@ -55,7 +55,7 @@ const MediaItem = ({ media }: { media: MediaModel }) => {
   );
 };
 
-export const EditMedias = () => {
+export const BMedias = () => {
   const medias = useGroupMedias();
 
   return (
