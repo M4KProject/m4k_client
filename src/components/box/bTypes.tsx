@@ -40,7 +40,7 @@ export interface BHierarchy {
   readonly item: BItem;
 }
 
-export type BItems = Readonly<BItem[]>;
+export type BItems = Readonly<(BItem|undefined)[]>;
 export type BKeys = keyof BItem;
 export type BChanges = Partial<BItem>;
 export type BPropNext<K extends BKeys> = NextState<BChanges[K]>;

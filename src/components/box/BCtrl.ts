@@ -14,6 +14,7 @@ import {
   isInt,
   isUInt,
   isNotEmpty,
+  removeIndex,
 } from 'fluxio';
 import { BFun, BData, BItem, BItems, BNext, BKeys, BPropNext, BType, BEvent } from './bTypes';
 import { BCarousel } from './BCarousel';
@@ -30,8 +31,8 @@ import { BMedia } from './BMedia';
 
 const log = logger('BCtrl');
 
-const applyChanges = (items: BItem[], i: number, prev: BItem|undefined, next: BItem|undefined) => {
-  console.debug('applyChanges', items, i, prev, next);
+const applyChanges = (items: Writable<BItems>, i: number, prev: BItem|undefined, next: BItem|undefined) => {
+  console.debug('applyChanges', i, 'prev:', prev, 'next:', next);
 
   if (next) items[i] = next;
   else delete items[i];
@@ -42,11 +43,16 @@ const applyChanges = (items: BItem[], i: number, prev: BItem|undefined, next: BI
   const prevParent = isUInt(prevParentIndex) ? items[prevParentIndex] : undefined;
   const nextParent = isUInt(nextParentIndex) ? items[nextParentIndex] : undefined;
 
+  console.debug('applyChanges parents', 'prevParent:', prevParent?.i, 'nextParent:', nextParent?.i);
+
   if (prevParent !== nextParent) {
     if (prevParent) {
+      const oldChildren = prevParent.children||[];
+      const newChildren = removeIndex([...oldChildren], i);
+      console.debug('applyChanges remove child', i, 'from parent', prevParent.i, 'oldChildren:', oldChildren, 'newChildren:', newChildren);
       items[prevParent.i] = {
         ...prevParent,
-        children: removeItem(prevParent.children, i),
+        children: newChildren,
       };
     }
 
