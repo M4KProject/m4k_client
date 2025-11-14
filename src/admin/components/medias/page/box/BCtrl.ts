@@ -100,7 +100,6 @@ export class BCtrl {
   readonly event$ = fluxUnion(this.init$, this.click$);
 
   readonly panZoom = new PanZoomCtrl();
-  public handlesEl?: HTMLDivElement | null;
 
   constructor() {
     app.boxCtrl = this;
@@ -139,7 +138,7 @@ export class BCtrl {
     return { i, item, el, type, event, timeStamp: Date.now() };
   }
 
-  init(i: number, el: HTMLElement | undefined) {
+  init(i: number, el: HTMLElement) {
     const prev = this.get(i);
     log.d('init', i, el, prev, 'prev.el:', prev?.el);
     if (!prev) return;
@@ -154,7 +153,9 @@ export class BCtrl {
 
   getRef(i: number) {
     return (el: HTMLElement | undefined | null) => {
-      this.init(i, el||undefined);
+      if (el && this.get(i)?.el !== el) {
+        this.init(i, el);
+      }
     }
   }
 
@@ -214,13 +215,13 @@ export class BCtrl {
     for (let i=0,l=data.length; i<l; i++) {
       const d = data[i];
       if (!d) continue;
-      const item = { ...d, i };
+      const item = { ...d, type: d.type || 'rect', i };
       const children = d.children;
       if (isNotEmpty(children)) item.children = uniq(children);
       items[i] = item;
     }
 
-    const root = items[0] || (items[0] = { i:0 });
+    const root = items[0] || (items[0] = { i:0, type: 'root' });
     root.type = 'root';
 
     for (let i=0,l=items.length; i<l; i++) {
@@ -256,6 +257,7 @@ export class BCtrl {
     const nextData = isFunction(replace) ? replace(prev) : replace;
     const next: BItem = {
       ...nextData,
+      type: nextData?.type || 'rect',
       parent: nextData?.parent || (i === 0 ? undefined : 0),
       children: uniq(nextData?.children || []),
       i,

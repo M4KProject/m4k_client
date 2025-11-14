@@ -1,7 +1,7 @@
 import { BCtrl, useBCtrl } from './BCtrl';
-import { useFlux } from '@/hooks/useFlux';
+import { useFlux, useFluxMemo } from '@/hooks/useFlux';
 import { BCompProps, BFactoryProps, BItem } from './bTypes';
-import { computeStyle, Css, CssStyle, logger } from 'fluxio';
+import { computeStyle, Css, CssStyle, firstUpper, logger } from 'fluxio';
 import { useMemo } from 'preact/hooks';
 
 const log = logger('B');
@@ -12,7 +12,14 @@ const c = Css('B', {
     col: 1,
     overflowX: 'hidden',
     overflowY: 'auto',
+    fontSize: '5vh',
   },
+  '-text': {
+    position: 'relative',
+    display: 'inline-block',
+    m: '1%',
+    p: '1%',
+  }
 });
 
 const computeProps = (ctrl: BCtrl, item: BItem): BCompProps['props'] => {
@@ -28,7 +35,7 @@ const computeProps = (ctrl: BCtrl, item: BItem): BCompProps['props'] => {
     cssStyle.height = `${h}%`;
   }
   const props: BCompProps['props'] = {
-    ...c('', `-${type}`, i, cls),
+    ...c('', `-${type}`, String(i), cls),
     style: cssStyle,
     onClick: ctrl.getClick(i),
     ref: ctrl.getRef(i),
@@ -41,7 +48,7 @@ export const BFactory = ({ i }: BFactoryProps) => {
   log.d('BFactory', i);
 
   const ctrl = useBCtrl();
-  const item = useFlux(ctrl.item$(i));
+  const item = useFluxMemo(() => ctrl.item$(i), [ctrl, i]);
   const type = ctrl.getType(item?.type);
   const Comp = type.comp;
   const props = useMemo(() => item && computeProps(ctrl, item), [ctrl, item]);

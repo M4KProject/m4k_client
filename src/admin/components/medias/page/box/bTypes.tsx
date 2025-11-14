@@ -26,6 +26,7 @@ export interface BData {
 
 export interface BItem extends BData {
   readonly i: number;
+  readonly type: string;
   readonly parent?: number; // parent index
   readonly children?: number[]; // children index
   readonly el?: HTMLElement;

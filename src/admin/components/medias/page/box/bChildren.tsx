@@ -3,7 +3,7 @@ import { BFactory } from './BFactory';
 import { BItem } from './bTypes';
 
 export const bChildren = (item: BItem) => {
-  console.debug('bChildren', item);
+  // console.debug('bChildren', item);
 
   const children: ComponentChildren[] = [];
   

@@ -1,6 +1,13 @@
+import { Css } from 'fluxio';
 import { BComp } from './bTypes';
 
-export const BText: BComp = ({ item, ...props }) => {
+const c = Css('BText', {
+  '': {
+
+  }
+});
+
+export const BText: BComp = ({ item, props }) => {
   console.debug('BText', props);
 
   const children = [];
@@ -14,10 +21,10 @@ export const BText: BComp = ({ item, ...props }) => {
       } else if (n) {
         children.push(<br key={i++}/>);
       } else if (t) {
-        children.push(<span key={i++}>t</span>);
+        children.push(<span key={i++}>{t}</span>);
       }
     }
   }
 
-  return <div {...props}>{children}</div>;
+  return <div {...props} {...c('', props)}>{children}</div>;
 };

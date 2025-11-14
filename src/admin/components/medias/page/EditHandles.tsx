@@ -7,11 +7,10 @@ import {
   mustExist,
   onHtmlEvent,
   round,
-  setStyle,
   stopEvent,
 } from 'fluxio';
 import { BCtrl, useBCtrl } from './box/BCtrl';
-import { useEffect, useRef } from 'preact/hooks';
+import { useFluxMemo } from '@/hooks/useFlux';
 
 const log = logger('EditHandles');
 
@@ -21,17 +20,25 @@ const c = Css('EditHandles', {
     position: 'absolute',
     inset: 0,
     pointerEvents: 'none',
-    m: '-1px',
+    m: '-2px',
     border: 'p',
+    borderWidth: '2px',
+  },
+  '-show': {
+    display: 'block',
   },
   ' div': {
+    display: 'none',
     position: 'absolute',
-    wh: '9px',
+    wh: '10px',
     m: '-5px',
     border: 's',
     bg: 'bg',
     pointerEvents: 'all',
   },
+  '-resize div': {
+    display: 'block',
+  }
 });
 
 type P = 0 | 0.5 | 1;
@@ -140,60 +147,10 @@ const startResize = (ctrl: BCtrl, dir: HandleDir, name: string, event: Event) =>
   }
 };
 
-export const EditHandles = () => {
+const EditHandlesContent = () => {
   const ctrl = useBCtrl();
-  const ref = useRef<HTMLDivElement>(null);
-  const handlesEl = ref.current;
-  ctrl.handlesEl = handlesEl;
-
-  useEffect(() => {
-    if (!ctrl) return;
-    if (!handlesEl) return;
-
-    return fluxCombine(
-      ctrl.click$,
-      ctrl.items$,
-      ctrl.panZoom.after$,
-      ctrl.panZoom.after$.delay(100),
-    )
-      .throttle(1000 / 60)
-      .on(([click, items, after1, after2]) => {
-        // log.d('fluxCombine triggered', {
-        //   click: click?.i,
-        //   itemsLength: items.length,
-        //   after1Type: after1?.type,
-        //   after2Type: after2?.type
-        // });
-
-        const { el, item } = click || {};
-        if (!el) return;
-        if (!item) {
-          setStyle(handlesEl, { display: 'none' });
-          return;
-        }
-
-        let { left, top, width, height } = el.getBoundingClientRect();
-
-        const viewportRect = ctrl.panZoom.viewportRect();
-        left -= viewportRect.left;
-        top -= viewportRect.top;
-
-        log.d('event', left, top, width, height);
-
-        setStyle(handlesEl, {
-          display: 'block',
-          left: left + 'px',
-          top: top + 'px',
-          width: width + 'px',
-          height: height + 'px',
-        });
-      });
-  }, [ctrl, handlesEl]);
-
-  log.d('render', ctrl, handlesEl);
-
   return (
-    <div ref={ref} {...c()}>
+    <>
       {handles.map(([name, config, style]) => (
         <div
           key={name}
@@ -201,6 +158,52 @@ export const EditHandles = () => {
           onMouseDown={(event) => startResize(ctrl, config, name, event)}
         />
       ))}
+    </>
+  )
+}
+
+export const EditHandles = () => {
+  const ctrl = useBCtrl();
+  const { x, y, w, h, pos, show } = useFluxMemo(() => {
+
+    if (!ctrl) return;
+
+    const combined$ = fluxCombine(
+      ctrl.click$,
+      ctrl.items$,
+      ctrl.panZoom.after$,
+      ctrl.panZoom.after$.delay(100),
+    ).throttle(1000 / 60);
+
+    return combined$.map(([click]) => {
+      const { el, item } = click || {};
+      if (!el || !item) return;
+
+      let { left:x, top:y, width:w, height:h } = el.getBoundingClientRect();
+
+      const viewportRect = ctrl.panZoom.viewportRect();
+      x -= viewportRect.left;
+      y -= viewportRect.top;
+
+      const pos = ctrl.getType(item?.type).pos;
+
+      log.d('event', x, y, w, h, pos);
+
+      return { x, y, w, h, pos, show: true };
+    });
+
+  }, [ctrl]) || {};
+
+  log.d('render', { x, y, w, h, pos, show });
+
+  return (
+    <div {...c('', pos && '-resize', show && '-show')} style={{
+      left: x + 'px',
+      top: y + 'px',
+      width: w + 'px',
+      height: h + 'px',
+    }}>
+      <EditHandlesContent />
     </div>
   );
 };

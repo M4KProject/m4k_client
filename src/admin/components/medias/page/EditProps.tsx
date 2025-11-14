@@ -5,7 +5,7 @@ import { Tr } from '@/components/Tr';
 import { useFlux, useFluxMemo } from '@/hooks/useFlux';
 import { BType, BData, BItem, BPropNext } from './box/bTypes';
 import { ComponentChildren } from 'preact';
-import { isAdvanced$ } from '@/router';
+import { isAdvanced$, setIsAdvanced } from '@/router';
 import { Button } from '@/components/Button';
 import {
   // Texte
@@ -38,11 +38,19 @@ const c = Css('EditProps', {
     m: 4,
   },
   ' .FieldLabel': {
+    fontSize: '80%',
     w: 100,
   },
   AlignRow: {
     w: '100%',
     row: ['center', 'between'],
+  },
+  Sep: {
+    my: 4,
+    mx: '10%',
+    w: '80%',
+    h: 2,
+    bg: 'g',
   }
 });
 
@@ -60,7 +68,7 @@ export const EditProp = ({ prop, defaultValue, ...props }: FieldProps & { prop: 
   return <Field name={prop} value={isDefined(value) ? value : defaultValue} onValue={setValue} {...props} />;
 };
 
-const Align = () => {
+const FlexAlign = () => {
   const [style, setStyle] = useProp('style');
   const s = style || {} as Style;
 
@@ -69,8 +77,6 @@ const Align = () => {
   const flex = row || col || ['', ''];
   const align = flex[0] as StyleFlexAlign;
   const justify = flex[1] as StyleFlexJustify;
-
-  const textAlign = s.textAlign as Style['textAlign'];
 
   const btn = (icon: ComponentChildren, isRow: 1|0, isJustify: 1|0, value: StyleFlexAlign&StyleFlexJustify) => {
     const selected = (isRow ? !!row : !!col) && (isJustify ? justify === value : align === value);
@@ -88,18 +94,6 @@ const Align = () => {
         }
         return next;
       });
-    }
-    
-    return (
-      <Button icon={icon} selected={selected} onClick={handleClick} />
-    )
-  };
-
-  const txtBtn = (icon: ComponentChildren, value: Style['textAlign']) => {
-    const selected = textAlign === value;
-
-    const handleClick = () => {
-      setStyle(prev => ({ ...prev, textAlign: value }));
     }
     
     return (
@@ -129,15 +123,36 @@ const Align = () => {
           {btn(<AlignVerticalJustifyEnd />, 0, 1, 'end')}
         </div>
       )} />
-      <Field name="textAlign" Comp={() => (
-        <div {...c('AlignRow')}>
-          {txtBtn(<AlignLeft />, 'left')}
-          {txtBtn(<AlignCenter />, 'center')}
-          {txtBtn(<AlignJustify />, 'justify')}
-          {txtBtn(<AlignRight />, 'right')}
-        </div>
-      )} />
     </>
+  )
+};
+
+const TextAlign = () => {
+  const [style, setStyle] = useProp('style');
+  const s = style || {} as Style;
+  const textAlign = s.textAlign as Style['textAlign'];
+
+  const txtBtn = (icon: ComponentChildren, value: Style['textAlign']) => {
+    const selected = textAlign === value;
+
+    const handleClick = () => {
+      setStyle(prev => ({ ...prev, textAlign: value }));
+    }
+    
+    return (
+      <Button icon={icon} selected={selected} onClick={handleClick} />
+    )
+  };
+
+  return (
+    <Field name="textAlign" Comp={() => (
+      <div {...c('AlignRow')}>
+        {txtBtn(<AlignLeft />, 'left')}
+        {txtBtn(<AlignCenter />, 'center')}
+        {txtBtn(<AlignJustify />, 'justify')}
+        {txtBtn(<AlignRight />, 'right')}
+      </div>
+    )} />
   )
 };
 
@@ -178,23 +193,25 @@ export const EditProps = () => {
   return (
     <div {...c()}>
       <EditProp label="Nom" prop="name" />
-      <EditProp label="Cacher" prop="hide" type="switch" />
       <EditProp label="Type" prop="type" type="select" defaultValue="box" items={types} />
-      <EditProp label="Classe" prop="class" />
-      <Align />
-      
+      <EditStyleProp label="Fond" prop="bg" type="color" />
+      {config.pos && <FlexAlign />}
+
       {config.text && (
         <>
-          <EditProp label="Texte" prop="text" type="multiline" />
+          <div {...c('Sep')} />
+          <Field label="Texte" Comp={() => (
+            <>
+              <EditStyleProp prop="fontSize" type="number" />
+              <EditStyleProp prop="fg" type="color" />
+            </>
+          )} />
+          <EditProp prop="text" type="multiline" col />
+          <TextAlign />
         </>
       )}
-      <Field label="Couleur" Comp={() => (
-        <>
-          <EditStyleProp prop="bg" type="color" />
-          <EditStyleProp prop="fg" type="color" />
-        </>
-      )} />
-      <EditProp label="Media" prop="media" />
+      
+      
       {/* <Field label="Bordure" Comp={() => (
         <>
           <EditStyleProp prop="borderColor" type="color" />
@@ -203,10 +220,33 @@ export const EditProps = () => {
       )} /> */}
 
       {config.children && <Button>Ajouter un texte</Button>}
+      <div {...c('Sep')} />
+      <Field
+        type="switch"
+        label="Autres"
+        name="advanced"
+        value={isAdvanced}
+        onValue={setIsAdvanced}
+      />
       {isAdvanced && (
         <>
+          <Field label="Contour" Comp={() => (
+            <>
+              <EditStyleProp prop="border" type="number" />
+              <EditStyleProp prop="rounded" type="number" />
+              <EditStyleProp prop="borderColor" type="color" />
+            </>
+          )} />
+          <Field label="Marge" Comp={() => (
+            <>
+              <EditStyleProp prop="m" type="number" />
+              <EditStyleProp prop="p" type="number" />
+            </>
+          )} />
           {/* <EditProp label="Position" prop="pos" type="json" col /> */}
-          
+          <EditProp label="Cacher" prop="hide" type="switch" />
+          <EditProp label="Classe" prop="cls" />
+          <EditProp label="Media ID" prop="media" />
           <EditProp label="Style" prop="style" type="json" col />
           <EditProp label="Click" prop="click" type="json" col />
           <EditProp label="Init" prop="init" type="json" col />

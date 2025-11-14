@@ -25,13 +25,22 @@ export const EditPage = ({ page }: { page: PageModel }) => {
       },
       {
         pos: [10, 10, 30, 10],
-        style: { bg: "#0000FF", fg: "#AAAAFF", center: 1 },
-        text: "Ma **BOX** aaa"
+        style: { bg: "#0000FF", fg: "#AAAAFF", center: 1 }
       },
       {
-        pos: [20, 18, 50, 10],
+        pos: [50, 50, 50, 50],
         style: { bg: "#00FF00AA", fg: "#FF0000", col: ["end", "end"] },
-        text: "Ma **BOX** bbb"
+        children: [3, 4]
+      },
+      {
+        type: "text",
+        style: { bg: "#FFFFFF", rounded: 5, fg: "#AA0000" },
+        text: "Mon **Texte** 1\nAvec saut de ligne"
+      },
+      {
+        type: "text",
+        style: { bg: "#FFFFAA", rounded: 2, fg: "#330000" },
+        text: "Mon **Texte** 2"
       }
     ])
     // ctrl.set('root', {

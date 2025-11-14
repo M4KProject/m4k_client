@@ -3,6 +3,7 @@ import { Css } from 'fluxio';
 import { EditButtons } from './EditButtons';
 import { useBCtrl } from './box/BCtrl';
 import { EditHandles } from './EditHandles';
+import { BFactory } from './box/BFactory';
 
 const c = Css('EditViewport', {
   '': {
@@ -24,7 +25,7 @@ export const EditViewport = () => {
     <div {...c()}>
       <PanZoom ctrl={ctrl.panZoom}>
         <div {...c('Body')}>
-          {bFactory(0)}
+          <BFactory i={0} />
         </div>
       </PanZoom>
       <EditButtons />
