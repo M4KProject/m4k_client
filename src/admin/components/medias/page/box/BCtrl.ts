@@ -294,14 +294,9 @@ export class BCtrl {
     });
   }
 
-  add() {
+  add(replace: BNext) {
     const i = this.getItems().length;
-    this.set(i, {
-      pos: [25, 25, 50, 50],
-      style: {
-        bg: randColor(),
-      },
-    });
+    this.set(i, replace);
   }
 
   getProp<K extends keyof BData>(i: number, prop: K) {

@@ -13,6 +13,7 @@ const c = Css('B', {
     overflowX: 'hidden',
     overflowY: 'auto',
     fontSize: '5vh',
+    boxSizing: 'border-box',
   },
   '-text': {
     position: 'relative',

@@ -1,4 +1,4 @@
-import { Css, normalizeIndex } from 'fluxio';
+import { Css, normalizeIndex, randColor } from 'fluxio';
 import {
   RotateCw,
   Monitor,
@@ -9,7 +9,7 @@ import {
   Smartphone,
   Tv,
   MonitorSmartphone,
-  BoxIcon,
+  SquarePlus,
 } from 'lucide-react';
 import { useState } from 'preact/hooks';
 import { useBCtrl } from './box/BCtrl';
@@ -97,8 +97,14 @@ export const EditButtons = () => {
       />
       <div {...c('Sep')} />
       <EditButton
-        icon={<BoxIcon />}
-        onClick={() => ctrl.add()}
+        icon={<SquarePlus />}
+        onClick={() => ctrl.add({
+          type: 'rect',
+          pos: [25, 25, 50, 50],
+          style: {
+            bg: randColor(),
+          },
+        })}
         tooltip="Ajouter un rectangle"
       />
     </div>

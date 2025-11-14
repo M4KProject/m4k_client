@@ -29,6 +29,12 @@ import {
   AlignVerticalJustifyStart,
   AlignVerticalJustifyCenter,
   AlignVerticalJustifyEnd,
+
+  // Add
+  ALargeSmall,
+  Image,
+  SquarePlay,
+  BookOpen,
 } from 'lucide-react';
 
 const c = Css('EditProps', {
@@ -38,7 +44,6 @@ const c = Css('EditProps', {
     m: 4,
   },
   ' .FieldLabel': {
-    fontSize: '80%',
     w: 100,
   },
   AlignRow: {
@@ -193,7 +198,6 @@ export const EditProps = () => {
   return (
     <div {...c()}>
       <EditProp label="Nom" prop="name" />
-      <EditProp label="Type" prop="type" type="select" defaultValue="box" items={types} />
       <EditStyleProp label="Fond" prop="bg" type="color" />
       {config.pos && <FlexAlign />}
 
@@ -219,17 +223,27 @@ export const EditProps = () => {
         </>
       )} /> */}
 
-      {config.children && <Button>Ajouter un texte</Button>}
+      {config.children && (
+        <Field label="Ajouter" Comp={() => (
+          <div {...c('AlignRow')}>
+            <Button icon={<ALargeSmall />} tooltip="Ajouter un texte" onClick={() => ctrl.add({ parent: i, type: 'text', text: 'Mon texte !' })} />
+            <Button icon={<SquarePlay />} tooltip="Ajouter une video" onClick={() => ctrl.add({ parent: i, type: 'video' })} />
+            <Button icon={<Image />} tooltip="Ajouter une image" onClick={() => ctrl.add({ parent: i, type: 'image' })} />
+            <Button icon={<BookOpen />} tooltip="Ajouter un document" onClick={() => ctrl.add({ parent: i, type: 'doc' })} />
+          </div>
+        )} />
+      )}
       <div {...c('Sep')} />
       <Field
         type="switch"
-        label="Autres"
+        label="Avancé"
         name="advanced"
         value={isAdvanced}
         onValue={setIsAdvanced}
       />
       {isAdvanced && (
         <>
+          <EditProp label="Type" prop="type" type="select" defaultValue="box" items={types} />
           <Field label="Contour" Comp={() => (
             <>
               <EditStyleProp prop="border" type="number" />
@@ -237,12 +251,7 @@ export const EditProps = () => {
               <EditStyleProp prop="borderColor" type="color" />
             </>
           )} />
-          <Field label="Marge" Comp={() => (
-            <>
-              <EditStyleProp prop="m" type="number" />
-              <EditStyleProp prop="p" type="number" />
-            </>
-          )} />
+          <EditStyleProp label="Marge" prop="p" type="number" />
           {/* <EditProp label="Position" prop="pos" type="json" col /> */}
           <EditProp label="Cacher" prop="hide" type="switch" />
           <EditProp label="Classe" prop="cls" />
