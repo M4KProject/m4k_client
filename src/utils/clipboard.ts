@@ -1,26 +1,28 @@
-import { toError } from 'fluxio';
+import { getStorage, logger } from 'fluxio';
 import { jsonStringify, jsonParse } from 'fluxio';
 
+const log = logger('clipboard');
+
 export const clipboardCopy = async (value: any): Promise<void> => {
-  console.debug('clipboardCopy');
-  localStorage.setItem('__copy', value);
   try {
-    await navigator.clipboard.writeText(jsonStringify(value) || '');
+    log.d('copy', value);
+    getStorage().set('clipboard', value);
+    const json = jsonStringify(value);
+    await navigator.clipboard.writeText(json);
   } catch (e) {
-    const error = toError(e);
-    console.warn('clipboardCopy error', error);
+    log.w('copy error', e);
   }
 };
 
 export const clipboardPaste = async () => {
   try {
-    console.debug('clipboardPaste');
+    log.d('paste');
     const json = await navigator.clipboard.readText();
-    if (typeof json === 'string') return jsonParse(json) || json;
-    return json;
+    const value = jsonParse(json) || json;
+    log.d('paste value', json, value);
+    return value;
   } catch (e) {
-    const error = toError(e);
-    console.warn('clipboardPaste error', error);
-    return Promise.resolve(localStorage.getItem('__copy'));
+    log.w('paste error', e);
+    return getStorage().get('clipboard', undefined);
   }
 };

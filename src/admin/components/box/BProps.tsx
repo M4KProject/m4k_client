@@ -49,9 +49,9 @@ const c = Css('BProps', {
   ' .FieldLabel': {
     w: 80,
   },
-  AlignRow: {
+  Row: {
     w: '100%',
-    row: ['center', 'between'],
+    row: ['center', 'around'],
   },
   Sep: {
     my: 4,
@@ -112,7 +112,7 @@ const FlexAlign = () => {
   return (
     <>
       <Field name="row" Comp={() => (
-        <div {...c('AlignRow')}>
+        <div {...c('Row')}>
           {btn(<AlignStartHorizontal />, 1, 0, 'start')}
           {btn(<AlignCenterHorizontal />, 1, 0, 'center')}
           {btn(<AlignEndHorizontal />, 1, 0, 'end')}
@@ -122,7 +122,7 @@ const FlexAlign = () => {
         </div>
       )} />
       <Field name="col" Comp={() => (
-        <div {...c('AlignRow')}>
+        <div {...c('Row')}>
           {btn(<AlignStartVertical />, 0, 0, 'start')}
           {btn(<AlignCenterVertical />, 0, 0, 'center')}
           {btn(<AlignEndVertical />, 0, 0, 'end')}
@@ -154,7 +154,7 @@ const TextAlign = () => {
 
   return (
     <Field name="textAlign" Comp={() => (
-      <div {...c('AlignRow')}>
+      <div {...c('Row')}>
         {txtBtn(<AlignLeft />, 'left')}
         {txtBtn(<AlignCenter />, 'center')}
         {txtBtn(<AlignJustify />, 'justify')}
@@ -229,7 +229,7 @@ export const BProps = () => {
 
       {config.children && (
         <Field label="Ajouter" Comp={() => (
-          <div {...c('AlignRow')}>
+          <div {...c('Row')}>
             {Object.entries(ctrl.registry)
               .map(([type, config]) => {
                 const Icon = config?.icon || Square;

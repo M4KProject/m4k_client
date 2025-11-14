@@ -1,4 +1,4 @@
-import { Css, normalizeIndex, randColor } from 'fluxio';
+import { Css, isItem, isString, isUInt, normalizeIndex, randColor } from 'fluxio';
 import {
   RotateCw,
   Monitor,
@@ -10,10 +10,16 @@ import {
   Tv,
   MonitorSmartphone,
   SquarePlus,
+  ClipboardCopy,
+  ClipboardPaste,
+  ClipboardX,
 } from 'lucide-react';
 import { useState } from 'preact/hooks';
-import { useBCtrl } from '@/components/box/BCtrl';
+import { BCtrl, useBCtrl } from '@/components/box/BCtrl';
 import { Button, ButtonProps } from '@/components/Button';
+import { useFlux } from '@/hooks/useFlux';
+import { BItem } from '@/components/box/bTypes';
+import { clipboardCopy, clipboardPaste } from '@/utils/clipboard';
 
 const c = Css('BButtons', {
   '': {
@@ -50,9 +56,45 @@ const BButton = (props: ButtonProps) => (
   <Button {...c('Button')} color="primary" {...props} />
 )
 
+const addRect = (ctrl: BCtrl) => {
+  ctrl.add({
+    type: 'rect',
+    pos: [25, 25, 50, 50],
+    style: {
+      bg: randColor(),
+    },
+  });
+}
+
+const cut = async (ctrl: BCtrl, index: number) => {
+  const data = ctrl.getData(index);
+  await clipboardCopy(data);
+  ctrl.delete(index);
+}
+
+const copy = async (ctrl: BCtrl, index: number) => {
+  const data = ctrl.getData(index);
+  await clipboardCopy(data);
+}
+
+const paste = async (ctrl: BCtrl, index: number) => {
+  const item = ctrl.get(index);
+  if (!item) return;
+  const data = await clipboardPaste();
+  if (isItem(data) && isString(data.type)) {
+    if (item.type === data.type) {
+      ctrl.set(item.i, { ...data, parent: item.parent });
+    } else {
+      ctrl.add({ ...data, parent: index });
+    }
+  }
+}
+
 export const BButtons = () => {
   const ctrl = useBCtrl();
-  const panZoom = ctrl.panZoom;
+  const select = useFlux(ctrl.click$);
+  const selectIndex = select.i;
+  const pz = ctrl.panZoom;
   const [sizeIndex, setSizeIndex] = useState(0);
   const [sizeWidth, sizeHeight, sizeTitle, SizeIcon] = SCREEN_SIZES[sizeIndex]!;
 
@@ -63,49 +105,26 @@ export const BButtons = () => {
     ctrl.panZoom.setSize(w, h);
   };
 
-  return (
-    <div {...c()}>
-      <BButton
-        icon={<SizeIcon />}
-        onClick={toggleScreenSize}
-        tooltip={`${sizeTitle} (${sizeWidth}x${sizeHeight})`}
-      />
-      <BButton
-        icon={<RotateCw />}
-        onClick={() => {
-          const [w, h] = panZoom.getSize();
-          panZoom.setSize(h, w);
-        }}
-        tooltip="Tourner l'écran"
-      />
-      <div {...c('Sep')} />
-      <BButton
-        icon={<ZoomIn />}
-        onClick={() => panZoom.zoomIn()}
-        tooltip="Zoom +"
-      />
-      <BButton
-        icon={<ZoomOut />}
-        onClick={() => panZoom.zoomOut()}
-        tooltip="Zoom -"
-      />
-      <BButton
-        icon={<Maximize2 />}
-        onClick={() => panZoom.fitToContainer()}
-        tooltip="Ajuster au conteneur"
-      />
-      <div {...c('Sep')} />
-      <BButton
-        icon={<SquarePlus />}
-        onClick={() => ctrl.add({
-          type: 'rect',
-          pos: [25, 25, 50, 50],
-          style: {
-            bg: randColor(),
-          },
-        })}
-        tooltip="Ajouter un rectangle"
-      />
-    </div>
-  );
+  if (!isUInt(selectIndex)) {
+    return (
+      <div {...c()}>
+        <BButton icon={<SizeIcon />} onClick={toggleScreenSize} tooltip={`${sizeTitle} (${sizeWidth}x${sizeHeight})`} />
+        <BButton icon={<RotateCw />} onClick={() => pz.switchSize()} tooltip="Tourner l'écran" />
+        <div {...c('Sep')} />
+        <BButton icon={<ZoomIn />} onClick={() => pz.zoomIn()} tooltip="Zoom +" />
+        <BButton icon={<ZoomOut />} onClick={() => pz.zoomOut()} tooltip="Zoom -" />
+        <BButton icon={<Maximize2 />} onClick={() => pz.fitToContainer()} tooltip="Ajuster au conteneur" />
+        <div {...c('Sep')} />
+        <BButton icon={<SquarePlus />} onClick={() => addRect(ctrl)} tooltip="Ajouter un rectangle" />
+      </div>
+    );
+  } else {
+    return (
+      <div {...c()}>
+        <BButton icon={<ClipboardX />} onClick={() => cut(ctrl, selectIndex)} tooltip="Couper" />
+        <BButton icon={<ClipboardCopy />} onClick={() => copy(ctrl, selectIndex)} tooltip="Copier" />
+        <BButton icon={<ClipboardPaste />} onClick={() => paste(ctrl, selectIndex)} tooltip="Coller" />
+      </div>
+    );
+  }
 };

@@ -21,12 +21,12 @@ import { PanZoomCtrl } from '@/components/PanZoom';
 import { createContext } from 'preact';
 import { useContext } from 'preact/hooks';
 import { fluxUndefined } from 'fluxio/flux/fluxUndefined';
-import { ALargeSmall, BookOpen, GalleryHorizontal, Home, ImageIcon, Square, SquarePlay } from 'lucide-react';
+import { ALargeSmall, FileIcon, GalleryHorizontal, Home, Square } from 'lucide-react';
 import { app } from '@/app';
 import { BText } from './BText';
 import { BRect } from './BRect';
 import { BRoot } from './BRoot';
-import { BDoc, BImage, BVideo } from './BMedia';
+import { BMedia } from './BMedia';
 
 const log = logger('BCtrl');
 
@@ -73,17 +73,21 @@ const applyChanges = (items: BItem[], i: number, prev: BItem|undefined, next: BI
   return items;
 }
 
+const toData = (item: BItem | undefined): BData | undefined => {
+  if (!item) return undefined;
+  const { i, parent, el, ...data } = item;
+  if (data.children?.length === 0) delete data.children;
+  return data;
+}
+
+const rect: BType = { comp: BRect, label: 'Rectangle', children: 1, pos: 1, icon: Square };
+const root: BType = { comp: BRoot, label: 'Root', children: 1, icon: Home };
+const text: BType = { comp: BText, label: 'Texte', text: 1, icon: ALargeSmall };
+const carousel: BType = { comp: BCarousel, label: 'Carousel', children: 1, pos: 1, icon: GalleryHorizontal };
+const media: BType = { comp: BMedia, label: 'Media', pos: 1, icon: FileIcon };
+
 export class BCtrl {
-  readonly rect: BType = { comp: BRect, label: 'Rectangle', children: 1, pos: 1, icon: Square };
-  readonly registry: Dictionary<BType> = {
-    rect: this.rect,
-    root: { comp: BRoot, label: 'Root', children: 1, icon: Home },
-    text: { comp: BText, label: 'Texte', text: 1, icon: ALargeSmall },
-    carousel: { comp: BCarousel, label: 'Carousel', children: 1, pos: 1, icon: GalleryHorizontal },
-    video: { comp: BVideo, label: 'Vidéo', pos: 1, icon: SquarePlay },
-    image: { comp: BImage, label: 'Image', pos: 1, icon: ImageIcon },
-    doc: { comp: BDoc, label: 'Doc', pos: 1, icon: BookOpen },
-  };
+  readonly registry: Dictionary<BType> = { root, rect, text, carousel, media };
 
   readonly funs: Dictionary<(boxEvent: BEvent) => void> = {};
 
@@ -107,8 +111,8 @@ export class BCtrl {
   }
 
   getType(type: string|undefined) {
-    if (!type) return this.rect;
-    return this.registry[type] || this.rect;
+    if (!type) return rect;
+    return this.registry[type] || rect;
   }
 
   funCall(fun: BFun | undefined, boxEvent: BEvent) {
@@ -171,27 +175,26 @@ export class BCtrl {
     return this.items$.get();
   }
 
-  get(i?: number) {
-    if (isUInt(i)) return this.getItems()[i];
+  get(index?: number) {
+    if (isUInt(index)) return this.getItems()[index];
   }
 
-  delete(i?: number) {
-    return this.set(i, undefined);
+  getData(index: number): BData|undefined {
+    return toData(this.get(index));
   }
+
+  // getDataWithChildren(index: number): BData|undefined {
+  //   const items = this.getItems();
+  //   const results: Writable<BData>[] = [];
+  //   const add = (index: number) => {
+
+  //   }
+  //   const data = toData(items[index]);
+  //   return results;
+  // }
 
   getAllData() {
-    const data = [] as BData[];
-    // by(
-    //   this.getItems(),
-    //   (_, i) => i,
-    //   (item): BData => {
-    //     const { i, parent, el, children, ...rest } = item;
-    //     const data = rest as Writable<BData>;
-    //     if (children.length) data.children = children;
-    //     return data;
-    //   }
-    // );
-    return data;
+    return this.getItems().map(toData)
   }
 
   setAllData(data: BData[]) {
@@ -242,6 +245,8 @@ export class BCtrl {
     const prev = items[i];
 
     const nextData = isFunction(replace) ? replace(prev) : replace;
+    if (!nextData) return prev;
+
     const next: BItem = {
       ...nextData,
       type: nextData?.type || 'rect',
@@ -284,6 +289,16 @@ export class BCtrl {
   add(replace: BNext) {
     const i = this.getItems().length;
     this.set(i, replace);
+  }
+
+  delete(index?: number) {
+    log.d('delete', index);
+    if (!isUInt(index)) return false;
+    const prev = this.get(index);
+    if (!prev) return false;
+    const items = this.getItems();
+    this.items$.set(applyChanges([ ...items ], index, prev, undefined));
+    return true;
   }
 
   getProp<K extends keyof BData>(i: number, prop: K) {

@@ -281,6 +281,11 @@ export class PanZoomCtrl {
     this.fitToContainer();
   }
 
+  switchSize() {
+    const [w, h] = this.getSize();
+    this.setSize(h, w);
+  }
+
   center() {
     const viewportRect = this.viewportRect();
     const canvasRect = this.canvasRect();
