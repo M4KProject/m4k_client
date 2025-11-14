@@ -10,7 +10,7 @@ export interface BFun {
 }
 
 export interface BData {
-  readonly children?: number[]; // children ids
+  readonly children?: number[]; // children indices or inline data
   readonly type?: string;
   readonly cls?: string; // html class
   readonly name?: string;
@@ -22,6 +22,7 @@ export interface BData {
   readonly init?: BFun; // on init event
   readonly click?: BFun; // on click event
   readonly data?: Dictionary<any>;
+  readonly _children?: BData[];
 }
 
 export interface BItem extends BData {
@@ -40,11 +41,14 @@ export interface BHierarchy {
   readonly item: BItem;
 }
 
-export type BItems = Readonly<(BItem|undefined)[]>;
+export type NBData = BData | undefined | null;
+export type NBItem = BItem | undefined | null;
+export type NBItems = Readonly<NBItem[]>;
 export type BKeys = keyof BItem;
 export type BChanges = Partial<BItem>;
+export type NBChanges = Partial<BItem> | undefined | null;
 export type BPropNext<K extends BKeys> = NextState<BChanges[K]>;
-export type BNext = NextState<BChanges | undefined>;
+export type BNext = NextState<NBChanges>;
 
 export interface BFactoryProps {
   readonly i: number;
@@ -56,7 +60,7 @@ export interface BCompProps {
   readonly props: {
     readonly class: string;
     readonly style: any;
-    readonly ref: (el: HTMLElement | null) => void;
+    readonly ref: (el: HTMLElement | undefined | null) => void;
     readonly onClick: (event: Event) => void;
   }
 }
@@ -70,7 +74,7 @@ export type BOnOff = 1|0
 export interface BEvent {
   i?: number;
   type?: string;
-  item?: BItem;
+  item?: NBItem;
   el?: HTMLElement;
   event?: Event;
   count?: number;

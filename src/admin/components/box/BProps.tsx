@@ -64,7 +64,7 @@ const c = Css('BProps', {
 
 const useProp = <K extends keyof BItem>(
   prop: K
-): [BItem[K] | undefined, (next: BPropNext<K>) => BItem | undefined] => {
+): [BItem[K] | undefined, (next: BPropNext<K>) => void] => {
   const ctrl = useBCtrl();
   const i = useFlux(ctrl.click$).i;
   const value = useFluxMemo(() => ctrl.prop$(i, prop), [i, prop]);

@@ -1,5 +1,5 @@
 import { Css, groupBy, isInt, logger, truncate, Writable } from 'fluxio';
-import { BHierarchy, BItems } from '@/components/box/bTypes';
+import { BHierarchy, NBItems } from '@/components/box/bTypes';
 import { useBCtrl } from '@/components/box/BCtrl';
 import { useFlux, useFluxMemo } from '@/hooks/useFlux';
 import { Square } from 'lucide-react';

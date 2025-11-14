@@ -16,7 +16,7 @@ import {
   isNotEmpty,
   removeIndex,
 } from 'fluxio';
-import { BFun, BData, BItem, BItems, BNext, BKeys, BPropNext, BType, BEvent } from './bTypes';
+import { BFun, BData, BItem, NBItems, BNext, BKeys, BPropNext, BType, BEvent, NBData, NBItem } from './bTypes';
 import { BCarousel } from './BCarousel';
 import { PanZoomCtrl } from '@/components/PanZoom';
 import { createContext } from 'preact';
@@ -31,11 +31,11 @@ import { BMedia } from './BMedia';
 
 const log = logger('BCtrl');
 
-const applyChanges = (items: Writable<BItems>, i: number, prev: BItem|undefined, next: BItem|undefined) => {
-  console.debug('applyChanges', i, 'prev:', prev, 'next:', next);
+const applyChanges = (items: Writable<NBItems>, index: number, prev: NBItem, next: NBItem) => {
+  console.debug('applyChanges', index, 'prev:', prev, 'next:', next);
 
-  if (next) items[i] = next;
-  else delete items[i];
+  if (next) items[index] = next;
+  else delete items[index];
 
   const prevParentIndex = prev?.parent;
   const nextParentIndex = next?.parent;
@@ -48,18 +48,18 @@ const applyChanges = (items: Writable<BItems>, i: number, prev: BItem|undefined,
   if (prevParent !== nextParent) {
     if (prevParent) {
       const oldChildren = prevParent.children||[];
-      const newChildren = removeIndex([...oldChildren], i);
-      console.debug('applyChanges remove child', i, 'from parent', prevParent.i, 'oldChildren:', oldChildren, 'newChildren:', newChildren);
+      const newChildren = removeIndex([...oldChildren], index);
+      console.debug('applyChanges remove child', index, 'from parent', prevParent.i, 'oldChildren:', oldChildren, 'newChildren:', newChildren);
       items[prevParent.i] = {
         ...prevParent,
         children: newChildren,
       };
     }
 
-    if (nextParent && !nextParent.children?.includes(i)) {
+    if (nextParent && !nextParent.children?.includes(index)) {
       items[nextParent.i] = {
         ...nextParent,
-        children: uniq([...nextParent.children||[], i]),
+        children: uniq([...nextParent.children||[], index]),
       };
     }
   }
@@ -79,8 +79,49 @@ const applyChanges = (items: Writable<BItems>, i: number, prev: BItem|undefined,
   return items;
 }
 
-const toData = (item: BItem | undefined): BData | undefined => {
-  if (!item) return undefined;
+const toItems = (data: NBData[], items: (Writable<NBItem>)[] = []) => {
+  for (let i=0,l=data.length; i<l; i++) {
+    const d = data[i];
+    if (!d) continue;
+
+    const item = { ...d, type: d.type || 'rect', i };
+
+    const children = d.children;
+    if (isNotEmpty(children)) item.children = uniq(children);
+
+    items[i] = item;
+  }
+
+  const root = items[0] || (items[0] = { i:0, type: 'root' });
+  root.type = 'root';
+
+  for (let i=0,l=items.length; i<l; i++) {
+    const item = items[i];
+    if (!item) continue;
+
+    const children = item.children;
+    if (!children) continue;
+
+    const removed: number[] = [];
+    for (const childIndex of children) {
+      const child = items[childIndex];
+      if (!child) {
+        removed.push(childIndex);
+        continue;
+      }
+      child.parent = i;
+    }
+
+    for (const childId of removed) {
+      removeItem(children, childId);
+    }
+  }
+
+  return items as NBItem[];
+}
+
+const toData = (item: NBItem): NBData => {
+  if (!item) return null;
   const { i, parent, el, ...data } = item;
   if (data.children?.length === 0) delete data.children;
   return data;
@@ -97,7 +138,7 @@ export class BCtrl {
 
   readonly funs: Dictionary<(boxEvent: BEvent) => void> = {};
 
-  readonly items$ = flux<BItems>([]);
+  readonly items$ = flux<NBItems>([]);
 
   readonly el?: HTMLElement;
   readonly parentId?: string;
@@ -182,10 +223,10 @@ export class BCtrl {
   }
 
   get(index?: number) {
-    if (isUInt(index)) return this.getItems()[index];
+    return isUInt(index) ? this.getItems()[index] : null;
   }
 
-  getData(index: number): BData|undefined {
+  getData(index?: number) {
     return toData(this.get(index));
   }
 
@@ -205,50 +246,17 @@ export class BCtrl {
 
   setAllData(data: BData[]) {
     log.d('setAllData', data);
-
-    const items = [] as Writable<BItem>[];
-
-    for (let i=0,l=data.length; i<l; i++) {
-      const d = data[i];
-      if (!d) continue;
-      const item = { ...d, type: d.type || 'rect', i };
-      const children = d.children;
-      if (isNotEmpty(children)) item.children = uniq(children);
-      items[i] = item;
-    }
-
-    const root = items[0] || (items[0] = { i:0, type: 'root' });
-    root.type = 'root';
-
-    for (let i=0,l=items.length; i<l; i++) {
-      const item = items[i];
-      if (!item) continue;
-      const children = item.children;
-      if (!children) continue;
-      const removed: number[] = [];
-      for (const childIndex of children) {
-        const child = items[childIndex];
-        if (!child) {
-          removed.push(childIndex);
-          continue;
-        }
-        child.parent = i;
-      }
-      for (const childId of removed) {
-        removeItem(children, childId);
-      }
-    }
-
+    const items = toItems(data);
     this.items$.set(items);
   }
 
-  set(i?: number, replace?: BNext) {
-    log.d('set', i, replace);
-    if (!isUInt(i)) return;
+  set(index?: number, replace?: BNext) {
+    log.d('set', index, replace);
+    if (!isUInt(index)) return;
 
     const items = this.getItems();
 
-    const prev = items[i];
+    const prev = items[index];
 
     const nextData = isFunction(replace) ? replace(prev) : replace;
     if (!nextData) return prev;
@@ -256,16 +264,16 @@ export class BCtrl {
     const next: BItem = {
       ...nextData,
       type: nextData?.type || 'rect',
-      parent: nextData?.parent || (i === 0 ? undefined : 0),
+      parent: nextData?.parent || (index === 0 ? undefined : 0),
       children: uniq(nextData?.children || []),
-      i,
+      i: index,
     };
 
     const changes = prev && next && getChanges(prev, next);
     if (changes && isEmpty(changes)) return prev;
 
-    log.d('set changes', i, changes);
-    this.items$.set(applyChanges([ ...items ], i, prev, next));
+    log.d('set changes', index, changes);
+    this.items$.set(applyChanges([ ...items ], index, prev, next));
 
     return next;
   }
@@ -314,7 +322,7 @@ export class BCtrl {
   item$(i?: number) {
     return isInt(i) ?
         this.items$.map(items => items[i])
-      : (fluxUndefined as Pipe<BItem | undefined, BItems>);
+      : (fluxUndefined as Pipe<NBItem, NBItems>);
   }
 
   prop$<K extends BKeys>(
