@@ -5,9 +5,9 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { MediaViewProps } from './MediaView';
 import { getVariants } from '@/api/getVariants';
 import { getMediaUrl } from '@/api/getMediaUrl';
-import { PanZoom } from '../PanZoom';
+import { PanZoom } from '../components/PanZoom';
 import { PdfModel } from '@/api/models';
-import { Button } from '../Button';
+import { Button } from '../components/Button';
 
 const c = Css('PdfView', {
   '': {

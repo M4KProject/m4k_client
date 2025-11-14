@@ -24,11 +24,8 @@ const c = Css('BSide', {
 export const BSide = () => {
   return (
     <div {...c()}>
-      {/* <div {...c('Content')}> */}
       <BHierarchies />
       <BProps />
-      {/* <BMedias /> */}
-      {/* </div> */}
     </div>
   );
 };

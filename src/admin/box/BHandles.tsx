@@ -10,7 +10,7 @@ import {
   round,
   stopEvent,
 } from 'fluxio';
-import { BCtrl, useBCtrl } from '@/components/box/BCtrl';
+import { BCtrl, useBCtrl } from '@/box/BCtrl';
 import { useFluxMemo } from '@/hooks/useFlux';
 
 const log = logger('BHandles');
@@ -82,7 +82,7 @@ const startResize = (ctrl: BCtrl, dir: HandleDir, name: string, event: Event) =>
     log.d('startResize', dir, name, event);
     stopEvent(event);
 
-    const i = mustExist(ctrl.click$.get()?.i, 'i');
+    const i = mustExist(ctrl.select$.get()?.i, 'i');
     const box = mustExist(ctrl.get(i), 'box');
     const pos = mustExist(box.pos, 'pos');
 
@@ -169,7 +169,7 @@ export const BHandles = () => {
     if (!ctrl) return;
 
     const combined$ = fluxCombine(
-      ctrl.click$,
+      ctrl.select$,
       ctrl.items$,
       ctrl.panZoom.after$,
       ctrl.panZoom.after$.delay(100),

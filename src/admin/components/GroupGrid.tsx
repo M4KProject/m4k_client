@@ -1,19 +1,20 @@
 import { Trash2 } from 'lucide-react';
 import { Grid, GridCols } from '@/components/Grid';
-import { groupSync } from '@/api/sync';
 import { setGroupKey } from '@/router/setters';
 import { useGroupKey, useIsAdvanced } from '@/router/hooks';
-import { useGroups } from '@/api/hooks';
+import { useApi, useGroups } from '@/hooks/apiHooks';
 import { GroupModel } from '@/api/models';
 import { Field } from '@/components/Field';
 import { tooltip } from '@/components/Tooltip';
 import { Button } from '@/components/Button';
+import { ApiCtrl } from '@/api/ApiCtrl';
 
 const cols: GridCols<
   GroupModel,
   {
     groupKey: string;
     isAdvanced: boolean;
+    api: ApiCtrl;
   }
 > = {
   selected: [
@@ -29,27 +30,27 @@ const cols: GridCols<
   ],
   key: [
     'Clé',
-    (item) => (
+    (item, { api }) => (
       <Field
         {...tooltip(item.id)}
         value={item.key}
-        onValue={(key) => groupSync.update(item.id, { key })}
+        onValue={(key) => api.group.update(item.id, { key })}
       />
     ),
     { if: (_, { isAdvanced }) => isAdvanced },
   ],
   name: [
     'Nom',
-    (item) => <Field value={item.name} onValue={(name) => groupSync.update(item.id, { name })} />,
+    (item, { api }) => <Field value={item.name} onValue={(name) => api.group.update(item.id, { name })} />,
   ],
   isDark: [
     'Mode sombre',
-    (item) => (
+    (item, { api }) => (
       <Field
         type="switch"
         value={item.data?.isDark}
         onValue={(isDark) => {
-          groupSync.apply(item.id, (prev) => {
+          api.group.apply(item.id, (prev) => {
             prev.data = { ...prev.data, isDark };
           });
         }}
@@ -58,12 +59,12 @@ const cols: GridCols<
   ],
   primary: [
     'Couleur primaire',
-    (item) => (
+    (item, { api }) => (
       <Field
         type="color"
         value={item.data?.primary}
         onValue={(primary) => {
-          groupSync.apply(item.id, (prev) => {
+          api.group.apply(item.id, (prev) => {
             prev.data = { ...prev.data, primary };
           });
         }}
@@ -72,12 +73,12 @@ const cols: GridCols<
   ],
   secondary: [
     'Couleur secondaire',
-    (item) => (
+    (item, { api }) => (
       <Field
         type="color"
         value={item.data?.secondary}
         onValue={(secondary) => {
-          groupSync.apply(item.id, (prev) => {
+          api.group.apply(item.id, (prev) => {
             prev.data = { ...prev.data, secondary };
           });
         }}
@@ -86,12 +87,12 @@ const cols: GridCols<
   ],
   actions: [
     'Actions',
-    (item) => (
+    (item, { api }) => (
       <Button
         icon={<Trash2 />}
         color="error"
         {...tooltip('Supprimer')}
-        onClick={() => groupSync.delete(item.id)}
+        onClick={() => api.group.delete(item.id)}
       />
     ),
     { w: 240 },
@@ -101,9 +102,10 @@ const cols: GridCols<
 export interface GroupGridProps {}
 
 export const GroupGrid = (_: GroupGridProps) => {
+  const api = useApi();
   const groups = useGroups();
   const groupKey = useGroupKey();
   const isAdvanced = useIsAdvanced();
   console.debug('GroupGrid', { groups, groupKey, isAdvanced });
-  return <Grid ctx={{ groupKey, isAdvanced }} cols={cols} items={groups} />;
+  return <Grid ctx={{ groupKey, isAdvanced, api }} cols={cols} items={groups} />;
 };

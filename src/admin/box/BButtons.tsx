@@ -15,10 +15,10 @@ import {
   ClipboardX,
 } from 'lucide-react';
 import { useState } from 'preact/hooks';
-import { BCtrl, useBCtrl } from '@/components/box/BCtrl';
+import { BCtrl, useBCtrl } from '@/box/BCtrl';
 import { Button, ButtonProps } from '@/components/Button';
 import { useFlux } from '@/hooks/useFlux';
-import { BItem } from '@/components/box/bTypes';
+import { BItem } from '@/box/bTypes';
 import { clipboardCopy, clipboardPaste } from '@/utils/clipboard';
 
 const c = Css('BButtons', {
@@ -92,7 +92,7 @@ const paste = async (ctrl: BCtrl, index: number) => {
 
 export const BButtons = () => {
   const ctrl = useBCtrl();
-  const select = useFlux(ctrl.click$);
+  const select = useFlux(ctrl.select$);
   const selectIndex = select.i;
   const pz = ctrl.panZoom;
   const [sizeIndex, setSizeIndex] = useState(0);

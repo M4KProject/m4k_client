@@ -8,16 +8,17 @@ import { JobsPage } from '../pages/JobsPage';
 import { DevicesPage } from '../pages/DevicesPage';
 import { AuthPage } from '../pages/AuthPage';
 import { AccountPage } from '../pages/AccountPage';
-import { useEffect } from 'preact/hooks';
+import { useEffect, useMemo } from 'preact/hooks';
 import { Page } from '@/router/types';
 import { useGroupKey, usePage } from '@/router/hooks';
-import { useGroup } from '@/api/hooks';
 import { Errors } from './Errors';
 import { getPbClient } from 'pblite';
 import { useFlux } from '@/hooks/useFlux';
 import { refreshTheme, updateTheme } from '@/utils/theme';
 import { groupId$ } from '@/api/groupId$';
 import { addFont } from '@/utils/addFont';
+import { ApiContext, useGroup } from '@/hooks/apiHooks';
+import { ApiCtrl } from '@/api/ApiCtrl';
 
 const c = Css('App', {
   '': {
@@ -106,10 +107,14 @@ export const App = () => {
     refreshTheme();
   }, []);
 
+  const apiCtrl = useMemo(() => new ApiCtrl(), []);
+
   return (
-    <div id="app" {...c('')}>
-      <AppSync />
-      <AppContent />
-    </div>
+    <ApiContext value={apiCtrl}>
+      <div id="app" {...c('')}>
+        <AppSync />
+        <AppContent />
+      </div>
+    </ApiContext>
   );
 };

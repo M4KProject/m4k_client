@@ -4,7 +4,7 @@ import { Plus, Trash2, Copy, ArrowUp, ArrowDown } from 'lucide-react';
 import { updatePlaylist } from '@/admin/controllers';
 import { JobGrid } from '../jobs/JobGrid';
 import { MediaPreview } from './MediaPreview';
-import { useGroupMedias } from '@/api/hooks';
+import { useGroupMedias } from '@/hooks/apiHooks';
 import { Grid, GridCols } from '@/components/Grid';
 import { JobModel, MediaModel, PlaylistEntry, PlaylistModel } from '@/api/models';
 import { Field } from '@/components/Field';

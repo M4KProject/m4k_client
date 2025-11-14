@@ -1,7 +1,7 @@
+import { ApiCtrl } from '@/api/ApiCtrl';
 import { needGroupId } from '@/api/groupId$';
 import { BaseMediaModel, JobModel, MediaModel, PageModel, PlaylistModel } from '@/api/models';
 import { needAuthId } from '@/api/needAuthId';
-import { mediaSync } from '@/api/sync';
 import {
   deepClone,
   getChanges,
@@ -31,7 +31,7 @@ const update = (id: string, changes: Partial<UploadItem>) => {
   uploadMediaJobs$.merge({ [id]: changes });
 };
 
-const startUploadMedia = async (item: UploadItem) => {
+const startUploadMedia = async (api: ApiCtrl, item: UploadItem) => {
   const { id, folder, playlist } = item;
   console.info('upload started', { id, item });
 
@@ -42,7 +42,7 @@ const startUploadMedia = async (item: UploadItem) => {
     update(id, { status: 'processing' });
 
     console.debug('upload creating', { item });
-    const media = await mediaSync.create(
+    const media = await api.media.create(
       {
         title: String(file.name),
         source: file,
@@ -66,7 +66,7 @@ const startUploadMedia = async (item: UploadItem) => {
 
     if (playlist) {
       console.debug('upload apply playlist', { item, media, playlist });
-      await mediaSync.apply(playlist.id, (next) => {
+      await api.media.apply(playlist.id, (next) => {
         if (!next.deps) next.deps = [];
         next.deps.push(media.id);
         if (!next.data) next.data = {};
@@ -91,7 +91,7 @@ const startUploadMedia = async (item: UploadItem) => {
   }
 };
 
-const processQueue = async () => {
+const processQueue = async (api: ApiCtrl) => {
   while (true) {
     const items = Object.values(uploadMediaJobs$.get());
     if (items.filter((i) => i.status === 'processing').length >= MAX_CONCURRENT_UPLOADS) {
@@ -103,11 +103,12 @@ const processQueue = async () => {
       return;
     }
 
-    await startUploadMedia(item);
+    await startUploadMedia(api, item);
   }
 };
 
 export const uploadMedia = (
+  api: ApiCtrl,
   files: File[],
   folder?: MediaModel,
   playlist?: MediaModel
@@ -130,12 +131,12 @@ export const uploadMedia = (
     });
     return id;
   });
-  processQueue();
+  processQueue(api);
   return ids;
 };
 
-export const updateMedia = async <T extends MediaModel>(id: string, apply: (next: T) => void) => {
-  const prev = mediaSync.get(id);
+export const updateMedia = async <T extends MediaModel>(api: ApiCtrl, id: string, apply: (next: T) => void) => {
+  const prev = api.media.get(id);
   if (!prev) return;
   const next = deepClone(prev);
   if (!isItem(next.data)) next.data = {};
@@ -143,11 +144,11 @@ export const updateMedia = async <T extends MediaModel>(id: string, apply: (next
   next.deps = uniq(next.deps || []);
   const changes = getChanges(prev, next);
   if (!isEmpty(changes)) {
-    return await mediaSync.update(id, changes);
+    return await api.media.update(id, changes);
   }
 };
 
-const cleanPlaylist = (next: PlaylistModel) => {
+const cleanPlaylist = (api: ApiCtrl, next: PlaylistModel) => {
   if (!isItem(next.data)) next.data = {};
   const data = next.data;
 
@@ -155,7 +156,7 @@ const cleanPlaylist = (next: PlaylistModel) => {
   data.items = data.items.filter(isItem);
   const items = data.items;
 
-  const mediaById = mediaSync.byId();
+  const mediaById = api.media.byId();
   const itemsByMediaId = groupBy(items, (item) => item.media || '');
   delete itemsByMediaId[''];
 
@@ -171,25 +172,25 @@ const cleanPlaylist = (next: PlaylistModel) => {
   next.deps = sortedDeps ? sortedDeps : [];
 };
 
-export const updatePlaylist = async (id: string, apply: (next: PlaylistModel) => void) =>
-  updateMedia<PlaylistModel>(id, (next) => {
+export const updatePlaylist = async (api: ApiCtrl, id: string, apply: (next: PlaylistModel) => void) =>
+  updateMedia<PlaylistModel>(api, id, (next) => {
     if (next.type !== 'playlist') {
       console.warn('no playlist', id);
       return;
     }
 
-    cleanPlaylist(next);
+    cleanPlaylist(api, next);
 
     apply(next);
 
-    cleanPlaylist(next);
+    cleanPlaylist(api, next);
   });
 
 export const getMediaData = <T extends BaseMediaModel>(media: T): T['data'] =>
   isItem(media.data) ? media.data : (media.data = {});
 
-export const updatePage = async (id: string, apply: (next: PageModel) => void) =>
-  updateMedia<PageModel>(id, (next) => {
+export const updatePage = async (api: ApiCtrl, id: string, apply: (next: PageModel) => void) =>
+  updateMedia<PageModel>(api, id, (next) => {
     if (next.type !== 'page') {
       console.warn('not a page', id);
       return;

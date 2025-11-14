@@ -1,7 +1,7 @@
 import { Css } from 'fluxio';
 import { Dictionary } from 'fluxio';
 import { JSX } from 'preact';
-import { DivProps } from '../types';
+import { DivProps } from '../components/types';
 import { MediaAnim, MediaFit, MediaModel } from '@/api/models';
 
 const c = Css('MediaView', {

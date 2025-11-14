@@ -1,9 +1,9 @@
 import { Css, isArray, isDefined, Style, StyleFlexAlign, StyleFlexJustify, Writable } from 'fluxio';
-import { useBCtrl } from '@/components/box/BCtrl';
+import { useBCtrl } from '@/box/BCtrl';
 import { Field, FieldProps } from '@/components/Field';
 import { Tr } from '@/components/Tr';
 import { useFlux, useFluxMemo } from '@/hooks/useFlux';
-import { BType, BData, BItem, BPropNext, BNext } from '@/components/box/bTypes';
+import { BType, BData, BItem, BPropNext, BNext } from '@/box/bTypes';
 import { ComponentChildren } from 'preact';
 import { isAdvanced$, setIsAdvanced } from '@/router';
 import { Button } from '@/components/Button';
@@ -37,6 +37,7 @@ import {
   BookOpen,
   Square,
 } from 'lucide-react';
+import { BMedias } from './BMedias';
 
 const c = Css('BProps', {
   '': {
@@ -66,7 +67,7 @@ const useProp = <K extends keyof BItem>(
   prop: K
 ): [BItem[K] | undefined, (next: BPropNext<K>) => void] => {
   const ctrl = useBCtrl();
-  const i = useFlux(ctrl.click$).i;
+  const i = useFlux(ctrl.select$).i;
   const value = useFluxMemo(() => ctrl.prop$(i, prop), [i, prop]);
   return [value, (next: BPropNext<K>) => ctrl.setProp(i, prop, next)];
 };
@@ -175,7 +176,7 @@ const BStyleField = ({ prop, ...props }: FieldProps & { prop: string }) => {
 
 export const BDataField = () => {
   const ctrl = useBCtrl();
-  const i = useFlux(ctrl.click$).i;
+  const i = useFlux(ctrl.select$).i;
   const item = useFluxMemo(() => ctrl.item$(i), [i]);
   const onValue = (next: any) => {
     ctrl.set(i, next);
@@ -185,7 +186,7 @@ export const BDataField = () => {
 
 export const BProps = () => {
   const ctrl = useBCtrl();
-  const select = useFlux(ctrl.click$);
+  const select = useFlux(ctrl.select$);
   const isAdvanced = useFlux(isAdvanced$);
   const i = select.i;
   const item = select.item;
@@ -279,6 +280,9 @@ export const BProps = () => {
           {/* <BProp label="Data" prop="data" type="json" col /> */}
           <BDataField />
         </>
+      )}
+      {config.media && (
+        <BMedias />
       )}
     </div>
   );

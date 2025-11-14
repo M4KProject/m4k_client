@@ -1,13 +1,13 @@
 import { MediaModel } from './models';
 import { getVariants } from './getVariants';
-import { mediaSync } from './sync';
 import { isString } from 'fluxio';
 import { getMediaUrl } from './getMediaUrl';
 import { setUrlParams } from 'fluxio';
+import { ApiCtrl } from './ApiCtrl';
 
-export const getMediaDownloadUrl = (mediaOrId?: string | MediaModel) => {
+export const getMediaDownloadUrl = (api: ApiCtrl, mediaOrId?: string | MediaModel) => {
   let url = '';
-  const media = isString(mediaOrId) ? mediaSync.get(mediaOrId) : mediaOrId;
+  const media = isString(mediaOrId) ? api.media.get(mediaOrId) : mediaOrId;
   if (media) {
     const variants = getVariants(media);
     const videos = variants.filter((v) => v.type === 'video');

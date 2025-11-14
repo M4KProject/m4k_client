@@ -3,10 +3,9 @@ import { jsonStringify, toDate, toError, toTime } from 'fluxio';
 import { RefreshCw, Trash2, Settings, Plus, Power } from 'lucide-react';
 import { useState } from 'preact/hooks';
 import { SearchField } from '../components/SearchField';
-import { deviceSync } from '@/api/sync';
 import { setDeviceKey, setPage } from '../../router/setters';
 import { useIsAdvanced } from '@/router/hooks';
-import { useGroupDevices, useGroupMedias } from '@/api/hooks';
+import { useApi, useGroupDevices, useGroupMedias } from '@/hooks/apiHooks';
 import { formatDate, formatDateTime } from 'fluxio';
 import { getPbClient } from 'pblite';
 import { Grid, GridCols } from '@/components/Grid';
@@ -20,6 +19,7 @@ import { Form } from '@/components/Form';
 import { showDialog } from '@/components/Dialog';
 import { Page, PageBody } from '@/components/Page';
 import { Toolbar } from '@/components/Toolbar';
+import { ApiCtrl } from '@/api/ApiCtrl';
 
 const c = Css('DevicesPage', {
   Buttons: {
@@ -30,7 +30,7 @@ const c = Css('DevicesPage', {
 const deviceCols: GridCols<
   DeviceModel,
   {
-    deviceSync: typeof deviceSync;
+    api: ApiCtrl;
     medias: MediaModel[];
     onlineMin: number;
     handleRemote: (device: DeviceModel) => void;
@@ -39,11 +39,11 @@ const deviceCols: GridCols<
 > = {
   key: [
     'Clé',
-    (d, ctx) => (
+    (d, { api }) => (
       <Field
         {...tooltip(d.id)}
         value={d.key}
-        onValue={(key) => ctx.deviceSync.update(d.id, { key })}
+        onValue={(key) => api.device.update(d.id, { key })}
       />
     ),
     { if: (_col, ctx) => !!ctx.isAdvanced },
@@ -61,7 +61,7 @@ const deviceCols: GridCols<
   ],
   name: [
     'Nom',
-    (d, ctx) => <Field value={d.name} onValue={(name) => ctx.deviceSync.update(d.id, { name })} />,
+    (d, { api }) => <Field value={d.name} onValue={(name) => api.device.update(d.id, { name })} />,
   ],
   resolution: ['Résolution', (d) => `${d.info?.width || 0}x${d.info?.height || 0}`],
   online: [
@@ -78,46 +78,46 @@ const deviceCols: GridCols<
   created: ['Création', (d) => formatDate(d.created)],
   media: [
     'Playlist',
-    (d, ctx) => (
+    (d, { api, medias }) => (
       <Field
         type="select"
-        items={ctx.medias
+        items={medias
           .filter((media) => media.type === 'playlist')
           .map((media) => [media.id, media.title || media.key || media.id])}
         value={d.media}
-        onValue={(media) => ctx.deviceSync.update(d.id, { media })}
+        onValue={(media) => api.device.update(d.id, { media })}
       />
     ),
   ],
   actions: [
     'Actions',
-    (d, ctx) => (
+    (d, { api, isAdvanced, handleRemote }) => (
       <div style={{ display: 'flex', gap: '0.5em' }}>
         <Button
           icon={<RefreshCw />}
           color="primary"
           {...tooltip('Rafraîchir')}
-          onClick={() => ctx.deviceSync.update(d.id, { action: 'reload' })}
+          onClick={() => api.device.update(d.id, { action: 'reload' })}
         />
         <Button
           icon={<Power />}
           color="primary"
           {...tooltip('Redémarrer')}
-          onClick={() => ctx.deviceSync.update(d.id, { action: 'reboot' })}
+          onClick={() => api.device.update(d.id, { action: 'reboot' })}
         />
-        {ctx.isAdvanced && (
+        {isAdvanced && (
           <Button
             icon={<Settings />}
             {...tooltip('Mode remote')}
-            onClick={() => ctx.handleRemote(d)}
+            onClick={() => handleRemote(d)}
           />
         )}
-        {ctx.isAdvanced && (
+        {isAdvanced && (
           <Button
             icon={<Trash2 />}
             color="error"
             {...tooltip('Supprimer')}
-            onClick={() => ctx.deviceSync.delete(d.id)}
+            onClick={() => api.device.delete(d.id)}
           />
         )}
       </div>
@@ -157,6 +157,7 @@ export const PairingForm = ({ onClose }: { onClose: () => void }) => {
 };
 
 export const DevicesPage = () => {
+  const api = useApi();
   const isAdvanced = useIsAdvanced();
   const medias = useGroupMedias();
   const devices = useGroupDevices();
@@ -197,7 +198,7 @@ export const DevicesPage = () => {
       <PageBody>
         <Grid
           cols={deviceCols}
-          ctx={{ deviceSync, medias, onlineMin, handleRemote, isAdvanced }}
+          ctx={{ api, medias, onlineMin, handleRemote, isAdvanced }}
           items={devices}
         />
       </PageBody>

@@ -1,7 +1,7 @@
-import { mediaSync } from '@/api/sync';
+import { ApiCtrl } from "@/api/ApiCtrl";
 
-export const getNextTitle = (start: string) => {
-  const medias = mediaSync.filter();
+export const getNextTitle = (api: ApiCtrl, start: string) => {
+  const medias = api.media.filter();
   let i = 1;
   let title = start;
   while (true) {

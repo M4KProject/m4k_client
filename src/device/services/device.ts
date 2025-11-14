@@ -1,5 +1,5 @@
+import { ApiCtrl } from '@/api/ApiCtrl';
 import { DeviceModel } from '@/api/models';
-import { deviceSync, userColl } from '@/api/sync';
 import { m4k, M4kResizeOptions } from '@/m4kBridge';
 import {
   sleep,
@@ -30,7 +30,7 @@ export const deviceAction$ = fluxStored<DeviceModel['action'] | undefined>(
 
 const serverDate = () => getPbClient().getDate();
 
-const deviceLogin = async (): Promise<DeviceModel> => {
+const deviceLogin = async (api: ApiCtrl): Promise<DeviceModel> => {
   let email = deviceEmail$.get();
   let password = devicePassword$.get();
   console.debug('deviceLogin', email);
@@ -39,7 +39,7 @@ const deviceLogin = async (): Promise<DeviceModel> => {
 
   if (email && password) {
     try {
-      deviceAuth = await userColl.login(email, password);
+      deviceAuth = await api.userColl.login(email, password);
       console.debug('deviceLogin login deviceAuth', deviceAuth);
     } catch (error) {
       console.info('deviceLogin login error', error);
@@ -53,8 +53,8 @@ const deviceLogin = async (): Promise<DeviceModel> => {
     password = randString(20);
 
     try {
-      await userColl.signUp(email, password);
-      deviceAuth = await userColl.login(email, password);
+      await api.userColl.signUp(email, password);
+      deviceAuth = await api.userColl.login(email, password);
       console.debug('deviceLogin signUp user', deviceAuth);
     } catch (error) {
       console.info('deviceLogin signUp error', error);
@@ -71,7 +71,7 @@ const deviceLogin = async (): Promise<DeviceModel> => {
   const info = await m4k.deviceInfo();
   info.started = serverDate();
 
-  const device = await deviceSync.coll.upsert(
+  const device = await api.device.coll.upsert(
     { user: deviceAuth.id },
     {
       user: deviceAuth.id,
@@ -87,35 +87,35 @@ const deviceLogin = async (): Promise<DeviceModel> => {
 };
 
 let deviceUnsubscribe = toVoid;
-const deviceStart = async () => {
+const deviceStart = async (api: ApiCtrl) => {
   console.debug('deviceStart');
-  const device = await deviceLogin();
+  const device = await deviceLogin(api);
 
   deviceUnsubscribe();
 
   console.debug('deviceStart subscribe', device.id);
-  deviceUnsubscribe = deviceSync.coll.on((device, action) => {
+  deviceUnsubscribe = api.device.coll.on((device, action) => {
     console.debug('deviceStart subscribe', action, device);
     if (action === 'delete') {
-      deviceLogin();
+      deviceLogin(api);
       return;
     }
     device$.set(device);
   }, device.id);
 
   while (true) {
-    await deviceLoop();
+    await deviceLoop(api);
     await sleep(10000);
   }
 };
 
-const deviceLoop = async () => {
+const deviceLoop = async (api: ApiCtrl) => {
   let device = device$.get();
   console.debug('deviceLoop device', device);
 
   if (!device) throw new Error('no device');
 
-  device = await deviceSync.update(device.id, {
+  device = await api.device.update(device.id, {
     online: serverDate(),
   });
   console.debug('deviceLoop updated', device);
@@ -124,10 +124,10 @@ const deviceLoop = async () => {
   device$.set(device);
 };
 
-export const deviceInit = async () => {
+export const deviceInit = async (api: ApiCtrl) => {
   while (true) {
     try {
-      await deviceStart();
+      await deviceStart(api);
     } catch (e) {
       console.warn('deviceInit', toError(e));
     }
@@ -144,15 +144,15 @@ deviceAction$.on(() => {
   if (device) runAction(device);
 });
 
-const capture = async (device: DeviceModel, options?: M4kResizeOptions | undefined) => {
+const capture = async (api: ApiCtrl, device: DeviceModel, options?: M4kResizeOptions | undefined) => {
   const base64 = await m4k.capture(options);
   const blob = base64toBlob(base64);
   if (isBlob(blob)) {
-    await deviceSync.update(device.id, { capture: blob }, { select: [] });
+    await api.device.update(device.id, { capture: blob }, { select: [] });
   }
 };
 
-const execAction = async (device: DeviceModel, action: string, input?: string) => {
+const execAction = async (api: ApiCtrl, device: DeviceModel, action: string, input?: string) => {
   switch (action) {
     case 'reload':
       return m4k.reload();
@@ -163,7 +163,7 @@ const execAction = async (device: DeviceModel, action: string, input?: string) =
     case 'exit':
       return await m4k.exit();
     case 'capture':
-      await capture(device, jsonParse(input || '') as M4kResizeOptions);
+      await capture(api, device, jsonParse(input || '') as M4kResizeOptions);
       return;
     case 'js':
       return await m4k.evalJs(toString(input));
@@ -182,7 +182,7 @@ const execAction = async (device: DeviceModel, action: string, input?: string) =
   }
 };
 
-const runAction = async (device: DeviceModel) => {
+const runAction = async (api: ApiCtrl, device: DeviceModel) => {
   console.debug('runAction', device.action, device.input, device);
 
   if (!device) throw toError('no device');
@@ -190,18 +190,18 @@ const runAction = async (device: DeviceModel) => {
   const { action, input } = device;
   if (!action) return;
 
-  await deviceSync.update(device.id, { action: '', online: serverDate() });
+  await api.device.update(device.id, { action: '', online: serverDate() });
 
   let value: any = null;
   let error: any = null;
 
   try {
-    value = await execAction(device, action, input);
+    value = await execAction(api, device, action, input);
   } catch (err) {
     error = err;
   }
 
-  await deviceSync.update(device.id, {
+  await api.device.update(device.id, {
     action: '',
     result: {
       success: !error,

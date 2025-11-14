@@ -1,10 +1,17 @@
-import { groupId$ } from './groupId$';
-import { GroupModel, MediaModel } from './models';
 import { useFlux } from '@/hooks/useFlux';
-import { deviceSync, groupSync, jobSync, mediaSync, memberSync, Sync } from './sync';
 import { useDeviceKey, useGroupKey, useMediaKey, useIsAdvanced } from '../router/hooks';
 import { useMemo } from 'preact/hooks';
 import { PbModel, PbWhere } from 'pblite';
+import { createContext } from "preact";
+import { useContext } from "preact/hooks";
+import { ApiCtrl } from '@/api/ApiCtrl';
+import { GroupModel, MediaModel } from '@/api/models';
+import { groupId$ } from '@/api/groupId$';
+import { Sync } from '@/api/sync';
+
+export const ApiContext = createContext<ApiCtrl | undefined>(undefined);
+
+export const useApi = () => useContext(ApiContext)!;
 
 const useItemKey = <T extends PbModel & { key?: string }>(
   sync: Sync<T>,
@@ -27,15 +34,20 @@ const useGroupItems = <T extends PbModel & { group?: string }>(
 
 const useById = <T extends PbModel>(sync: Sync<T>, _where?: PbWhere<T>) => useFlux(sync.up$);
 
-export const useDevice = () => useItemKey(deviceSync, useDeviceKey());
-export const useMedia = () => useItemKey(mediaSync, useMediaKey());
-export const useGroup = () => useItemKey(groupSync, useGroupKey());
+export const useDevice = () => useItemKey(useApi().device, useDeviceKey());
 
-export const useGroups = (): GroupModel[] => useItems(groupSync) as GroupModel[];
-export const useGroupMembers = () => useGroupItems(memberSync);
-export const useGroupDevices = () => useGroupItems(deviceSync);
+export const useMedia = (key?: string) => useItemKey(useApi().media, key || useMediaKey());
+
+export const useGroup = () => useItemKey(useApi().group, useGroupKey());
+
+export const useGroups = (): GroupModel[] => useItems(useApi().group) as GroupModel[];
+
+export const useGroupMembers = () => useGroupItems(useApi().member);
+
+export const useGroupDevices = () => useGroupItems(useApi().device);
+
 export const useGroupMedias = (type?: MediaModel['type']) => {
-  const allMedias = useGroupItems(mediaSync);
+  const allMedias = useGroupItems(useApi().media);
   const isAdvanced = useIsAdvanced();
   return useMemo(() => {
     let medias = allMedias;
@@ -44,10 +56,15 @@ export const useGroupMedias = (type?: MediaModel['type']) => {
     return medias;
   }, [allMedias, isAdvanced, type]);
 };
-export const useGroupJobs = () => useGroupItems(jobSync);
 
-export const useGroupById = () => useById(groupSync);
-export const useMemberById = () => useById(memberSync);
-export const useDeviceById = () => useById(deviceSync);
-export const useMediaById = () => useById(mediaSync);
-export const useJobById = () => useById(jobSync);
+export const useGroupJobs = () => useGroupItems(useApi().job);
+
+export const useGroupById = () => useById(useApi().group);
+
+export const useMemberById = () => useById(useApi().member);
+
+export const useDeviceById = () => useById(useApi().device);
+
+export const useMediaById = () => useById(useApi().media);
+
+export const useJobById = () => useById(useApi().job);

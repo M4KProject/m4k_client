@@ -1,12 +1,13 @@
 import { Css, toString } from 'fluxio';
-import { Page, PageBody, Button, tooltip, Toolbar } from '@common/components';
 import { useEffect, useState } from 'preact/hooks';
 import { RefreshCw, Power, LogOut } from 'lucide-react';
 import { DeviceScreen } from '../components/devices/DeviceScreen';
 import { DeviceConsole } from '../components/devices/DeviceConsole';
 import { glb, jsonStringify } from 'fluxio';
-import { deviceSync } from '@/api/sync';
-import { useDevice } from '@/api/hooks';
+import { useApi, useDevice } from '@/hooks/apiHooks';
+import { Page, PageBody } from '@/components/Page';
+import { Toolbar } from '@/components/Toolbar';
+import { Button } from '@/components/Button';
 
 const c = Css('DevicePage', {
   Body: {
@@ -21,6 +22,7 @@ const c = Css('DevicePage', {
 });
 
 export const DevicePage = () => {
+  const api = useApi();
   const device = useDevice();
 
   const [consoleOutput, setConsoleOutput] = useState('Console ready...\n');
@@ -34,7 +36,7 @@ export const DevicePage = () => {
   const executeAction = async (action: string, input?: any) => {
     if (!device) return;
     try {
-      await deviceSync.update(device.id, { action: action as any, input });
+      await api.device.update(device.id, { action: action as any, input });
       setConsoleOutput((p) => p + `> Action: ${action}\n`);
     } catch (error) {
       setConsoleOutput((p) => p + `> Error: ${error}\n`);
@@ -69,24 +71,24 @@ export const DevicePage = () => {
   }
 
   const captureUrl =
-    device.capture ? deviceSync.coll.getFileUrl(device.id, toString(device.capture)) : '';
+    device.capture ? api.device.coll.getFileUrl(device.id, toString(device.capture)) : '';
 
   return (
     <Page {...c()}>
       <Toolbar title={device.name || device.key}>
         <Button
           icon={<RefreshCw />}
-          {...tooltip('Rafraîchir')}
+          tooltip="Rafraîchir"
           onClick={() => executeAction('refresh')}
         />
         <Button
           icon={<Power />}
-          {...tooltip('Redémarrer')}
+          tooltip="Redémarrer"
           onClick={() => executeAction('reboot')}
         />
         <Button
           icon={<LogOut />}
-          {...tooltip('Fermer le Kiosk')}
+          tooltip="Fermer le Kiosk"
           onClick={() => executeAction('exit')}
         />
       </Toolbar>

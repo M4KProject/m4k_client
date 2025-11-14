@@ -128,10 +128,10 @@ const toData = (item: NBItem): NBData => {
 }
 
 const rect: BType = { comp: BRect, label: 'Rectangle', children: 1, pos: 1, icon: Square };
-const root: BType = { comp: BRoot, label: 'Root', children: 1, icon: Home };
+const root: BType = { comp: BRoot, label: 'Racine', children: 1, icon: Home };
 const text: BType = { comp: BText, label: 'Texte', text: 1, icon: ALargeSmall };
 const carousel: BType = { comp: BCarousel, label: 'Carousel', children: 1, pos: 1, icon: GalleryHorizontal };
-const media: BType = { comp: BMedia, label: 'Media', pos: 1, icon: FileIcon };
+const media: BType = { comp: BMedia, label: 'Media', media: 1, icon: FileIcon };
 
 export class BCtrl {
   readonly registry: Dictionary<BType> = { root, rect, text, carousel, media };
@@ -144,8 +144,8 @@ export class BCtrl {
   readonly parentId?: string;
 
   readonly init$ = flux<BEvent>({});
-  readonly click$ = flux<BEvent>({});
-  readonly event$ = fluxUnion(this.init$, this.click$);
+  readonly select$ = flux<BEvent>({});
+  readonly event$ = fluxUnion(this.init$, this.select$);
 
   readonly panZoom = new PanZoomCtrl();
 
@@ -203,13 +203,13 @@ export class BCtrl {
 
     stopEvent(event);
 
-    const lastEvent = this.click$.get();
+    const lastEvent = this.select$.get();
     const boxEvent = this.newEvent(i, 'click', event);
     boxEvent.count = (lastEvent.i === i ? lastEvent.count || 1 : 0) + 1;
 
     log.d('click event', boxEvent, 'el:', boxEvent.el);
     this.funCall(box?.click, boxEvent);
-    this.click$.set(boxEvent);
+    this.select$.set(boxEvent);
   }
 
   getClick(i: number) {

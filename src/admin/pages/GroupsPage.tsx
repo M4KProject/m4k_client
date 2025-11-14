@@ -1,7 +1,6 @@
 import { Plus } from 'lucide-react';
 import { computeStyle, Css } from 'fluxio';
 import { SearchField } from '../components/SearchField';
-import { groupSync, memberSync } from '@/api/sync';
 import { GroupGrid } from '../components/GroupGrid';
 import { getPbClient } from 'pblite';
 import { tooltip } from '@/components/Tooltip';
@@ -9,6 +8,7 @@ import { Role } from '@/api/models';
 import { Page, PageBody } from '@/components/Page';
 import { Toolbar } from '@/components/Toolbar';
 import { Button } from '@/components/Button';
+import { useApi } from '@/hooks/apiHooks';
 
 const c = Css('GroupsPage', {
   Color: {
@@ -23,13 +23,14 @@ export const Color = ({ color }: { color: string }) => (
 );
 
 export const GroupsPage = () => {
+  const api = useApi();
   const handleAdd = async () => {
     const auth = getPbClient().getAuth();
     if (!auth) return;
-    const group = await groupSync.create({ name: 'Nouveau Groupe', user: auth.id });
+    const group = await api.group.create({ name: 'Nouveau Groupe', user: auth.id });
     if (group) {
       const role = Role.viewer;
-      await memberSync.create({ user: auth.id, group: group.id, role });
+      await api.member.create({ user: auth.id, group: group.id, role });
     }
   };
 

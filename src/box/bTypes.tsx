@@ -87,6 +87,7 @@ export interface BType {
   children?: BOnOff;
   text?: BOnOff;
   pos?: BOnOff;
+  media?: BOnOff;
   icon?: typeof BoxIcon;
 }
 

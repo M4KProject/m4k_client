@@ -3,7 +3,7 @@
 // import { PageModel } from '@/api';
 // import { DivProps } from '@common/components';
 // import { useEffect } from 'preact/hooks';
-// import { useGroupMedias } from '@/api/hooks';
+// import { useGroupMedias } from '@/hooks/apiHooks';
 // import { MediaConfig, MediaView, MediaViewProps } from './BaseView';
 
 // const c = Css('PageView', {

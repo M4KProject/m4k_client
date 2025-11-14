@@ -9,12 +9,12 @@ import { getPbClient } from 'pblite';
 import { tooltip } from '@/components/Tooltip';
 import { useFlux } from '@/hooks/useFlux';
 import { theme$, updateTheme } from '@/utils/theme';
-import { userColl } from '@/api/sync';
 import { Page, PageBody } from '@/components/Page';
 import { Toolbar } from '@/components/Toolbar';
 import { Button } from '@/components/Button';
 import { Form } from '@/components/Form';
 import { Field } from '@/components/Field';
+import { useApi } from '@/hooks/apiHooks';
 
 const c = Css('AccountPage', {
   Color: {
@@ -29,6 +29,7 @@ export const Color = ({ color }: { color: string }) => (
 );
 
 export const AccountPage = () => {
+  const api = useApi();
   const theme = useFlux(theme$);
   const auth = useFlux(getPbClient().auth$);
   const [passwordError, setPasswordError] = useState('');
@@ -40,7 +41,7 @@ export const AccountPage = () => {
 
   const handleUpdatePassword = async () => {
     try {
-      await userColl.update(auth.id, { oldPassword, password, passwordConfirm: password });
+      await api.userColl.update(auth.id, { oldPassword, password, passwordConfirm: password });
       setPasswordError('');
       setPassword('');
     } catch (_error) {

@@ -7,7 +7,7 @@ import { Form } from './Form';
 import { toError } from 'fluxio';
 import { addTr } from '@/hooks/useTr';
 import { LogIn, UserPlus, Mail, Key, ArrowLeft } from 'lucide-react';
-import { userColl } from '@/api/sync';
+import { useApi } from '@/hooks/apiHooks';
 
 addTr({
   'Failed to authenticate.': 'Échec, vérifier le mot de passe.',
@@ -32,6 +32,7 @@ const c = Css('AuthForm', {
 });
 
 export const AuthForm = () => {
+  const api = useApi();
   const isAuthLoading = false; // useFlux(isAuthLoading$);
   const [page, setPage] = useState('sign-in');
   const [email, setEmail] = useState('');
@@ -75,7 +76,7 @@ export const AuthForm = () => {
                 onClick={async () => {
                   setPage('');
                   try {
-                    await userColl.login(email, password);
+                    await api.userColl.login(email, password);
                     setPasswordError('');
                   } catch (error) {
                     setPasswordError(toError(error).message);
@@ -113,7 +114,7 @@ export const AuthForm = () => {
                 title="S'inscrire"
                 onClick={async () => {
                   setPage('');
-                  await userColl.signUp(email, password);
+                  await api.userColl.signUp(email, password);
                   setPage('sign-in');
                 }}
                 color="primary"
@@ -134,7 +135,7 @@ export const AuthForm = () => {
                 title="Réinitialiser le mot de passe par email"
                 onClick={async () => {
                   setPage('');
-                  await userColl.passwordReset(email);
+                  await api.userColl.passwordReset(email);
                   setPage('sign-in');
                   // setPage('code');
                 }}

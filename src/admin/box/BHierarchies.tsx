@@ -1,6 +1,6 @@
 import { Css, groupBy, isInt, logger, truncate, Writable } from 'fluxio';
-import { BHierarchy, NBItems } from '@/components/box/bTypes';
-import { useBCtrl } from '@/components/box/BCtrl';
+import { BHierarchy, NBItems } from '@/box/bTypes';
+import { useBCtrl } from '@/box/BCtrl';
 import { useFlux, useFluxMemo } from '@/hooks/useFlux';
 import { Square } from 'lucide-react';
 
@@ -34,17 +34,17 @@ const c = Css('BHierarchy', {
 const BHierarchyItem = ({ i }: { i: number }) => {
   const ctrl = useBCtrl();
   const item = useFluxMemo(() => ctrl.item$(i), [ctrl, i]);
-  const selected = useFluxMemo(() => ctrl.click$.map(e => e.i === i), [ctrl, i]);
+  const selected = useFluxMemo(() => ctrl.select$.map(e => e.i === i), [ctrl, i]);
   const type = ctrl.getType(item?.type);
   const Icon = type.icon || Square;
 
-  const label = truncate(item?.name || item?.text?.replace(/\*\*/g, '') || `B${i}`, 20);
+  const label = truncate(item?.name || item?.text?.replace(/\*\*/g, '') || type.label || `B${i}`, 20);
   const children = item?.children;
 
   // const { i, item, depth } = hierarchy;
   // const { name, text, type } = item;
   // const ctrl = useBCtrl();
-  // const selected = useFluxMemo(() => ctrl.click$.map(e => e.i === i), [ctrl, i]);
+  // const selected = useFluxMemo(() => ctrl.select$.map(e => e.i === i), [ctrl, i]);
   // const config = ctrl.getType(type);
   // const Icon = config.icon;
 

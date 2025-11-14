@@ -1,29 +1,29 @@
 import { Css } from 'fluxio';
 import { MediaGrid } from '../components/medias/MediaGrid';
 import { getNextTitle, uploadMedia } from '../controllers';
-import { mediaSync } from '@/api/sync';
 import { AddPlaylistItemButton, EditPlaylist } from '../components/medias/EditPlaylist';
 import { EditPage } from '../components/medias/EditPage';
 import { Edit, FolderPlus, MapPlus, FilePlus, Play, Upload } from 'lucide-react';
 import { useIsEdit, useMediaType } from '@/router/hooks';
 import { setIsEdit, setMediaKey, setMediaType } from '@/router/setters';
-import { useMedia, useMediaById } from '@/api/hooks';
+import { useApi, useMedia, useMediaById } from '@/hooks/apiHooks';
 import { MediaModel, PageModel, PlaylistModel } from '@/api/models';
 import { needAuthId } from '@/api/needAuthId';
 import { needGroupId } from '@/api/groupId$';
 import { Page, PageBody } from '@/components/Page';
-import { MediaView } from '@/components/medias/MediaView';
+import { MediaView } from '@/medias/MediaView';
 import { Toolbar } from '@/components/Toolbar';
 import { Button, UploadButton } from '@/components/Button';
 import { tooltip } from '@/components/Tooltip';
+import { ApiCtrl } from '@/api/ApiCtrl';
 
 const c = Css('MediasPage', {});
 
 const handleAddToPlaylist = async () => {};
 
-const addMedia = async (type: MediaModel['type'], title: string) => {
-  const media = await mediaSync.create({
-    title: getNextTitle(title),
+const addMedia = async (api: ApiCtrl, type: MediaModel['type'], title: string) => {
+  const media = await api.media.create({
+    title: getNextTitle(api, title),
     type,
     user: needAuthId(),
     group: needGroupId(),
@@ -32,10 +32,11 @@ const addMedia = async (type: MediaModel['type'], title: string) => {
   setMediaKey(media.key);
 };
 
-const addPlaylist = () => addMedia('playlist', 'Playlist');
-const addPage = () => addMedia('page', 'Page');
+const addPlaylist = (api: ApiCtrl) => addMedia(api, 'playlist', 'Playlist');
+const addPage = (api: ApiCtrl) => addMedia(api, 'page', 'Page');
 
 export const MediasPage = () => {
+  const api = useApi();
   const type = useMediaType();
   const media = useMedia();
   const mediaById = useMediaById();
@@ -83,13 +84,13 @@ export const MediasPage = () => {
         </Button> */}
 
         {type === 'playlist' && (
-          <Button icon={<MapPlus />} {...tooltip('Créer une playlist')} onClick={addPlaylist}>
+          <Button icon={<MapPlus />} {...tooltip('Créer une playlist')} onClick={() => addPlaylist(api)}>
             Crée une Playlist
           </Button>
         )}
 
         {type === 'page' && (
-          <Button icon={<FilePlus />} {...tooltip('Créer une page')} onClick={addPage} />
+          <Button icon={<FilePlus />} {...tooltip('Créer une page')} onClick={() => addPage(api)} />
         )}
 
         {type === '' && (
@@ -97,8 +98,8 @@ export const MediasPage = () => {
             icon={<FolderPlus />}
             {...tooltip('Créer un nouveau dossier')}
             onClick={() => {
-              mediaSync.create({
-                title: getNextTitle('Dossier'),
+              api.media.create({
+                title: getNextTitle(api, 'Dossier'),
                 mime: 'application/folder',
                 type: 'folder',
                 user: needAuthId(),
@@ -116,14 +117,14 @@ export const MediasPage = () => {
           color="primary"
           onFiles={(files) => {
             if (media?.type === 'playlist') {
-              uploadMedia(files, media.parent ? mediaById[media.parent] : undefined, media);
+              uploadMedia(api, files, media.parent ? mediaById[media.parent] : undefined, media);
               return;
             }
             if (media?.type === 'folder') {
-              uploadMedia(files, media);
+              uploadMedia(api, files, media);
               return;
             }
-            uploadMedia(files);
+            uploadMedia(api, files);
           }}
         />
 

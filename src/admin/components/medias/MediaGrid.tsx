@@ -2,14 +2,13 @@ import { Css } from 'fluxio';
 import { byId, groupBy, sortItems, fluxDictionary, isUFloat } from 'fluxio';
 import { JobGrid } from '../jobs/JobGrid';
 import { selectedById$ } from '@/admin/controllers/selected';
-import { useGroupMedias } from '@/api/hooks';
+import { useApi, useGroupMedias } from '@/hooks/apiHooks';
 import { useIsAdvanced } from '@/router/hooks';
 import { Dictionary, round } from 'fluxio';
 import { Trash2, FolderInput, PlusSquare, Edit, Eye, Download } from 'lucide-react';
 import { SelectedField } from '../SelectedField';
 import { MediaPreview } from './MediaPreview';
 import { updatePlaylist } from '../../controllers';
-import { mediaSync } from '@/api/sync';
 import { MediaIcon } from './MediaIcon';
 import { updateRoute } from '@/router/setters';
 import { useMemo } from 'preact/hooks';
@@ -21,6 +20,7 @@ import { Field } from '@/components/Field';
 import { Button } from '@/components/Button';
 import { tooltip } from '@/components/Tooltip';
 import { useFlux } from '@/hooks/useFlux';
+import { ApiCtrl } from '@/api/ApiCtrl';
 
 addTr({
   pending: 'en attente',
@@ -37,6 +37,7 @@ const c = Css('MediaTable', {
 });
 
 interface MediaGridCtx {
+  api: ApiCtrl;
   isAdvanced: boolean;
   selectedIds: string[];
   getTab: (id: string) => number;
@@ -49,7 +50,7 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
   select: ['', ({ id }) => <SelectedField id={id} />, { w: 30 }],
   title: [
     'Titre',
-    ({ id, type, title }, { isAdvanced, getTab, getIsOpen, setIsOpen, getChildren }) => (
+    ({ id, type, title }, { api, getTab, getIsOpen, setIsOpen, getChildren }) => (
       <>
         <div style={{ width: 24 * getTab(id) }} />
         <div onClick={() => setIsOpen(id, !getIsOpen(id))}>
@@ -59,7 +60,7 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
             hasChildren={type === 'folder' && getChildren(id).length > 0}
           />
         </div>
-        <Field value={title} onValue={(title) => mediaSync.update(id, { title })} />
+        <Field value={title} onValue={(title) => api.media.update(id, { title })} />
       </>
     ),
   ],
@@ -90,7 +91,7 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
   ],
   actions: [
     '',
-    ({ id, key, type }, { selectedIds, getChildren }) => (
+    ({ id, key, type }, { selectedIds, getChildren, api }) => (
       <>
         {type === 'folder' && selectedIds.length > 0 && (
           <Button
@@ -99,7 +100,7 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
             onClick={async () => {
               for (const selectId of selectedIds) {
                 selectedById$.setItem(selectId, undefined);
-                await mediaSync.update(selectId, { parent: id });
+                await api.media.update(selectId, { parent: id });
               }
             }}
           />
@@ -172,9 +173,9 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
           {...tooltip('Supprimer')}
           onClick={async () => {
             for (const c of getChildren(id)) {
-              mediaSync.update(c.id, { parent: null as any });
+              api.media.update(c.id, { parent: null as any });
             }
-            mediaSync.delete(id);
+            api.media.delete(id);
           }}
         />
       </>
@@ -201,6 +202,7 @@ export const getMediasByParent = (medias: MediaModel[]) => {
 };
 
 export const MediaGrid = ({ type }: { type?: MediaModel['type'] }) => {
+  const api = useApi();
   const medias = useGroupMedias(type);
   const openById = useFlux(openById$);
   const isAdvanced = useIsAdvanced();
@@ -229,6 +231,7 @@ export const MediaGrid = ({ type }: { type?: MediaModel['type'] }) => {
   deep(rootMedias, 0);
 
   const ctx: MediaGridCtx = {
+    api,
     isAdvanced: !!isAdvanced,
     selectedIds,
     getChildren: (id) => (id && mediasByParent[id]) || [],

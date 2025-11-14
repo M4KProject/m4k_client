@@ -3,9 +3,9 @@ import { Css } from 'fluxio';
 import { Download } from 'lucide-react';
 import { sortItems } from 'fluxio';
 import { m4k } from '@/m4kBridge';
-import { applicationColl } from '@/api/sync';
 import { Button } from '@/components/Button';
 import { ApplicationModel } from '@/api/models';
+import { useApi } from '@/hooks/apiHooks';
 
 const c = Css('Apps', {
   '': {
@@ -41,7 +41,8 @@ export const AppButton = ({
   file: string;
   filename: string;
 }) => {
-  const url = applicationColl.getDownloadUrl(id, file);
+  const api = useApi();
+  const url = api.applicationColl.getDownloadUrl(id, file);
   return (
     <Button
       {...c('AppButton')}
@@ -61,10 +62,11 @@ export const AppButton = ({
 };
 
 export const Apps = () => {
+  const api = useApi();
   const [applications, setApplications] = useState<ApplicationModel[]>([]);
 
   useEffect(() => {
-    applicationColl.all({ active: true }).then(setApplications);
+    api.applicationColl.all({ active: true }).then(setApplications);
   }, []);
 
   sortItems(applications, (a) => (a.name || '') + a.version);

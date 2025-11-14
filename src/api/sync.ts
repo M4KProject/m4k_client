@@ -11,15 +11,6 @@ import {
 } from 'fluxio';
 import { isEmpty, isArray, isString } from 'fluxio';
 import { notImplemented } from 'fluxio/error';
-import {
-  ApplicationModel,
-  DeviceModel,
-  GroupModel,
-  JobModel,
-  MediaModel,
-  MemberModel,
-  UserModel,
-} from './models';
 import { Flux } from 'fluxio';
 import { jsonStringify } from 'fluxio';
 import { deepClone, getChanges } from 'fluxio';
@@ -237,14 +228,14 @@ export class Sync<T extends PbModel> {
   }
 }
 
-export const sync = <T extends PbModel>(name: string) => new Sync<T>(name);
+// export const sync = <T extends PbModel>(name: string) => new Sync<T>(name);
 
-export const deviceSync = sync<DeviceModel>('devices');
-export const groupSync = sync<GroupModel>('groups');
-export const jobSync = sync<JobModel>('jobs');
-export const mediaSync = sync<MediaModel>('medias');
-export const memberSync = sync<MemberModel>('members');
-// export const userSync = sync<UserModel>('users');
+// export const deviceSync = sync<DeviceModel>('devices');
+// export const groupSync = sync<GroupModel>('groups');
+// export const jobSync = sync<JobModel>('jobs');
+// export const mediaSync = sync<MediaModel>('medias');
+// export const memberSync = sync<MemberModel>('members');
+// // export const userSync = sync<UserModel>('users');
 
-export const applicationColl = new PbColl<ApplicationModel>('applications');
-export const userColl = new PbAuthColl<UserModel>('users');
+// export const applicationColl = new PbColl<ApplicationModel>('applications');
+// export const userColl = new PbAuthColl<UserModel>('users');

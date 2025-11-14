@@ -2,12 +2,12 @@ import { Css } from 'fluxio';
 import { Home, Users, Monitor, User, Zap } from 'lucide-react';
 import { MediaIcon } from './medias/MediaIcon';
 import { setGroupKey, setPage, updateRoute } from '../../router/setters';
-import { useGroup, useGroups } from '../../api/hooks';
 import { useIsAdvanced, useMediaType, usePage } from '@/router/hooks';
 import { Page } from '@/router/types';
 import { Side, SIDE_MIN, SideButton, SideSep } from '@/components/Side';
 import { addTr } from '@/hooks/useTr';
 import { MediaType } from '@/api/models';
+import { useGroup, useGroups } from '@/hooks/apiHooks';
 
 const c = Css('SideBar', {
   Version: {

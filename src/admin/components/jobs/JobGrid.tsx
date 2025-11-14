@@ -1,11 +1,10 @@
 import { Trash2 } from 'lucide-react';
 import { JobStatus } from './JobStatus';
 import { UploadItem, uploadMediaJobs$ } from '../../controllers';
-import { jobSync } from '@/api/sync';
 import { Css } from 'fluxio';
 import { MediaPreview } from '../medias/MediaPreview';
 import { byId } from 'fluxio';
-import { useGroupJobs, useGroupMedias } from '@/api/hooks';
+import { useApi, useGroupJobs, useGroupMedias } from '@/hooks/apiHooks';
 import { filterItems, Dictionary } from 'fluxio';
 import { addTr } from '@/hooks/useTr';
 import { Grid, GridCols } from '@/components/Grid';
@@ -14,6 +13,7 @@ import { Tr } from '@/components/Tr';
 import { Button } from '@/components/Button';
 import { tooltip } from '@/components/Tooltip';
 import { useFlux } from '@/hooks/useFlux';
+import { ApiCtrl } from '@/api/ApiCtrl';
 
 // Ajout des traductions pour les actions de job
 addTr({ convert: 'Convertion du media', addMember: 'Ajouter membre' });
@@ -39,7 +39,7 @@ const c = Css('JobGrid', {
   },
 });
 
-const cols: GridCols<JobModel, { mediaById: Dictionary<MediaModel> }> = {
+const cols: GridCols<JobModel, { mediaById: Dictionary<MediaModel>, api: ApiCtrl }> = {
   action: ['Action', (job) => <Tr>{job.action}</Tr>],
   statut: ['Statut', (job) => <JobStatus job={job} />],
   media: [
@@ -48,12 +48,12 @@ const cols: GridCols<JobModel, { mediaById: Dictionary<MediaModel> }> = {
   ],
   actions: [
     'Actions',
-    (job) => (
+    (job, { api }) => (
       <Button
         icon={<Trash2 />}
         color="error"
         {...tooltip('Supprimer')}
-        onClick={() => jobSync.delete(job.id)}
+        onClick={() => api.job.delete(job.id)}
       />
     ),
   ],
@@ -66,6 +66,7 @@ export interface JobGridProps {
 }
 
 export const JobGrid = ({ filter, panel, ...props }: JobGridProps) => {
+  const api = useApi();
   const jobs = useGroupJobs();
   const uploadJobs = useFlux(uploadMediaJobs$);
   const uploadJobsList = Object.values(uploadJobs).filter((j) => j !== undefined);
@@ -80,7 +81,7 @@ export const JobGrid = ({ filter, panel, ...props }: JobGridProps) => {
     return <div {...c('Panel', 'Panel-close', props)} />;
   }
 
-  const table = <Grid cols={cols} ctx={{ mediaById }} items={jobs} />;
+  const table = <Grid cols={cols} ctx={{ mediaById, api }} items={jobs} />;
 
   if (panel) {
     return <div {...c('Panel', 'Panel-open', props)}>{table}</div>;
