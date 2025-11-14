@@ -3,6 +3,7 @@ import {
   CssStyle,
   fluxCombine,
   getEventXY,
+  isDeepEqual,
   logger,
   mustExist,
   onHtmlEvent,
@@ -165,7 +166,6 @@ const BHandlesContent = () => {
 export const BHandles = () => {
   const ctrl = useBCtrl();
   const { x, y, w, h, pos, show } = useFluxMemo(() => {
-
     if (!ctrl) return;
 
     const combined$ = fluxCombine(
@@ -175,7 +175,7 @@ export const BHandles = () => {
       ctrl.panZoom.after$.delay(100),
     ).throttle(1000 / 60);
 
-    return combined$.map(([click]) => {
+    const mapped$ = combined$.map(([click]) => {
       const { el, item } = click || {};
       if (!el || !item) return;
 
@@ -187,11 +187,14 @@ export const BHandles = () => {
 
       const pos = ctrl.getType(item?.type).pos;
 
-      log.d('event', x, y, w, h, pos);
+      // log.d('event', x, y, w, h, pos);
 
       return { x, y, w, h, pos, show: true };
     });
+    
+    mapped$.isEqual = isDeepEqual
 
+    return mapped$
   }, [ctrl]) || {};
 
   log.d('render', { x, y, w, h, pos, show });
