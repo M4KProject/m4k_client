@@ -257,6 +257,8 @@ export class PanZoomCtrl {
   }
 
   applyTransform(x: number, y: number, scale: number) {
+    console.debug('applyTransform', x, y, scale);
+
     const canvas = this.canvas();
 
     this.x = x;
@@ -274,6 +276,8 @@ export class PanZoomCtrl {
   }
 
   setSize(w: number, h: number) {
+    console.debug('setSize', w, h);
+    
     const canvas = this.canvas();
     this.w = w;
     this.h = h;
@@ -352,12 +356,17 @@ export interface PanZoomProps extends DivProps {
 
 export const PanZoom = ({ children, ctrl, ...props }: PanZoomProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const container = containerRef.current;
-
   const contentRef = useRef<HTMLDivElement>(null);
+
+  const container = containerRef.current;
   const content = contentRef.current;
 
   useEffect(() => {
+    const container = containerRef.current;
+    const content = contentRef.current;
+
+    console.debug('PanZoom', container, content);
+
     if (!container) return;
     if (!content) return;
 
@@ -365,7 +374,7 @@ export const PanZoom = ({ children, ctrl, ...props }: PanZoomProps) => {
     c.init(container, content);
 
     return () => c.dispose();
-  }, [ctrl, container, content]);
+  }, [ctrl, containerRef, contentRef, container, content]);
 
   return (
     <div {...props} {...c('', props)} ref={containerRef}>

@@ -24,15 +24,27 @@ export const BViewport = () => {
   const ctrl = useBCtrl();
 
   useEffect(() => {
-    return ctrl.panZoom.ready$.on(() => {
-      const el = ctrl.panZoom.viewport();
+    console.debug('BViewport useEffect');
+
+    const ready = () => {
+      console.debug('BViewport ready');
+      const pz = ctrl.panZoom;
+
+      const el = pz.viewport();
       onHtmlEvent(el, 'click', (event) => {
         ctrl.select$.set({ el, event });
       });
 
       const [w, h] = SCREEN_SIZES[0]!;
-      ctrl.panZoom.setSize(w, h);
-    });
+      pz.setSize(w, h);
+
+      setTimeout(() => {
+        pz.fitToContainer();
+      }, 1000);
+    }
+    ready();
+
+    return ctrl.panZoom.ready$.on(ready);
   }, [ctrl]);
 
   return (
