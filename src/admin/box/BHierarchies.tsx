@@ -1,7 +1,6 @@
-import { Css, groupBy, isInt, logger, truncate, Writable } from 'fluxio';
-import { BHierarchy, NBItems } from '@/box/bTypes';
+import { Css, logger, truncate } from 'fluxio';
 import { useBCtrl } from '@/box/BCtrl';
-import { useFlux, useFluxMemo } from '@/hooks/useFlux';
+import { useFluxMemo } from '@/hooks/useFlux';
 import { Square } from 'lucide-react';
 
 const log = logger('BHierarchy');
@@ -35,11 +34,11 @@ const BHierarchyItem = ({ i }: { i: number }) => {
   const ctrl = useBCtrl();
   const item = useFluxMemo(() => ctrl.item$(i), [ctrl, i]);
   const selected = useFluxMemo(() => ctrl.select$.map(e => e.i === i), [ctrl, i]);
-  const type = ctrl.getType(item?.type);
+  const type = ctrl.getType(item?.t);
   const Icon = type.icon || Square;
 
-  const label = truncate(item?.name || item?.text?.replace(/\*\*/g, '') || type.label || `B${i}`, 20);
-  const children = item?.children;
+  const label = truncate(item?.n || item?.b?.replace(/\*\*/g, '') || type.label || '', 20);
+  const children = item?.r;
 
   // const { i, item, depth } = hierarchy;
   // const { name, text, type } = item;

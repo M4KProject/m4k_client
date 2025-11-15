@@ -13,15 +13,14 @@ import {
   ClipboardCopy,
   ClipboardPaste,
   ClipboardX,
-  SaveAll,
   Save,
 } from 'lucide-react';
 import { useState } from 'preact/hooks';
 import { BCtrl, useBCtrl } from '@/box/BCtrl';
 import { Button, ButtonProps } from '@/components/Button';
 import { useFlux } from '@/hooks/useFlux';
-import { BItem } from '@/box/bTypes';
 import { clipboardCopy, clipboardPaste } from '@/utils/clipboard';
+import { BData, NBData } from '@/box/bTypes';
 
 const c = Css('BButtons', {
   '': {
@@ -58,15 +57,9 @@ const BButton = (props: ButtonProps) => (
   <Button {...c('Button')} color="primary" {...props} />
 )
 
-const addRect = (ctrl: BCtrl) => {
-  ctrl.add({
-    type: 'rect',
-    pos: [25, 25, 50, 50],
-    style: {
-      bg: randColor(),
-    },
-  });
-}
+const addRect = (ctrl: BCtrl) => (
+  ctrl.add({ a: [25, 25, 50, 50], s: { bg: randColor() } })
+);
 
 const cut = async (ctrl: BCtrl, index: number) => {
   const data = ctrl.getData(index);
@@ -82,13 +75,9 @@ const copy = async (ctrl: BCtrl, index: number) => {
 const paste = async (ctrl: BCtrl, index: number) => {
   const item = ctrl.get(index);
   if (!item) return;
-  const data = await clipboardPaste();
-  if (isItem(data) && isString(data.type)) {
-    if (item.type === data.type) {
-      ctrl.set(item.i, { ...data, parent: item.parent });
-    } else {
-      ctrl.add({ ...data, parent: index });
-    }
+  const d: BData = await clipboardPaste();
+  if (isItem(d)) {
+    ctrl.add({ ...d, p: item.t === d.t ? item.p : index });
   }
 }
 
@@ -119,7 +108,9 @@ export const BButtons = () => {
         <div {...c('Sep')} />
         <BButton icon={<SquarePlus />} onClick={() => addRect(ctrl)} tooltip="Ajouter un rectangle" />
         <div {...c('Sep')} />
-        <BButton icon={<Save />} onClick={() => {}} tooltip="Enregistrer" />
+        <BButton icon={<Save />} onClick={() => {
+          
+        }} tooltip="Enregistrer" />
       </div>
     );
   } else {

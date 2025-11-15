@@ -37,7 +37,7 @@ const BMediasItem = ({ media }: { media: MediaModel }) => {
   const mediaId = media.id;
   const selected = useFluxMemo(() =>
     fluxCombine(ctrl.select$, ctrl.items$)
-      .map(([click]) => ctrl.get(click.i)?.media === mediaId),
+      .map(([click]) => ctrl.get(click.i)?.m === mediaId),
     [ctrl, mediaId]
   );
   const variants = api.getVariants(media);
@@ -52,7 +52,7 @@ const BMediasItem = ({ media }: { media: MediaModel }) => {
       onClick={() => {
         const select = ctrl.select$.get();
         if (select.i !== undefined) {
-          ctrl.update(select.i, { media: media.id });
+          ctrl.update(select.i, { m: media.id });
         }
       }}
     />

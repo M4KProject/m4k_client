@@ -11,7 +11,8 @@ const c = Css('BMedia', {
 
 export const BMedia: BComp = ({ i, item, props, ctrl }) => {
   console.debug('BMedia', i, item, props, ctrl);
-  const media = useMedia(item.media);
+  const mediaId = item.m;
+  const media = useMedia(mediaId);
   const mediaById = useMediaById();
 
   return (

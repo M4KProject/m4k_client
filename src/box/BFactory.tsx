@@ -24,20 +24,20 @@ const c = Css('B', {
 });
 
 const computeProps = (ctrl: BCtrl, item: BItem): BCompProps['props'] => {
-  const { i, type, cls, style } = item;
-  const cssStyle = computeStyle(style);
-  const pos = item?.pos;
-  if (pos) {
-    const [x, y, w, h] = pos;
-    cssStyle.position = 'absolute';
-    cssStyle.left = `${x}%`;
-    cssStyle.top = `${y}%`;
-    cssStyle.width = `${w}%`;
-    cssStyle.height = `${h}%`;
+  const { i, t, c: cls, s } = item;
+  const style = computeStyle(s);
+  const a = item?.a;
+  if (a) {
+    const [x, y, w, h] = a;
+    style.position = 'absolute';
+    style.left = `${x}%`;
+    style.top = `${y}%`;
+    style.width = `${w}%`;
+    style.height = `${h}%`;
   }
   const props: BCompProps['props'] = {
-    ...c('', `-${type}`, String(i), cls),
-    style: cssStyle,
+    ...c('', `-${t}`, String(i), cls),
+    style,
     onClick: ctrl.getClick(i),
     ref: ctrl.getRef(i),
   }
@@ -50,9 +50,9 @@ export const BFactory = ({ i }: BFactoryProps) => {
 
   const ctrl = useBCtrl();
   const item = useFluxMemo(() => ctrl.item$(i), [ctrl, i]);
-  const type = ctrl.getType(item?.type);
+  const type = ctrl.getType(item?.t);
   const Comp = type.comp;
   const props = useMemo(() => item && computeProps(ctrl, item), [ctrl, item]);
 
-  return item && props && !item.hide ? <Comp i={i} item={item} ctrl={ctrl} props={props} /> : null;
+  return item && props ? <Comp i={i} item={item} ctrl={ctrl} props={props} /> : null;
 };

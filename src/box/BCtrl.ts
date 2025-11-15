@@ -28,6 +28,7 @@ import { BText } from './BText';
 import { BRect } from './BRect';
 import { BRoot } from './BRoot';
 import { BMedia } from './BMedia';
+import { PageModel } from '@/api/models';
 
 const log = logger('BCtrl');
 
@@ -37,29 +38,24 @@ const applyChanges = (items: Writable<NBItems>, index: number, prev: NBItem, nex
   if (next) items[index] = next;
   else delete items[index];
 
-  const prevParentIndex = prev?.parent;
-  const nextParentIndex = next?.parent;
+  const prevP = prev?.p;
+  const nextP = next?.p;
 
-  const prevParent = isUInt(prevParentIndex) ? items[prevParentIndex] : undefined;
-  const nextParent = isUInt(nextParentIndex) ? items[nextParentIndex] : undefined;
-
-  console.debug('applyChanges parents', 'prevParent:', prevParent?.i, 'nextParent:', nextParent?.i);
+  const prevParent = isUInt(prevP) ? items[prevP] : undefined;
+  const nextParent = isUInt(nextP) ? items[nextP] : undefined;
 
   if (prevParent !== nextParent) {
     if (prevParent) {
-      const oldChildren = prevParent.children||[];
-      const newChildren = removeIndex([...oldChildren], index);
-      console.debug('applyChanges remove child', index, 'from parent', prevParent.i, 'oldChildren:', oldChildren, 'newChildren:', newChildren);
       items[prevParent.i] = {
         ...prevParent,
-        children: newChildren,
+        r: removeIndex([...prevParent.r||[]], index),
       };
     }
 
-    if (nextParent && !nextParent.children?.includes(index)) {
+    if (nextParent && !nextParent.r?.includes(index)) {
       items[nextParent.i] = {
         ...nextParent,
-        children: uniq([...nextParent.children||[], index]),
+        r: uniq([...nextParent.r||[], index]),
       };
     }
   }
@@ -79,41 +75,43 @@ const applyChanges = (items: Writable<NBItems>, index: number, prev: NBItem, nex
   return items;
 }
 
+const getDefaultType = (d: BData) => (d.b ? 'text' : d.m ? 'media' : 'rect');
+
 const toItems = (data: NBData[], items: (Writable<NBItem>)[] = []) => {
   for (let i=0,l=data.length; i<l; i++) {
     const d = data[i];
     if (!d) continue;
 
-    const item = { ...d, type: d.type || 'rect', i };
-
-    const children = d.children;
-    if (isNotEmpty(children)) item.children = uniq(children);
-
-    items[i] = item;
+    items[i] = {
+      ...d,
+      t: d.t || getDefaultType(d),
+      r: d.r ? uniq(d.r) : [],
+      i
+    };
   }
 
-  const root = items[0] || (items[0] = { i:0, type: 'root' });
-  root.type = 'root';
+  const root = items[0] || (items[0] = { i:0, t: '' });
+  root.t = 'root';
 
   for (let i=0,l=items.length; i<l; i++) {
     const item = items[i];
     if (!item) continue;
 
-    const children = item.children;
-    if (!children) continue;
+    const relation = item.r;
+    if (!relation) continue;
 
     const removed: number[] = [];
-    for (const childIndex of children) {
+    for (const childIndex of relation) {
       const child = items[childIndex];
       if (!child) {
         removed.push(childIndex);
         continue;
       }
-      child.parent = i;
+      child.p = i;
     }
 
     for (const childId of removed) {
-      removeItem(children, childId);
+      removeItem(relation, childId);
     }
   }
 
@@ -122,16 +120,17 @@ const toItems = (data: NBData[], items: (Writable<NBItem>)[] = []) => {
 
 const toData = (item: NBItem): NBData => {
   if (!item) return null;
-  const { i, parent, el, ...data } = item;
-  if (data.children?.length === 0) delete data.children;
-  return data;
+  const { i, p, e, ...d } = item;
+  if (d.r?.length === 0) delete d.r;
+  if (getDefaultType(d) === d.t) delete (d as Writable<BData>).t;
+  return d;
 }
 
-const rect: BType = { comp: BRect, label: 'Rectangle', children: 1, pos: 1, icon: Square };
-const root: BType = { comp: BRoot, label: 'Racine', children: 1, icon: Home };
-const text: BType = { comp: BText, label: 'Texte', text: 1, icon: ALargeSmall };
-const carousel: BType = { comp: BCarousel, label: 'Carousel', children: 1, pos: 1, icon: GalleryHorizontal };
-const media: BType = { comp: BMedia, label: 'Media', media: 1, icon: FileIcon };
+const rect: BType = { comp: BRect, label: 'Rectangle', r: 1, a: 1, icon: Square };
+const root: BType = { comp: BRoot, label: 'Racine', r: 1, icon: Home };
+const text: BType = { comp: BText, label: 'Texte', b: 1, icon: ALargeSmall };
+const carousel: BType = { comp: BCarousel, label: 'Carousel', r: 1, a: 1, icon: GalleryHorizontal };
+const media: BType = { comp: BMedia, label: 'Media', m: 1, icon: FileIcon };
 
 export class BCtrl {
   readonly registry: Dictionary<BType> = { root, rect, text, carousel, media };
@@ -153,6 +152,10 @@ export class BCtrl {
     app.boxCtrl = this;
   }
 
+  setPage(page: PageModel) {
+    this.setAllData(page.data?.boxes||[]);
+  }
+
   register(type: string, boxConfig: BType) {
     this.registry[type] = boxConfig;
   }
@@ -172,26 +175,26 @@ export class BCtrl {
 
   private newEvent(i: number, type: string, event?: Event): BEvent {
     const item = this.get(i);
-    const el = item?.el;
+    const el = item?.e;
     return { i, item, el, type, event, timeStamp: Date.now() };
   }
 
   init(i: number, el: HTMLElement) {
     const prev = this.get(i);
-    log.d('init', i, el, prev, 'prev.el:', prev?.el);
+    log.d('init', i, el, prev, 'prev.el:', prev?.e);
     if (!prev) return;
 
-    const next = this.update(i, { el });
+    const next = this.update(i, { e: el });
     const boxEvent = this.newEvent(i, 'init');
 
-    log.d('init event', boxEvent, 'next.el:', next?.el);
+    log.d('init event', boxEvent, 'next.e:', next?.e);
     this.funCall(next?.init, boxEvent);
     this.init$.set(boxEvent);
   }
 
   getRef(i: number) {
     return (el: HTMLElement | undefined | null) => {
-      if (el && this.get(i)?.el !== el) {
+      if (el && this.get(i)?.e !== el) {
         this.init(i, el);
       }
     }
@@ -247,6 +250,9 @@ export class BCtrl {
   setAllData(data: BData[]) {
     log.d('setAllData', data);
     const items = toItems(data);
+    if (!items.length) {
+      items
+    }
     this.items$.set(items);
   }
 
@@ -258,14 +264,14 @@ export class BCtrl {
 
     const prev = items[index];
 
-    const nextData = isFunction(replace) ? replace(prev) : replace;
-    if (!nextData) return prev;
+    const d = isFunction(replace) ? replace(prev) : replace;
+    if (!d) return prev;
 
     const next: BItem = {
-      ...nextData,
-      type: nextData?.type || 'rect',
-      parent: nextData?.parent || (index === 0 ? undefined : 0),
-      children: uniq(nextData?.children || []),
+      ...d,
+      t: d?.t || getDefaultType(d),
+      p: d?.p || (index === 0 ? undefined : 0),
+      r: uniq(d?.r || []),
       i: index,
     };
 

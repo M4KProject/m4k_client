@@ -78,7 +78,7 @@ export const BField = ({ prop, defaultValue, ...props }: FieldProps & { prop: ke
 };
 
 const FlexAlign = () => {
-  const [style, setStyle] = useProp('style');
+  const [style, setStyle] = useProp('s');
   const s = style || {} as Style;
 
   const row = isArray(s.row) ? s.row : null;
@@ -137,7 +137,7 @@ const FlexAlign = () => {
 };
 
 const TextAlign = () => {
-  const [style, setStyle] = useProp('style');
+  const [style, setStyle] = useProp('s');
   const s = style || {} as Style;
   const textAlign = s.textAlign as Style['textAlign'];
 
@@ -166,7 +166,7 @@ const TextAlign = () => {
 };
 
 const BStyleField = ({ prop, ...props }: FieldProps & { prop: string }) => {
-  const [style, setStyle] = useProp('style');
+  const [style, setStyle] = useProp('s');
   const value = ((style || {}) as any)[prop] as any;
   const onValue = (value: any) => {
     setStyle(prev => ({ ...prev, [prop]: value }));
@@ -193,7 +193,7 @@ export const BProps = () => {
   const types = Object.entries(ctrl.registry).map(
     ([type, config]) => [type, <Tr>{config.label}</Tr>] as [string, ComponentChildren]
   );
-  const [nType] = useProp('type');
+  const [nType] = useProp('t');
   const type = nType || 'box';
   const config = ctrl.registry[type] || {} as Partial<BType>;
 
@@ -202,11 +202,11 @@ export const BProps = () => {
   return (
     <div {...c()}>
       <div {...c('Sep')} />
-      <BField label="Nom" prop="name" />
+      <BField label="Nom" prop="n" />
       <BStyleField label="Fond" prop="bg" type="color" />
-      {config.pos && <FlexAlign />}
+      {config.a && <FlexAlign />}
 
-      {config.text && (
+      {config.b && (
         <>
           <div {...c('Sep')} />
           <Field label="Texte" Comp={() => (
@@ -215,7 +215,7 @@ export const BProps = () => {
               <BStyleField prop="fg" type="color" />
             </>
           )} />
-          <BField prop="text" type="multiline" col />
+          <BField prop="b" type="multiline" col />
           <TextAlign />
         </>
       )}
@@ -228,20 +228,20 @@ export const BProps = () => {
         </>
       )} /> */}
 
-      {config.children && (
+      {config.r && (
         <Field label="Ajouter" Comp={() => (
           <div {...c('Row')}>
             {Object.entries(ctrl.registry)
-              .map(([type, config]) => {
+              .map(([t, config]) => {
                 const Icon = config?.icon || Square;
-                if (type === 'root' || type === 'rect') return null;
+                if (t === 'root' || t === 'rect') return null;
                 return (
                   <Button
                     icon={<Icon />}
                     tooltip={config?.label||''}
                     onClick={() => {
-                      const next: Writable<Partial<BItem>> = { parent: i, type };
-                      if (type === 'text') next.text = "Mon texte !";
+                      const next: Writable<Partial<BItem>> = { p: i, t };
+                      if (type === 'text') next.b = "Mon texte !";
                       ctrl.add(next);
                     }}
                   />
@@ -261,7 +261,7 @@ export const BProps = () => {
       />
       {isAdvanced && (
         <>
-          <BField label="Type" prop="type" type="select" defaultValue="box" items={types} />
+          <BField label="Type" prop="t" type="select" defaultValue="box" items={types} />
           <Field label="Contour" Comp={() => (
             <>
               <BStyleField prop="border" type="number" />
@@ -270,18 +270,15 @@ export const BProps = () => {
             </>
           )} />
           <BStyleField label="Marge" prop="p" type="number" />
-          {/* <BProp label="Position" prop="pos" type="json" col /> */}
-          <BField label="Cacher" prop="hide" type="switch" />
-          <BField label="Classe" prop="cls" />
-          <BField label="Media ID" prop="media" />
-          <BField label="Style" prop="style" type="json" col />
-          <BField label="Click" prop="click" type="json" col />
+          <BStyleField label="Cacher" prop="hide" type="switch" />
+          <BField label="Classe" prop="c" />
+          <BField label="Media ID" prop="m" />
           <BField label="Init" prop="init" type="json" col />
-          {/* <BProp label="Data" prop="data" type="json" col /> */}
+          <BField label="Click" prop="click" type="json" col />
           <BDataField />
         </>
       )}
-      {config.media && (
+      {config.m && (
         <BMedias />
       )}
     </div>

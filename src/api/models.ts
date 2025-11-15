@@ -126,7 +126,7 @@ export interface PlaylistData {
 }
 
 export interface PageData {
-  boxes?: Dictionary<BData>;
+  boxes?: BData[];
 }
 
 export interface BaseMediaModel extends _MediaModel {

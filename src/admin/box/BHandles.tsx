@@ -37,7 +37,7 @@ const c = Css('BHandles', {
     bg: 'bg',
     pointerEvents: 'all',
   },
-  '-resize div': {
+  '-a div': {
     display: 'block',
   }
 });
@@ -84,7 +84,7 @@ const startResize = (ctrl: BCtrl, dir: HandleDir, name: string, event: Event) =>
 
     const i = mustExist(ctrl.select$.get()?.i, 'i');
     const box = mustExist(ctrl.get(i), 'box');
-    const pos = mustExist(box.pos, 'pos');
+    const a = mustExist(box.a, 'a');
 
     const [xDir, yDir, wDir, hDir] = dir;
 
@@ -106,12 +106,12 @@ const startResize = (ctrl: BCtrl, dir: HandleDir, name: string, event: Event) =>
 
     const [startEventX, startEventY] = mustExist(getEventXY(event), 'startEventXY');
 
-    const x0 = prctToPxX(pos[0]);
-    const y0 = prctToPxY(pos[1]);
-    const w0 = prctToPxX(pos[2]);
-    const h0 = prctToPxY(pos[3]);
+    const x0 = prctToPxX(a[0]);
+    const y0 = prctToPxY(a[1]);
+    const w0 = prctToPxX(a[2]);
+    const h0 = prctToPxY(a[3]);
 
-    log.d('startResize pos', pos, [x0, y0, w0, h0]);
+    log.d('startResize pos', a, [x0, y0, w0, h0]);
 
     const onMove = (event: Event) => {
       const [eventX, eventY] = mustExist(getEventXY(event), 'eventXY');
@@ -129,7 +129,7 @@ const startResize = (ctrl: BCtrl, dir: HandleDir, name: string, event: Event) =>
       const w = pxToPrctX(wPx);
       const h = pxToPrctY(hPx);
 
-      ctrl.update(i, { pos: [x, y, w, h] });
+      ctrl.update(i, { a: [x, y, w, h] });
     };
 
     const onEnd = (event: Event) => {
@@ -165,7 +165,7 @@ const BHandlesContent = () => {
 
 export const BHandles = () => {
   const ctrl = useBCtrl();
-  const { x, y, w, h, pos, show } = useFluxMemo(() => {
+  const { x, y, w, h, a, show } = useFluxMemo(() => {
     if (!ctrl) return;
 
     const combined$ = fluxCombine(
@@ -185,11 +185,11 @@ export const BHandles = () => {
       x -= viewportRect.left;
       y -= viewportRect.top;
 
-      const pos = ctrl.getType(item?.type).pos;
+      const a = ctrl.getType(item?.t).a;
 
       // log.d('event', x, y, w, h, pos);
 
-      return { x, y, w, h, pos, show: true };
+      return { x, y, w, h, a, show: true };
     });
     
     mapped$.isEqual = isDeepEqual
@@ -197,10 +197,10 @@ export const BHandles = () => {
     return mapped$
   }, [ctrl]) || {};
 
-  log.d('render', { x, y, w, h, pos, show });
+  log.d('render', { x, y, w, h, a, show });
 
   return (
-    <div {...c('', pos && '-resize', show && '-show')} style={{
+    <div {...c('', a && '-a', show && '-show')} style={{
       left: x + 'px',
       top: y + 'px',
       width: w + 'px',

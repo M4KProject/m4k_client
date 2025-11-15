@@ -10,36 +10,33 @@ export interface BFun {
 }
 
 export interface BData {
-  readonly children?: number[]; // children indices or inline data
-  readonly type?: string;
-  readonly cls?: string; // html class
-  readonly name?: string;
-  readonly hide?: boolean;
-  readonly pos?: [number, number, number, number]; // absolute x%, y%, width%, height%
-  readonly style?: Style; // style
-  readonly text?: string; // multiline text content with **bold**
-  readonly media?: string; // media id
+  readonly t?: string; // Type
+  readonly p?: number; // Parent index
+  readonly r?: number[]; // Relations : children indices
+  readonly c?: string; // Class HTML
+  readonly n?: string; // Name
+  readonly a?: [number, number, number, number]; // Absolute x%, y%, width%, height%
+  readonly s?: Style; // Style
+  readonly b?: string; // Body : text multiline text content with **bold**
+  readonly m?: string; // media id
+  readonly d?: Dictionary<any>; // Data custom
   readonly init?: BFun; // on init event
   readonly click?: BFun; // on click event
-  readonly data?: Dictionary<any>;
-  readonly _children?: BData[];
 }
 
 export interface BItem extends BData {
-  readonly i: number;
-  readonly type: string;
-  readonly parent?: number; // parent index
-  readonly children?: number[]; // children index
-  readonly el?: HTMLElement;
+  readonly i: number; // Index
+  readonly t: string; // Type
+  readonly e?: HTMLElement; // Element HTML
 }
 
-export interface BHierarchy {
-  readonly i: number;
-  readonly parent?: BHierarchy;
-  readonly children: BHierarchy[];
-  readonly depth: number;
-  readonly item: BItem;
-}
+// export interface BHierarchy {
+//   readonly i: number;
+//   readonly parent?: BHierarchy;
+//   readonly children: BHierarchy[];
+//   readonly depth: number;
+//   readonly item: BItem;
+// }
 
 export type NBData = BData | undefined | null;
 export type NBItem = BItem | undefined | null;
@@ -84,11 +81,11 @@ export interface BEvent {
 export interface BType {
   comp: BComp;
   label: string;
-  children?: BOnOff;
-  text?: BOnOff;
-  pos?: BOnOff;
-  media?: BOnOff;
   icon?: typeof BoxIcon;
+  r?: BOnOff;
+  b?: BOnOff;
+  a?: BOnOff;
+  m?: BOnOff;
 }
 
 

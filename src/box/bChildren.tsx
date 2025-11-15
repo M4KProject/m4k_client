@@ -7,8 +7,8 @@ export const bChildren = (item: BItem) => {
 
   const children: ComponentChildren[] = [];
   
-  if (item.children) {
-    for (const c of item.children) {
+  if (item.r) {
+    for (const c of item.r) {
       children.push(<BFactory key={c} i={c} />);
     }
   }

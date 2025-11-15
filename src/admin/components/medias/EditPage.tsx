@@ -18,31 +18,38 @@ export const EditPage = ({ page }: { page: PageModel }) => {
   const ctrl = useMemo(() => new BCtrl(), []);
 
   useEffect(() => {
-    ctrl.setAllData([
-      {
-        style: { bg: "#00FFFF", wh: "100%" },
-        children: [1, 2]
-      },
-      {
-        pos: [10, 10, 30, 10],
-        style: { bg: "#0000FF", fg: "#AAAAFF", center: 1 }
-      },
-      {
-        pos: [50, 50, 50, 50],
-        style: { bg: "#00FF00AA", fg: "#FF0000", col: ["end", "end"] },
-        children: [3, 4]
-      },
-      {
-        type: "text",
-        style: { bg: "#FFFFFF", rounded: 5, fg: "#AA0000" },
-        text: "Mon **Texte** 1\nAvec saut de ligne"
-      },
-      {
-        type: "text",
-        style: { bg: "#FFFFAA", rounded: 2, fg: "#330000" },
-        text: "Mon **Texte** 2"
-      }
-    ])
+    const boxes = page.data?.boxes;
+
+    if (!boxes) {
+      ctrl.setAllData([
+        { // 0
+          s: { bg: "#00FFFF", wh: "100%" },
+          r: [1, 2]
+        },
+        { // 1
+          a: [10, 10, 30, 10],
+          s: { bg: "#0000FF", fg: "#AAAAFF", center: 1 }
+        },
+        { // 2
+          a: [50, 50, 50, 50],
+          s: { bg: "#00FF00AA", fg: "#FF0000", col: ["end", "end"] },
+          r: [3, 4]
+        },
+        { // 3
+          s: { bg: "#FFFFFF", rounded: 5, fg: "#AA0000" },
+          b: "Mon **Texte** 1\nAvec saut de ligne"
+        },
+        { // 4
+          s: { bg: "#FFFFAA", rounded: 2, fg: "#330000" },
+          b: "Mon **Texte** 2"
+        }
+      ])
+    } else {
+      ctrl.setAllData(boxes);
+    }
+
+
+
     // ctrl.set('root', {
     //   style: {
     //     bg: '#00FFFF',
