@@ -18,6 +18,8 @@ import {
   base64toBlob,
 } from 'fluxio';
 import { PbAuth } from 'pblite';
+import { createContext } from 'preact';
+import { useContext } from 'preact/hooks';
 
 export class DeviceCtrl {
   email$ = fluxStored<string>('deviceEmail$', '', isString);
@@ -223,6 +225,10 @@ export class DeviceCtrl {
     });
   }
 }
+
+export const DeviceContext = createContext<DeviceCtrl | undefined>(undefined);
+
+export const useDeviceCtrl = () => useContext(DeviceContext)!;
 
 // import { m4k } from "@common/m4k";
 // import supabase from "./supabase";

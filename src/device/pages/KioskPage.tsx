@@ -2,7 +2,6 @@ import { Css } from 'fluxio';
 import { toNumber } from 'fluxio';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { openCodePinDialog } from '../components/CodePinView';
-import { device$ } from '../services/device';
 import { bgColor$, itemAnim$, itemDurationMs$, itemFit$, playlist$, url$ } from '../messages';
 import { m4k } from '@/m4kBridge';
 import { logger } from 'fluxio';
@@ -10,6 +9,7 @@ import { KioskVideo } from '../components/KioskVideo';
 import { usePromise } from '@/hooks/usePromise';
 import { useFlux } from '@/hooks/useFlux';
 import { Button } from '@/components/Button';
+import { useDeviceCtrl } from '../controllers/DeviceCtrl';
 
 const log = logger('KioskPage');
 
@@ -137,7 +137,8 @@ const KioskItem = ({
 };
 
 export const KioskPage = () => {
-  const device = useFlux(device$);
+  const deviceCtrl = useDeviceCtrl();
+  const device = useFlux(deviceCtrl.device$);
 
   const [open, setOpen] = useState(false);
   const [count, setCount] = useState(0);

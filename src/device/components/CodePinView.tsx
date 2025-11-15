@@ -3,7 +3,6 @@ import { Flux } from 'fluxio';
 import { useEffect, useState } from 'preact/hooks';
 import { page$ } from '../messages/page$';
 import { Globe, Lock } from 'lucide-react';
-import { device$ } from '../services/device';
 import { codePin$, offlineMode$ } from '../messages';
 import { Branding } from './Branding';
 import { useFlux } from '@/hooks/useFlux';
@@ -12,6 +11,8 @@ import { Form } from '@/components/Form';
 import { Field } from '@/components/Field';
 import { Button } from '@/components/Button';
 import { showDialog } from '@/components/Dialog';
+import { useApi } from '@/hooks/apiHooks';
+import { useDeviceCtrl } from '../controllers/DeviceCtrl';
 
 const c = Css('CodePinView', {
   '': {
@@ -33,8 +34,9 @@ const c = Css('CodePinView', {
 });
 
 export const CodePinView = ({ open$ }: { open$: Flux<boolean> }) => {
+  const deviceCtrl = useDeviceCtrl();
   const [codePin, setCodePin] = useState('');
-  const device = useFlux(device$);
+  const device = useFlux(deviceCtrl.device$);
   const [updated, setUpdated] = useState(0);
   const timerMs = useInterval(1000, [updated]);
 

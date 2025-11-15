@@ -1,11 +1,11 @@
 import { Css } from 'fluxio';
-import { device$ } from '../services/device';
 import { page$ } from '../messages/page$';
 import { offlineMode$ } from '../messages';
 import { Branding } from '../components/Branding';
 import { useFlux } from '@/hooks/useFlux';
 import { LoadingSpinner } from '@/components/Loading';
 import { Button } from '@/components/Button';
+import { useDeviceCtrl } from '../controllers/DeviceCtrl';
 
 const c = Css('PairingPage', {
   '': {
@@ -53,7 +53,8 @@ const c = Css('PairingPage', {
 });
 
 export const PairingPage = () => {
-  const device = useFlux(device$);
+  const deviceCtrl = useDeviceCtrl();
+  const device = useFlux(deviceCtrl.device$);
   const pairingCode = device?.key || device?.id || 'Chargement...';
 
   return (

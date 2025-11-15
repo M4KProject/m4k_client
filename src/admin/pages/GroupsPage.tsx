@@ -2,7 +2,6 @@ import { Plus } from 'lucide-react';
 import { computeStyle, Css } from 'fluxio';
 import { SearchField } from '../components/SearchField';
 import { GroupGrid } from '../components/GroupGrid';
-import { getPbClient } from 'pblite';
 import { tooltip } from '@/components/Tooltip';
 import { Role } from '@/api/models';
 import { Page, PageBody } from '@/components/Page';
@@ -25,7 +24,7 @@ export const Color = ({ color }: { color: string }) => (
 export const GroupsPage = () => {
   const api = useApi();
   const handleAdd = async () => {
-    const auth = getPbClient().getAuth();
+    const auth = api.pb.getAuth();
     if (!auth) return;
     const group = await api.group.create({ name: 'Nouveau Groupe', user: auth.id });
     if (group) {

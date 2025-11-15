@@ -1,5 +1,4 @@
 import { Css } from 'fluxio';
-import { device$ } from '../services/device';
 import { JSX } from 'preact';
 import { page$, PageName } from '../messages/page$';
 import { LoadingPage } from '../pages/LoadingPage';
@@ -13,11 +12,14 @@ import { ActionsPage } from '../pages/ActionsPage';
 import { EventsPage } from '../pages/EventsPage';
 import { PlaylistPage } from '../pages/PlaylistPage';
 import { PairingPage } from '../pages/PairingPage';
-import { useEffect } from 'preact/hooks';
+import { useEffect, useMemo } from 'preact/hooks';
 import { offlineMode$ } from '../messages';
 import { DialogContainer } from './DialogContainer';
 import { useFlux } from '@/hooks/useFlux';
 import { Side, SideButton, SideSep } from '@/components/Side';
+import { DeviceContext, DeviceCtrl, useDeviceCtrl } from '../controllers/DeviceCtrl';
+import { Api } from '@/api/Api';
+import { ApiContext } from '@/hooks/apiHooks';
 
 const c = Css('DeviceApp', {
   '': {
@@ -58,8 +60,14 @@ const DeviceAppRouter = () => {
 };
 
 const DeviceAppContent = () => {
+  const deviceCtrl = useDeviceCtrl();
+
+  useEffect(() => {
+    deviceCtrl.init();
+  }, []);
+
   const page = useFlux(page$);
-  const device = useFlux(device$);
+  const device = useFlux(deviceCtrl.device$);
 
   useEffect(() => {
     if (!device?.group && !offlineMode$.get()) {
@@ -122,5 +130,14 @@ const DeviceAppContent = () => {
 };
 
 export const DeviceApp = () => {
-  return <DeviceAppContent />;
+  const api = useMemo(() => new Api(), []);
+  const deviceCtrl = useMemo(() => new DeviceCtrl(api), []);
+
+  return (
+    <ApiContext value={api}>
+      <DeviceContext value={deviceCtrl}>
+        <DeviceAppContent />
+      </DeviceContext>
+    </ApiContext>
+  );
 };

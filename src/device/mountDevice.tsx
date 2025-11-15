@@ -1,7 +1,6 @@
 import { render } from 'preact';
 import { setEl } from 'fluxio';
 import copyPlaylist from './copyPlaylist';
-import { deviceInit } from './services/device';
 import { m4k } from '@/m4kBridge';
 import { DeviceApp } from './components/DeviceApp';
 import { copyDir$ } from './messages';
@@ -26,8 +25,6 @@ export const mountDevice = () => {
 
   _rootEl = setEl('div', { id: 'm4kDevice', parent: 'body' });
   render(<DeviceApp />, _rootEl);
-
-  deviceInit();
 
   m4k.subscribe(async (e) => {
     if (e.type !== 'storage' || e.action !== 'mounted') return;
