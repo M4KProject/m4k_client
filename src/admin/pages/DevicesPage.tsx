@@ -7,7 +7,6 @@ import { setDeviceKey, setPage } from '../../router/setters';
 import { useIsAdvanced } from '@/router/hooks';
 import { useApi, useGroupDevices, useGroupMedias } from '@/hooks/apiHooks';
 import { formatDate, formatDateTime } from 'fluxio';
-import { getPbClient } from 'pblite';
 import { Grid, GridCols } from '@/components/Grid';
 import { DeviceModel, MediaModel } from '@/api/models';
 import { Field } from '@/components/Field';
@@ -136,7 +135,7 @@ export const PairingForm = ({ onClose }: { onClose: () => void }) => {
 
     try {
       console.log('Tentative de pairage avec le code:', cleanKey);
-      await getPbClient().req('GET', `pair/${cleanKey}/${group}`);
+      await api.pb.req('GET', `pair/${cleanKey}/${group}`);
       onClose();
     } catch (e) {
       const error = toError(e);
@@ -164,7 +163,7 @@ export const DevicesPage = () => {
 
   // search ? devices.filter((d) => isSearched(d.name, search)) : devices;
 
-  const onlineMin = getPbClient().getTime() - 10 * 1000;
+  const onlineMin = api.pb.getTime() - 10 * 1000;
 
   const handleAdd = async () => {
     showDialog('Pairer un nouvel écran', (open$) => {

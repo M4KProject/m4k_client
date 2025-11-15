@@ -5,7 +5,6 @@ import { LoadingPage } from './LoadingPage';
 import { useIsAdvanced } from '@/router/hooks';
 import { setIsAdvanced } from '@/router/setters';
 import { Branding } from '@/device/components/Branding';
-import { getPbClient } from 'pblite';
 import { tooltip } from '@/components/Tooltip';
 import { useFlux } from '@/hooks/useFlux';
 import { theme$, updateTheme } from '@/utils/theme';
@@ -31,7 +30,7 @@ export const Color = ({ color }: { color: string }) => (
 export const AccountPage = () => {
   const api = useApi();
   const theme = useFlux(theme$);
-  const auth = useFlux(getPbClient().auth$);
+  const auth = useFlux(api.pb.auth$);
   const [passwordError, setPasswordError] = useState('');
   const [password, setPassword] = useState('');
   const [oldPassword, setOldPassword] = useState('');
@@ -56,7 +55,7 @@ export const AccountPage = () => {
           color="primary"
           title="Deconnexion"
           icon={<LogOut />}
-          onClick={() => getPbClient().logout()}
+          onClick={() => api.pb.logout()}
         />
         <Button
           color="primary"

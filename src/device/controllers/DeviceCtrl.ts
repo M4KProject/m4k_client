@@ -1,5 +1,6 @@
 import { Api } from '@/api/Api';
 import { DeviceModel } from '@/api/models';
+import { app } from '@/app';
 import { m4k, M4kResizeOptions } from '@/m4kBridge';
 import {
   sleep,
@@ -16,203 +17,212 @@ import {
   isBlob,
   base64toBlob,
 } from 'fluxio';
-import { getPbClient, PbAuth } from 'pblite';
+import { PbAuth } from 'pblite';
 
-export const deviceEmail$ = fluxStored<string>('deviceEmail$', '', isString);
-export const devicePassword$ = fluxStored<string>('devicePassword$', '', isString);
-export const deviceAuth$ = fluxStored<PbAuth | undefined>('deviceAuth$', undefined, isItem);
-export const device$ = fluxStored<DeviceModel | null>('device$', null, isItem);
-export const deviceAction$ = fluxStored<DeviceModel['action'] | undefined>(
-  'deviceAction$',
-  undefined,
-  isItem
-);
-
-const serverDate = () => getPbClient().getDate();
-
-const deviceLogin = async (api: Api): Promise<DeviceModel> => {
-  let email = deviceEmail$.get();
-  let password = devicePassword$.get();
-  console.debug('deviceLogin', email);
-
-  let deviceAuth: PbAuth | undefined = undefined;
-
-  if (email && password) {
-    try {
-      deviceAuth = await api.userColl.login(email, password);
-      console.debug('deviceLogin login deviceAuth', deviceAuth);
-    } catch (error) {
-      console.info('deviceLogin login error', error);
-      if (!(error instanceof ReqError)) throw error;
-      if (error.status !== 400) throw error;
-    }
-  }
-
-  if (!deviceAuth) {
-    email = uuid() + '@m4k.fr';
-    password = randString(20);
-
-    try {
-      await api.userColl.signUp(email, password);
-      deviceAuth = await api.userColl.login(email, password);
-      console.debug('deviceLogin signUp user', deviceAuth);
-    } catch (error) {
-      console.info('deviceLogin signUp error', error);
-      throw error;
-    }
-  }
-
-  if (!deviceAuth) throw new Error('no user');
-
-  deviceAuth$.set(deviceAuth);
-  deviceEmail$.set(email);
-  devicePassword$.set(password);
-
-  const info = await m4k.deviceInfo();
-  info.started = serverDate();
-
-  const device = await api.device.coll.upsert(
-    { user: deviceAuth.id },
-    {
-      user: deviceAuth.id,
-      online: serverDate(),
-      info,
-    }
+export class DeviceCtrl {
+  email$ = fluxStored<string>('deviceEmail$', '', isString);
+  password$ = fluxStored<string>('devicePassword$', '', isString);
+  auth$ = fluxStored<PbAuth | undefined>('deviceAuth$', undefined, isItem);
+  device$ = fluxStored<DeviceModel | null>('device$', null, isItem);
+  action$ = fluxStored<DeviceModel['action'] | undefined>(
+    'deviceAction$',
+    undefined,
+    isItem
   );
-  console.debug('deviceLogin device', device);
 
-  device$.set(device);
+  constructor(public api: Api) {
+    app.deviceCtrl = this;
 
-  return device;
-};
+    this.device$.on((device) => {
+      this.action$.set(device?.action);
+    });
 
-let deviceUnsubscribe = toVoid;
-const deviceStart = async (api: Api) => {
-  console.debug('deviceStart');
-  const device = await deviceLogin(api);
-
-  deviceUnsubscribe();
-
-  console.debug('deviceStart subscribe', device.id);
-  deviceUnsubscribe = api.device.coll.on((device, action) => {
-    console.debug('deviceStart subscribe', action, device);
-    if (action === 'delete') {
-      deviceLogin(api);
-      return;
-    }
-    device$.set(device);
-  }, device.id);
-
-  while (true) {
-    await deviceLoop(api);
-    await sleep(10000);
+    this.action$.on(() => {
+      const device = this.device$.get();
+      if (device) this.runAction(device);
+    });
   }
-};
 
-const deviceLoop = async (api: Api) => {
-  let device = device$.get();
-  console.debug('deviceLoop device', device);
+  getDate() {
+    return this.api.pb.getDate();
+  }
 
-  if (!device) throw new Error('no device');
+  async login(): Promise<DeviceModel> {
+    let email = this.email$.get();
+    let password = this.password$.get();
+    console.debug('deviceLogin', email);
 
-  device = await api.device.update(device.id, {
-    online: serverDate(),
-  });
-  console.debug('deviceLoop updated', device);
-  if (!device) throw new Error('no device update');
+    let deviceAuth: PbAuth | undefined = undefined;
 
-  device$.set(device);
-};
+    if (email && password) {
+      try {
+        deviceAuth = await this.api.userColl.login(email, password);
+        console.debug('deviceLogin login deviceAuth', deviceAuth);
+      } catch (error) {
+        console.info('deviceLogin login error', error);
+        if (!(error instanceof ReqError)) throw error;
+        if (error.status !== 400) throw error;
+      }
+    }
 
-export const deviceInit = async (api: Api) => {
-  while (true) {
+    if (!deviceAuth) {
+      email = uuid() + '@m4k.fr';
+      password = randString(20);
+
+      try {
+        await this.api.userColl.signUp(email, password);
+        deviceAuth = await this.api.userColl.login(email, password);
+        console.debug('deviceLogin signUp user', deviceAuth);
+      } catch (error) {
+        console.info('deviceLogin signUp error', error);
+        throw error;
+      }
+    }
+
+    if (!deviceAuth) throw new Error('no user');
+
+    this.auth$.set(deviceAuth);
+    this.email$.set(email);
+    this.password$.set(password);
+
+    const info = await m4k.deviceInfo();
+    info.started = this.getDate();
+
+    const device = await this.api.device.coll.upsert(
+      { user: deviceAuth.id },
+      {
+        user: deviceAuth.id,
+        online: this.getDate(),
+        info,
+      }
+    );
+    console.debug('deviceLogin device', device);
+
+    this.device$.set(device);
+
+    return device;
+  }
+
+  unsubscribe = toVoid;
+
+  async start() {
+    console.debug('deviceStart');
+    const device = await this.login();
+
+    this.unsubscribe();
+
+    console.debug('deviceStart subscribe', device.id);
+    this.unsubscribe = this.api.device.coll.on((device, action) => {
+      console.debug('deviceStart subscribe', action, device);
+      if (action === 'delete') {
+        this.login();
+        return;
+      }
+      this.device$.set(device);
+    }, device.id);
+
+    while (true) {
+      await this.loop();
+      await sleep(10000);
+    }
+  }
+
+  async loop() {
+    let device = this.device$.get();
+    console.debug('deviceLoop device', device);
+
+    if (!device) throw new Error('no device');
+
+    device = await this.api.device.update(device.id, {
+      online: this.getDate(),
+    });
+    console.debug('deviceLoop updated', device);
+    if (!device) throw new Error('no device update');
+
+    this.device$.set(device);
+  }
+
+  async init() {
+    while (true) {
+      try {
+        await this.start();
+      } catch (e) {
+        console.warn('deviceInit', toError(e));
+      }
+      await sleep(60000);
+    }
+  }
+
+  async capture(device: DeviceModel, options?: M4kResizeOptions | undefined) {
+    const base64 = await m4k.capture(options);
+    const blob = base64toBlob(base64);
+    if (isBlob(blob)) {
+      await this.api.device.update(device.id, { capture: blob }, { select: [] });
+    }
+  }
+
+  async execAction(device: DeviceModel, action: string, input?: string) {
+    switch (action) {
+      case 'reload':
+        return m4k.reload();
+      case 'reboot':
+        return await m4k.reboot();
+      case 'restart':
+        return await m4k.restart();
+      case 'exit':
+        return await m4k.exit();
+      case 'capture':
+        await this.capture(device, jsonParse(input || '') as M4kResizeOptions);
+        return;
+      case 'js':
+        return await m4k.evalJs(toString(input));
+      case 'sh':
+        return await m4k.sh(toString(input));
+      case 'su':
+        return await m4k.su(toString(input));
+      case 'info':
+        return await m4k.deviceInfo();
+      case 'ping':
+        return input;
+      case 'kiosk_on':
+        return await m4k.setKioskOn(input !== 'false');
+      case 'screen_on':
+        return await m4k.setScreenOn(input !== 'false');
+    }
+  }
+
+  async runAction(device: DeviceModel) {
+    console.debug('runAction', device.action, device.input, device);
+
+    if (!device) throw toError('no device');
+
+    const { action, input } = device;
+    if (!action) return;
+
+    await this.api.device.update(device.id, { action: '', online: this.getDate() });
+
+    let value: any = null;
+    let error: any = null;
+
     try {
-      await deviceStart(api);
-    } catch (e) {
-      console.warn('deviceInit', toError(e));
+      value = await this.execAction(device, action, input);
+    } catch (err) {
+      error = err;
     }
-    await sleep(60000);
+
+    await this.api.device.update(device.id, {
+      action: '',
+      result: {
+        success: !error,
+        action,
+        input,
+        value,
+        error,
+      },
+      online: this.getDate(),
+    });
   }
-};
-
-device$.on((device) => {
-  deviceAction$.set(device?.action);
-});
-
-deviceAction$.on(() => {
-  const device = device$.get();
-  if (device) runAction(device);
-});
-
-const capture = async (api: Api, device: DeviceModel, options?: M4kResizeOptions | undefined) => {
-  const base64 = await m4k.capture(options);
-  const blob = base64toBlob(base64);
-  if (isBlob(blob)) {
-    await api.device.update(device.id, { capture: blob }, { select: [] });
-  }
-};
-
-const execAction = async (api: Api, device: DeviceModel, action: string, input?: string) => {
-  switch (action) {
-    case 'reload':
-      return m4k.reload();
-    case 'reboot':
-      return await m4k.reboot();
-    case 'restart':
-      return await m4k.restart();
-    case 'exit':
-      return await m4k.exit();
-    case 'capture':
-      await capture(api, device, jsonParse(input || '') as M4kResizeOptions);
-      return;
-    case 'js':
-      return await m4k.evalJs(toString(input));
-    case 'sh':
-      return await m4k.sh(toString(input));
-    case 'su':
-      return await m4k.su(toString(input));
-    case 'info':
-      return await m4k.deviceInfo();
-    case 'ping':
-      return input;
-    case 'kiosk_on':
-      return await m4k.setKioskOn(input !== 'false');
-    case 'screen_on':
-      return await m4k.setScreenOn(input !== 'false');
-  }
-};
-
-const runAction = async (api: Api, device: DeviceModel) => {
-  console.debug('runAction', device.action, device.input, device);
-
-  if (!device) throw toError('no device');
-
-  const { action, input } = device;
-  if (!action) return;
-
-  await api.device.update(device.id, { action: '', online: serverDate() });
-
-  let value: any = null;
-  let error: any = null;
-
-  try {
-    value = await execAction(api, device, action, input);
-  } catch (err) {
-    error = err;
-  }
-
-  await api.device.update(device.id, {
-    action: '',
-    result: {
-      success: !error,
-      action,
-      input,
-      value,
-      error,
-    },
-    online: serverDate(),
-  });
-};
+}
 
 // import { m4k } from "@common/m4k";
 // import supabase from "./supabase";

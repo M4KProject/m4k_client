@@ -13,6 +13,8 @@ import {
   ClipboardCopy,
   ClipboardPaste,
   ClipboardX,
+  SaveAll,
+  Save,
 } from 'lucide-react';
 import { useState } from 'preact/hooks';
 import { BCtrl, useBCtrl } from '@/box/BCtrl';
@@ -116,6 +118,8 @@ export const BButtons = () => {
         <BButton icon={<Maximize2 />} onClick={() => pz.fitToContainer()} tooltip="Ajuster au conteneur" />
         <div {...c('Sep')} />
         <BButton icon={<SquarePlus />} onClick={() => addRect(ctrl)} tooltip="Ajouter un rectangle" />
+        <div {...c('Sep')} />
+        <BButton icon={<Save />} onClick={() => {}} tooltip="Enregistrer" />
       </div>
     );
   } else {

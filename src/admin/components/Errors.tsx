@@ -2,10 +2,10 @@ import { Css } from 'fluxio';
 import { isItem, removeItem, ReqError, toError } from 'fluxio';
 import { Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'preact/hooks';
-import { getPbClient } from 'pblite';
 import { Grid, GridCols } from '@/components/Grid';
 import { tooltip } from '@/components/Tooltip';
 import { Button } from '@/components/Button';
+import { useApi } from '@/hooks/apiHooks';
 
 const c = Css('Errors', {
   '': {
@@ -65,6 +65,7 @@ const errorToItem = (e: any) => {
 };
 
 const useErrorItems = () => {
+  const api = useApi();
   const [items, setItems] = useState<ErrorItem[]>([]);
 
   const filterDeleted = (item: ErrorItem) => item.deleted < Date.now();
@@ -78,7 +79,7 @@ const useErrorItems = () => {
   };
 
   useEffect(() =>
-    getPbClient().error$.on((e) => {
+    api.pb.error$.on((e) => {
       pushItem(errorToItem(e));
     })
   );

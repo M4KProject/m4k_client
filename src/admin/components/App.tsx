@@ -12,7 +12,6 @@ import { useEffect, useMemo } from 'preact/hooks';
 import { Page } from '@/router/types';
 import { useGroupKey, usePage } from '@/router/hooks';
 import { Errors } from './Errors';
-import { getPbClient } from 'pblite';
 import { useFlux } from '@/hooks/useFlux';
 import { refreshTheme, updateTheme } from '@/utils/theme';
 import { addFont } from '@/utils/addFont';
@@ -82,10 +81,6 @@ export const AppSync = () => {
   const group = useGroup();
   const groupId = group?.id;
   const { isDark, primary, secondary } = group?.data || {};
-
-  useEffect(() => {
-    getPbClient().authRefresh();
-  }, []);
 
   useEffect(() => {
     api.groupId$.set(groupId ?? '');

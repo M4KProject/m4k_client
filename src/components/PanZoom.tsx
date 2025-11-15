@@ -365,7 +365,7 @@ export const PanZoom = ({ children, ctrl, ...props }: PanZoomProps) => {
     c.init(container, content);
 
     return () => c.dispose();
-  }, [container, content]);
+  }, [ctrl, container, content]);
 
   return (
     <div {...props} {...c('', props)} ref={containerRef}>

@@ -38,6 +38,8 @@ export class Api {
 
   constructor() {
     app.api = this;
+    this.initPbUrl();
+    this.pb.authRefresh();
   }
   
   initPbUrl() {
@@ -53,9 +55,8 @@ export class Api {
         pbClient.setApiUrl(nextApiUrl);
       }
     }
-  };
-
-
+  }
+  
   getGroupId() {
     return this.groupId$.get();
   }
