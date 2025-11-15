@@ -1,15 +1,14 @@
-import { useFlux } from '@/hooks/useFlux';
+import { useFlux, useFluxMemo } from '@/hooks/useFlux';
 import { useDeviceKey, useGroupKey, useMediaKey, useIsAdvanced } from '../router/hooks';
 import { useMemo } from 'preact/hooks';
 import { PbModel, PbWhere } from 'pblite';
 import { createContext } from "preact";
 import { useContext } from "preact/hooks";
-import { ApiCtrl } from '@/api/ApiCtrl';
 import { GroupModel, MediaModel } from '@/api/models';
-import { groupId$ } from '@/api/groupId$';
 import { Sync } from '@/api/sync';
+import { Api } from '@/api/Api';
 
-export const ApiContext = createContext<ApiCtrl | undefined>(undefined);
+export const ApiContext = createContext<Api | undefined>(undefined);
 
 export const useApi = () => useContext(ApiContext)!;
 
@@ -27,8 +26,9 @@ const useGroupItems = <T extends PbModel & { group?: string }>(
   sync: Sync<T>,
   where?: PbWhere<T>
 ): T[] => {
-  const group = useFlux(groupId$);
-  const items = useFlux(sync.filter$(group ? ({ ...where, group } as PbWhere<T>) : where));
+  const api = useApi();
+  const group = useFlux(api.groupId$);
+  const items = useFluxMemo(() => sync.filter$(group ? ({ ...where, group } as PbWhere<T>) : where), [ sync, where, group ]);
   return items || [];
 };
 

@@ -1,4 +1,4 @@
-import { ApiCtrl } from '@/api/ApiCtrl';
+import { Api } from '@/api/Api';
 import { DeviceModel } from '@/api/models';
 import { m4k, M4kResizeOptions } from '@/m4kBridge';
 import {
@@ -30,7 +30,7 @@ export const deviceAction$ = fluxStored<DeviceModel['action'] | undefined>(
 
 const serverDate = () => getPbClient().getDate();
 
-const deviceLogin = async (api: ApiCtrl): Promise<DeviceModel> => {
+const deviceLogin = async (api: Api): Promise<DeviceModel> => {
   let email = deviceEmail$.get();
   let password = devicePassword$.get();
   console.debug('deviceLogin', email);
@@ -87,7 +87,7 @@ const deviceLogin = async (api: ApiCtrl): Promise<DeviceModel> => {
 };
 
 let deviceUnsubscribe = toVoid;
-const deviceStart = async (api: ApiCtrl) => {
+const deviceStart = async (api: Api) => {
   console.debug('deviceStart');
   const device = await deviceLogin(api);
 
@@ -109,7 +109,7 @@ const deviceStart = async (api: ApiCtrl) => {
   }
 };
 
-const deviceLoop = async (api: ApiCtrl) => {
+const deviceLoop = async (api: Api) => {
   let device = device$.get();
   console.debug('deviceLoop device', device);
 
@@ -124,7 +124,7 @@ const deviceLoop = async (api: ApiCtrl) => {
   device$.set(device);
 };
 
-export const deviceInit = async (api: ApiCtrl) => {
+export const deviceInit = async (api: Api) => {
   while (true) {
     try {
       await deviceStart(api);
@@ -144,7 +144,7 @@ deviceAction$.on(() => {
   if (device) runAction(device);
 });
 
-const capture = async (api: ApiCtrl, device: DeviceModel, options?: M4kResizeOptions | undefined) => {
+const capture = async (api: Api, device: DeviceModel, options?: M4kResizeOptions | undefined) => {
   const base64 = await m4k.capture(options);
   const blob = base64toBlob(base64);
   if (isBlob(blob)) {
@@ -152,7 +152,7 @@ const capture = async (api: ApiCtrl, device: DeviceModel, options?: M4kResizeOpt
   }
 };
 
-const execAction = async (api: ApiCtrl, device: DeviceModel, action: string, input?: string) => {
+const execAction = async (api: Api, device: DeviceModel, action: string, input?: string) => {
   switch (action) {
     case 'reload':
       return m4k.reload();
@@ -182,7 +182,7 @@ const execAction = async (api: ApiCtrl, device: DeviceModel, action: string, inp
   }
 };
 
-const runAction = async (api: ApiCtrl, device: DeviceModel) => {
+const runAction = async (api: Api, device: DeviceModel) => {
   console.debug('runAction', device.action, device.input, device);
 
   if (!device) throw toError('no device');

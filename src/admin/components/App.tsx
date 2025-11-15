@@ -15,10 +15,9 @@ import { Errors } from './Errors';
 import { getPbClient } from 'pblite';
 import { useFlux } from '@/hooks/useFlux';
 import { refreshTheme, updateTheme } from '@/utils/theme';
-import { groupId$ } from '@/api/groupId$';
 import { addFont } from '@/utils/addFont';
-import { ApiContext, useGroup } from '@/hooks/apiHooks';
-import { ApiCtrl } from '@/api/ApiCtrl';
+import { ApiContext, useApi, useGroup } from '@/hooks/apiHooks';
+import { Api } from '@/api/Api';
 
 const c = Css('App', {
   '': {
@@ -77,6 +76,7 @@ const AppContent = () => {
 };
 
 export const AppSync = () => {
+  const api = useApi();
   const groupKey = useGroupKey();
   const group = useGroup();
   const groupId = group?.id;
@@ -87,7 +87,7 @@ export const AppSync = () => {
   }, []);
 
   useEffect(() => {
-    groupId$.set(groupId ?? '');
+    api.groupId$.set(groupId ?? '');
   }, [groupId]);
 
   useEffect(() => {
@@ -107,7 +107,7 @@ export const App = () => {
     refreshTheme();
   }, []);
 
-  const apiCtrl = useMemo(() => new ApiCtrl(), []);
+  const apiCtrl = useMemo(() => new Api(), []);
 
   return (
     <ApiContext value={apiCtrl}>

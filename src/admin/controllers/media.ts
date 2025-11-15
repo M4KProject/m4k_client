@@ -1,7 +1,5 @@
-import { ApiCtrl } from '@/api/ApiCtrl';
-import { needGroupId } from '@/api/groupId$';
+import { Api } from '@/api/Api';
 import { BaseMediaModel, JobModel, MediaModel, PageModel, PlaylistModel } from '@/api/models';
-import { needAuthId } from '@/api/needAuthId';
 import {
   deepClone,
   getChanges,
@@ -31,7 +29,7 @@ const update = (id: string, changes: Partial<UploadItem>) => {
   uploadMediaJobs$.merge({ [id]: changes });
 };
 
-const startUploadMedia = async (api: ApiCtrl, item: UploadItem) => {
+const startUploadMedia = async (api: Api, item: UploadItem) => {
   const { id, folder, playlist } = item;
   console.info('upload started', { id, item });
 
@@ -46,8 +44,8 @@ const startUploadMedia = async (api: ApiCtrl, item: UploadItem) => {
       {
         title: String(file.name),
         source: file,
-        group: needGroupId(),
-        user: needAuthId(),
+        group: api.needGroupId(),
+        user: api.needAuthId(),
         parent: folder?.id,
       },
       {
@@ -91,7 +89,7 @@ const startUploadMedia = async (api: ApiCtrl, item: UploadItem) => {
   }
 };
 
-const processQueue = async (api: ApiCtrl) => {
+const processQueue = async (api: Api) => {
   while (true) {
     const items = Object.values(uploadMediaJobs$.get());
     if (items.filter((i) => i.status === 'processing').length >= MAX_CONCURRENT_UPLOADS) {
@@ -108,7 +106,7 @@ const processQueue = async (api: ApiCtrl) => {
 };
 
 export const uploadMedia = (
-  api: ApiCtrl,
+  api: Api,
   files: File[],
   folder?: MediaModel,
   playlist?: MediaModel
@@ -135,7 +133,7 @@ export const uploadMedia = (
   return ids;
 };
 
-export const updateMedia = async <T extends MediaModel>(api: ApiCtrl, id: string, apply: (next: T) => void) => {
+export const updateMedia = async <T extends MediaModel>(api: Api, id: string, apply: (next: T) => void) => {
   const prev = api.media.get(id);
   if (!prev) return;
   const next = deepClone(prev);
@@ -148,7 +146,7 @@ export const updateMedia = async <T extends MediaModel>(api: ApiCtrl, id: string
   }
 };
 
-const cleanPlaylist = (api: ApiCtrl, next: PlaylistModel) => {
+const cleanPlaylist = (api: Api, next: PlaylistModel) => {
   if (!isItem(next.data)) next.data = {};
   const data = next.data;
 
@@ -172,7 +170,7 @@ const cleanPlaylist = (api: ApiCtrl, next: PlaylistModel) => {
   next.deps = sortedDeps ? sortedDeps : [];
 };
 
-export const updatePlaylist = async (api: ApiCtrl, id: string, apply: (next: PlaylistModel) => void) =>
+export const updatePlaylist = async (api: Api, id: string, apply: (next: PlaylistModel) => void) =>
   updateMedia<PlaylistModel>(api, id, (next) => {
     if (next.type !== 'playlist') {
       console.warn('no playlist', id);
@@ -189,7 +187,7 @@ export const updatePlaylist = async (api: ApiCtrl, id: string, apply: (next: Pla
 export const getMediaData = <T extends BaseMediaModel>(media: T): T['data'] =>
   isItem(media.data) ? media.data : (media.data = {});
 
-export const updatePage = async (api: ApiCtrl, id: string, apply: (next: PageModel) => void) =>
+export const updatePage = async (api: Api, id: string, apply: (next: PageModel) => void) =>
   updateMedia<PageModel>(api, id, (next) => {
     if (next.type !== 'page') {
       console.warn('not a page', id);

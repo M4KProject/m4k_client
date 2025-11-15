@@ -7,7 +7,7 @@ import { DeviceModel, MemberModel } from '@/api/models';
 import { Field } from '@/components/Field';
 import { Button } from '@/components/Button';
 import { tooltip } from '@/components/Tooltip';
-import { ApiCtrl } from '@/api/ApiCtrl';
+import { Api } from '@/api/Api';
 
 const c = Css('MemberGrid', {
   Actions: {
@@ -15,7 +15,7 @@ const c = Css('MemberGrid', {
   },
 });
 
-const cols: GridCols<MemberModel, { deviceById: Dictionary<DeviceModel>, api: ApiCtrl }> = {
+const cols: GridCols<MemberModel, { deviceById: Dictionary<DeviceModel>, api: Api }> = {
   id: ['Appareil', ({ device }) => <Field type="switch" value={!!device} readonly />, { w: 50 }],
   name: [
     'Email',

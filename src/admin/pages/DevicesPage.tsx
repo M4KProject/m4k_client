@@ -14,12 +14,11 @@ import { Field } from '@/components/Field';
 import { tooltip } from '@/components/Tooltip';
 import { Button } from '@/components/Button';
 import { useFlux } from '@/hooks/useFlux';
-import { groupId$ } from '@/api/groupId$';
 import { Form } from '@/components/Form';
 import { showDialog } from '@/components/Dialog';
 import { Page, PageBody } from '@/components/Page';
 import { Toolbar } from '@/components/Toolbar';
-import { ApiCtrl } from '@/api/ApiCtrl';
+import { Api } from '@/api/Api';
 
 const c = Css('DevicesPage', {
   Buttons: {
@@ -30,7 +29,7 @@ const c = Css('DevicesPage', {
 const deviceCols: GridCols<
   DeviceModel,
   {
-    api: ApiCtrl;
+    api: Api;
     medias: MediaModel[];
     onlineMin: number;
     handleRemote: (device: DeviceModel) => void;
@@ -126,8 +125,9 @@ const deviceCols: GridCols<
 };
 
 export const PairingForm = ({ onClose }: { onClose: () => void }) => {
+  const api = useApi();
   const [key, setKey] = useState('');
-  const group = useFlux(groupId$);
+  const group = useFlux(api.groupId$);
 
   const handlePairing = async () => {
     if (!key) return;

@@ -1,4 +1,4 @@
-import { BoxData } from '@/admin/components/medias/page/box/boxTypes';
+import { BData } from '@/box/bTypes';
 import {
   _DeviceModel,
   _MediaModel,
@@ -126,7 +126,7 @@ export interface PlaylistData {
 }
 
 export interface PageData {
-  boxes?: Dictionary<BoxData>;
+  boxes?: Dictionary<BData>;
 }
 
 export interface BaseMediaModel extends _MediaModel {

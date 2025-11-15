@@ -1,10 +1,8 @@
-import { useGroupMedias } from '@/hooks/apiHooks';
+import { useApi, useGroupMedias } from '@/hooks/apiHooks';
 import { Css, fluxCombine } from 'fluxio';
 import { MediaModel } from '@/api/models';
-import { getMediaUrl } from '@/api/getMediaUrl';
-import { getVariants } from '@/api/getVariants';
 import { useBCtrl } from '@/box/BCtrl';
-import { useFlux, useFluxMemo } from '@/hooks/useFlux';
+import { useFluxMemo } from '@/hooks/useFlux';
 import { Button } from '@/components/Button';
 
 const c = Css('BMedias', {
@@ -34,6 +32,7 @@ const c = Css('BMedias', {
 });
 
 const BMediasItem = ({ media }: { media: MediaModel }) => {
+  const api = useApi();
   const ctrl = useBCtrl();
   const mediaId = media.id;
   const selected = useFluxMemo(() =>
@@ -41,9 +40,9 @@ const BMediasItem = ({ media }: { media: MediaModel }) => {
       .map(([click]) => ctrl.get(click.i)?.media === mediaId),
     [ctrl, mediaId]
   );
-  const variants = getVariants(media);
+  const variants = api.getVariants(media);
   const image = variants.find(v => v.type === 'image');
-  const url = image ? getMediaUrl(image, 80) : undefined;
+  const url = image ? api.getMediaUrl(image, 80) : undefined;
 
   return (
     <Button

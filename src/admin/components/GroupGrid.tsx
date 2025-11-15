@@ -7,14 +7,14 @@ import { GroupModel } from '@/api/models';
 import { Field } from '@/components/Field';
 import { tooltip } from '@/components/Tooltip';
 import { Button } from '@/components/Button';
-import { ApiCtrl } from '@/api/ApiCtrl';
+import { Api } from '@/api/Api';
 
 const cols: GridCols<
   GroupModel,
   {
     groupKey: string;
     isAdvanced: boolean;
-    api: ApiCtrl;
+    api: Api;
   }
 > = {
   selected: [

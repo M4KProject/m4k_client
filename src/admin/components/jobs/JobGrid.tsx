@@ -13,7 +13,7 @@ import { Tr } from '@/components/Tr';
 import { Button } from '@/components/Button';
 import { tooltip } from '@/components/Tooltip';
 import { useFlux } from '@/hooks/useFlux';
-import { ApiCtrl } from '@/api/ApiCtrl';
+import { Api } from '@/api/Api';
 
 // Ajout des traductions pour les actions de job
 addTr({ convert: 'Convertion du media', addMember: 'Ajouter membre' });
@@ -39,7 +39,7 @@ const c = Css('JobGrid', {
   },
 });
 
-const cols: GridCols<JobModel, { mediaById: Dictionary<MediaModel>, api: ApiCtrl }> = {
+const cols: GridCols<JobModel, { mediaById: Dictionary<MediaModel>, api: Api }> = {
   action: ['Action', (job) => <Tr>{job.action}</Tr>],
   statut: ['Statut', (job) => <JobStatus job={job} />],
   media: [

@@ -3,11 +3,10 @@ import { groupBy, sortItems } from 'fluxio';
 import { useState } from 'preact/hooks';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { MediaViewProps } from './MediaView';
-import { getVariants } from '@/api/getVariants';
-import { getMediaUrl } from '@/api/getMediaUrl';
 import { PanZoom } from '../components/PanZoom';
 import { PdfModel } from '@/api/models';
 import { Button } from '../components/Button';
+import { useApi } from '@/hooks/apiHooks';
 
 const c = Css('PdfView', {
   '': {
@@ -54,9 +53,10 @@ const c = Css('PdfView', {
 export type PdfViewProps = MediaViewProps<PdfModel>;
 
 export const PdfView = ({ media, divProps }: PdfViewProps) => {
+  const api = useApi();
   const [currentPage, setCurrentPage] = useState(0);
 
-  const variants = getVariants(media);
+  const variants = api.getVariants(media);
   const images = variants.filter((v) => v.type === 'image');
   const imagesByPage = groupBy(images, (i) => i.page);
   const pages = sortItems(Object.keys(imagesByPage), Number);
@@ -86,7 +86,7 @@ export const PdfView = ({ media, divProps }: PdfViewProps) => {
           <div
             {...c('Page')}
             style={{
-              backgroundImage: `url('${getMediaUrl(currentImage)}')`,
+              backgroundImage: `url('${api.getMediaUrl(currentImage)}')`,
             }}
           />
         )}

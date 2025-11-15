@@ -8,32 +8,30 @@ import { useIsEdit, useMediaType } from '@/router/hooks';
 import { setIsEdit, setMediaKey, setMediaType } from '@/router/setters';
 import { useApi, useMedia, useMediaById } from '@/hooks/apiHooks';
 import { MediaModel, PageModel, PlaylistModel } from '@/api/models';
-import { needAuthId } from '@/api/needAuthId';
-import { needGroupId } from '@/api/groupId$';
 import { Page, PageBody } from '@/components/Page';
 import { MediaView } from '@/medias/MediaView';
 import { Toolbar } from '@/components/Toolbar';
 import { Button, UploadButton } from '@/components/Button';
 import { tooltip } from '@/components/Tooltip';
-import { ApiCtrl } from '@/api/ApiCtrl';
+import { Api } from '@/api/Api';
 
 const c = Css('MediasPage', {});
 
 const handleAddToPlaylist = async () => {};
 
-const addMedia = async (api: ApiCtrl, type: MediaModel['type'], title: string) => {
+const addMedia = async (api: Api, type: MediaModel['type'], title: string) => {
   const media = await api.media.create({
     title: getNextTitle(api, title),
     type,
-    user: needAuthId(),
-    group: needGroupId(),
+    user: api.needAuthId(),
+    group: api.needGroupId(),
   });
   setMediaType(type);
   setMediaKey(media.key);
 };
 
-const addPlaylist = (api: ApiCtrl) => addMedia(api, 'playlist', 'Playlist');
-const addPage = (api: ApiCtrl) => addMedia(api, 'page', 'Page');
+const addPlaylist = (api: Api) => addMedia(api, 'playlist', 'Playlist');
+const addPage = (api: Api) => addMedia(api, 'page', 'Page');
 
 export const MediasPage = () => {
   const api = useApi();
@@ -102,8 +100,8 @@ export const MediasPage = () => {
                 title: getNextTitle(api, 'Dossier'),
                 mime: 'application/folder',
                 type: 'folder',
-                user: needAuthId(),
-                group: needGroupId(),
+                user: api.needAuthId(),
+                group: api.needGroupId(),
               });
             }}
           >

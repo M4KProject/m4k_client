@@ -4,7 +4,6 @@ import { Plus } from 'lucide-react';
 import { useState } from 'preact/hooks';
 import { MemberGrid } from '../components/MemberGrid';
 import { SearchField } from '../components/SearchField';
-import { needGroupId } from '@/api/groupId$';
 import { Role } from '@/api/models';
 import { Form } from '@/components/Form';
 import { Field } from '@/components/Field';
@@ -36,9 +35,9 @@ const CreateMemberForm = ({ onClose }: { onClose: () => void }) => {
     try {
       if (isNew) {
         await api.userColl.create({ email, password, passwordConfirm: password });
-        await api.member.create({ email, group: needGroupId(), role: Role.editor });
+        await api.member.create({ email, group: api.needGroupId(), role: Role.editor });
       } else {
-        await api.member.create({ email, group: needGroupId(), role: Role.editor });
+        await api.member.create({ email, group: api.needGroupId(), role: Role.editor });
       }
       onClose();
     } catch (e) {

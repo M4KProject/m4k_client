@@ -12,7 +12,6 @@ import { updatePlaylist } from '../../controllers';
 import { MediaIcon } from './MediaIcon';
 import { updateRoute } from '@/router/setters';
 import { useMemo } from 'preact/hooks';
-import { startMediaDownload } from '@/api/startMediaDownload';
 import { addTr } from '@/hooks/useTr';
 import { MediaModel } from '@/api/models';
 import { Grid, GridCols } from '@/components/Grid';
@@ -20,7 +19,7 @@ import { Field } from '@/components/Field';
 import { Button } from '@/components/Button';
 import { tooltip } from '@/components/Tooltip';
 import { useFlux } from '@/hooks/useFlux';
-import { ApiCtrl } from '@/api/ApiCtrl';
+import { Api } from '@/api/Api';
 
 addTr({
   pending: 'en attente',
@@ -37,7 +36,7 @@ const c = Css('MediaTable', {
 });
 
 interface MediaGridCtx {
-  api: ApiCtrl;
+  api: Api;
   isAdvanced: boolean;
   selectedIds: string[];
   getTab: (id: string) => number;
@@ -164,7 +163,7 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
           <Button
             icon={<Download />}
             {...tooltip('Télécharger')}
-            onClick={() => startMediaDownload(id)}
+            onClick={() => api.startMediaDownload(id)}
           />
         )}
         <Button

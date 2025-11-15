@@ -1,6 +1,6 @@
-import { ApiCtrl } from "@/api/ApiCtrl";
+import { Api } from "@/api/Api";
 
-export const getNextTitle = (api: ApiCtrl, start: string) => {
+export const getNextTitle = (api: Api, start: string) => {
   const medias = api.media.filter();
   let i = 1;
   let title = start;

@@ -2,9 +2,8 @@ import { Css } from 'fluxio';
 import { uuid } from 'fluxio';
 import { useMemo } from 'preact/hooks';
 import { Popover, useIsOver } from './Popover';
-import { getVariants } from '@/api/getVariants';
-import { getMediaUrl } from '@/api/getMediaUrl';
 import { MediaModel } from '@/api/models';
+import { useApi } from '@/hooks/apiHooks';
 
 const c = Css('MediaPreview', {
   Video: {
@@ -27,8 +26,9 @@ const c = Css('MediaPreview', {
 });
 
 export const MediaPreview = ({ media }: { media?: MediaModel }) => {
+  const api = useApi();
   const overId = useMemo(uuid, []);
-  const variants = getVariants(media);
+  const variants = api.getVariants(media);
   const images = variants.filter((v) => v.type === 'image');
   const videos = variants.filter((v) => v.type === 'video');
   const isOver = useIsOver(overId);
@@ -52,7 +52,7 @@ export const MediaPreview = ({ media }: { media?: MediaModel }) => {
             }}
           >
             {videos.map((v, i) => (
-              <source key={i} type={v.mime} src={getMediaUrl(v)} />
+              <source key={i} type={v.mime} src={api.getMediaUrl(v)} />
             ))}
           </video>
         </div>
@@ -60,7 +60,7 @@ export const MediaPreview = ({ media }: { media?: MediaModel }) => {
         <div
           {...c('Image')}
           style={{
-            backgroundImage: `url('${getMediaUrl(images[0], 360)}')`,
+            backgroundImage: `url('${api.getMediaUrl(images[0], 360)}')`,
           }}
         />
       : null}
