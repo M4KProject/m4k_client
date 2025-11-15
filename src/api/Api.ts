@@ -10,11 +10,13 @@ import {
   MemberModel,
   UserModel,
 } from './models';
-import { Dictionary, fluxStored, getExt, isString, removeAccents, toError } from 'fluxio';
+import { Dictionary, fluxStored, getExt, isString, logger, removeAccents, toError } from 'fluxio';
 import { setUrlParams } from 'fluxio';
 import { isStringValid } from 'fluxio';
 import { app } from "@/app";
 import { startDownload } from "@/utils/startDownload";
+
+const log = logger('Api');
 
 export interface Variant extends FileInfo {
   media: MediaModel;
@@ -37,6 +39,22 @@ export class Api {
   constructor() {
     app.api = this;
   }
+  
+  initPbUrl() {
+    const host = location.host;
+    const pbClient = getPbClient();
+    log.d('host', host);
+    if (host.includes(':')) {
+      const prevApiUrl = pbClient.getApiUrl();
+      log.d('prevApiUrl', prevApiUrl);
+      if (!prevApiUrl) {
+        const nextApiUrl = 'https://i.m4k.fr/api/';
+        log.d('set url', prevApiUrl, nextApiUrl);
+        pbClient.setApiUrl(nextApiUrl);
+      }
+    }
+  };
+
 
   getGroupId() {
     return this.groupId$.get();

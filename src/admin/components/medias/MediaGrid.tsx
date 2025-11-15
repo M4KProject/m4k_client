@@ -123,7 +123,7 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
                 icon={<PlusSquare />}
                 {...tooltip(`Ajouter ${selectedIds.length} élément(s) à la playlist`)}
                 onClick={async () => {
-                  updatePlaylist(id, (playlist) => {
+                  updatePlaylist(api, id, (playlist) => {
                     if (playlist.data && playlist.data.items) {
                       playlist.data.items = [
                         ...playlist.data.items,

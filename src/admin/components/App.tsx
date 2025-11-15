@@ -57,7 +57,8 @@ const AppRouter = () => {
 };
 
 const AppContent = () => {
-  const auth = useFlux(getPbClient().auth$);
+  const api = useApi();
+  const auth = useFlux(api.pb.auth$);
 
   // console.debug("AppContent", { c, auth });
   if (!auth) {
