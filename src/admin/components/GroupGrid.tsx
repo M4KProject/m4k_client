@@ -41,7 +41,9 @@ const cols: GridCols<
   ],
   name: [
     'Nom',
-    (item, { api }) => <Field value={item.name} onValue={(name) => api.group.update(item.id, { name })} />,
+    (item, { api }) => (
+      <Field value={item.name} onValue={(name) => api.group.update(item.id, { name })} />
+    ),
   ],
   isDark: [
     'Mode sombre',

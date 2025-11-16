@@ -39,7 +39,7 @@ const c = Css('JobGrid', {
   },
 });
 
-const cols: GridCols<JobModel, { mediaById: Dictionary<MediaModel>, api: Api }> = {
+const cols: GridCols<JobModel, { mediaById: Dictionary<MediaModel>; api: Api }> = {
   action: ['Action', (job) => <Tr>{job.action}</Tr>],
   statut: ['Statut', (job) => <JobStatus job={job} />],
   media: [

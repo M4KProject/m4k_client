@@ -40,7 +40,7 @@ const c = Css('BButtons', {
   Button: {
     bg: 'bg',
     elevation: 1,
-  }
+  },
 });
 
 type ScreenSize = [number, number, string, typeof Monitor];
@@ -53,24 +53,20 @@ export const SCREEN_SIZES: ScreenSize[] = [
   [360, 640, 'Smartphone', Smartphone],
 ];
 
-const BButton = (props: ButtonProps) => (
-  <Button {...c('Button')} color="primary" {...props} />
-)
+const BButton = (props: ButtonProps) => <Button {...c('Button')} color="primary" {...props} />;
 
-const addRect = (ctrl: BCtrl) => (
-  ctrl.add({ a: [25, 25, 50, 50], s: { bg: randColor() } })
-);
+const addRect = (ctrl: BCtrl) => ctrl.add({ a: [25, 25, 50, 50], s: { bg: randColor() } });
 
 const cut = async (ctrl: BCtrl, index: number) => {
   const data = ctrl.getData(index);
   await clipboardCopy(data);
   ctrl.delete(index);
-}
+};
 
 const copy = async (ctrl: BCtrl, index: number) => {
   const data = ctrl.getData(index);
   await clipboardCopy(data);
-}
+};
 
 const paste = async (ctrl: BCtrl, index: number) => {
   const item = ctrl.get(index);
@@ -79,7 +75,7 @@ const paste = async (ctrl: BCtrl, index: number) => {
   if (isItem(d)) {
     ctrl.add({ ...d, p: item.t === d.t ? item.p : index });
   }
-}
+};
 
 export const BButtons = () => {
   const ctrl = useBCtrl();
@@ -99,26 +95,44 @@ export const BButtons = () => {
   if (!isUInt(selectIndex)) {
     return (
       <div {...c()}>
-        <BButton icon={<SizeIcon />} onClick={toggleScreenSize} tooltip={`${sizeTitle} (${sizeWidth}x${sizeHeight})`} />
+        <BButton
+          icon={<SizeIcon />}
+          onClick={toggleScreenSize}
+          tooltip={`${sizeTitle} (${sizeWidth}x${sizeHeight})`}
+        />
         <BButton icon={<RotateCw />} onClick={() => pz.switchSize()} tooltip="Tourner l'écran" />
         <div {...c('Sep')} />
         <BButton icon={<ZoomIn />} onClick={() => pz.zoomIn()} tooltip="Zoom +" />
         <BButton icon={<ZoomOut />} onClick={() => pz.zoomOut()} tooltip="Zoom -" />
-        <BButton icon={<Maximize2 />} onClick={() => pz.fitToContainer()} tooltip="Ajuster au conteneur" />
+        <BButton
+          icon={<Maximize2 />}
+          onClick={() => pz.fitToContainer()}
+          tooltip="Ajuster au conteneur"
+        />
         <div {...c('Sep')} />
-        <BButton icon={<SquarePlus />} onClick={() => addRect(ctrl)} tooltip="Ajouter un rectangle" />
+        <BButton
+          icon={<SquarePlus />}
+          onClick={() => addRect(ctrl)}
+          tooltip="Ajouter un rectangle"
+        />
         <div {...c('Sep')} />
-        <BButton icon={<Save />} onClick={() => {
-          
-        }} tooltip="Enregistrer" />
+        <BButton icon={<Save />} onClick={() => {}} tooltip="Enregistrer" />
       </div>
     );
   } else {
     return (
       <div {...c()}>
         <BButton icon={<ClipboardX />} onClick={() => cut(ctrl, selectIndex)} tooltip="Couper" />
-        <BButton icon={<ClipboardCopy />} onClick={() => copy(ctrl, selectIndex)} tooltip="Copier" />
-        <BButton icon={<ClipboardPaste />} onClick={() => paste(ctrl, selectIndex)} tooltip="Coller" />
+        <BButton
+          icon={<ClipboardCopy />}
+          onClick={() => copy(ctrl, selectIndex)}
+          tooltip="Copier"
+        />
+        <BButton
+          icon={<ClipboardPaste />}
+          onClick={() => paste(ctrl, selectIndex)}
+          tooltip="Coller"
+        />
       </div>
     );
   }

@@ -59,14 +59,14 @@ export interface BCompProps {
     readonly style: any;
     readonly ref: (el: HTMLElement | undefined | null) => void;
     readonly onClick: (event: Event) => void;
-  }
+  };
 }
-export type BComp = (props: BCompProps) => ComponentChildren
+export type BComp = (props: BCompProps) => ComponentChildren;
 
 export type A1 = 1 | 0 | -1;
 export type BLabel = string;
 
-export type BOnOff = 1|0
+export type BOnOff = 1 | 0;
 
 export interface BEvent {
   i?: number;
@@ -87,7 +87,6 @@ export interface BType {
   a?: BOnOff;
   m?: BOnOff;
 }
-
 
 // // Carousel
 // delay?: number;

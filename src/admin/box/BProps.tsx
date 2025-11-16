@@ -1,4 +1,13 @@
-import { Css, isArray, isDefined, isUInt, Style, StyleFlexAlign, StyleFlexJustify, Writable } from 'fluxio';
+import {
+  Css,
+  isArray,
+  isDefined,
+  isUInt,
+  Style,
+  StyleFlexAlign,
+  StyleFlexJustify,
+  Writable,
+} from 'fluxio';
 import { useBCtrl } from '@/box/BCtrl';
 import { Field, FieldProps } from '@/components/Field';
 import { Tr } from '@/components/Tr';
@@ -60,7 +69,7 @@ const c = Css('BProps', {
     w: '80%',
     h: 2,
     bg: 'g',
-  }
+  },
 });
 
 const useProp = <K extends keyof BItem>(
@@ -72,14 +81,25 @@ const useProp = <K extends keyof BItem>(
   return [value, (next: BPropNext<K>) => ctrl.setProp(i, prop, next)];
 };
 
-export const BField = ({ prop, defaultValue, ...props }: FieldProps & { prop: keyof BData, defaultValue?: any }) => {
+export const BField = ({
+  prop,
+  defaultValue,
+  ...props
+}: FieldProps & { prop: keyof BData; defaultValue?: any }) => {
   const [value, setValue] = useProp(prop);
-  return <Field name={prop} value={isDefined(value) ? value : defaultValue} onValue={setValue} {...props} />;
+  return (
+    <Field
+      name={prop}
+      value={isDefined(value) ? value : defaultValue}
+      onValue={setValue}
+      {...props}
+    />
+  );
 };
 
 const FlexAlign = () => {
   const [style, setStyle] = useProp('s');
-  const s = style || {} as Style;
+  const s = style || ({} as Style);
 
   const row = isArray(s.row) ? s.row : null;
   const col = isArray(s.col) ? s.col : null;
@@ -87,27 +107,29 @@ const FlexAlign = () => {
   const align = flex[0] as StyleFlexAlign;
   const justify = flex[1] as StyleFlexJustify;
 
-  const btn = (icon: ComponentChildren, isRow: 1|0, isJustify: 1|0, value: StyleFlexAlign&StyleFlexJustify) => {
+  const btn = (
+    icon: ComponentChildren,
+    isRow: 1 | 0,
+    isJustify: 1 | 0,
+    value: StyleFlexAlign & StyleFlexJustify
+  ) => {
     const selected = (isRow ? !!row : !!col) && (isJustify ? justify === value : align === value);
 
     const handleClick = () => {
-      setStyle(prev => {
-        const next = {...prev};
+      setStyle((prev) => {
+        const next = { ...prev };
         if (isRow) {
           next.row = isJustify ? [align, value] : [value, justify];
           delete next.col;
-        }
-        else {
+        } else {
           delete next.row;
           next.col = isJustify ? [align, value] : [value, justify];
         }
         return next;
       });
-    }
-    
-    return (
-      <Button icon={icon} selected={selected} onClick={handleClick} />
-    )
+    };
+
+    return <Button icon={icon} selected={selected} onClick={handleClick} />;
   };
 
   return (
@@ -133,24 +155,22 @@ const FlexAlign = () => {
         </div>
       </Field>
     </>
-  )
+  );
 };
 
 const TextAlign = () => {
   const [style, setStyle] = useProp('s');
-  const s = style || {} as Style;
+  const s = style || ({} as Style);
   const textAlign = s.textAlign as Style['textAlign'];
 
   const txtBtn = (icon: ComponentChildren, value: Style['textAlign']) => {
     const selected = textAlign === value;
 
     const handleClick = () => {
-      setStyle(prev => ({ ...prev, textAlign: value }));
-    }
-    
-    return (
-      <Button icon={icon} selected={selected} onClick={handleClick} />
-    )
+      setStyle((prev) => ({ ...prev, textAlign: value }));
+    };
+
+    return <Button icon={icon} selected={selected} onClick={handleClick} />;
   };
 
   return (
@@ -162,15 +182,15 @@ const TextAlign = () => {
         {txtBtn(<AlignRight />, 'right')}
       </div>
     </Field>
-  )
+  );
 };
 
 const BStyleField = ({ prop, ...props }: FieldProps & { prop: string }) => {
   const [style, setStyle] = useProp('s');
   const value = ((style || {}) as any)[prop] as any;
   const onValue = (value: any) => {
-    setStyle(prev => ({ ...prev, [prop]: value }));
-  }
+    setStyle((prev) => ({ ...prev, [prop]: value }));
+  };
   return <Field name={prop} value={value} onValue={onValue} {...props} />;
 };
 
@@ -180,7 +200,7 @@ export const BDataField = () => {
   const item = useFluxMemo(() => ctrl.item$(i), [i]);
   const onValue = (next: any) => {
     ctrl.set(i, next);
-  }
+  };
   return <Field label="B" name="box" type="json" value={item} onValue={onValue} col />;
 };
 
@@ -195,7 +215,7 @@ export const BProps = () => {
   );
   const [nType] = useProp('t');
   const type = nType || 'box';
-  const config = ctrl.registry[type] || {} as Partial<BType>;
+  const config = ctrl.registry[type] || ({} as Partial<BType>);
 
   if (!isUInt(i) || !item) return null;
 
@@ -217,8 +237,7 @@ export const BProps = () => {
           <TextAlign />
         </>
       )}
-      
-      
+
       {/* <Field label="Bordure" Comp={() => (
         <>
           <BStyleField prop="borderColor" type="color" />
@@ -229,23 +248,21 @@ export const BProps = () => {
       {config.r && (
         <Field label="Ajouter">
           <div {...c('Row')}>
-            {Object.entries(ctrl.registry)
-              .map(([t, config]) => {
-                const Icon = config?.icon || Square;
-                if (t === 'root' || t === 'rect') return null;
-                return (
-                  <Button
-                    icon={<Icon />}
-                    tooltip={config?.label||''}
-                    onClick={() => {
-                      const next: Writable<Partial<BItem>> = { p: i, t };
-                      if (type === 'text') next.b = "Mon texte !";
-                      ctrl.add(next);
-                    }}
-                  />
-                )
-              })
-            }
+            {Object.entries(ctrl.registry).map(([t, config]) => {
+              const Icon = config?.icon || Square;
+              if (t === 'root' || t === 'rect') return null;
+              return (
+                <Button
+                  icon={<Icon />}
+                  tooltip={config?.label || ''}
+                  onClick={() => {
+                    const next: Writable<Partial<BItem>> = { p: i, t };
+                    if (type === 'text') next.b = 'Mon texte !';
+                    ctrl.add(next);
+                  }}
+                />
+              );
+            })}
           </div>
         </Field>
       )}
@@ -274,9 +291,7 @@ export const BProps = () => {
           <BDataField />
         </>
       )}
-      {config.m && (
-        <BMedias />
-      )}
+      {config.m && <BMedias />}
     </div>
   );
 };

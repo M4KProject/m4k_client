@@ -524,15 +524,15 @@ return (
 
 ```typescript
 interface BoxData {
-  type?: string;              // Box type (default: 'box', also 'text', 'carousel', etc.)
-  pos?: [x, y, w, h];         // Position [x%, y%, width%, height%]
-  style?: Style;              // Style object using cssFunMap
-  text?: string;              // Text content (supports **bold** markdown)
-  children?: number[];        // Child box indices
-  hide?: boolean;             // Hide box
-  init?: BoxFun;              // Function to call on init
-  click?: BoxFun;             // Function to call on click
-  data?: Dictionary<any>;     // Custom data
+  type?: string; // Box type (default: 'box', also 'text', 'carousel', etc.)
+  pos?: [x, y, w, h]; // Position [x%, y%, width%, height%]
+  style?: Style; // Style object using cssFunMap
+  text?: string; // Text content (supports **bold** markdown)
+  children?: number[]; // Child box indices
+  hide?: boolean; // Hide box
+  init?: BoxFun; // Function to call on init
+  click?: BoxFun; // Function to call on click
+  data?: Dictionary<any>; // Custom data
 }
 ```
 
@@ -557,7 +557,7 @@ ctrl.setProp(i, 'pos', [10, 10, 80, 80]);
 
 // Update box style
 ctrl.update(i, {
-  style: { bg: 'primary', p: 2 }
+  style: { bg: 'primary', p: 2 },
 });
 
 // Listen to clicks
@@ -572,12 +572,12 @@ useEffect(() => {
 
 ```typescript
 ctrl.register('mytype', {
-  comp: MyComponent,          // Component to render
-  label: 'My Type',           // Display label
-  children: 1,                // Supports children
-  text: 1,                    // Supports text
-  pos: 1,                     // Supports positioning
-  icon: MyIcon,               // Icon component
+  comp: MyComponent, // Component to render
+  label: 'My Type', // Display label
+  children: 1, // Supports children
+  text: 1, // Supports text
+  pos: 1, // Supports positioning
+  icon: MyIcon, // Icon component
 });
 ```
 

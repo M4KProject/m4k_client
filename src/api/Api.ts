@@ -1,5 +1,5 @@
-import { getPbClient, PbAuthColl, PbColl } from "pblite";
-import { Sync } from "./sync";
+import { getPbClient, PbAuthColl, PbColl } from 'pblite';
+import { Sync } from './sync';
 import {
   ApplicationModel,
   DeviceModel,
@@ -13,8 +13,8 @@ import {
 import { Dictionary, fluxStored, getExt, isString, logger, removeAccents, toError } from 'fluxio';
 import { setUrlParams } from 'fluxio';
 import { isStringValid } from 'fluxio';
-import { app } from "@/app";
-import { startDownload } from "@/utils/startDownload";
+import { app } from '@/app';
+import { startDownload } from '@/utils/startDownload';
 
 const log = logger('Api');
 
@@ -32,7 +32,7 @@ export class Api {
   job = new Sync<JobModel>('jobs');
   media = new Sync<MediaModel>('medias');
   member = new Sync<MemberModel>('members');
-  
+
   applicationColl = new PbColl<ApplicationModel>('applications');
   userColl = new PbAuthColl<UserModel>('users');
 
@@ -41,7 +41,7 @@ export class Api {
     this.initPbUrl();
     this.pb.authRefresh();
   }
-  
+
   initPbUrl() {
     const host = location.host;
     const pbClient = getPbClient();
@@ -56,7 +56,7 @@ export class Api {
       }
     }
   }
-  
+
   getGroupId() {
     return this.groupId$.get();
   }
@@ -72,7 +72,7 @@ export class Api {
     if (!isStringValid(id)) throw toError('no group id');
     return id;
   }
-  
+
   getMediaDownloadUrl(mediaOrId?: string | MediaModel) {
     let url = '';
     const media = isString(mediaOrId) ? this.media.get(mediaOrId) : mediaOrId;
@@ -101,7 +101,14 @@ export class Api {
     });
     if (isStringValid(media.source) && media.mime && media.type && media.bytes !== undefined) {
       const file = media.source;
-      results.push({ ...media, file, media, mime: media.mime, type: media.type, bytes: media.bytes });
+      results.push({
+        ...media,
+        file,
+        media,
+        mime: media.mime,
+        type: media.type,
+        bytes: media.bytes,
+      });
     }
     return results;
   }
@@ -120,7 +127,8 @@ export class Api {
     if (!media) return;
     const url = this.getMediaDownloadUrl(media);
     const ext = getExt(url);
-    const filename = removeAccents(media.title || String(media.source) || media.id).trim() + '.' + ext;
+    const filename =
+      removeAccents(media.title || String(media.source) || media.id).trim() + '.' + ext;
     startDownload(url, filename);
   }
 }

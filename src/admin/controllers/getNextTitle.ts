@@ -1,4 +1,4 @@
-import { Api } from "@/api/Api";
+import { Api } from '@/api/Api';
 
 export const getNextTitle = (api: Api, start: string) => {
   const medias = api.media.filter();

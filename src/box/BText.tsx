@@ -3,9 +3,7 @@ import { BComp } from './bTypes';
 import { createElement } from 'preact';
 
 const c = Css('BText', {
-  '': {
-
-  }
+  '': {},
 });
 
 export const BText: BComp = ({ item, props }) => {
@@ -20,7 +18,7 @@ export const BText: BComp = ({ item, props }) => {
   const text = item.b;
   if (text) {
     const parts = text.matchAll(/\*\*(?<b>.+?)\*\*|(?<n>\n)|(?<t>[^*\n]+)/g);
-    let i=0;
+    let i = 0;
     for (const { groups } of parts) {
       const { b, n, t } = groups!;
       if (b) {

@@ -133,7 +133,11 @@ export const uploadMedia = (
   return ids;
 };
 
-export const updateMedia = async <T extends MediaModel>(api: Api, id: string, apply: (next: T) => void) => {
+export const updateMedia = async <T extends MediaModel>(
+  api: Api,
+  id: string,
+  apply: (next: T) => void
+) => {
   const prev = api.media.get(id);
   if (!prev) return;
   const next = deepClone(prev);

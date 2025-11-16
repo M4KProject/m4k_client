@@ -39,7 +39,7 @@ const c = Css('BHandles', {
   },
   '-a div': {
     display: 'block',
-  }
+  },
 });
 
 type P = 0 | 0.5 | 1;
@@ -160,52 +160,56 @@ const BHandlesContent = () => {
         />
       ))}
     </>
-  )
-}
+  );
+};
 
 export const BHandles = () => {
   const ctrl = useBCtrl();
-  const { x, y, w, h, a, show } = useFluxMemo(() => {
-    if (!ctrl) return;
+  const { x, y, w, h, a, show } =
+    useFluxMemo(() => {
+      if (!ctrl) return;
 
-    const combined$ = fluxCombine(
-      ctrl.select$,
-      ctrl.items$,
-      ctrl.panZoom.after$,
-      ctrl.panZoom.after$.delay(100),
-    ).throttle(1000 / 60);
+      const combined$ = fluxCombine(
+        ctrl.select$,
+        ctrl.items$,
+        ctrl.panZoom.after$,
+        ctrl.panZoom.after$.delay(100)
+      ).throttle(1000 / 60);
 
-    const mapped$ = combined$.map(([click]) => {
-      const { el, item } = click || {};
-      if (!el || !item) return;
+      const mapped$ = combined$.map(([click]) => {
+        const { el, item } = click || {};
+        if (!el || !item) return;
 
-      let { left:x, top:y, width:w, height:h } = el.getBoundingClientRect();
+        let { left: x, top: y, width: w, height: h } = el.getBoundingClientRect();
 
-      const viewportRect = ctrl.panZoom.viewportRect();
-      x -= viewportRect.left;
-      y -= viewportRect.top;
+        const viewportRect = ctrl.panZoom.viewportRect();
+        x -= viewportRect.left;
+        y -= viewportRect.top;
 
-      const a = ctrl.getType(item?.t).a;
+        const a = ctrl.getType(item?.t).a;
 
-      // log.d('event', x, y, w, h, pos);
+        // log.d('event', x, y, w, h, pos);
 
-      return { x, y, w, h, a, show: true };
-    });
-    
-    mapped$.isEqual = isDeepEqual
+        return { x, y, w, h, a, show: true };
+      });
 
-    return mapped$
-  }, [ctrl]) || {};
+      mapped$.isEqual = isDeepEqual;
+
+      return mapped$;
+    }, [ctrl]) || {};
 
   log.d('render', { x, y, w, h, a, show });
 
   return (
-    <div {...c('', a && '-a', show && '-show')} style={{
-      left: x + 'px',
-      top: y + 'px',
-      width: w + 'px',
-      height: h + 'px',
-    }}>
+    <div
+      {...c('', a && '-a', show && '-show')}
+      style={{
+        left: x + 'px',
+        top: y + 'px',
+        width: w + 'px',
+        height: h + 'px',
+      }}
+    >
       <BHandlesContent />
     </div>
   );

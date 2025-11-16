@@ -9,7 +9,7 @@ export const mountAdmin = () => {
   console.debug('admin mount');
 
   // addResponsiveListener();
-  
+
   // _rootEl = setEl('div', { id: 'app', parent: 'body' });
   render(<App />, document.body);
 

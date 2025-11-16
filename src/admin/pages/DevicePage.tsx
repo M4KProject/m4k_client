@@ -81,16 +81,8 @@ export const DevicePage = () => {
           tooltip="Rafraîchir"
           onClick={() => executeAction('refresh')}
         />
-        <Button
-          icon={<Power />}
-          tooltip="Redémarrer"
-          onClick={() => executeAction('reboot')}
-        />
-        <Button
-          icon={<LogOut />}
-          tooltip="Fermer le Kiosk"
-          onClick={() => executeAction('exit')}
-        />
+        <Button icon={<Power />} tooltip="Redémarrer" onClick={() => executeAction('reboot')} />
+        <Button icon={<LogOut />} tooltip="Fermer le Kiosk" onClick={() => executeAction('exit')} />
       </Toolbar>
       <PageBody {...c('Body')}>
         <div {...c('Screen')}>

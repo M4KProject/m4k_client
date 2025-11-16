@@ -33,7 +33,7 @@ const c = Css('BHierarchy', {
 const BHierarchyItem = ({ i }: { i: number }) => {
   const ctrl = useBCtrl();
   const item = useFluxMemo(() => ctrl.item$(i), [ctrl, i]);
-  const selected = useFluxMemo(() => ctrl.select$.map(e => e.i === i), [ctrl, i]);
+  const selected = useFluxMemo(() => ctrl.select$.map((e) => e.i === i), [ctrl, i]);
   const type = ctrl.getType(item?.t);
   const Icon = type.icon || Square;
 
@@ -62,12 +62,14 @@ const BHierarchyItem = ({ i }: { i: number }) => {
       </div>
       {children && (
         <div {...c('Children')}>
-          {children.map(child => <BHierarchyItem i={child} />)}
+          {children.map((child) => (
+            <BHierarchyItem i={child} />
+          ))}
         </div>
       )}
     </>
-  )
-}
+  );
+};
 
 // const getHierarchyDepth = (h: Writable<BHierarchy>): number => {
 //   if (h.depth !== 0) return h.depth;

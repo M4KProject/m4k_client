@@ -135,7 +135,7 @@ export class PanZoomCtrl {
   onMouseDown(event: MouseEvent) {
     const target = event.target as HTMLElement;
     log.d('onMouseDown', target, target?.id);
-    
+
     const eventXY = getEventXY(event);
     if (!eventXY) return;
     stopEvent(event);
@@ -277,7 +277,7 @@ export class PanZoomCtrl {
 
   setSize(w: number, h: number) {
     console.debug('setSize', w, h);
-    
+
     const canvas = this.canvas();
     this.w = w;
     this.h = h;

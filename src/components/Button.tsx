@@ -71,7 +71,6 @@ const c = Css('Button', {
   '-selected&-icon&-success': { bg: 'success' },
   '-selected&-icon&-warn': { bg: 'warn' },
   '-selected&-icon&-error': { bg: 'error' },
-  
 });
 
 type BaseButtonProps = Omit<Props['button'] & Props['a'], 'onClick'> & {

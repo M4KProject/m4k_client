@@ -20,7 +20,7 @@ const c = Css('B', {
     display: 'inline-block',
     m: '1%',
     p: '1%',
-  }
+  },
 });
 
 const computeProps = (ctrl: BCtrl, item: BItem): BCompProps['props'] => {
@@ -40,10 +40,10 @@ const computeProps = (ctrl: BCtrl, item: BItem): BCompProps['props'] => {
     style,
     onClick: ctrl.getClick(i),
     ref: ctrl.getRef(i),
-  }
+  };
   log.d('computeProps', item, props);
   return props;
-}
+};
 
 export const BFactory = ({ i }: BFactoryProps) => {
   log.d('BFactory', i);

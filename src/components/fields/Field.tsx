@@ -147,7 +147,7 @@ export const Field = (props: FieldProps) => {
     }
   };
 
-  const FinalComp = Comp || (fieldRegistry[type || 'text'] || fieldRegistry.text);
+  const FinalComp = Comp || fieldRegistry[type || 'text'] || fieldRegistry.text;
 
   const formatValue = (value: any) => {
     const format = type && formatByType[type];
@@ -160,10 +160,9 @@ export const Field = (props: FieldProps) => {
     <div {...divProps} {...c('', col && '-col', type && `-${type}`, err && '-error', divProps)}>
       {label && <div {...c('Label')}>{label} :</div>}
       <div {...c('Content')}>
-        {isContainer ? (
+        {isContainer ?
           children
-        ) : (
-          <>
+        : <>
             <FinalComp
               cls={'Input'}
               name={name}
@@ -175,7 +174,7 @@ export const Field = (props: FieldProps) => {
             />
             {children}
           </>
-        )}
+        }
         {err ?
           <div {...c('Error')}>
             <Tr>{err}</Tr>

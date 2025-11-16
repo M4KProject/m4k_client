@@ -16,7 +16,19 @@ import {
   isNotEmpty,
   removeIndex,
 } from 'fluxio';
-import { BFun, BData, BItem, NBItems, BNext, BKeys, BPropNext, BType, BEvent, NBData, NBItem } from './bTypes';
+import {
+  BFun,
+  BData,
+  BItem,
+  NBItems,
+  BNext,
+  BKeys,
+  BPropNext,
+  BType,
+  BEvent,
+  NBData,
+  NBItem,
+} from './bTypes';
 import { BCarousel } from './BCarousel';
 import { PanZoomCtrl } from '@/components/PanZoom';
 import { createContext } from 'preact';
@@ -48,14 +60,14 @@ const applyChanges = (items: Writable<NBItems>, index: number, prev: NBItem, nex
     if (prevParent) {
       items[prevParent.i] = {
         ...prevParent,
-        r: removeIndex([...prevParent.r||[]], index),
+        r: removeIndex([...(prevParent.r || [])], index),
       };
     }
 
     if (nextParent && !nextParent.r?.includes(index)) {
       items[nextParent.i] = {
         ...nextParent,
-        r: uniq([...nextParent.r||[], index]),
+        r: uniq([...(nextParent.r || []), index]),
       };
     }
   }
@@ -73,12 +85,15 @@ const applyChanges = (items: Writable<NBItems>, index: number, prev: NBItem, nex
   // if (!isEmpty(added)) console.warn(`unauthorized added childId`);
 
   return items;
-}
+};
 
-const getDefaultType = (d: BData) => (d.b ? 'text' : d.m ? 'media' : 'rect');
+const getDefaultType = (d: BData) =>
+  d.b ? 'text'
+  : d.m ? 'media'
+  : 'rect';
 
-const toItems = (data: NBData[], items: (Writable<NBItem>)[] = []) => {
-  for (let i=0,l=data.length; i<l; i++) {
+const toItems = (data: NBData[], items: Writable<NBItem>[] = []) => {
+  for (let i = 0, l = data.length; i < l; i++) {
     const d = data[i];
     if (!d) continue;
 
@@ -86,14 +101,14 @@ const toItems = (data: NBData[], items: (Writable<NBItem>)[] = []) => {
       ...d,
       t: d.t || getDefaultType(d),
       r: d.r ? uniq(d.r) : [],
-      i
+      i,
     };
   }
 
-  const root = items[0] || (items[0] = { i:0, t: '' });
+  const root = items[0] || (items[0] = { i: 0, t: '' });
   root.t = 'root';
 
-  for (let i=0,l=items.length; i<l; i++) {
+  for (let i = 0, l = items.length; i < l; i++) {
     const item = items[i];
     if (!item) continue;
 
@@ -116,7 +131,7 @@ const toItems = (data: NBData[], items: (Writable<NBItem>)[] = []) => {
   }
 
   return items as NBItem[];
-}
+};
 
 const toData = (item: NBItem): NBData => {
   if (!item) return null;
@@ -124,7 +139,7 @@ const toData = (item: NBItem): NBData => {
   if (d.r?.length === 0) delete d.r;
   if (getDefaultType(d) === d.t) delete (d as Writable<BData>).t;
   return d;
-}
+};
 
 const rect: BType = { comp: BRect, label: 'Rectangle', r: 1, a: 1, icon: Square };
 const root: BType = { comp: BRoot, label: 'Racine', r: 1, icon: Home };
@@ -153,14 +168,14 @@ export class BCtrl {
   }
 
   setPage(page: PageModel) {
-    this.setAllData(page.data?.boxes||[]);
+    this.setAllData(page.data?.boxes || []);
   }
 
   register(type: string, boxConfig: BType) {
     this.registry[type] = boxConfig;
   }
 
-  getType(type: string|undefined) {
+  getType(type: string | undefined) {
     if (!type) return rect;
     return this.registry[type] || rect;
   }
@@ -197,7 +212,7 @@ export class BCtrl {
       if (el && this.get(i)?.e !== el) {
         this.init(i, el);
       }
-    }
+    };
   }
 
   click(i: number, event?: Event): void {
@@ -218,7 +233,7 @@ export class BCtrl {
   getClick(i: number) {
     return (event: Event) => {
       this.click(i, event);
-    }
+    };
   }
 
   getItems() {
@@ -244,14 +259,14 @@ export class BCtrl {
   // }
 
   getAllData() {
-    return this.getItems().map(toData)
+    return this.getItems().map(toData);
   }
 
   setAllData(data: BData[]) {
     log.d('setAllData', data);
     const items = toItems(data);
     if (!items.length) {
-      items
+      items;
     }
     this.items$.set(items);
   }
@@ -279,14 +294,14 @@ export class BCtrl {
     if (changes && isEmpty(changes)) return prev;
 
     log.d('set changes', index, changes);
-    this.items$.set(applyChanges([ ...items ], index, prev, next));
+    this.items$.set(applyChanges([...items], index, prev, next));
 
     return next;
   }
 
   update(i?: number, changes?: BNext) {
     log.d('update', i, changes);
-    return this.set(i, prev => {
+    return this.set(i, (prev) => {
       if (!prev) return prev;
       const results = isFunction(changes) ? changes(prev) : changes;
       if (isEmpty(results)) return prev;
@@ -296,7 +311,7 @@ export class BCtrl {
 
   setProp<K extends BKeys>(i: number | undefined, prop: K, value: BPropNext<K>) {
     log.d('setProp', i, prop, value);
-    return this.set(i, prev => {
+    return this.set(i, (prev) => {
       if (!prev) return prev;
       const prevValue = prev[prop];
       const nextValue = isFunction(value) ? value(prevValue) : value;
@@ -317,7 +332,7 @@ export class BCtrl {
     const prev = this.get(index);
     if (!prev) return false;
     const items = this.getItems();
-    this.items$.set(applyChanges([ ...items ], index, prev, undefined));
+    this.items$.set(applyChanges([...items], index, prev, undefined));
     return true;
   }
 
@@ -327,16 +342,13 @@ export class BCtrl {
 
   item$(i?: number) {
     return isInt(i) ?
-        this.items$.map(items => items[i])
+        this.items$.map((items) => items[i])
       : (fluxUndefined as Pipe<NBItem, NBItems>);
   }
 
-  prop$<K extends BKeys>(
-    i: number | undefined,
-    prop: K
-  ): Pipe<BItem[K] | undefined, any> {
+  prop$<K extends BKeys>(i: number | undefined, prop: K): Pipe<BItem[K] | undefined, any> {
     return isInt(i) ?
-        this.items$.map(items => items[i]?.[prop])
+        this.items$.map((items) => items[i]?.[prop])
       : (fluxUndefined as Pipe<BItem[K] | undefined, any>);
   }
 }

@@ -18,7 +18,7 @@ const c = Css('BSide', {
     overflowX: 'hidden',
     overflowY: 'auto',
     col: ['stretch', 'start'],
-  }
+  },
 });
 
 export const BSide = () => {

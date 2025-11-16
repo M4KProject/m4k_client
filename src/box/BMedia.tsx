@@ -6,8 +6,8 @@ import { useMedia, useMediaById } from '@/hooks/apiHooks';
 const c = Css('BMedia', {
   '': {
     wh: '100%',
-  }
-})
+  },
+});
 
 export const BMedia: BComp = ({ i, item, props, ctrl }) => {
   console.debug('BMedia', i, item, props, ctrl);

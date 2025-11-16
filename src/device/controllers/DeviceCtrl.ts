@@ -26,11 +26,7 @@ export class DeviceCtrl {
   password$ = fluxStored<string>('devicePassword$', '', isString);
   auth$ = fluxStored<PbAuth | undefined>('deviceAuth$', undefined, isItem);
   device$ = fluxStored<DeviceModel | null>('device$', null, isItem);
-  action$ = fluxStored<DeviceModel['action'] | undefined>(
-    'deviceAction$',
-    undefined,
-    isItem
-  );
+  action$ = fluxStored<DeviceModel['action'] | undefined>('deviceAction$', undefined, isItem);
 
   constructor(public api: Api) {
     app.deviceCtrl = this;

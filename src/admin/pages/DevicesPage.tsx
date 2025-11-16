@@ -38,11 +38,7 @@ const deviceCols: GridCols<
   key: [
     'Clé',
     (d, { api }) => (
-      <Field
-        {...tooltip(d.id)}
-        value={d.key}
-        onValue={(key) => api.device.update(d.id, { key })}
-      />
+      <Field {...tooltip(d.id)} value={d.key} onValue={(key) => api.device.update(d.id, { key })} />
     ),
     { if: (_col, ctx) => !!ctx.isAdvanced },
   ],
@@ -104,11 +100,7 @@ const deviceCols: GridCols<
           onClick={() => api.device.update(d.id, { action: 'reboot' })}
         />
         {isAdvanced && (
-          <Button
-            icon={<Settings />}
-            {...tooltip('Mode remote')}
-            onClick={() => handleRemote(d)}
-          />
+          <Button icon={<Settings />} {...tooltip('Mode remote')} onClick={() => handleRemote(d)} />
         )}
         {isAdvanced && (
           <Button

@@ -15,7 +15,7 @@ const c = Css('MemberGrid', {
   },
 });
 
-const cols: GridCols<MemberModel, { deviceById: Dictionary<DeviceModel>, api: Api }> = {
+const cols: GridCols<MemberModel, { deviceById: Dictionary<DeviceModel>; api: Api }> = {
   id: ['Appareil', ({ device }) => <Field type="switch" value={!!device} readonly />, { w: 50 }],
   name: [
     'Email',

@@ -41,7 +41,7 @@ export const BViewport = () => {
       setTimeout(() => {
         pz.fitToContainer();
       }, 1000);
-    }
+    };
     ready();
 
     return ctrl.panZoom.ready$.on(ready);

@@ -35,13 +35,12 @@ const BMediasItem = ({ media }: { media: MediaModel }) => {
   const api = useApi();
   const ctrl = useBCtrl();
   const mediaId = media.id;
-  const selected = useFluxMemo(() =>
-    fluxCombine(ctrl.select$, ctrl.items$)
-      .map(([click]) => ctrl.get(click.i)?.m === mediaId),
+  const selected = useFluxMemo(
+    () => fluxCombine(ctrl.select$, ctrl.items$).map(([click]) => ctrl.get(click.i)?.m === mediaId),
     [ctrl, mediaId]
   );
   const variants = api.getVariants(media);
-  const image = variants.find(v => v.type === 'image');
+  const image = variants.find((v) => v.type === 'image');
   const url = image ? api.getMediaUrl(image, 80) : undefined;
 
   return (
@@ -63,12 +62,12 @@ const BMediasContent = () => {
   const medias = useGroupMedias();
   return (
     <>
-      {medias.map(media => (
+      {medias.map((media) => (
         <BMediasItem key={media.id} media={media} />
       ))}
     </>
-  )
-}
+  );
+};
 
 export const BMedias = () => {
   return (
