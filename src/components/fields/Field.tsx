@@ -59,7 +59,7 @@ export const Field = (props: FieldProps) => {
     onValue,
     delay,
     items,
-    Comp,
+    input,
     children,
     props: propsProps,
     ...divProps
@@ -147,14 +147,14 @@ export const Field = (props: FieldProps) => {
     }
   };
 
-  const FinalComp = Comp || fieldRegistry[type || 'text'] || fieldRegistry.text;
+  const FinalComp = input || fieldRegistry[type || 'text'] || fieldRegistry.text;
 
   const formatValue = (value: any) => {
     const format = type && formatByType[type];
     return format ? format(value) : value;
   };
 
-  const isContainer = children && !Comp && !type;
+  const isContainer = children && !input && !type;
 
   return (
     <div {...divProps} {...c('', col && '-col', type && `-${type}`, err && '-error', divProps)}>

@@ -2,7 +2,17 @@ import { ComponentChildren } from 'preact';
 import { DivProps } from '@/components/types';
 import { Flux } from 'fluxio';
 
-export type FieldComp<T = any> = (props: {
+export interface FieldProps<T = any> extends FieldInfo, DivProps {
+  msg?: Flux<T>;
+  value?: T;
+  cast?: (next: any) => T;
+  onValue?: (next: T) => void;
+  delay?: number;
+  input?: FieldInput;
+  children?: ComponentChildren;
+}
+
+export type FieldInputProps<T = any> = {
   cls?: string;
   name: string | undefined;
   required?: boolean;
@@ -10,7 +20,9 @@ export type FieldComp<T = any> = (props: {
   onChange: (e: any) => void;
   onBlur?: () => void;
   fieldProps: FieldProps<T>;
-}) => ComponentChildren;
+};
+
+export type FieldInput<T = any> = (props: FieldInputProps<T>) => ComponentChildren;
 
 export type FieldType =
   | 'email'
@@ -46,15 +58,5 @@ export interface FieldInfo<T = any> {
 
 export interface FluxFieldProps<T = any> extends FieldInfo, DivProps {
   flux: Flux<T>;
-  children?: ComponentChildren;
-}
-
-export interface FieldProps<T = any> extends FieldInfo, DivProps {
-  msg?: Flux<T>;
-  value?: T;
-  cast?: (next: any) => T;
-  onValue?: (next: T) => void;
-  delay?: number;
-  Comp?: FieldComp;
   children?: ComponentChildren;
 }

@@ -58,6 +58,20 @@ export const fieldStyle = Css('Field', {
     caretColor: 'black',
   },
 
+  // Styles pour les flèches de l'input number (Chrome/Safari/Edge)
+  'Input::-webkit-inner-spin-button': {
+    opacity: 1,
+    backgroundColor: 'white',
+    color: 'black',
+    cursor: 'pointer',
+  },
+  'Input::-webkit-outer-spin-button': {
+    opacity: 1,
+    backgroundColor: 'white',
+    color: 'black',
+    cursor: 'pointer',
+  },
+
   '-check &Input': {
     center: 1,
     p: 0,
