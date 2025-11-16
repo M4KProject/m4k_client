@@ -1,4 +1,4 @@
-import { addHsl, Css, darken, lighten, setHsl, setRgb, toHsl, toRgb } from "fluxio";
+import { addHsl, Css, darken, lighten, round, setHsl, setRgb, toHsl, toRgb } from "fluxio";
 import { useState } from "preact/hooks";
 import { Field } from "@/components/Field";
 import { theme$ } from "@/utils/theme";
@@ -19,7 +19,7 @@ const c = Css('ColorPicker', {
   },
   Color: {
     wh: 30,
-    m: 4,
+    m: 2,
     rounded: 5,
     cursor: 'pointer',
     border: '2px solid transparent',
@@ -33,32 +33,26 @@ const c = Css('ColorPicker', {
 });
 
 export const ColorPicker = () => {
-  const [color, setColor] = useState('#697689');
+  const [color, setColor] = useState<string|undefined>('#697689');
   const hsl = toHsl(color);
   const rgb = toRgb(color);
 
   const theme = theme$.get();
-    const primary = theme.primary || '#28A8D9';
-    const secondary = theme.secondary || addHsl(primary, { h: 360 / 3 });
+  const p = theme.primary || '#28A8D9';
+  const s = theme.secondary || addHsl(p, { h: 360 / 3 });
+  const g = setHsl(color, { s: 0, l: 50 });
+
+  const ls = [10, 20, 40, 60, 80, 90];
 
   const variations = [
     [
-        primary,
-        secondary,
-        addHsl(primary, { h: 180 }),
-        addHsl(secondary, { h: 180 }),
-        '#FFFFFF',
-        '#000000',
+        p,
+        s,
+        ...[0, 50, 100].map(l => setHsl(color, { l })),
+        undefined,
     ],
-    [0, 45, 60, 120, 220, 280].map(h => (
-        setHsl(color, { h })
-    )),
-    [10, 20, 40, 60, 80, 90].map(l => (
-        setHsl(color, { l })
-    )),
-    [1, 20, 40, 60, 80, 100].map(s => (
-        setHsl(color, { s })
-    )),
+    [ "#e20000ff", "#ffa600ff", "#fffb00ff", "#07db00ff", "#0063f7ff", "#a300e4ff" ],
+    ls.map(l => setHsl(color, { l })),
   ];
 
   return (
@@ -88,21 +82,21 @@ export const ColorPicker = () => {
             <>
                 <Field
                     type="number"
-                    value={hsl.h}
+                    value={round(hsl.h)}
                     onValue={h => setColor(setHsl(color, { h }))}
                     props={{ min: 0, max: 360 }}
                 />
 
                 <Field
                     type="number"
-                    value={hsl.s}
+                    value={round(hsl.s)}
                     onValue={s => setColor(setHsl(color, { s }))}
                     props={{ min: 0, max: 100 }}
                 />
 
                 <Field
                     type="number"
-                    value={hsl.l}
+                    value={round(hsl.l)}
                     onValue={l => setColor(setHsl(color, { l }))}
                     props={{ min: 0, max: 100 }}
                 />
