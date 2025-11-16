@@ -17,7 +17,7 @@ import { refreshTheme, updateTheme } from '@/utils/theme';
 import { addFont } from '@/utils/addFont';
 import { ApiContext, useApi, useGroup } from '@/hooks/apiHooks';
 import { Api } from '@/api/Api';
-import { ColorPicker } from './ColorPicker';
+import { ColorPicker } from '@/components/fields/ColorPicker';
 
 const c = Css('App', {
   '': {

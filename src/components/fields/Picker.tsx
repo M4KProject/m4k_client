@@ -1,6 +1,6 @@
 import { ComponentChildren } from 'preact';
 import { Css } from 'fluxio';
-import { Button } from './Button';
+import { Button } from '@/components/Button';
 import { isArray } from 'fluxio';
 
 const c = Css('Picker', {
