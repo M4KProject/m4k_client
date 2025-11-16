@@ -1,4 +1,4 @@
-import { Css, isArray, isDefined, Style, StyleFlexAlign, StyleFlexJustify, Writable } from 'fluxio';
+import { Css, isArray, isDefined, isUInt, Style, StyleFlexAlign, StyleFlexJustify, Writable } from 'fluxio';
 import { useBCtrl } from '@/box/BCtrl';
 import { Field, FieldProps } from '@/components/Field';
 import { Tr } from '@/components/Tr';
@@ -197,7 +197,7 @@ export const BProps = () => {
   const type = nType || 'box';
   const config = ctrl.registry[type] || {} as Partial<BType>;
 
-  if (!i || !item) return null;
+  if (!isUInt(i) || !item) return null;
 
   return (
     <div {...c()}>

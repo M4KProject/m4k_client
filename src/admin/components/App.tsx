@@ -17,6 +17,7 @@ import { refreshTheme, updateTheme } from '@/utils/theme';
 import { addFont } from '@/utils/addFont';
 import { ApiContext, useApi, useGroup } from '@/hooks/apiHooks';
 import { Api } from '@/api/Api';
+import { ColorPicker } from './ColorPicker';
 
 const c = Css('App', {
   '': {
@@ -110,6 +111,7 @@ export const App = () => {
       <div id="app" {...c('')}>
         <AppSync />
         <AppContent />
+        <ColorPicker />
       </div>
     </ApiContext>
   );
