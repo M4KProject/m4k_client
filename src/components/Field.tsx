@@ -45,6 +45,9 @@ const c = Css('Field', {
     flex: 2,
     hMin: 16,
   },
+  'Content > .Field:not(:first-child)': {
+    ml: 4,
+  },
   Input: {
     w: '100%',
     hMin: FIELD_HEIGHT,
@@ -168,7 +171,8 @@ export interface FieldProps<T = any> extends FieldInfo, DivProps {
   cast?: (next: any) => T;
   onValue?: (next: T) => void;
   delay?: number;
-  Comp?: FieldComp,
+  Comp?: FieldComp;
+  children?: ComponentChildren;
 }
 
 export const castByType: Dictionary<(next: any) => any> = {
@@ -395,6 +399,10 @@ const compByType: Record<FieldType, FieldComp> = {
   ),
 };
 
+const FluxField = (props: FieldProps) => {
+  
+}
+
 export const Field = (props: FieldProps) => {
   const {
     col,
@@ -507,20 +515,28 @@ export const Field = (props: FieldProps) => {
     return format ? format(value) : value;
   };
 
+  const isContainer = children && !Comp && !type;
+
   return (
     <div {...divProps} {...c('', col && '-col', type && `-${type}`, err && '-error', divProps)}>
       {label && <div {...c('Label')}>{label} :</div>}
       <div {...c('Content')}>
-        <FinalComp
-          cls={'Input'}
-          name={name}
-          value={formatValue(changed === undefined ? initiated : changed)}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          required={required}
-          fieldProps={props}
-        />
-        {children}
+        {isContainer ? (
+          children
+        ) : (
+          <>
+            <FinalComp
+              cls={'Input'}
+              name={name}
+              value={formatValue(changed === undefined ? initiated : changed)}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              required={required}
+              fieldProps={props}
+            />
+            {children}
+          </>
+        )}
         {err ?
           <div {...c('Error')}>
             <Tr>{err}</Tr>

@@ -112,7 +112,7 @@ const FlexAlign = () => {
 
   return (
     <>
-      <Field name="row" Comp={() => (
+      <Field name="row">
         <div {...c('Row')}>
           {btn(<AlignStartHorizontal />, 1, 0, 'start')}
           {btn(<AlignCenterHorizontal />, 1, 0, 'center')}
@@ -121,8 +121,8 @@ const FlexAlign = () => {
           {btn(<AlignHorizontalJustifyCenter />, 1, 1, 'center')}
           {btn(<AlignHorizontalJustifyEnd />, 1, 1, 'end')}
         </div>
-      )} />
-      <Field name="col" Comp={() => (
+      </Field>
+      <Field name="col">
         <div {...c('Row')}>
           {btn(<AlignStartVertical />, 0, 0, 'start')}
           {btn(<AlignCenterVertical />, 0, 0, 'center')}
@@ -131,7 +131,7 @@ const FlexAlign = () => {
           {btn(<AlignVerticalJustifyCenter />, 0, 1, 'center')}
           {btn(<AlignVerticalJustifyEnd />, 0, 1, 'end')}
         </div>
-      )} />
+      </Field>
     </>
   )
 };
@@ -154,14 +154,14 @@ const TextAlign = () => {
   };
 
   return (
-    <Field name="textAlign" Comp={() => (
+    <Field name="textAlign">
       <div {...c('Row')}>
         {txtBtn(<AlignLeft />, 'left')}
         {txtBtn(<AlignCenter />, 'center')}
         {txtBtn(<AlignJustify />, 'justify')}
         {txtBtn(<AlignRight />, 'right')}
       </div>
-    )} />
+    </Field>
   )
 };
 
@@ -209,12 +209,10 @@ export const BProps = () => {
       {config.b && (
         <>
           <div {...c('Sep')} />
-          <Field label="Texte" Comp={() => (
-            <>
-              <BStyleField prop="fontSize" type="number" />
-              <BStyleField prop="fg" type="color" />
-            </>
-          )} />
+          <Field label="Texte">
+            <BStyleField prop="fontSize" type="number" />
+            <BStyleField prop="fg" type="color" />
+          </Field>
           <BField prop="b" type="multiline" col />
           <TextAlign />
         </>
@@ -229,7 +227,7 @@ export const BProps = () => {
       )} /> */}
 
       {config.r && (
-        <Field label="Ajouter" Comp={() => (
+        <Field label="Ajouter">
           <div {...c('Row')}>
             {Object.entries(ctrl.registry)
               .map(([t, config]) => {
@@ -249,7 +247,7 @@ export const BProps = () => {
               })
             }
           </div>
-        )} />
+        </Field>
       )}
       <div {...c('Sep')} />
       <Field
@@ -262,13 +260,11 @@ export const BProps = () => {
       {isAdvanced && (
         <>
           <BField label="Type" prop="t" type="select" defaultValue="box" items={types} />
-          <Field label="Contour" Comp={() => (
-            <>
-              <BStyleField prop="border" type="number" />
-              <BStyleField prop="rounded" type="number" />
-              <BStyleField prop="borderColor" type="color" />
-            </>
-          )} />
+          <Field label="Contour">
+            <BStyleField prop="border" type="number" />
+            <BStyleField prop="rounded" type="number" />
+            <BStyleField prop="borderColor" type="color" />
+          </Field>
           <BStyleField label="Marge" prop="p" type="number" />
           <BStyleField label="Cacher" prop="hide" type="switch" />
           <BField label="Classe" prop="c" />
