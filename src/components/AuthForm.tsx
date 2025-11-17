@@ -47,7 +47,10 @@ export const AuthForm = () => {
       value={email}
       onValue={setEmail}
       label="Votre adresse e-mail"
-      props={{ autoComplete: 'username' }}
+      stored="email"
+      props={{
+        autoComplete: 'email',
+      }}
     />
   );
 
@@ -66,7 +69,9 @@ export const AuthForm = () => {
               value={password}
               onValue={setPassword}
               label="Votre mot de passe"
-              props={{ autoComplete: 'current-password' }}
+              props={{
+                autoComplete: 'current-password',
+              }}
               error={passwordError}
             />
             <div {...c('Col')}>
@@ -107,7 +112,9 @@ export const AuthForm = () => {
               value={password}
               onValue={setPassword}
               label="Votre mot de passe"
-              props={{ autoComplete: 'new-password' }}
+              props={{
+                autoComplete: 'new-password',
+              }}
             />
             <div {...c('Col')}>
               <Button

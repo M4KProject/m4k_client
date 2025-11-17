@@ -23,7 +23,7 @@ const c = Css('Picker', {
 });
 
 export interface PickerProps {
-  class?: string;
+  class?: any;
   name?: string;
   required?: boolean;
   value?: string;

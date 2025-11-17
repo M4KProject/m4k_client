@@ -93,7 +93,7 @@ const c = Css('Select', {
 });
 
 export interface SelectProps {
-  class?: string;
+  class?: any;
   name?: string;
   required?: boolean;
   value?: string;

@@ -71,21 +71,24 @@ export const ColorPicker = () => {
           type="number"
           value={round(hsl.h)}
           onValue={(h) => setColor(setHsl(color, { h }))}
-          props={{ min: 0, max: 360 }}
+          min={0}
+          max={360}
         />
 
         <Field
           type="number"
           value={round(hsl.s)}
           onValue={(s) => setColor(setHsl(color, { s }))}
-          props={{ min: 0, max: 100 }}
+          min={0}
+          max={100}
         />
 
         <Field
           type="number"
           value={round(hsl.l)}
           onValue={(l) => setColor(setHsl(color, { l }))}
-          props={{ min: 0, max: 100 }}
+          min={0}
+          max={100}
         />
       </Field>
       <Field label="RGB">
@@ -93,19 +96,22 @@ export const ColorPicker = () => {
           type="number"
           value={rgb.r}
           onValue={(r) => setColor(setRgb(color, { r }))}
-          props={{ min: 0, max: 360 }}
+          min={0}
+          max={100}
         />
         <Field
           type="number"
           value={rgb.g}
           onValue={(g) => setColor(setRgb(color, { g }))}
-          props={{ min: 0, max: 100 }}
+          min={0}
+          max={100}
         />
         <Field
           type="number"
           value={rgb.b}
           onValue={(b) => setColor(setRgb(color, { b }))}
-          props={{ min: 0, max: 100 }}
+          min={0}
+          max={100}
         />
       </Field>
       <Field
@@ -113,7 +119,8 @@ export const ColorPicker = () => {
         type="number"
         value={rgb.a * 100}
         onValue={(a) => setColor(setRgb(color, { a: a / 100 }))}
-        props={{ min: 0, max: 100 }}
+        min={0}
+        max={100}
       />
     </div>
   );

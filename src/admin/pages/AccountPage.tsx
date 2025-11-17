@@ -72,7 +72,10 @@ export const AccountPage = () => {
             name="username"
             value={auth.email}
             readonly
-            props={{ autocomplete: 'email' }}
+            stored="email"
+            props={{
+              autoComplete: 'email',
+            }}
           />
           <Field
             type="switch"
@@ -146,7 +149,9 @@ export const AccountPage = () => {
             value={oldPassword}
             onValue={setOldPassword}
             error={passwordError}
-            props={{ autocomplete: 'current-password' }}
+            props={{
+              autoComplete: 'current-password',
+            }}
           />
           <Field
             label="Nouveau mot de passe"
@@ -154,7 +159,9 @@ export const AccountPage = () => {
             type="password"
             value={password}
             onValue={setPassword}
-            props={{ autocomplete: 'new-password' }}
+            props={{
+              autoComplete: 'new-password',
+            }}
           />
           <Branding />
         </Form>

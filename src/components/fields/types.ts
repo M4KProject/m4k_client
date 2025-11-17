@@ -1,28 +1,36 @@
-import { ComponentChildren } from 'preact';
-import { DivProps } from '@/components/types';
-import { Flux } from 'fluxio';
+import type { ComponentChildren } from 'preact';
+import type { DivProps } from '@/components/types';
 
-export interface FieldProps<T = any> extends FieldInfo, DivProps {
-  msg?: Flux<T>;
+export type SelectItems<T = any> = ([T, ComponentChildren] | false | null | undefined)[];
+
+export interface FieldProps<T = any> {
+  type?: FieldType;
+  name?: string;
+  items?: SelectItems<T>;
+  required?: boolean;
+  readonly?: boolean;
+  stored?: string;
   value?: T;
-  cast?: (next: any) => T;
   onValue?: (next: T) => void;
+  input?: () => ComponentChildren;
+  props?: any;
+  error?: ComponentChildren;
+  min?: T;
+  max?: T;
+
   delay?: number;
-  input?: FieldInput;
-  children?: ComponentChildren;
+  convert?: (value: any) => any;
+  reverse?: (value: any) => any;
+
+  col?: boolean;
+  label?: ComponentChildren;
+  placeholder?: string;
+  helper?: ComponentChildren;
+  containerProps?: DivProps;
+  children?: DivProps['children'];
 }
 
-export type FieldInputProps<T = any> = {
-  cls?: string;
-  name: string | undefined;
-  required?: boolean;
-  value: T;
-  onChange: (e: any) => void;
-  onBlur?: () => void;
-  fieldProps: FieldProps<T>;
-};
-
-export type FieldInput<T = any> = (props: FieldInputProps<T>) => ComponentChildren;
+export type FieldComponent = (props: FieldProps) => ComponentChildren;
 
 export type FieldType =
   | 'email'
@@ -41,22 +49,3 @@ export type FieldType =
   | 'date'
   | 'datetime'
   | 'seconds';
-
-export interface FieldInfo<T = any> {
-  col?: boolean;
-  type?: FieldType;
-  name?: string;
-  label?: ComponentChildren;
-  helper?: ComponentChildren;
-  error?: ComponentChildren;
-  items?: ([T, ComponentChildren] | false | null | undefined)[];
-  required?: boolean;
-  readonly?: boolean;
-  castType?: string;
-  props?: any;
-}
-
-export interface FluxFieldProps<T = any> extends FieldInfo, DivProps {
-  flux: Flux<T>;
-  children?: ComponentChildren;
-}

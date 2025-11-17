@@ -1,60 +1,41 @@
 import { useState } from 'preact/hooks';
 import { Button } from '@/components/Button';
-import { FieldInput, FieldInputProps, FieldType } from './types';
+import { FieldType } from './types';
 import { CheckIcon, EyeIcon, EyeOffIcon } from 'lucide-react';
 import { Select } from './Select';
 import { Picker } from './Picker';
 import { fieldStyle } from './fieldStyle';
+import { useFieldContext, useInputProps } from './FieldCtrl';
 
 const c = fieldStyle;
 
-const getMediaField = (_mimetypes: string[]): FieldInput => {
-  // const mimetypeMap = by(mimetypes, m => m, () => true);
-  return ({ cls, name, required, value, onChange, fieldProps }) => {
-    // const medias = Object.values(useFlux(medias$));
-    // const filteredMedias = medias.filter(m => mimetypeMap[m.mimetype]);
-    // const groupId = useFlux(groupId$);
-    return (
-      <select
-        name={name}
-        required={required}
-        value={value || ''}
-        onChange={onChange}
-        {...fieldProps.props}
-        {...c(cls, fieldProps.props)}
-      >
-        {/* <option value="" className={!value ? `${cls}Selected` : undefined}></option>
-                {Object.values(filteredMedias).map(media => (
-                    <option key={media.id} value={media.id} className={media.id === value ? `${cls}Selected` : undefined}>
-                        {media.name.replace(`${groupId}/`, '')}
-                    </option>
-                ))} */}
-      </select>
-    );
-  };
+const getMediaInput = (_mimetypes: string[]) => () => {
+  const props = useInputProps();
+  return <input type="text" {...props} />;
 };
 
-const getInputProps = (props: FieldInputProps) => {
-  const { cls, name, required, value, onChange, fieldProps } = props;
-  return {
-    name,
-    required,
-    value: value || '',
-    onChange,
-    ...fieldProps.props,
-    ...c(cls, fieldProps.props),
-  };
-}
+export const ImageInput = getMediaInput([
+  'image/png',
+  'image/jpeg',
+  'image/svg+xml',
+  'application/pdf',
+]);
+export const DocInput = getMediaInput(['application/pdf']);
 
-export const EmailInput: FieldInput = (props) => (
-  <input {...getInputProps(props)} type="email" />
-);
+export const getTextInput = (type: string) => () => <input type={type} {...useInputProps()} />;
 
-export const PasswordInput: FieldInput = (props) => {
+export const EmailInput = getTextInput('email');
+export const ColorInput = getTextInput('color');
+export const TextInput = getTextInput('text');
+export const NumberInput = getTextInput('number');
+export const DateInput = getTextInput('date');
+
+export const PasswordInput = () => {
   const [show, setShow] = useState(false);
+  const props = useInputProps();
   return (
     <>
-      <input {...getInputProps(props)} type={show ? 'text' : 'password'} />
+      <input type={show ? 'text' : 'password'} {...props} />
       <Button
         onClick={(e) => {
           e.preventDefault();
@@ -66,89 +47,115 @@ export const PasswordInput: FieldInput = (props) => {
   );
 };
 
-export const ColorInput: FieldInput = (props) => (
-  <input {...getInputProps(props)} type="color" />
-);
+export const SecondsInput = () => <input type="text" placeholder="00:00:00" {...useInputProps()} />;
 
-export const TextInput: FieldInput = (props) => (
-  <input {...getInputProps(props)} type="text" />
-);
+export const MultilineInput = () => <textarea rows={5} {...useInputProps()} />;
 
-export const NumberInput: FieldInput = (props) => (
-  <input {...getInputProps(props)} type="number" />
-);
+export const JsonInput = () => <textarea rows={5} {...useInputProps()} />;
 
-export const DateInput: FieldInput = (props) => (
-  <input {...getInputProps(props)} type="date" />
-);
-
-export const SecondsInput: FieldInput = (props) => (
-  <input {...getInputProps(props)} type="text" placeholder="00:00:00" />
-);
-
-export const MultilineInput: FieldInput = (props) => (
-  <textarea {...getInputProps(props)} rows={5} />
-);
-
-export const JsonInput: FieldInput = (props) => (
-  <textarea {...getInputProps(props)} rows={5} />
-);
-
-export const SwitchInput: FieldInput = (props) => {
-  const { cls, value, onChange, fieldProps } = props;
+export const SwitchInput = () => {
+  const { value, onChange, ...props } = useInputProps();
   return (
     <div
       onClick={() => onChange(!value)}
-      {...fieldProps.props}
-      {...c(cls, value && `${cls}-selected`, fieldProps.props)}
+      {...props}
+      {...c('Input', value && 'Input-selected', props)}
     >
-      <div {...c(`${cls}Handle`)}></div>
+      <div {...c('InputHandle')}></div>
     </div>
   );
 };
 
-export const CheckInput: FieldInput = (props) => {
-  const { cls, value, onChange, fieldProps } = props;
+export const CheckInput = () => {
+  const { value, onChange, ...props } = useInputProps();
   return (
     <div
       onClick={() => onChange(!value)}
-      {...fieldProps.props}
-      {...c(cls, value && `${cls}-selected`, fieldProps.props)}
+      {...props}
+      {...c('Input', value && 'Input-selected', props)}
     >
       <CheckIcon />
     </div>
   );
 };
 
-export const SelectInput: FieldInput = (props) => {
-  const { fieldProps, ...rest } = props;
+export const SelectInput = () => {
+  const ctx = useFieldContext();
+  const { value, onChange, name, required, placeholder } = useInputProps();
   return (
-    <Select {...rest} items={fieldProps.items} {...fieldProps.props} />
+    <Select
+      items={ctx.config.items}
+      value={value}
+      onChange={onChange}
+      name={name}
+      required={required}
+      placeholder={placeholder}
+    />
   );
 };
 
-export const PickerInput: FieldInput = (props) => {
-  const { fieldProps, ...rest } = props;
+export const PickerInput = () => {
+  const ctx = useFieldContext();
+  const { value, onChange, name, required } = useInputProps();
   return (
-    <Picker {...rest} items={fieldProps.items} {...fieldProps.props} />
+    <Picker
+      items={ctx.config.items}
+      value={value}
+      onChange={onChange}
+      name={name}
+      required={required}
+    />
   );
 };
 
-export const fieldRegistry: Record<FieldType, FieldInput> = {
-  email: EmailInput,
-  password: PasswordInput,
-  color: ColorInput,
-  text: TextInput,
-  multiline: MultilineInput,
-  json: JsonInput,
-  number: NumberInput,
-  select: SelectInput,
-  picker: PickerInput,
-  switch: SwitchInput,
-  check: CheckInput,
-  image: getMediaField(['image/png', 'image/jpeg', 'image/svg+xml', 'application/pdf']),
-  doc: getMediaField(['application/pdf']),
-  date: DateInput,
-  datetime: DateInput,
-  seconds: SecondsInput,
+export const defaultInputConfig = { input: TextInput, delay: 400 };
+
+export type InputConfig = typeof defaultInputConfig;
+
+export const fieldRegistry: Record<FieldType, Partial<InputConfig>> = {
+  text: {},
+  email: { input: EmailInput },
+  password: { input: PasswordInput },
+  color: { input: ColorInput },
+  multiline: { input: MultilineInput },
+  json: { input: JsonInput },
+  number: { input: NumberInput },
+  date: { input: DateInput },
+  datetime: { input: DateInput },
+  seconds: { input: SecondsInput },
+  select: { input: SelectInput, delay: 0 },
+  picker: { input: PickerInput, delay: 0 },
+  switch: { input: SwitchInput, delay: 0 },
+  check: { input: CheckInput, delay: 0 },
+  image: { input: ImageInput, delay: 0 },
+  doc: { input: DocInput, delay: 0 },
 };
+
+// export const castByType: Dictionary<(next: any) => any> = {
+//   json: (next: any) => {
+//     const casted = jsonParse(next);
+//     if (casted === null) throw toError('not-a-json');
+//     return casted;
+//   },
+//   number: (next: any) => {
+//     const casted = toNumber(next, null);
+//     if (casted === null) throw toError('not-a-number');
+//     return casted;
+//   },
+//   seconds: (next: any) => {
+//     const seconds = parseSeconds(next);
+//     if (seconds === null) throw toError('invalid-time-format');
+//     return seconds;
+//   },
+// };
+
+// export const formatByType: Dictionary<(value: any) => any> = {
+//   json: (value: any) => {
+//     if (typeof value === 'string') return value;
+//     return jsonStringify(value, undefined, 2);
+//   },
+//   seconds: (value: any) => {
+//     if (typeof value === 'number') return formatSeconds(value);
+//     return value || '';
+//   },
+// };
