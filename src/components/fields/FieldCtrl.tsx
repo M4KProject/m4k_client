@@ -1,4 +1,4 @@
-import { flux, fluxStored, isDefined, isNumber, logger, Unsubscribe } from 'fluxio';
+import { flux, fluxStored, isNumber, logger, Unsubscribe } from 'fluxio';
 import { FieldProps, FieldType } from './types';
 import { defaultInputConfig, fieldRegistry } from './fieldRegistry';
 import { createContext } from 'preact';

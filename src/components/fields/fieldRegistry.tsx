@@ -1,11 +1,12 @@
 import { useState } from 'preact/hooks';
 import { Button } from '@/components/Button';
-import { FieldType } from './types';
+import { FieldProps, FieldType } from './types';
 import { CheckIcon, EyeIcon, EyeOffIcon } from 'lucide-react';
 import { Select } from './Select';
 import { Picker } from './Picker';
 import { fieldStyle } from './fieldStyle';
 import { useFieldContext, useInputProps } from './FieldCtrl';
+import { jsonStringify, jsonParse, toNumber, toString } from 'fluxio';
 
 const c = fieldStyle;
 
@@ -108,9 +109,44 @@ export const PickerInput = () => {
   );
 };
 
-export const defaultInputConfig = { input: TextInput, delay: 400 };
+export const defaultInputConfig: FieldProps = {
+  input: TextInput,
+  delay: 400,
+};
 
 export type InputConfig = typeof defaultInputConfig;
+
+// convert: appliqué lors de input$.set() - convertit string input -> valeur typée
+// reverse: appliqué lors de input$.get() - convertit valeur typée -> string input
+
+const stringToJson = (value: any) => {
+  if (typeof value !== 'string') return value;
+  const trimmed = value.trim();
+  if (!trimmed) return value; // Garde la string vide ou whitespace
+  const parsed = jsonParse(trimmed);
+  if (parsed === null) throw new Error('invalid-json');
+  return parsed;
+};
+
+const jsonToString = (value: any) => {
+  if (typeof value === 'string') return value;
+  return jsonStringify(value, undefined, 2);
+};
+
+const stringToNumber = (value: any) => {
+  if (typeof value === 'number') return value;
+  if (typeof value !== 'string') return value;
+  const trimmed = value.trim();
+  if (!trimmed) return value; // Garde la string vide
+  const num = toNumber(trimmed, null);
+  if (num === null) throw new Error('invalid-number');
+  return num;
+};
+
+const numberToString = (value: any) => {
+  if (typeof value === 'string') return value;
+  return toString(value);
+};
 
 export const fieldRegistry: Record<FieldType, Partial<InputConfig>> = {
   text: {},
@@ -118,8 +154,8 @@ export const fieldRegistry: Record<FieldType, Partial<InputConfig>> = {
   password: { input: PasswordInput },
   color: { input: ColorInput },
   multiline: { input: MultilineInput },
-  json: { input: JsonInput },
-  number: { input: NumberInput },
+  json: { input: JsonInput, convert: stringToJson, reverse: jsonToString },
+  number: { input: NumberInput, convert: stringToNumber, reverse: numberToString },
   date: { input: DateInput },
   datetime: { input: DateInput },
   seconds: { input: SecondsInput },

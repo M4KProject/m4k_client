@@ -40,14 +40,14 @@ export const FieldsTestPage = () => {
           label="Texte"
           type="text"
           value={state.text}
-          onValue={text => setState(prev => ({ ...prev, text }))}
+          onValue={(text) => setState((prev) => ({ ...prev, text }))}
           placeholder="Entrez du texte"
         />
         <Field
           label="Nombre"
           type="number"
           value={state.number}
-          onValue={number => setState(prev => ({ ...prev, number }))}
+          onValue={(number) => setState((prev) => ({ ...prev, number }))}
           min={0}
           max={100}
         />
