@@ -2,11 +2,9 @@ import { flux, fluxStored, isNumber, logger, Unsubscribe } from 'fluxio';
 import { FieldProps, FieldType } from './types';
 import { fieldRegistry } from './fieldRegistry';
 import { createContext } from 'preact';
-import { useContext } from 'preact/hooks';
-import { useFlux } from '@/hooks/useFlux';
 
-export class FieldCtrl<T = any> {
-  log = logger('FieldContext');
+export class FieldController<T = any> {
+  log = logger('FieldController');
   props: Readonly<FieldProps<T>> = {};
   offs: Unsubscribe[] = [];
   type: FieldType = 'text';
@@ -111,20 +109,6 @@ export class FieldCtrl<T = any> {
   }
 }
 
-export const FieldContext = createContext<FieldCtrl | undefined>(undefined);
+export const FieldContext = createContext<FieldController | undefined>(undefined);
 
 export const FieldProvider = FieldContext.Provider;
-
-export const useFieldContext = () => useContext(FieldContext)!;
-
-export const useInputProps = (): any => {
-  const ctx = useContext(FieldContext)!;
-  const value = useFlux(ctx.input$);
-  const { onChange, onBlur, config } = ctx;
-  const { props: inputProps, name, required, placeholder } = config;
-  const props: any = { value, onChange, onBlur, name, required, ...inputProps };
-  if (placeholder) props.placeholder = placeholder;
-  return props;
-};
-
-// value={formatValue(changed === undefined ? initiated : changed)}

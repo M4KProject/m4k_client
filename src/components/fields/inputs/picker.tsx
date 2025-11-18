@@ -2,6 +2,8 @@ import { ComponentChildren } from 'preact';
 import { Css } from 'fluxio';
 import { Button } from '@/components/Button';
 import { isArray } from 'fluxio';
+import { useFieldContext, useInputProps } from '../hooks';
+import { FieldProps } from '../types';
 
 const c = Css('Picker', {
   '': {
@@ -22,7 +24,7 @@ const c = Css('Picker', {
   },
 });
 
-export interface PickerProps {
+interface PickerProps {
   class?: any;
   name?: string;
   required?: boolean;
@@ -32,7 +34,7 @@ export interface PickerProps {
   props?: any;
 }
 
-export const Picker = ({
+const Picker = ({
   name,
   required,
   value = '',
@@ -70,3 +72,26 @@ export const Picker = ({
     </div>
   );
 };
+
+const PickerInput = () => {
+  const ctx = useFieldContext();
+  const { value, onChange, name, required } = useInputProps();
+  return (
+    <Picker
+      items={ctx.config.items}
+      value={value}
+      onChange={onChange}
+      name={name}
+      required={required}
+    />
+  );
+};
+
+const picker: FieldProps = {
+  input: PickerInput,
+  delay: 10,
+}
+
+export const pickerInputs = {
+  picker,
+}

@@ -1,0 +1,50 @@
+import { CheckIcon } from "lucide-react";
+import { useInputProps } from "../hooks";
+import { Css } from "fluxio";
+import { FIELD_HEIGHT, LABEL_WIDTH } from "../styles";
+import { FieldProps } from "../types";
+
+const c = Css('SwitchInput', {
+  '': {
+    center: 1,
+    w: FIELD_HEIGHT * 2,
+    cursor: 'pointer',
+    border: 'border',
+    bg: 'bg',
+    position: 'relative',
+    rounded: 99,
+    transition: 0.3,
+  },
+  '-selected': { borderColor: 'p', bg: 'p' },
+
+  'Handle': {
+    wh: FIELD_HEIGHT - 4,
+    bg: 'handle',
+    rounded: 99,
+    position: 'absolute',
+    elevation: 1,
+    transition: 0.3,
+    translateX: -(FIELD_HEIGHT - 4) + 'px',
+  },
+  '-selected &Handle': { translateX: FIELD_HEIGHT - 4 + 'px' },
+});
+
+const SwitchInput = () => {
+  const { value, onChange, ...props } = useInputProps();
+  return (
+    <div
+      onClick={() => onChange(!value)}
+      {...props}
+      {...c('', value && '-selected', props)}
+    >
+      <div {...c('Handle')}></div>
+    </div>
+  );
+};
+
+export const switchInputs = {
+  switch: {
+    input: SwitchInput,
+    delay: 0,
+  }
+}

@@ -1,8 +1,15 @@
-import { useInputProps } from "../FieldCtrl";
+import { useInputProps } from "../hooks";
 import { FieldProps } from "../types";
 
-export const jsonInput: FieldProps = {
-  input: () => <textarea rows={5} {...useInputProps()} />,
+const Multiline = () => <textarea rows={5} {...useInputProps()} />;
+
+const multiline: FieldProps = {
+  input: Multiline,
+  delay: 1000,
+}
+
+const json: FieldProps = {
+  input: Multiline,
   convert: (value: any) => {
     if (typeof value !== 'string') return value;
     const trimmed = value.trim();
@@ -14,4 +21,9 @@ export const jsonInput: FieldProps = {
     return JSON.stringify(value, undefined, 2);
   },
   delay: 1000,
+}
+
+export const multilineInputs = {
+  multiline,
+  json,
 }

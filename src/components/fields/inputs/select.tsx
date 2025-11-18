@@ -4,6 +4,8 @@ import { Css } from 'fluxio';
 import { isArray } from 'fluxio';
 import { isSearched } from 'fluxio';
 import { ChevronDown } from 'lucide-react';
+import { FieldProps } from '../types';
+import { useFieldContext, useInputProps } from '../hooks';
 
 const FIELD_HEIGHT = 22;
 
@@ -92,7 +94,7 @@ const c = Css('Select', {
   },
 });
 
-export interface SelectProps {
+interface SelectProps {
   class?: any;
   name?: string;
   required?: boolean;
@@ -104,7 +106,7 @@ export interface SelectProps {
   props?: any;
 }
 
-export const Select = ({
+const Select = ({
   name,
   required,
   value = '',
@@ -258,3 +260,27 @@ export const Select = ({
     </div>
   );
 };
+
+const SelectInput = () => {
+  const ctx = useFieldContext();
+  const { value, onChange, name, required, placeholder } = useInputProps();
+  return (
+    <Select
+      items={ctx.config.items}
+      value={value}
+      onChange={onChange}
+      name={name}
+      required={required}
+      placeholder={placeholder}
+    />
+  );
+};
+
+const select: FieldProps = {
+  input: SelectInput,
+  delay: 10,
+}
+
+export const selectInputs = {
+  select,
+}

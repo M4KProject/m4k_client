@@ -1,5 +1,5 @@
 import { useState } from "preact/hooks";
-import { useInputProps } from "../FieldCtrl";
+import { useInputProps } from "../hooks";
 import { FieldProps } from "../types";
 import { Button } from "@/components/Button";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
@@ -10,13 +10,13 @@ const getInput = (type: string): FieldProps => ({
     delay: 400,
 });
 
-export const emailInput = getInput('email');
-export const colorInput = getInput('color');
-export const textInput = getInput('text');
-export const numberInput = getInput('number');
-export const dateInput = getInput('date');
+const email = getInput('email');
+const color = getInput('color');
+const text = getInput('text');
+const number = getInput('number');
+const date = getInput('date');
 
-numberInput.convert = (value: any) => {
+number.convert = (value: any) => {
   if (typeof value === 'number') return value;
   if (typeof value !== 'string') return value;
   const trimmed = value.trim();
@@ -26,12 +26,12 @@ numberInput.convert = (value: any) => {
   return num;
 };
 
-numberInput.reverse = (value: any) => {
+number.reverse = (value: any) => {
   if (typeof value === 'string') return value;
   return String(value);
 };
 
-export const passwordInput = {
+const password = {
     input: () => {
         const [show, setShow] = useState(false);
         const props = useInputProps();
@@ -50,7 +50,18 @@ export const passwordInput = {
     }
 };
 
-export const secondsInput = {
+const seconds = {
     input: () => <input type="text" placeholder="00:00:00" {...useInputProps()} />,
     delay: 400,
+}
+
+export const baseInputs = {
+  text: text,
+  email: email,
+  password: password,
+  color: color,
+  number: number,
+  date: date,
+  datetime: date,
+  seconds: seconds,
 }

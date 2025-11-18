@@ -44,8 +44,7 @@ export type FieldType =
   | 'picker'
   | 'switch'
   | 'check'
-  | 'image'
-  | 'doc'
   | 'date'
   | 'datetime'
-  | 'seconds';
+  | 'seconds'
+  | 'upload';
