@@ -1,8 +1,6 @@
-import { CheckIcon } from "lucide-react";
 import { useInputProps } from "../hooks";
 import { Css } from "fluxio";
-import { FIELD_HEIGHT, LABEL_WIDTH } from "../styles";
-import { FieldProps } from "../types";
+import { FIELD_HEIGHT } from "../constants";
 
 const c = Css('SwitchInput', {
   '': {

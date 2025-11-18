@@ -5,7 +5,7 @@ import { Tr } from '@/components/Tr';
 import { useFlux } from '@/hooks/useFlux';
 import { FieldProps, FieldComponent } from './types';
 import { FieldController, FieldProvider } from './FieldController';
-import { FIELD_HEIGHT, LABEL_WIDTH } from './styles';
+import { FIELD_HEIGHT, LABEL_WIDTH } from './constants';
 
 export const c = Css('Field', {
   '': {

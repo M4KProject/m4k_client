@@ -1,7 +1,7 @@
 import { CheckIcon } from "lucide-react";
 import { useInputProps } from "../hooks";
 import { Css } from "fluxio";
-import { FIELD_HEIGHT, LABEL_WIDTH } from "../styles";
+import { FIELD_HEIGHT } from "../constants";
 import { FieldProps } from "../types";
 
 const c = Css('CheckInput', {
