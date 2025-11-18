@@ -91,6 +91,7 @@ export const Field: FieldComponent = (props: FieldProps) => {
   const error = useFlux(ctx.error$);
 
   const isComposed = isNotEmpty(children);
+  console.debug('Field', { ctx, config, error, isComposed })
 
   return (
     <FieldProvider value={ctx}>

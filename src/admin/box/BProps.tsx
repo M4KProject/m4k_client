@@ -9,7 +9,7 @@ import {
   Writable,
 } from 'fluxio';
 import { useBCtrl } from '@/box/BCtrl';
-import { Field, FieldProps } from '@/components/Field';
+import { Field } from '@/components/Field';
 import { Tr } from '@/components/Tr';
 import { useFlux, useFluxMemo } from '@/hooks/useFlux';
 import { BType, BData, BItem, BPropNext, BNext } from '@/box/bTypes';
@@ -47,6 +47,7 @@ import {
   Square,
 } from 'lucide-react';
 import { BMedias } from './BMedias';
+import { FieldProps } from '@/components/fields/types';
 
 const c = Css('BProps', {
   '': {

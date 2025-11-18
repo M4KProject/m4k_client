@@ -83,7 +83,7 @@ export const SideBar = () => {
             onClick={goMedias('')}
           />
 
-          {page === 'medias' ?
+          {/* {page === 'medias' ?
             (
               [
                 ['playlist', 'Playlists'],
@@ -102,8 +102,10 @@ export const SideBar = () => {
                 onClick={goMedias(type)}
               />
             ))
-          : null}
-          <SideButton title="Jobs" icon={<Zap />} selected={page === 'jobs'} onClick={go('jobs')} />
+          : null} */}
+          {isAdvanced && (
+            <SideButton title="Jobs" icon={<Zap />} selected={page === 'jobs'} onClick={go('jobs')} />
+          )}
         </>
       : null}
       <SideSep />

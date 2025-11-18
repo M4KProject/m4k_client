@@ -5,7 +5,7 @@ import { createContext } from 'preact';
 
 export class FieldController<T = any> {
   log = logger('FieldController');
-  props: Readonly<FieldProps<T>> = {};
+  props: Readonly<FieldProps<T>> = { type: ({} as any) };
   offs: Unsubscribe[] = [];
   type: FieldType = 'text';
   config: Readonly<FieldProps<T>> = {};
@@ -48,8 +48,10 @@ export class FieldController<T = any> {
     const type = this.props.type || 'text';
     this.type = type;
 
+    const typeConfig = (type ? inputRegistry[type] : null) || inputRegistry.text;
+
     const config = {
-      ...((type ? inputRegistry[type] : null) || inputRegistry.text),
+      ...typeConfig,
       ...this.props,
       type,
     };
