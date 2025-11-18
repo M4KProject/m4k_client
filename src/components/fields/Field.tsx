@@ -21,7 +21,7 @@ export const c = Css('Field', {
     col: ['stretch', 'start'],
   },
   '-error &Label': { fg: 'error' },
-  '-error &Input': { border: 'error' },
+  '-error input': { border: 'error' },
   Error: { fg: 'error' },
   Label: {
     // flex: 1,
@@ -38,7 +38,7 @@ export const c = Css('Field', {
   'Content > .Field:not(:first-child)': {
     ml: 4,
   },
-  Input: {
+  ' input': {
     w: '100%',
     hMin: FIELD_HEIGHT,
     py: 2,
@@ -51,7 +51,7 @@ export const c = Css('Field', {
     fontSize: '1rem',
     // elevation: 1,
   },
-  'Input:hover': {
+  ' input:hover': {
     borderColor: 'border',
   },
 

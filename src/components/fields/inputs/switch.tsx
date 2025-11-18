@@ -2,10 +2,14 @@ import { useInputProps } from "../hooks";
 import { Css } from "fluxio";
 import { FIELD_HEIGHT } from "../constants";
 
+const HANDLE_SIZE = FIELD_HEIGHT - 6;
+const HANDLE_X = HANDLE_SIZE - 4;
+
 const c = Css('SwitchInput', {
   '': {
     center: 1,
-    w: FIELD_HEIGHT * 2,
+    w: 50,
+    h: FIELD_HEIGHT,
     cursor: 'pointer',
     border: 'border',
     bg: 'bg',
@@ -16,15 +20,18 @@ const c = Css('SwitchInput', {
   '-selected': { borderColor: 'p', bg: 'p' },
 
   'Handle': {
-    wh: FIELD_HEIGHT - 4,
+    wh: HANDLE_SIZE,
+    m: -1,
+    mr: 0,
+    mb: 0,
     bg: 'handle',
     rounded: 99,
     position: 'absolute',
     elevation: 1,
     transition: 0.3,
-    translateX: -(FIELD_HEIGHT - 4) + 'px',
+    translateX: -HANDLE_X + 'px',
   },
-  '-selected &Handle': { translateX: FIELD_HEIGHT - 4 + 'px' },
+  '-selected &Handle': { translateX: HANDLE_X + 'px' },
 });
 
 const SwitchInput = () => {
