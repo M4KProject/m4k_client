@@ -3,7 +3,7 @@ import { useInputProps } from "../hooks";
 import { FieldProps } from "../types";
 import { Button } from "@/components/Button";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
-import { toNumber } from "fluxio";
+import { formatSeconds, parseSeconds, toError, toNumber } from "fluxio";
 
 const getInput = (type: string): FieldProps => ({
     input: () => <input type={type} {...useInputProps()} />,
@@ -30,7 +30,7 @@ number.reverse = (value: any) => {
   return String(value);
 };
 
-const password = {
+const password: FieldProps = {
     input: () => {
         const [show, setShow] = useState(false);
         const props = useInputProps();
@@ -49,9 +49,18 @@ const password = {
     }
 };
 
-const seconds = {
+const seconds: FieldProps = {
     input: () => <input type="text" placeholder="00:00:00" {...useInputProps()} />,
     delay: 400,
+    convert: (next: any) => {
+        const seconds = parseSeconds(next);
+        if (seconds === null) throw toError('invalid-time-format');
+        return seconds;
+    },
+    reverse: (value: any) => {
+        if (typeof value === 'number') return formatSeconds(value);
+        return value || '';
+    }
 }
 
 export const baseInputs = {

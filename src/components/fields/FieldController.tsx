@@ -1,6 +1,6 @@
 import { flux, fluxStored, isNumber, logger, Unsubscribe } from 'fluxio';
 import { FieldProps, FieldType } from './types';
-import { fieldRegistry } from './fieldRegistry';
+import { inputRegistry } from './inputRegistry';
 import { createContext } from 'preact';
 
 export class FieldController<T = any> {
@@ -49,7 +49,7 @@ export class FieldController<T = any> {
     this.type = type;
 
     const config = {
-      ...((type ? fieldRegistry[type] : null) || fieldRegistry.text),
+      ...((type ? inputRegistry[type] : null) || inputRegistry.text),
       ...this.props,
       type,
     };
