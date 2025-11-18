@@ -12,7 +12,6 @@ const c = Css('B', {
     col: 1,
     overflowX: 'hidden',
     overflowY: 'auto',
-    fontSize: '5vh',
     boxSizing: 'border-box',
   },
   '-text': {

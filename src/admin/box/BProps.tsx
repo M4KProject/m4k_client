@@ -221,19 +221,18 @@ export const BProps = () => {
   if (!isUInt(i) || !item) return null;
 
   return (
-    <div {...c()}>
+    <div {...c()} key={i}>
       <div {...c('Sep')} />
       <BField label="Nom" prop="n" />
       <BStyleField label="Fond" prop="bg" type="color" />
+      <BStyleField label="Texte" prop="fg" type="color" />
+      <BStyleField label="- Size" prop="fontSize" type="number" />
+
       {config.a && <FlexAlign />}
 
       {config.b && (
         <>
           <div {...c('Sep')} />
-          <Field label="Texte">
-            <BStyleField prop="fontSize" type="number" />
-            <BStyleField prop="fg" type="color" />
-          </Field>
           <BField prop="b" type="multiline" col />
           <TextAlign />
         </>

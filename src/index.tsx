@@ -12,7 +12,7 @@ const log = logger('main');
 const main = async () => {
   log.d('start');
 
-  addResponsiveListener();
+  // addResponsiveListener();
   initServiceWorker();
 
   let isDevice = isDevice$.get();

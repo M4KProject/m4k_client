@@ -144,7 +144,7 @@ const ColorButton = () => {
 };
 
 const color: FieldProps = {
-  input: ColorButton,
+  input: ColorInput,
   delay: 0,
 };
 
