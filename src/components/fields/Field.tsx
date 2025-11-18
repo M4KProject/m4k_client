@@ -6,6 +6,8 @@ import { useFlux } from '@/hooks/useFlux';
 import { FieldProps, FieldComponent } from './types';
 import { FieldController, FieldProvider } from './FieldController';
 import { FIELD_HEIGHT, LABEL_WIDTH } from './constants';
+import { Button } from '@/components/Button';
+import { XIcon } from 'lucide-react';
 
 export const c = Css('Field', {
   '': {
@@ -37,6 +39,10 @@ export const c = Css('Field', {
   },
   'Content > .Field:not(:first-child)': {
     ml: 4,
+  },
+  Clear: {
+    m: 0,
+    ml: 2,
   },
   ' input': {
     w: '100%',
@@ -86,12 +92,14 @@ export const Field: FieldComponent = (props: FieldProps) => {
   ctx.setProps(props);
 
   const config = ctx.config;
-  const { input: Input, children, label, helper, col, type, containerProps } = config;
+  const { input: Input, children, label, helper, col, type, containerProps, clearable } = config;
 
   const error = useFlux(ctx.error$);
+  const value = useFlux(ctx.value$);
 
   const isComposed = isNotEmpty(children);
-  console.debug('Field', { ctx, config, error, isComposed })
+  const showClear = clearable && value !== undefined && !config.readonly;
+  console.debug('Field', { ctx, config, error, isComposed, showClear })
 
   return (
     <FieldProvider value={ctx}>
@@ -106,6 +114,14 @@ export const Field: FieldComponent = (props: FieldProps) => {
           : Input ?
             <Input />
           : null}
+          {showClear && (
+            <Button
+              {...c('Clear')}
+              icon={<XIcon size={16} />}
+              onClick={() => ctx.clear()}
+              tooltip="Effacer la valeur"
+            />
+          )}
           {error ?
             <div {...c('Error')}>
               <Tr>{error}</Tr>

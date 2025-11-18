@@ -26,6 +26,7 @@ export interface FieldProps<T = any> {
   label?: ComponentChildren;
   placeholder?: string;
   helper?: ComponentChildren;
+  clearable?: boolean;
   containerProps?: DivProps;
   children?: DivProps['children'];
 }

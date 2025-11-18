@@ -146,6 +146,7 @@ const ColorButton = () => {
 const color: FieldProps = {
   input: ColorInput,
   delay: 0,
+  clearable: true,
 };
 
 export const colorInputs = {

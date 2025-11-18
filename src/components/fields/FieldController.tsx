@@ -18,6 +18,26 @@ export class FieldController<T = any> {
     this.onBlur = this.onBlur.bind(this);
   }
 
+  onChange(e: any) {
+    this.log.d('onChange', e);
+
+    if (this.config.readonly) return;
+
+    const input = e instanceof Event ? (e.target as any).value : e;
+    this.log.d('onChange input', e, input);
+
+    this.input$.set(input);
+  }
+
+  onBlur(e: any) {
+    this.onChange(e);
+  }
+
+  clear() {
+    this.log.d('clear');
+    this.value$.set(undefined);
+  }
+
   dispose() {
     for (const off of this.offs) off();
   }
@@ -93,21 +113,6 @@ export class FieldController<T = any> {
         }
       ),
     ];
-  }
-
-  onChange(e: any) {
-    this.log.d('onChange', e);
-
-    if (this.config.readonly) return;
-
-    const input = e instanceof Event ? (e.target as any).value : e;
-    this.log.d('onChange input', e, input);
-
-    this.input$.set(input);
-  }
-
-  onBlur(e: any) {
-    this.onChange(e);
   }
 }
 
