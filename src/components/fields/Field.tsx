@@ -12,9 +12,8 @@ import { XIcon } from 'lucide-react';
 export const c = Css('Field', {
   '': {
     row: 'center',
-    my: 4,
     w: '100%',
-    hMin: FIELD_HEIGHT,
+    hMin: 30,
   },
   Group: {
     row: ['center', 'between'],

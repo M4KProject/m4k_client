@@ -17,7 +17,7 @@ const c = Css('BSide', {
     bg: 'bg',
     overflowX: 'hidden',
     overflowY: 'auto',
-    col: ['stretch', 'start'],
+    col: 1,
   },
 });
 

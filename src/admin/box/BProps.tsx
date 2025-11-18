@@ -53,6 +53,9 @@ const c = Css('BProps', {
     overflowY: 'auto',
     col: ['stretch', 'start'],
   },
+  '> *': {
+    flexShrink: 0,
+  },
   ' .FieldLabel': {
     w: 80,
   },
