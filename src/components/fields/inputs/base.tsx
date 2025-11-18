@@ -11,7 +11,6 @@ const getInput = (type: string): FieldProps => ({
 });
 
 const email = getInput('email');
-const color = getInput('color');
 const text = getInput('text');
 const number = getInput('number');
 const date = getInput('date');
@@ -59,7 +58,6 @@ export const baseInputs = {
   text: text,
   email: email,
   password: password,
-  color: color,
   number: number,
   date: date,
   datetime: date,

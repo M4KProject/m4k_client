@@ -6,6 +6,7 @@ import { pickerInputs } from './inputs/picker';
 import { switchInputs } from './inputs/switch';
 import { checkInputs } from './inputs/check';
 import { uploadInputs } from './inputs/upload';
+import { colorInputs } from './inputs/color';
 
 export const fieldRegistry: Record<FieldType, FieldProps> = {
   ...baseInputs,
@@ -15,6 +16,7 @@ export const fieldRegistry: Record<FieldType, FieldProps> = {
   ...switchInputs,
   ...checkInputs,
   ...uploadInputs,
+  ...colorInputs,
 };
 
 // export const castByType: Dictionary<(next: any) => any> = {

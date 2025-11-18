@@ -1,3 +1,5 @@
+import { FieldProps } from "../types";
+import { useInputProps } from "../hooks";
 import { addHsl, Css, round, setHsl, setRgb, toHsl, toRgb } from 'fluxio';
 import { useState } from 'preact/hooks';
 import { Field } from '@/components/Field';
@@ -32,7 +34,11 @@ const c = Css('ColorPicker', {
   },
 });
 
-export const ColorPicker = () => {
+const ColorInput = () => (
+    <input type="color" {...useInputProps()} />
+)
+
+const ColorPicker = () => {
   const [color, setColor] = useState<string | undefined>('#697689');
   const hsl = toHsl(color);
   const rgb = toRgb(color);
@@ -52,7 +58,7 @@ export const ColorPicker = () => {
 
   return (
     <div {...c()}>
-      <Field type="color" label="Couleur" value={color} onValue={setColor} />
+      <Field input={ColorInput} label="Couleur" value={color} onValue={setColor} />
 
       {variations.map((v) => (
         <div {...c('Variations')}>
@@ -125,3 +131,23 @@ export const ColorPicker = () => {
     </div>
   );
 };
+
+const ColorButton = () => {
+  const { value, onChange, ...props } = useInputProps();
+  return (
+    <div
+      {...props}
+    >
+        <ColorPicker />
+    </div>
+  );
+};
+
+const color: FieldProps = {
+  input: ColorButton,
+  delay: 0,
+};
+
+export const colorInputs = {
+  color,
+}
