@@ -73,11 +73,9 @@ export class FieldCtrl<T = any> {
       this.input$.on(
         (input) => {
           this.log.d('input', this, input);
-          this.error$.set(undefined);
         },
         (error) => {
           this.log.w('input error', this, this.input$.get(), error);
-          this.error$.set(error);
         }
       ),
       this.value$.on(
