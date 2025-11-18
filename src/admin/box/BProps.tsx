@@ -91,7 +91,7 @@ export const BField = ({
 };
 
 const FlexAlignButton = ({ icon, row, justify, v }: {
-  icon: typeof AlignLeft,
+  icon: ComponentChildren,
   row?: true,
   justify?: true,
   v: StyleFlexJustify&StyleFlexAlign,
@@ -124,7 +124,10 @@ const FlexAlignButton = ({ icon, row, justify, v }: {
   return <Button icon={icon} selected={selected} onClick={handleClick} />;
 }
 
-const TextAlignButton = ({ icon, v }: { icon: typeof AlignLeft, v: Style['textAlign'] }) => {
+const TextAlignButton = ({ icon, v }: {
+  icon: ComponentChildren,
+  v: Style['textAlign'],
+}) => {
   const [style, setStyle] = useProp('s');
   const s = style || ({} as Style);
 
@@ -175,7 +178,7 @@ export const BProps = () => {
       <BField label="Nom" prop="n" />
       <BStyleField label="Fond" prop="bg" type="color" />
       <BStyleField label="Texte" prop="fg" type="color" />
-      <BStyleField label="- Size" prop="fontSize" type="number" />
+      <BStyleField label="Font Size" prop="fontSize" type="number" />
 
       {config.a && (
         <>

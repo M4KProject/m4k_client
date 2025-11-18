@@ -12,7 +12,7 @@ const getInput = (type: string): FieldProps => ({
 
 const email = getInput('email');
 const text = getInput('text');
-const number = getInput('number');
+const number = getInput('text');
 const date = getInput('date');
 
 number.convert = (value: any) => {

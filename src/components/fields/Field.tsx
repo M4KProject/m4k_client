@@ -45,7 +45,7 @@ export const c = Css('Field', {
     m: 0,
     ml: 2,
   },
-  ' input': {
+  ' input,& textarea': {
     w: '100%',
     hMin: FIELD_HEIGHT,
     py: 2,
@@ -55,10 +55,11 @@ export const c = Css('Field', {
     outline: 'none',
     bg: 'bg',
     fg: 't',
-    fontSize: '1rem',
+    fontSize: '100%',
+    fontFamily: 'mono',
     // elevation: 1,
   },
-  ' input:hover': {
+  ' input:hover,& textarea:hover': {
     borderColor: 'border',
   },
 

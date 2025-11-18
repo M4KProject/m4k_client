@@ -12,6 +12,7 @@ const c = Css('BHierarchy', {
     overflowX: 'hidden',
     overflowY: 'auto',
     col: ['stretch', 'start'],
+    bb: 'border',
   },
   Item: {
     row: ['center', 'start'],
