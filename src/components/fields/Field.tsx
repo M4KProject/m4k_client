@@ -33,7 +33,8 @@ export const c = Css('Field', {
     w: LABEL_WIDTH,
   },
   Content: {
-    row: ['center', 'start'],
+    w: '100%',
+    row: ['center', 'around'],
     flex: 2,
     hMin: 16,
   },

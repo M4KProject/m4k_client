@@ -40,10 +40,6 @@ import {
   AlignVerticalJustifyEnd,
 
   // Add
-  ALargeSmall,
-  Image,
-  SquarePlay,
-  BookOpen,
   Square,
 } from 'lucide-react';
 import { BMedias } from './BMedias';
@@ -59,10 +55,6 @@ const c = Css('BProps', {
   },
   ' .FieldLabel': {
     w: 80,
-  },
-  Row: {
-    w: '100%',
-    row: ['center', 'around'],
   },
   Sep: {
     my: 4,
@@ -98,93 +90,50 @@ export const BField = ({
   );
 };
 
-const FlexAlign = () => {
+const FlexAlignButton = ({ icon, row, justify, v }: {
+  icon: typeof AlignLeft,
+  row?: true,
+  justify?: true,
+  v: StyleFlexJustify&StyleFlexAlign,
+}) => {
   const [style, setStyle] = useProp('s');
   const s = style || ({} as Style);
 
-  const row = isArray(s.row) ? s.row : null;
-  const col = isArray(s.col) ? s.col : null;
-  const flex = row || col || ['', ''];
-  const align = flex[0] as StyleFlexAlign;
-  const justify = flex[1] as StyleFlexJustify;
+  const fRow = isArray(s.row) ? s.row : null;
+  const fCol = isArray(s.col) ? s.col : null;
+  const flex = fRow || fCol || ['', ''];
+  const fAlign = flex[0] as StyleFlexAlign;
+  const fJustify = flex[1] as StyleFlexJustify;
 
-  const btn = (
-    icon: ComponentChildren,
-    isRow: 1 | 0,
-    isJustify: 1 | 0,
-    value: StyleFlexAlign & StyleFlexJustify
-  ) => {
-    const selected = (isRow ? !!row : !!col) && (isJustify ? justify === value : align === value);
+  const selected = (row ? !!fRow : !!fCol) && (justify ? fJustify === v : fAlign === v);
 
-    const handleClick = () => {
-      setStyle((prev) => {
-        const next = { ...prev };
-        if (isRow) {
-          next.row = isJustify ? [align, value] : [value, justify];
-          delete next.col;
-        } else {
-          delete next.row;
-          next.col = isJustify ? [align, value] : [value, justify];
-        }
-        return next;
-      });
-    };
-
-    return <Button icon={icon} selected={selected} onClick={handleClick} />;
+  const handleClick = () => {
+    setStyle((prev) => {
+      const next = { ...prev };
+      if (row) {
+        next.row = justify ? [fAlign, v] : [v, fJustify];
+        delete next.col;
+      } else {
+        delete next.row;
+        next.col = justify ? [fAlign, v] : [v, fJustify];
+      }
+      return next;
+    });
   };
 
-  return (
-    <>
-      <Field name="row">
-        <div {...c('Row')}>
-          {btn(<AlignStartHorizontal />, 1, 0, 'start')}
-          {btn(<AlignCenterHorizontal />, 1, 0, 'center')}
-          {btn(<AlignEndHorizontal />, 1, 0, 'end')}
-          {btn(<AlignHorizontalJustifyStart />, 1, 1, 'start')}
-          {btn(<AlignHorizontalJustifyCenter />, 1, 1, 'center')}
-          {btn(<AlignHorizontalJustifyEnd />, 1, 1, 'end')}
-        </div>
-      </Field>
-      <Field name="col">
-        <div {...c('Row')}>
-          {btn(<AlignStartVertical />, 0, 0, 'start')}
-          {btn(<AlignCenterVertical />, 0, 0, 'center')}
-          {btn(<AlignEndVertical />, 0, 0, 'end')}
-          {btn(<AlignVerticalJustifyStart />, 0, 1, 'start')}
-          {btn(<AlignVerticalJustifyCenter />, 0, 1, 'center')}
-          {btn(<AlignVerticalJustifyEnd />, 0, 1, 'end')}
-        </div>
-      </Field>
-    </>
-  );
-};
+  return <Button icon={icon} selected={selected} onClick={handleClick} />;
+}
 
-const TextAlign = () => {
+const TextAlignButton = ({ icon, v }: { icon: typeof AlignLeft, v: Style['textAlign'] }) => {
   const [style, setStyle] = useProp('s');
   const s = style || ({} as Style);
-  const textAlign = s.textAlign as Style['textAlign'];
-
-  const txtBtn = (icon: ComponentChildren, value: Style['textAlign']) => {
-    const selected = textAlign === value;
-
-    const handleClick = () => {
-      setStyle((prev) => ({ ...prev, textAlign: value }));
-    };
-
-    return <Button icon={icon} selected={selected} onClick={handleClick} />;
-  };
 
   return (
-    <Field name="textAlign">
-      <div {...c('Row')}>
-        {txtBtn(<AlignLeft />, 'left')}
-        {txtBtn(<AlignCenter />, 'center')}
-        {txtBtn(<AlignJustify />, 'justify')}
-        {txtBtn(<AlignRight />, 'right')}
-      </div>
-    </Field>
+    <Button icon={icon} selected={s.textAlign === v} onClick={() => {
+      setStyle((prev) => ({ ...prev, textAlign: v }));
+    }} />
   );
-};
+}
 
 const BStyleField = ({ prop, ...props }: FieldProps & { prop: string }) => {
   const [style, setStyle] = useProp('s');
@@ -228,13 +177,37 @@ export const BProps = () => {
       <BStyleField label="Texte" prop="fg" type="color" />
       <BStyleField label="- Size" prop="fontSize" type="number" />
 
-      {config.a && <FlexAlign />}
+      {config.a && (
+        <>
+          <Field name="row">
+            <FlexAlignButton icon={<AlignStartHorizontal />} row v="start" />
+            <FlexAlignButton icon={<AlignCenterHorizontal />} row v="center" />
+            <FlexAlignButton icon={<AlignEndHorizontal />} row v="end" />
+            <FlexAlignButton icon={<AlignHorizontalJustifyStart />} row justify v="start" />
+            <FlexAlignButton icon={<AlignHorizontalJustifyCenter />} row justify v="center" />
+            <FlexAlignButton icon={<AlignHorizontalJustifyEnd />} row justify v="end" />
+          </Field>
+          <Field name="col">
+            <FlexAlignButton icon={<AlignStartVertical />} v="start" />
+            <FlexAlignButton icon={<AlignCenterVertical />} v="center" />
+            <FlexAlignButton icon={<AlignEndVertical />} v="end" />
+            <FlexAlignButton icon={<AlignVerticalJustifyStart />} justify v="start" />
+            <FlexAlignButton icon={<AlignVerticalJustifyCenter />} justify v="center" />
+            <FlexAlignButton icon={<AlignVerticalJustifyEnd />} justify v="end" />
+          </Field>
+        </>
+      )}
 
       {config.b && (
         <>
           <div {...c('Sep')} />
           <BField prop="b" type="multiline" col />
-          <TextAlign />
+          <Field name="textAlign">
+            <TextAlignButton icon={<AlignLeft />} v="left" />
+            <TextAlignButton icon={<AlignCenter />} v="center" />
+            <TextAlignButton icon={<AlignJustify />} v="justify" />
+            <TextAlignButton icon={<AlignRight />} v="right" />
+          </Field>
         </>
       )}
 
@@ -247,23 +220,22 @@ export const BProps = () => {
 
       {config.r && (
         <Field label="Ajouter">
-          <div {...c('Row')}>
-            {Object.entries(ctrl.registry).map(([t, config]) => {
-              const Icon = config?.icon || Square;
-              if (t === 'root' || t === 'rect') return null;
-              return (
-                <Button
-                  icon={<Icon />}
-                  tooltip={config?.label || ''}
-                  onClick={() => {
-                    const next: Writable<Partial<BItem>> = { p: i, t };
-                    if (type === 'text') next.b = 'Mon texte !';
-                    ctrl.add(next);
-                  }}
-                />
-              );
-            })}
-          </div>
+          {Object.entries(ctrl.registry).map(([t, config], i) => {
+            const Icon = config?.icon || Square;
+            if (t === 'root' || t === 'rect') return null;
+            return (
+              <Button
+                key={i}
+                icon={<Icon />}
+                tooltip={config?.label || ''}
+                onClick={() => {
+                  const next: Writable<Partial<BItem>> = { p: i, t };
+                  if (type === 'text') next.b = 'Mon texte !';
+                  ctrl.add(next);
+                }}
+              />
+            );
+          })}
         </Field>
       )}
       <div {...c('Sep')} />
