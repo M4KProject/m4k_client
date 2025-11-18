@@ -2,6 +2,7 @@ import { useState } from 'preact/hooks';
 import { Css } from 'fluxio';
 import { Field } from '@/components/Field';
 import { Form } from '@/components/Form';
+import { refreshTheme, updateTheme } from '@/utils/theme';
 
 const c = Css('FieldsTestPage', {
   '': {
@@ -10,6 +11,8 @@ const c = Css('FieldsTestPage', {
     gap: 20,
     maxWidth: 600,
     margin: '0 auto',
+    bg: 'bg',
+    fg: 't',
   },
   Title: {
     fontSize: 2,
@@ -18,8 +21,6 @@ const c = Css('FieldsTestPage', {
   },
   Json: {
     p: 15,
-    bg: '#1e1e1e',
-    fg: '#d4d4d4',
     rounded: 8,
     fontFamily: 'monospace',
     fontSize: 0.9,
@@ -27,6 +28,15 @@ const c = Css('FieldsTestPage', {
     overflowX: 'auto',
   },
 });
+
+updateTheme({
+  isDark: false,
+  isUserDark: false,
+  primary: '#28A8D9',
+  secondary: undefined,
+  grey: undefined,
+});
+refreshTheme();
 
 export const FieldsTestPage = () => {
   const [state, setState] = useState({ text: '', number: 5 });
