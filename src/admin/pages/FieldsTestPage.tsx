@@ -39,29 +39,119 @@ updateTheme({
 refreshTheme();
 
 export const FieldsTestPage = () => {
-  const [state, setState] = useState({ text: '', number: 5 });
+  const [v, set] = useState({
+    text: '',
+    number: 5,
+    boolean: true,
+    color: '#FF0000',
+    email: 'toto@gmail.com',
+    date: '',
+    datetime: '',
+    multiline: '',
+    password: '',
+    seconds: 0,
+    select: 0,
+  });
+
+  const up = (changes: Partial<typeof v>) => set(p => ({ ...p, ...changes }));
 
   return (
     <div {...c()}>
       <div {...c('Title')}>Test Fields</div>
 
       <Form>
+        <Field label="Valeurs JSON" type="json" value={v} onValue={set} />
         <Field
           label="Texte"
           type="text"
-          value={state.text}
-          onValue={(text) => setState((prev) => ({ ...prev, text }))}
+          value={v.text}
+          onValue={v => up({ text: v })}
           placeholder="Entrez du texte"
         />
         <Field
           label="Nombre"
           type="number"
-          value={state.number}
-          onValue={(number) => setState((prev) => ({ ...prev, number }))}
+          value={v.number}
+          onValue={v => up({ number: v })}
           min={0}
           max={100}
         />
-        <Field label="Valeurs JSON" type="json" value={state} onValue={setState} />
+        <Field
+          label="Switch"
+          type="switch"
+          value={v.boolean}
+          onValue={v => up({ boolean: v })}
+        />
+        <Field
+          label="Check"
+          type="check"
+          value={v.boolean}
+          onValue={v => up({ boolean: v })}
+        />
+        <Field
+          label="Email"
+          type="email"
+          value={v.email}
+          onValue={v => up({ email: v })}
+        />
+        <Field
+          label="Date"
+          type="date"
+          value={v.date}
+          onValue={v => up({ date: v })}
+        />
+        <Field
+          label="Date"
+          type="datetime"
+          value={v.date}
+          onValue={v => up({ datetime: v })}
+        />
+        <Field
+          label="Multiline"
+          type="multiline"
+          value={v.multiline}
+          onValue={v => up({ multiline: v })}
+        />
+        <Field
+          label="Password"
+          type="password"
+          value={v.password}
+          onValue={v => up({ password: v })}
+        />
+        <Field
+          label="Seconds"
+          type="seconds"
+          value={v.seconds}
+          onValue={v => up({ seconds: v })}
+        />
+        <Field
+          label="Picker"
+          type="picker"
+          value={v.select}
+          onValue={v => up({ select: v })}
+          items={[
+            [10, "10"],
+            [20, "20"],
+            [30, "30"],
+          ]}
+        />
+        <Field
+          label="Select"
+          type="select"
+          value={v.select}
+          onValue={v => up({ select: v })}
+          items={[
+            [10, "10"],
+            [20, "20"],
+            [30, "30"],
+          ]}
+        />
+        <Field
+          label="Color"
+          type="color"
+          value={v.color}
+          onValue={v => up({ color: v })}
+        />
       </Form>
     </div>
   );
