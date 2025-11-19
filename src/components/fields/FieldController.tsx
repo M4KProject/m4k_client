@@ -33,11 +33,13 @@ export class FieldController<V, R> {
 
     if (!isDeepEqual(this.config.value, props.value)) {
       this.log.d('setProps value', this.config.value, '->', props.value);
+      this.config = { ...this.config, value: props.value };
       this.update({ value: props.value });
     }
 
     if (!isDeepEqual(this.config.error, props.error)) {
       this.log.d('setProps error', this.config.error, '->', props.error);
+      this.config = { ...this.config, error: props.error };
       this.update({ error: props.error });
     }
   }
@@ -55,12 +57,23 @@ export class FieldController<V, R> {
 
     const value = config.stored ? getStorage().get(config.stored, config.value) : config.value;
 
-    this.update({
-      raw: undefined,
+    let raw: R | undefined = undefined;
+    let error = config.error;
+    try {
+      raw = isDefined(value) ? (config.toRaw||toMe)(value) as any : undefined;
+    } catch (e) {
+      error = toError(e);
+      this.log.e('reset toRaw error', value, error);
+    }
+
+    this.state = {
+      raw,
       value,
-      error: config.error,
+      error,
       config,
-    });
+    };
+    this.next = undefined;
+    this.notify();
   }
 
   update(next?: NextState<Partial<FieldState<V, R>>>) {

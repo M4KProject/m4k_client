@@ -40,20 +40,23 @@ refreshTheme();
 
 export const FieldsTestPage = () => {
   const [v, set] = useState({
-    text: '',
-    number: 5,
+    // text: '',
+    // number: 5,
     boolean: true,
-    color: '#FF0000',
-    email: 'toto@gmail.com',
-    date: '',
-    datetime: '',
-    multiline: '',
-    password: '',
-    seconds: 0,
-    select: 0,
+    // color: '#FF0000',
+    // email: 'toto@gmail.com',
+    // date: '',
+    // datetime: '',
+    // multiline: '',
+    // password: '',
+    // seconds: 0,
+    // select: 0,
   });
 
-  const up = (changes: Partial<typeof v>) => set(p => ({ ...p, ...changes }));
+  const up = (changes: Partial<typeof v>) => {
+    console.log('up called with:', changes);
+    set(p => ({ ...p, ...changes }));
+  };
 
   return (
     <div {...c()}>
@@ -61,7 +64,7 @@ export const FieldsTestPage = () => {
 
       <Form>
         <Field label="Valeurs JSON" name="json" type="json" value={v} onValue={v => v && set(v)} />
-        <Field
+        {/* <Field
           label="Texte"
           type="text"
           value={v.text}
@@ -75,7 +78,7 @@ export const FieldsTestPage = () => {
           onValue={v => up({ number: v })}
           min={0}
           max={100}
-        />
+        /> */}
         <Field
           label="Switch"
           type="switch"
@@ -88,7 +91,7 @@ export const FieldsTestPage = () => {
           value={v.boolean}
           onValue={v => up({ boolean: v })}
         />
-        <Field
+        {/* <Field
           label="Email"
           type="email"
           value={v.email}
@@ -147,7 +150,7 @@ export const FieldsTestPage = () => {
             [20, "20"],
             [30, "30"],
           ]}
-        />
+        /> */}
         {/* <Field
           label="Color"
           type="color"
