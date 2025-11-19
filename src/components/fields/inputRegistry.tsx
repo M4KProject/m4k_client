@@ -8,7 +8,7 @@ import { checkInputs } from './inputs/check';
 import { uploadInputs } from './inputs/upload';
 import { colorInputs } from './inputs/color';
 
-export const inputRegistry: Record<FieldType, FieldProps> = {
+export const inputRegistry: Record<FieldType, FieldProps<any, any>> = {
   ...baseInputs,
   ...multilineInputs,
   ...selectInputs,

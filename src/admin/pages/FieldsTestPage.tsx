@@ -60,8 +60,8 @@ export const FieldsTestPage = () => {
       <div {...c('Title')}>Test Fields</div>
 
       <Form>
-        <Field label="Valeurs JSON" type="json" value={v} onValue={set} />
-        <Field
+        {/* <Field label="Valeurs JSON" type="json" value={v} onValue={set} /> */}
+        {/* <Field
           label="Texte"
           type="text"
           value={v.text}
@@ -123,9 +123,10 @@ export const FieldsTestPage = () => {
           type="seconds"
           value={v.seconds}
           onValue={v => up({ seconds: v })}
-        />
+        /> */}
         <Field
           label="Picker"
+          name="picker"
           type="picker"
           value={v.select}
           onValue={v => up({ select: v })}
@@ -137,6 +138,7 @@ export const FieldsTestPage = () => {
         />
         <Field
           label="Select"
+          name="select"
           type="select"
           value={v.select}
           onValue={v => up({ select: v })}
@@ -146,12 +148,12 @@ export const FieldsTestPage = () => {
             [30, "30"],
           ]}
         />
-        <Field
+        {/* <Field
           label="Color"
           type="color"
           value={v.color}
           onValue={v => up({ color: v })}
-        />
+        /> */}
       </Form>
     </div>
   );

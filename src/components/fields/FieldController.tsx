@@ -1,143 +1,153 @@
-import { flux, fluxStored, isNumber, logger, toMe, Unsubscribe } from 'fluxio';
-import { FieldProps, FieldType } from './types';
+import { getChanges, getStorage, isDeepEqual, isFunction, isNotEmpty, isNumber, Listener, logger, NextState, removeItem, toError, toMe, toNumber, Unsubscribe } from 'fluxio';
+import { FieldProps, FieldState } from './types';
 import { inputRegistry } from './inputRegistry';
 import { createContext } from 'preact';
 
-export class FieldController<T = any> {
-  log = logger('FieldController');
-  props: Readonly<FieldProps<T>> = { type: ({} as any) };
-  offs: Unsubscribe[] = [];
-  type: FieldType = 'text';
-  config: Readonly<FieldProps<T>> = {};
-  input$ = flux<any>(undefined);
-  value$ = flux<any>(undefined);
-  error$ = flux<any>(undefined);
+export class FieldController<V, R> {
+  private log = logger('FieldController');
+  private hash?: string;
+  private config: Readonly<FieldProps<V, R>> = {};
+  private next?: FieldState<V, R>;
+  private timer?: any;
+  private readonly listeners: Listener<FieldState<V, R>>[] = [];
+  
+  public state: FieldState<V, R> = { config: {} };
 
-  constructor() {
-    this.onChange = this.onChange.bind(this);
-    this.onBlur = this.onBlur.bind(this);
-    this.convert = this.convert.bind(this);
-    this.reverse = this.reverse.bind(this);
-  }
-
-  onChange(e: any) {
-    this.log.d('onChange', e);
-
-    if (this.config.readonly) return;
-
-    const input = e instanceof Event ? (e.target as any).value : e;
-    this.log.d('onChange input', e, input);
-
-    this.input$.set(input);
-  }
-
-  onBlur(e: any) {
-    this.onChange(e);
-  }
-
-  clear() {
-    this.log.d('clear');
-    this.value$.set(undefined);
-  }
-
-  dispose() {
-    for (const off of this.offs) off();
-    this.offs = [];
-  }
-
-  setProps(props: FieldProps<T>) {
-    const last = this.props;
-
-    if (last.type !== props.type || last.name !== props.name || last.delay !== props.delay) {
-      this.props = props;
-      this.reset();
-    }
-
-    if (last.value !== props.value) {
-      this.value$.set(props.value);
-    }
-
-    if (last.error !== props.error) {
-      this.error$.set(props.error);
+  subscribe(listener: Listener<FieldState<V, R>>): Unsubscribe {
+    this.listeners.push(listener);
+    return () => {
+      removeItem(this.listeners, listener);
     }
   }
 
-  convert(input: any) {
-    try {
-      this.log.d('convert', input);
+  setProps(props: FieldProps<V, R>) {
+    this.log.d('setProps', props);
+    const { value, error, ...rest } = props;
 
-      const { convert, min, max, onValue } = this.config;
-      let value = convert ? convert(input) : input;
-
-      if (isNumber(min) && value < min) value = min;
-      if (isNumber(max) && value > max) value = max;
-
-      if (onValue) {
-        setTimeout(() => onValue(value), 0);
-      }
-
-      this.log.d('convert value', input, '->', value);
-      this.error$.set(undefined);
-      return value;
+    const hash = Object.values(rest).join(';');
+    if (this.hash !== hash) {
+      this.hash = hash;
+      this.reset(props);
+      return;
     }
-    catch (error) {
-      this.log.w('convert error', input, error);
-      this.error$.set(error);
+
+    if (!isDeepEqual(this.config.value, props.value)) {
+      this.log.d('setProps value', this.config.value, '->', props.value);
+      this.update({ value: props.value });
+    }
+
+    if (!isDeepEqual(this.config.error, props.error)) {
+      this.log.d('setProps error', this.config.error, '->', props.error);
+      this.update({ error: props.error });
     }
   }
 
-  reverse(value: any) {
-    try {
-      this.log.d('reverse', value);
-      this.error$.set(undefined);
-
-      const { reverse } = this.config;
-      let input = reverse ? reverse(value) : value;
-
-      this.log.d('reverse value', value, '->', input);
-      return value;
-    }
-    catch (error) {
-      this.log.w('convert error', value, error);
-      this.error$.set(error);
-    }
-  }
-
-  reset() {
-    this.log.d('reset', this);
-
-    this.dispose();
-
-    this.input$.set(undefined);
-    this.error$.set(undefined);
-
-    const type = this.props.type || 'text';
-    this.type = type;
-
-    const typeConfig = (type ? inputRegistry[type] : null) || inputRegistry.text;
-
-    const config = {
-      ...typeConfig,
-      ...this.props,
+  reset(props: FieldProps<V, R>) {
+    const type = props.type || 'text';
+    const config = this.config = {
+      ...((type ? inputRegistry[type] : null) || inputRegistry.text),
+      ...props,
       type,
     };
 
     this.log = logger(`${config.name}(${type})`);
+    this.log.d('reset', this);
 
-    this.config = config;
+    const value = config.stored ? getStorage().get(config.stored, config.value) : config.value;
 
-    const { delay, stored } = config;
+    this.update({
+      raw: undefined,
+      value,
+      error: config.error,
+      config,
+    });
+  }
 
-    this.value$ = this.input$
-      .debounce(delay||400)
-      .map(this.convert, this.reverse);
+  update(next?: NextState<Partial<FieldState<V, R>>>) {
+    const prev = this.next || this.state;
+    this.log.d('update', prev, '->', next);
+    const changes = isFunction(next) ? next(prev) : next;
+    this.log.d('update changes', changes);
+    this.next = { ...prev, ...changes };
+    const delay = toNumber(this.config.delay, 400);
+    this.log.d('update delay', delay);
+    if (this.timer) clearTimeout(this.timer);
+    this.timer = setTimeout(() => this.apply(), delay);
+  }
 
-    if (stored) {
-      this.value$ = fluxStored(stored, this.value$);
+  apply() {
+    this.log.d('apply');
+    const changes = this.next && getChanges(this.state, this.next);
+    if (isNotEmpty(changes)) {
+      this.log.d('apply changes', changes);
+
+      let { value, raw, event, error } = changes;
+      const config = this.config;
+
+      if ('value' in changes) {
+        try {
+          raw = (config.toRaw||toMe)(value) as any;
+          this.log.d('apply value to raw', value, raw);
+        }
+        catch (e) {
+          error = toError(e);
+          this.log.d('apply value to raw error', value, error);
+
+        }
+      } else if ('raw' in changes) {
+        try {
+          value = (config.toValue||toMe)(raw, event) as any;
+
+          if (isNumber(value)) {
+            const { min, max } = config;
+            if (isNumber(min) && value < min) value = min;
+            else if (isNumber(max) && value > max) value = max;
+          }
+
+          this.log.d('apply raw to value', raw, value);
+        }
+        catch (e) {
+          error = toError(e);
+          this.log.d('apply raw to value error', raw, error);
+        }
+      }
+
+      this.state = { ...this.state, ...changes, value, raw, error };
+      this.next = undefined;
+      this.notify();
     }
   }
+
+  notify() {
+    const state = this.state;
+    this.log.d('notify', state);
+    this.config.onValue?.(state.value);
+    for (const listener of this.listeners) {
+      try {
+        listener(state);
+      }
+      catch (error) {
+        this.log.e('notify error', this, listener, error);
+      }
+    }
+  }
+
+  onChange(event: any) {
+    this.log.d('onChange', event);
+    if (this.config.readonly) return;
+
+    const raw = event instanceof Event ? (event.target as any).value : event;
+    this.log.d('onChange raw', event, raw);
+
+    this.update({ raw, event });
+  }
+
+  // clear() {
+  //   this.log.d('clear');
+  //   this.parsed$.set(undefined);
+  // }
 }
 
-export const FieldContext = createContext<FieldController | undefined>(undefined);
+export const FieldContext = createContext<FieldController<any, any> | undefined>(undefined);
 
 export const FieldProvider = FieldContext.Provider;

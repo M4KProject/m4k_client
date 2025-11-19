@@ -5,7 +5,7 @@ import { isArray } from 'fluxio';
 import { isSearched } from 'fluxio';
 import { ChevronDown } from 'lucide-react';
 import { FieldProps } from '../types';
-import { useFieldContext, useInputProps } from '../hooks';
+import { useFieldConfig, useFieldController, useInputProps } from '../hooks';
 
 const FIELD_HEIGHT = 22;
 
@@ -262,11 +262,12 @@ const Select = ({
 };
 
 const SelectInput = () => {
-  const ctx = useFieldContext();
+  const ctrl = useFieldController();
+  const config = useFieldConfig(ctrl);
   const { value, onChange, name, required, placeholder } = useInputProps();
   return (
     <Select
-      items={ctx.config.items}
+      items={config.items}
       value={value}
       onChange={onChange}
       name={name}
@@ -276,7 +277,7 @@ const SelectInput = () => {
   );
 };
 
-const select: FieldProps = {
+const select: FieldProps<any, string> = {
   input: SelectInput,
   delay: 10,
 }

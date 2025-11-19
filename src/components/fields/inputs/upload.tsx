@@ -17,9 +17,11 @@ const UploadInput = () => {
   );
 };
 
-const upload: FieldProps = {
+const upload: FieldProps<File[], string> = {
   input: UploadInput,
   delay: 0,
+  toRaw: (files) => files && files[0]?.name || '',
+  // toValue: (raw, e) => (e as InputEvent).files && files[0]?.name || '',
 };
 
 export const uploadInputs = {

@@ -46,7 +46,7 @@ const CheckInput = () => {
   );
 };
 
-const check: FieldProps = {
+const check: FieldProps<boolean, string>  = {
   input: CheckInput,
   delay: 0,
 };

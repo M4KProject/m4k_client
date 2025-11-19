@@ -1,26 +1,26 @@
 import type { ComponentChildren } from 'preact';
 import type { DivProps } from '@/components/types';
 
-export type SelectItems<T = any> = ([T, ComponentChildren] | false | null | undefined)[];
+export type SelectItems<V> = ([V, ComponentChildren] | false | null | undefined)[];
 
-export interface FieldProps<T = any> {
+export interface FieldProps<V, R> {
   type?: FieldType;
   name?: string;
-  items?: SelectItems<T>;
+  items?: SelectItems<V>;
   required?: boolean;
   readonly?: boolean;
   stored?: string;
-  value?: T;
-  onValue?: (next: T) => void;
+  value?: V | undefined;
+  onValue?: (next: V | undefined) => void;
   input?: () => ComponentChildren;
   props?: any;
   error?: ComponentChildren;
-  min?: T;
-  max?: T;
+  min?: V;
+  max?: V;
 
   delay?: number;
-  convert?: (value: any) => any;
-  reverse?: (value: any) => any;
+  toRaw?: (value: V | undefined) => R | undefined;
+  toValue?: (raw: R | undefined, e: Event) => V | undefined;
 
   col?: boolean;
   label?: ComponentChildren;
@@ -31,7 +31,15 @@ export interface FieldProps<T = any> {
   children?: DivProps['children'];
 }
 
-export type FieldComponent = (props: FieldProps) => ComponentChildren;
+export interface FieldState<V, R> {
+  readonly value?: V | undefined;
+  readonly raw?: R | undefined;
+  readonly error?: any;
+  readonly event?: any;
+  readonly config: Readonly<FieldProps<V, R>>;
+}
+
+export type FieldComponent<V, R> = (props: FieldProps<V, R>) => ComponentChildren;
 
 export type FieldType =
   | 'email'

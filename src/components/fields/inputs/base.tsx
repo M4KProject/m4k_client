@@ -3,34 +3,22 @@ import { useInputProps } from "../hooks";
 import { FieldProps } from "../types";
 import { Button } from "@/components/Button";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
-import { formatSeconds, parseSeconds, toError, toNumber } from "fluxio";
+import { formatSeconds, parseSeconds, toError, toNumber, toString } from "fluxio";
 
-const getInput = (type: string): FieldProps => ({
+const getInput = <V=string>(type: string): FieldProps<V, string> => ({
     input: () => <input type={type} {...useInputProps()} />,
     delay: 400,
 });
 
 const email = getInput('email');
 const text = getInput('text');
-const number = getInput('text');
+const number = getInput<number>('text');
 const date = getInput('date');
 
-number.convert = (value: any) => {
-  if (typeof value === 'number') return value;
-  if (typeof value !== 'string') return value;
-  const trimmed = value.trim();
-  if (!trimmed) return value; // Garde la string vide
-  const num = toNumber(trimmed, null);
-  if (num === null) throw new Error('invalid-number');
-  return num;
-};
+number.toRaw = toString;
+number.toValue = toNumber;
 
-number.reverse = (value: any) => {
-  if (typeof value === 'string') return value;
-  return String(value);
-};
-
-const password: FieldProps = {
+const password: FieldProps<string, string> = {
     input: () => {
         const [show, setShow] = useState(false);
         const props = useInputProps();
@@ -49,18 +37,11 @@ const password: FieldProps = {
     }
 };
 
-const seconds: FieldProps = {
+const seconds: FieldProps<number, string> = {
     input: () => <input type="text" placeholder="00:00:00" {...useInputProps()} />,
     delay: 400,
-    convert: (next: any) => {
-        const seconds = parseSeconds(next);
-        if (seconds === null) throw toError('invalid-time-format');
-        return seconds;
-    },
-    reverse: (value: any) => {
-        if (typeof value === 'number') return formatSeconds(value);
-        return value || '';
-    }
+    toValue: (next) => next ? parseSeconds(next) : undefined,
+    toRaw: (value) => value ? formatSeconds(value) : undefined,
 }
 
 export const baseInputs = {

@@ -1,13 +1,13 @@
-import { Css, isNotEmpty } from 'fluxio';
+import { Css, isDefined, isNotEmpty } from 'fluxio';
 import { useEffect, useMemo } from 'preact/hooks';
 import { DivProps } from '@/components/types';
 import { Tr } from '@/components/Tr';
-import { useFlux } from '@/hooks/useFlux';
 import { FieldProps, FieldComponent } from './types';
 import { FieldController, FieldProvider } from './FieldController';
 import { FIELD_HEIGHT, LABEL_WIDTH } from './constants';
 import { Button } from '@/components/Button';
 import { XIcon } from 'lucide-react';
+import { useFieldConfig, useFieldController, useFieldError, useFieldValue } from './hooks';
 
 export const c = Css('Field', {
   '': {
@@ -21,9 +21,15 @@ export const c = Css('Field', {
   '-col': {
     col: ['stretch', 'start'],
   },
-  '-error &Label': { fg: 'error' },
-  '-error input': { border: 'error' },
-  Error: { fg: 'error' },
+  '-error &Label': {
+    fg: 'error'
+  },
+  '-error input': {
+    border: 'error'
+  },
+  Error: {
+    fg: 'error'
+  },
   Label: {
     // flex: 1,
     textAlign: 'left',
@@ -84,26 +90,37 @@ export const c = Css('Field', {
   // },
 });
 
-export const Field: FieldComponent = (props: FieldProps) => {
-  const ctx = useMemo(() => new FieldController(), []);
-  useEffect(() => {
-    () => ctx.dispose();
-  }, [ctx]);
+const ClearButton = () => {
+  const ctrl = useFieldController();
+  const config = useFieldConfig(ctrl);
+  const value = useFieldValue(ctrl);
+  const { clearable, readonly } = config;
+  const showClear = clearable && isDefined(value) && !readonly;
+  return showClear ? (
+    <Button
+      {...c('Clear')}
+      icon={<XIcon size={16} />}
+      onClick={() => ctrl.update({ value: undefined })}
+      tooltip="Effacer la valeur"
+    />
+  ) : null;
+}
 
-  ctx.setProps(props);
+export const Field = <V=any, R=any>(props: FieldProps<V, R>) => {
+  const ctrl = useMemo(() => new FieldController<V, R>(), []);
+  ctrl.setProps(props);
 
-  const config = ctx.config;
-  const { input: Input, children, label, helper, col, type, containerProps, clearable } = config;
-
-  const error = useFlux(ctx.error$);
-  const value = useFlux(ctx.value$);
+  const config = useFieldConfig(ctrl);
+  const error = useFieldError(ctrl);
+  
+  const { input: Input, children, label, helper, col, type, containerProps } = config;
 
   const isComposed = isNotEmpty(children);
-  const showClear = clearable && value !== undefined && !config.readonly;
-  console.debug('Field', { ctx, config, error, isComposed, showClear })
+
+  console.debug('Field container render', { ctrl, config, error, isComposed })
 
   return (
-    <FieldProvider value={ctx}>
+    <FieldProvider value={ctrl}>
       <div
         {...containerProps}
         {...c('', col && '-col', type && `-${type}`, error && '-error', containerProps)}
@@ -115,14 +132,7 @@ export const Field: FieldComponent = (props: FieldProps) => {
           : Input ?
             <Input />
           : null}
-          {showClear && (
-            <Button
-              {...c('Clear')}
-              icon={<XIcon size={16} />}
-              onClick={() => ctx.clear()}
-              tooltip="Effacer la valeur"
-            />
-          )}
+          <ClearButton />
           {error ?
             <div {...c('Error')}>
               <Tr>{error}</Tr>

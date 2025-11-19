@@ -1,15 +1,59 @@
-import { useContext } from "preact/hooks";
-import { FieldContext } from "./FieldController";
-import { useFlux } from "@/hooks/useFlux";
+import { useContext, useEffect, useState } from "preact/hooks";
+import { FieldContext, FieldController } from "./FieldController";
+import { isEmpty } from "fluxio";
 
-export const useFieldContext = () => useContext(FieldContext)!;
+export const useFieldController = () => useContext(FieldContext)!;
 
-export const useInputProps = (): any => {
-  const ctx = useContext(FieldContext)!;
-  const value = useFlux(ctx.input$);
-  const { onChange, onBlur, config } = ctx;
+export const useFieldRaw = <V, R>(ctrl: FieldController<V, R>) => {
+  const [v, set] = useState(ctrl.state.raw);
+  useEffect(() => ctrl.subscribe(s => set(s.raw)), [ctrl]);
+  return v;
+};
+
+export const useFieldValue = <V, R>(ctrl: FieldController<V, R>) => {
+  const [v, set] = useState(ctrl.state.value);
+  useEffect(() => ctrl.subscribe(s => set(s.value)), [ctrl]);
+  return v;
+};
+
+export const useFieldError = <V, R>(ctrl: FieldController<V, R>) => {
+  const [v, set] = useState(ctrl.state.error);
+  useEffect(() => ctrl.subscribe(s => set(s.error)), [ctrl]);
+  return v;
+};
+
+export const useFieldConfig = <V, R>(ctrl: FieldController<V, R>) => {
+  const [v, set] = useState(ctrl.state.config);
+  useEffect(() => ctrl.subscribe(s => set(s.config)), [ctrl]);
+  return v;
+};
+
+interface inputProps {
+  value: any;
+  onChange: (e: any) => void;
+  name: string | undefined;
+  required: boolean | undefined;
+  placeholder?: string;
+  class?: any;
+}
+
+export const useInputProps = () => {
+  const ctrl = useFieldController();
+
+  const raw = useFieldRaw(ctrl);
+  const config = useFieldConfig(ctrl);
+
   const { props: inputProps, name, required, placeholder } = config;
-  const props: any = { value, onChange, onBlur, name, required, ...inputProps };
+
+  const props: inputProps = {
+    value: raw,
+    onChange: (e) => ctrl.onChange(e),
+    name,
+    required,
+  };
+
+  if (!isEmpty(inputProps)) Object.assign(props, inputProps);
   if (placeholder) props.placeholder = placeholder;
+
   return props;
 };

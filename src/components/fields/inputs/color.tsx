@@ -1,6 +1,6 @@
 import { FieldProps } from "../types";
 import { useInputProps } from "../hooks";
-import { addHsl, Css, round, setHsl, setRgb, toHsl, toRgb } from 'fluxio';
+import { addHsl, Css, isFloat, round, setHsl, setRgb, toHsl, toRgb } from 'fluxio';
 import { useState } from 'preact/hooks';
 import { Field } from '@/components/Field';
 import { theme$ } from '@/utils/theme';
@@ -124,7 +124,7 @@ const ColorPicker = () => {
         label="Alpha"
         type="number"
         value={rgb.a * 100}
-        onValue={(a) => setColor(setRgb(color, { a: a / 100 }))}
+        onValue={(a) => isFloat(a) && setColor(setRgb(color, { a: a / 100 }))}
         min={0}
         max={100}
       />
@@ -143,7 +143,7 @@ const ColorButton = () => {
   );
 };
 
-const color: FieldProps = {
+const color: FieldProps<string, string>  = {
   input: ColorInput,
   delay: 0,
   clearable: true,
