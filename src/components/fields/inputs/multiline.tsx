@@ -7,8 +7,8 @@ const c = Css('Multiline', {
   '': {
     resize: 'none',
     overflow: 'auto',
-    minHeight: '2.5rem',
-    maxHeight: 'calc(2.5rem * 10)',
+    hMin: '2.5rem',
+    hMax: 'calc(2.5rem * 10)',
     lineHeight: '1.5',
   },
 });
@@ -35,7 +35,6 @@ const Multiline = () => {
 
 const multiline: FieldProps<string, string> = {
   input: Multiline,
-  delay: 1000,
 };
 
 const json: FieldProps<any, string> = {
