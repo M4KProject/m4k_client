@@ -1,26 +1,25 @@
-import { isDefined, isString } from "fluxio";
-import { useInputProps } from "../hooks";
-import { FieldProps } from "../types";
+import { isDefined, isString } from 'fluxio';
+import { useInputProps } from '../hooks';
+import { FieldProps } from '../types';
 
 const Multiline = () => {
   const props = useInputProps();
   console.debug('Multiline render', props);
-  return <textarea rows={5} {...props} />
+  return <textarea rows={5} {...props} />;
 };
 
-const multiline: FieldProps<string, string>  = {
+const multiline: FieldProps<string, string> = {
   input: Multiline,
   delay: 1000,
-}
+};
 
-const json: FieldProps<any, string>  = {
+const json: FieldProps<any, string> = {
   input: Multiline,
   toRaw: (value: any) => {
     console.debug('json toRaw', value);
     try {
       return isDefined(value) ? JSON.stringify(value, undefined, 2) : undefined;
-    }
-    catch (error) {
+    } catch (error) {
       console.error('json toRaw error', value, error);
       throw error;
     }
@@ -29,15 +28,14 @@ const json: FieldProps<any, string>  = {
     console.debug('json toValue', value);
     try {
       return isString(value) ? JSON.parse(value) : undefined;
-    }
-    catch (error) {
+    } catch (error) {
       console.error('json toValue error', value, error);
       throw error;
     }
   },
-}
+};
 
 export const multilineInputs = {
   multiline,
   json,
-}
+};

@@ -34,14 +34,7 @@ interface PickerProps {
   props?: any;
 }
 
-const Picker = ({
-  name,
-  required,
-  value = '',
-  onChange,
-  items = [],
-  ...props
-}: PickerProps) => {
+const Picker = ({ name, required, value = '', onChange, items = [], ...props }: PickerProps) => {
   const validItems = items.filter((item) => isArray(item)) as [string, ComponentChildren][];
 
   const handleIconClick = (iconValue: string) => {
@@ -92,8 +85,8 @@ const PickerInput = () => {
 const picker: FieldProps<any, string> = {
   input: PickerInput,
   delay: 10,
-}
+};
 
 export const pickerInputs = {
   picker,
-}
+};

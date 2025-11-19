@@ -93,11 +93,16 @@ export const BField = ({
   );
 };
 
-const FlexAlignButton = ({ icon, row, justify, v }: {
-  icon: ComponentChildren,
-  row?: true,
-  justify?: true,
-  v: StyleFlexJustify&StyleFlexAlign,
+const FlexAlignButton = ({
+  icon,
+  row,
+  justify,
+  v,
+}: {
+  icon: ComponentChildren;
+  row?: true;
+  justify?: true;
+  v: StyleFlexJustify & StyleFlexAlign;
 }) => {
   const [style, setStyle] = useProp('s');
   const s = style || ({} as Style);
@@ -125,21 +130,22 @@ const FlexAlignButton = ({ icon, row, justify, v }: {
   };
 
   return <Button icon={icon} selected={selected} onClick={handleClick} />;
-}
+};
 
-const TextAlignButton = ({ icon, v }: {
-  icon: ComponentChildren,
-  v: Style['textAlign'],
-}) => {
+const TextAlignButton = ({ icon, v }: { icon: ComponentChildren; v: Style['textAlign'] }) => {
   const [style, setStyle] = useProp('s');
   const s = style || ({} as Style);
 
   return (
-    <Button icon={icon} selected={s.textAlign === v} onClick={() => {
-      setStyle((prev) => ({ ...prev, textAlign: v }));
-    }} />
+    <Button
+      icon={icon}
+      selected={s.textAlign === v}
+      onClick={() => {
+        setStyle((prev) => ({ ...prev, textAlign: v }));
+      }}
+    />
   );
-}
+};
 
 const BStyleField = ({ prop, ...props }: FieldProps & { prop: string }) => {
   const [style, setStyle] = useProp('s');

@@ -281,8 +281,8 @@ const SelectInput = () => {
 const select: FieldProps<any, string> = {
   input: SelectInput,
   delay: 10,
-}
+};
 
 export const selectInputs = {
   select,
-}
+};

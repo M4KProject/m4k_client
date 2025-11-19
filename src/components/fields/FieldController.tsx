@@ -1,4 +1,20 @@
-import { getChanges, getStorage, isDeepEqual, isDefined, isFunction, isNotEmpty, isNumber, Listener, logger, NextState, removeItem, toError, toMe, toNumber, Unsubscribe } from 'fluxio';
+import {
+  getChanges,
+  getStorage,
+  isDeepEqual,
+  isDefined,
+  isFunction,
+  isNotEmpty,
+  isNumber,
+  Listener,
+  logger,
+  NextState,
+  removeItem,
+  toError,
+  toMe,
+  toNumber,
+  Unsubscribe,
+} from 'fluxio';
 import { FieldProps, FieldState } from './types';
 import { inputRegistry } from './inputRegistry';
 import { createContext } from 'preact';
@@ -20,7 +36,7 @@ export class FieldController<V, R> {
     this.listeners.push(listener);
     return () => {
       removeItem(this.listeners, listener);
-    }
+    };
   }
 
   setProps(props: FieldProps<V, R>) {
@@ -49,11 +65,11 @@ export class FieldController<V, R> {
 
   reset(props: FieldProps<V, R>) {
     const type = props.type || 'text';
-    const config = this.config = {
+    const config = (this.config = {
       ...((type ? inputRegistry[type] : null) || inputRegistry.text),
       ...props,
       type,
-    };
+    });
 
     this.log = logger(`${config.name}(${type})`);
     this.log.d('reset', this);
@@ -65,7 +81,7 @@ export class FieldController<V, R> {
     let raw: R | undefined = undefined;
     let error = config.error;
     try {
-      raw = isDefined(value) ? (config.toRaw||toMe)(value) as any : undefined;
+      raw = isDefined(value) ? ((config.toRaw || toMe)(value) as any) : undefined;
     } catch (e) {
       error = toError(e);
       this.log.e('reset toRaw error', value, error);
@@ -104,17 +120,15 @@ export class FieldController<V, R> {
 
       if ('value' in changes) {
         try {
-          raw = isDefined(value) ? (config.toRaw||toMe)(value) as any : undefined;
+          raw = isDefined(value) ? ((config.toRaw || toMe)(value) as any) : undefined;
           this.log.d('apply value to raw', value, raw);
-        }
-        catch (e) {
+        } catch (e) {
           error = toError(e);
           this.log.d('apply value to raw error', value, error);
-
         }
       } else if ('raw' in changes) {
         try {
-          value = isDefined(raw) ? (config.toValue||toMe)(raw, event) as any : undefined;
+          value = isDefined(raw) ? ((config.toValue || toMe)(raw, event) as any) : undefined;
 
           if (isNumber(value)) {
             const { min, max } = config;
@@ -123,8 +137,7 @@ export class FieldController<V, R> {
           }
 
           this.log.d('apply raw to value', raw, value);
-        }
-        catch (e) {
+        } catch (e) {
           error = toError(e);
           this.log.d('apply raw to value error', raw, error);
         }
@@ -148,8 +161,7 @@ export class FieldController<V, R> {
     for (const listener of this.listeners) {
       try {
         listener(state);
-      }
-      catch (error) {
+      } catch (error) {
         this.log.e('notify error', this, listener, error);
       }
     }

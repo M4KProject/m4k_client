@@ -22,13 +22,13 @@ export const c = Css('Field', {
     col: ['stretch', 'start'],
   },
   '-error &Label': {
-    fg: 'error'
+    fg: 'error',
   },
   '-error input': {
-    border: 'error'
+    border: 'error',
   },
   Error: {
-    fg: 'error'
+    fg: 'error',
   },
   Label: {
     // flex: 1,
@@ -97,28 +97,28 @@ const ClearButton = () => {
   const { clearable, readonly } = config;
   const showClear = clearable && isDefined(value) && !readonly;
   console.debug('ClearButton render', value, showClear);
-  return showClear ? (
-    <Button
-      {...c('Clear')}
-      icon={<XIcon size={16} />}
-      onClick={() => ctrl.update({ value: undefined })}
-      tooltip="Effacer la valeur"
-    />
-  ) : null;
-}
+  return showClear ?
+      <Button
+        {...c('Clear')}
+        icon={<XIcon size={16} />}
+        onClick={() => ctrl.update({ value: undefined })}
+        tooltip="Effacer la valeur"
+      />
+    : null;
+};
 
-export const Field = <V=any, R=any>(props: FieldProps<V, R>) => {
+export const Field = <V = any, R = any>(props: FieldProps<V, R>) => {
   const ctrl = useMemo(() => new FieldController<V, R>(), []);
   ctrl.setProps(props);
 
   const config = useFieldConfig(ctrl);
   const error = useFieldError(ctrl);
-  
+
   const { input: Input, children, label, helper, col, type, containerProps } = config;
 
   const isComposed = isNotEmpty(children);
 
-  console.debug('Field container render', { ctrl, config, error, isComposed })
+  console.debug('Field container render', { ctrl, config, error, isComposed });
 
   return (
     <FieldProvider value={ctrl}>

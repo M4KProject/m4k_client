@@ -1,30 +1,30 @@
-import { useContext, useEffect, useState } from "preact/hooks";
-import { FieldContext, FieldController } from "./FieldController";
-import { isEmpty } from "fluxio";
+import { useContext, useEffect, useState } from 'preact/hooks';
+import { FieldContext, FieldController } from './FieldController';
+import { isEmpty } from 'fluxio';
 
 export const useFieldController = () => useContext(FieldContext)!;
 
 export const useFieldRaw = <V, R>(ctrl: FieldController<V, R>) => {
   const [v, set] = useState(ctrl.state.raw);
-  useEffect(() => ctrl.subscribe(s => set(s.raw)), [ctrl]);
+  useEffect(() => ctrl.subscribe((s) => set(s.raw)), [ctrl]);
   return v;
 };
 
 export const useFieldValue = <V, R>(ctrl: FieldController<V, R>) => {
   const [v, set] = useState(ctrl.state.value);
-  useEffect(() => ctrl.subscribe(s => set(s.value)), [ctrl]);
+  useEffect(() => ctrl.subscribe((s) => set(s.value)), [ctrl]);
   return v;
 };
 
 export const useFieldError = <V, R>(ctrl: FieldController<V, R>) => {
   const [v, set] = useState(ctrl.state.error);
-  useEffect(() => ctrl.subscribe(s => set(s.error)), [ctrl]);
+  useEffect(() => ctrl.subscribe((s) => set(s.error)), [ctrl]);
   return v;
 };
 
 export const useFieldConfig = <V, R>(ctrl: FieldController<V, R>) => {
   const [v, set] = useState(ctrl.state.config);
-  useEffect(() => ctrl.subscribe(s => set(s.config)), [ctrl]);
+  useEffect(() => ctrl.subscribe((s) => set(s.config)), [ctrl]);
   return v;
 };
 

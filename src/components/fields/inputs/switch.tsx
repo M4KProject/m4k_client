@@ -1,6 +1,6 @@
-import { useInputProps } from "../hooks";
-import { Css } from "fluxio";
-import { FIELD_HEIGHT } from "../constants";
+import { useInputProps } from '../hooks';
+import { Css } from 'fluxio';
+import { FIELD_HEIGHT } from '../constants';
 
 const HANDLE_SIZE = FIELD_HEIGHT - 6;
 const HANDLE_X = HANDLE_SIZE - 4;
@@ -19,7 +19,7 @@ const c = Css('SwitchInput', {
   },
   '-selected': { borderColor: 'p', bg: 'p' },
 
-  'Handle': {
+  Handle: {
     wh: HANDLE_SIZE,
     m: -1,
     mr: 0,
@@ -38,11 +38,7 @@ const SwitchInput = () => {
   const { value, onChange, ...props } = useInputProps();
   console.debug('SwitchInput render', value, props);
   return (
-    <div
-      onClick={() => onChange(!value)}
-      {...props}
-      {...c('', value && '-selected', props)}
-    >
+    <div onClick={() => onChange(!value)} {...props} {...c('', value && '-selected', props)}>
       <div {...c('Handle')}></div>
     </div>
   );
@@ -52,5 +48,5 @@ export const switchInputs = {
   switch: {
     input: SwitchInput,
     delay: 0,
-  }
-}
+  },
+};

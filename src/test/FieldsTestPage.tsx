@@ -55,7 +55,7 @@ export const FieldsTestPage = () => {
 
   const up = (changes: Partial<typeof v>) => {
     console.log('up called with:', changes);
-    set(p => ({ ...p, ...changes }));
+    set((p) => ({ ...p, ...changes }));
   };
 
   return (
@@ -63,7 +63,13 @@ export const FieldsTestPage = () => {
       <div {...c('Title')}>Test Fields</div>
 
       <Form>
-        <Field label="Valeurs JSON" name="json" type="json" value={v} onValue={v => v && set(v)} />
+        <Field
+          label="Valeurs JSON"
+          name="json"
+          type="json"
+          value={v}
+          onValue={(v) => v && set(v)}
+        />
         {/* <Field
           label="Texte"
           type="text"
@@ -79,18 +85,8 @@ export const FieldsTestPage = () => {
           min={0}
           max={100}
         /> */}
-        <Field
-          label="Switch"
-          type="switch"
-          value={v.boolean}
-          onValue={v => up({ boolean: v })}
-        />
-        <Field
-          label="Check"
-          type="check"
-          value={v.boolean}
-          onValue={v => up({ boolean: v })}
-        />
+        <Field label="Switch" type="switch" value={v.boolean} onValue={(v) => up({ boolean: v })} />
+        <Field label="Check" type="check" value={v.boolean} onValue={(v) => up({ boolean: v })} />
         {/* <Field
           label="Email"
           type="email"

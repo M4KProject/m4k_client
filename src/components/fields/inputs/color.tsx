@@ -1,5 +1,5 @@
-import { FieldProps } from "../types";
-import { useInputProps } from "../hooks";
+import { FieldProps } from '../types';
+import { useInputProps } from '../hooks';
 import { addHsl, Css, isFloat, round, setHsl, setRgb, toHsl, toRgb } from 'fluxio';
 import { useState } from 'preact/hooks';
 import { Field } from '@/components/Field';
@@ -34,9 +34,7 @@ const c = Css('ColorPicker', {
   },
 });
 
-const ColorInput = () => (
-    <input type="color" {...useInputProps()} />
-)
+const ColorInput = () => <input type="color" {...useInputProps()} />;
 
 const ColorPicker = () => {
   const [color, setColor] = useState<string | undefined>('#697689');
@@ -135,15 +133,13 @@ const ColorPicker = () => {
 const ColorButton = () => {
   const { value, onChange, ...props } = useInputProps();
   return (
-    <div
-      {...props}
-    >
-        <ColorPicker />
+    <div {...props}>
+      <ColorPicker />
     </div>
   );
 };
 
-const color: FieldProps<string, string>  = {
+const color: FieldProps<string, string> = {
   input: ColorInput,
   clearable: true,
   delay: 0,
@@ -151,4 +147,4 @@ const color: FieldProps<string, string>  = {
 
 export const colorInputs = {
   color,
-}
+};

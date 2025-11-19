@@ -1,8 +1,8 @@
-import { CheckIcon } from "lucide-react";
-import { useInputProps } from "../hooks";
-import { Css } from "fluxio";
-import { FIELD_HEIGHT } from "../constants";
-import { FieldProps } from "../types";
+import { CheckIcon } from 'lucide-react';
+import { useInputProps } from '../hooks';
+import { Css } from 'fluxio';
+import { FIELD_HEIGHT } from '../constants';
+import { FieldProps } from '../types';
 
 const c = Css('CheckInput', {
   '': {
@@ -37,21 +37,17 @@ const CheckInput = () => {
   const { value, onChange, ...props } = useInputProps();
   console.debug('CheckInput render', value, props);
   return (
-    <div
-      onClick={() => onChange(!value)}
-      {...props}
-      {...c('', value && '-selected', props)}
-    >
+    <div onClick={() => onChange(!value)} {...props} {...c('', value && '-selected', props)}>
       <CheckIcon />
     </div>
   );
 };
 
-const check: FieldProps<boolean, string>  = {
+const check: FieldProps<boolean, string> = {
   input: CheckInput,
   delay: 0,
 };
 
 export const checkInputs = {
   check,
-}
+};
