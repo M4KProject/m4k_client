@@ -81,7 +81,7 @@ export const BField = ({
   prop,
   defaultValue,
   ...props
-}: FieldProps & { prop: keyof BData; defaultValue?: any }) => {
+}: FieldProps<any, any> & { prop: keyof BData; defaultValue?: any }) => {
   const [value, setValue] = useProp(prop);
   return (
     <Field
@@ -147,7 +147,7 @@ const TextAlignButton = ({ icon, v }: { icon: ComponentChildren; v: Style['textA
   );
 };
 
-const BStyleField = ({ prop, ...props }: FieldProps & { prop: string }) => {
+const BStyleField = ({ prop, ...props }: FieldProps<any, any> & { prop: string }) => {
   const [style, setStyle] = useProp('s');
   const value = ((style || {}) as any)[prop] as any;
   const onValue = (value: any) => {

@@ -4,7 +4,7 @@ import { Plus, Trash2, Copy, ArrowUp, ArrowDown } from 'lucide-react';
 import { updatePlaylist } from '@/admin/controllers';
 import { JobGrid } from '../jobs/JobGrid';
 import { MediaPreview } from './MediaPreview';
-import { useGroupMedias } from '@/hooks/apiHooks';
+import { useGroupMedias, useApi } from '@/hooks/apiHooks';
 import { Grid, GridCols } from '@/components/Grid';
 import { JobModel, MediaModel, PlaylistEntry, PlaylistModel } from '@/api/models';
 import { Field } from '@/components/Field';
@@ -138,8 +138,9 @@ const playlistCols: GridCols<
 };
 
 export const AddPlaylistItemButton = ({ playlist }: { playlist: PlaylistModel }) => {
+  const api = useApi();
   const newItem = () => {
-    updatePlaylist(playlist.id, ({ data }) => {
+    updatePlaylist(api, playlist.id, ({ data }) => {
       if (data && data.items) {
         addItem(data.items, { title: 'Nouvelle entrée' });
       }
@@ -149,10 +150,11 @@ export const AddPlaylistItemButton = ({ playlist }: { playlist: PlaylistModel })
 };
 
 export const EditPlaylist = ({ playlist }: { playlist: PlaylistModel }) => {
+  const api = useApi();
   const medias = useGroupMedias();
 
   const updateItem = (index: number, changes: Partial<PlaylistEntry>) => {
-    updatePlaylist(playlist.id, ({ data }) => {
+    updatePlaylist(api, playlist.id, ({ data }) => {
       if (data && data.items && data.items[index]) {
         Object.assign(data.items[index], changes);
       }
@@ -160,7 +162,7 @@ export const EditPlaylist = ({ playlist }: { playlist: PlaylistModel }) => {
   };
 
   const deleteItem = (index: number) => {
-    updatePlaylist(playlist.id, ({ data }) => {
+    updatePlaylist(api, playlist.id, ({ data }) => {
       if (data && data.items) {
         removeIndex(data.items, index);
       }
@@ -168,7 +170,7 @@ export const EditPlaylist = ({ playlist }: { playlist: PlaylistModel }) => {
   };
 
   const duplicateItem = (index: number) => {
-    updatePlaylist(playlist.id, ({ data }) => {
+    updatePlaylist(api, playlist.id, ({ data }) => {
       if (data && data.items && data.items[index]) {
         const copy = deepClone(data.items[index]);
         addItem(data.items, copy, index + 1);
@@ -177,7 +179,7 @@ export const EditPlaylist = ({ playlist }: { playlist: PlaylistModel }) => {
   };
 
   const moveItemIndex = (from: number, to: number) => {
-    updatePlaylist(playlist.id, ({ data }) => {
+    updatePlaylist(api, playlist.id, ({ data }) => {
       if (data && data.items) {
         moveIndex(data.items, from, to);
       }
