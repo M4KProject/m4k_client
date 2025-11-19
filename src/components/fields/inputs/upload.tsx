@@ -9,6 +9,7 @@ const c = Css('UploadInput', {
 
 const UploadInput = () => {
   const { value, onChange, ...props } = useInputProps();
+  console.debug('UploadInput render', value, props);
   return (
     <div
       {...props}

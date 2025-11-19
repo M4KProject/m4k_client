@@ -36,6 +36,7 @@ const c = Css('SwitchInput', {
 
 const SwitchInput = () => {
   const { value, onChange, ...props } = useInputProps();
+  console.debug('SwitchInput render', value, props);
   return (
     <div
       onClick={() => onChange(!value)}

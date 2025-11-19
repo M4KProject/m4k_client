@@ -2,7 +2,11 @@ import { isDefined, isString } from "fluxio";
 import { useInputProps } from "../hooks";
 import { FieldProps } from "../types";
 
-const Multiline = () => <textarea rows={5} {...useInputProps()} />;
+const Multiline = () => {
+  const props = useInputProps();
+  console.debug('Multiline render', props);
+  return <textarea rows={5} {...props} />
+};
 
 const multiline: FieldProps<string, string>  = {
   input: Multiline,
@@ -31,7 +35,6 @@ const json: FieldProps<any, string>  = {
       throw error;
     }
   },
-  delay: 1000,
 }
 
 export const multilineInputs = {

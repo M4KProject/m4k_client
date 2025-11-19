@@ -1,4 +1,4 @@
-import { getChanges, getStorage, isDeepEqual, isFunction, isNotEmpty, isNumber, Listener, logger, NextState, removeItem, toError, toMe, toNumber, Unsubscribe } from 'fluxio';
+import { getChanges, getStorage, isDeepEqual, isDefined, isFunction, isNotEmpty, isNumber, Listener, logger, NextState, removeItem, toError, toMe, toNumber, Unsubscribe } from 'fluxio';
 import { FieldProps, FieldState } from './types';
 import { inputRegistry } from './inputRegistry';
 import { createContext } from 'preact';
@@ -86,7 +86,7 @@ export class FieldController<V, R> {
 
       if ('value' in changes) {
         try {
-          raw = (config.toRaw||toMe)(value) as any;
+          raw = isDefined(value) ? (config.toRaw||toMe)(value) as any : undefined;
           this.log.d('apply value to raw', value, raw);
         }
         catch (e) {
@@ -96,7 +96,7 @@ export class FieldController<V, R> {
         }
       } else if ('raw' in changes) {
         try {
-          value = (config.toValue||toMe)(raw, event) as any;
+          value = isDefined(raw) ? (config.toValue||toMe)(raw, event) as any : undefined;
 
           if (isNumber(value)) {
             const { min, max } = config;
@@ -121,7 +121,12 @@ export class FieldController<V, R> {
   notify() {
     const state = this.state;
     this.log.d('notify', state);
-    this.config.onValue?.(state.value);
+    const value = state.value;
+
+    if (isDefined(value)) {
+      this.config.onValue?.(value);
+    }
+
     for (const listener of this.listeners) {
       try {
         listener(state);

@@ -50,10 +50,10 @@ export const useInputProps = () => {
     onChange: (e) => ctrl.onChange(e),
     name,
     required,
+    placeholder,
   };
 
   if (!isEmpty(inputProps)) Object.assign(props, inputProps);
-  if (placeholder) props.placeholder = placeholder;
 
   return props;
 };

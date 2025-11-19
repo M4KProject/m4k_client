@@ -1,7 +1,7 @@
 import { render } from 'preact';
-import { FieldsTestPage } from './admin/pages/FieldsTestPage';
-import { refreshTheme } from './utils/theme';
-import { addFont } from './utils/addFont';
+import { FieldsTestPage } from './FieldsTestPage';
+import { refreshTheme } from '../utils/theme';
+import { addFont } from '../utils/addFont';
 
 // Initialize theme and fonts
 addFont('Roboto');

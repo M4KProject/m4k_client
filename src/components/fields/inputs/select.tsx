@@ -265,6 +265,7 @@ const SelectInput = () => {
   const ctrl = useFieldController();
   const config = useFieldConfig(ctrl);
   const { value, onChange, name, required, placeholder } = useInputProps();
+  console.debug('SelectInput render', value, name);
   return (
     <Select
       items={config.items}

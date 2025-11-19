@@ -77,6 +77,7 @@ const PickerInput = () => {
   const ctrl = useFieldController();
   const config = useFieldConfig(ctrl);
   const { value, onChange, name, required } = useInputProps();
+  console.debug('PickerInput render', value, name);
   return (
     <Picker
       items={config.items}

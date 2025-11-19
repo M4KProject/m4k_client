@@ -3,11 +3,14 @@ import { useInputProps } from "../hooks";
 import { FieldProps } from "../types";
 import { Button } from "@/components/Button";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
-import { formatSeconds, parseSeconds, toError, toNumber, toString } from "fluxio";
+import { formatSeconds, parseSeconds, toNumber, toString } from "fluxio";
 
 const getInput = <V=string>(type: string): FieldProps<V, string> => ({
-    input: () => <input type={type} {...useInputProps()} />,
-    delay: 400,
+    input: () => {
+        const props = useInputProps();
+        console.debug('input render', type, props);
+        return <input {...props} type={type} />
+    },
 });
 
 const email = getInput('email');
@@ -22,13 +25,14 @@ const password: FieldProps<string, string> = {
     input: () => {
         const [show, setShow] = useState(false);
         const props = useInputProps();
+        console.debug('password render', props, show);
         return (
             <>
-                <input type={show ? 'text' : 'password'} {...props} />
+                <input {...props} type={show ? 'text' : 'password'} />
                 <Button
                     onClick={(e) => {
-                    e.preventDefault();
-                    setShow((s) => !s);
+                        e.preventDefault();
+                        setShow((s) => !s);
                     }}
                     icon={show ? <EyeOffIcon /> : <EyeIcon />}
                 />
@@ -38,10 +42,13 @@ const password: FieldProps<string, string> = {
 };
 
 const seconds: FieldProps<number, string> = {
-    input: () => <input type="text" placeholder="00:00:00" {...useInputProps()} />,
-    delay: 400,
-    toValue: (next) => next ? parseSeconds(next) : undefined,
-    toRaw: (value) => value ? formatSeconds(value) : undefined,
+    input: () => {
+        const props = useInputProps();
+        console.debug('seconds render', props);
+        return <input {...props} type="text" placeholder={props.placeholder || "00:00:00"} />
+    },
+    toValue: parseSeconds,
+    toRaw: formatSeconds,
 }
 
 export const baseInputs = {

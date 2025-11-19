@@ -10,8 +10,8 @@ export interface FieldProps<V, R> {
   required?: boolean;
   readonly?: boolean;
   stored?: string;
-  value?: V | undefined;
-  onValue?: (next: V | undefined) => void;
+  value?: V;
+  onValue?: (next: V) => void;
   input?: () => ComponentChildren;
   props?: any;
   error?: ComponentChildren;
@@ -19,8 +19,8 @@ export interface FieldProps<V, R> {
   max?: V;
 
   delay?: number;
-  toRaw?: (value: V | undefined) => R | undefined;
-  toValue?: (raw: R | undefined, e: Event) => V | undefined;
+  toRaw?: (value: V) => R | undefined;
+  toValue?: (raw: R, e: Event) => V | undefined;
 
   col?: boolean;
   label?: ComponentChildren;
@@ -32,8 +32,8 @@ export interface FieldProps<V, R> {
 }
 
 export interface FieldState<V, R> {
-  readonly value?: V | undefined;
-  readonly raw?: R | undefined;
+  readonly value?: V;
+  readonly raw?: R;
   readonly error?: any;
   readonly event?: any;
   readonly config: Readonly<FieldProps<V, R>>;

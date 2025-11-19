@@ -96,6 +96,7 @@ const ClearButton = () => {
   const value = useFieldValue(ctrl);
   const { clearable, readonly } = config;
   const showClear = clearable && isDefined(value) && !readonly;
+  console.debug('ClearButton render', value, showClear);
   return showClear ? (
     <Button
       {...c('Clear')}
