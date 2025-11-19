@@ -2,15 +2,18 @@ import { getChanges, getStorage, isDeepEqual, isDefined, isFunction, isNotEmpty,
 import { FieldProps, FieldState } from './types';
 import { inputRegistry } from './inputRegistry';
 import { createContext } from 'preact';
+import type { ComponentChildren } from 'preact';
 
 export class FieldController<V, R> {
   private log = logger('FieldController');
   private hash?: string;
   private config: Readonly<FieldProps<V, R>> = {};
+  private propsValue?: V;
+  private propsError?: ComponentChildren;
   private next?: FieldState<V, R>;
   private timer?: any;
   private readonly listeners: Listener<FieldState<V, R>>[] = [];
-  
+
   public state: FieldState<V, R> = { config: {} };
 
   subscribe(listener: Listener<FieldState<V, R>>): Unsubscribe {
@@ -31,15 +34,15 @@ export class FieldController<V, R> {
       return;
     }
 
-    if (!isDeepEqual(this.config.value, props.value)) {
-      this.log.d('setProps value', this.config.value, '->', props.value);
-      this.config = { ...this.config, value: props.value };
+    if (!isDeepEqual(this.propsValue, props.value)) {
+      this.log.d('setProps value', this.propsValue, '->', props.value);
+      this.propsValue = props.value;
       this.update({ value: props.value });
     }
 
-    if (!isDeepEqual(this.config.error, props.error)) {
-      this.log.d('setProps error', this.config.error, '->', props.error);
-      this.config = { ...this.config, error: props.error };
+    if (!isDeepEqual(this.propsError, props.error)) {
+      this.log.d('setProps error', this.propsError, '->', props.error);
+      this.propsError = props.error;
       this.update({ error: props.error });
     }
   }
@@ -56,6 +59,8 @@ export class FieldController<V, R> {
     this.log.d('reset', this);
 
     const value = config.stored ? getStorage().get(config.stored, config.value) : config.value;
+    this.propsValue = props.value;
+    this.propsError = props.error;
 
     let raw: R | undefined = undefined;
     let error = config.error;
@@ -159,11 +164,6 @@ export class FieldController<V, R> {
 
     this.update({ raw, event });
   }
-
-  // clear() {
-  //   this.log.d('clear');
-  //   this.parsed$.set(undefined);
-  // }
 }
 
 export const FieldContext = createContext<FieldController<any, any> | undefined>(undefined);
