@@ -1,3 +1,4 @@
+import { isDefined, isString } from "fluxio";
 import { useInputProps } from "../hooks";
 import { FieldProps } from "../types";
 
@@ -11,14 +12,36 @@ const multiline: FieldProps = {
 const json: FieldProps = {
   input: Multiline,
   convert: (value: any) => {
-    if (typeof value !== 'string') return value;
-    const trimmed = value.trim();
-    if (!trimmed) return value; // Garde la string vide ou whitespace
-    return JSON.parse(value);
+    console.debug('Multiline json convert', value);
+    try {
+      return isDefined(value) ? JSON.parse(value) : undefined;
+    }
+    catch (error) {
+      console.error('Multiline json convert', value, error);
+      try {
+        return isDefined(value) ? JSON.stringify(value, undefined, 2) : undefined;
+      }
+      catch (error) {
+        console.error('Multiline json convert2', value, error);
+        throw error;
+      }
+    }
   },
   reverse: (value: any) => {
-    if (typeof value === 'string') return value;
-    return JSON.stringify(value, undefined, 2);
+    console.debug('Multiline json reverse', value);
+    try {
+      return isDefined(value) ? JSON.stringify(value, undefined, 2) : undefined;
+    }
+    catch (error) {
+      console.error('Multiline json reverse', value, error);
+      try {
+        return isDefined(value) ? JSON.parse(value) : undefined;
+      }
+      catch (error) {
+        console.error('Multiline json reverse2', value, error);
+        throw error;
+      }
+    }
   },
   delay: 1000,
 }
