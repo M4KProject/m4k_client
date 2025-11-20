@@ -10,5 +10,9 @@ const c = Css('BRoot', {
 });
 
 export const BRoot: BComp = ({ item, props }) => {
-  return <div {...props} {...c(props, '')}>{bChildren(item)}</div>;
+  return (
+    <div {...props} {...c(props, '')}>
+      {bChildren(item)}
+    </div>
+  );
 };

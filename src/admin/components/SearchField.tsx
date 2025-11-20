@@ -21,11 +21,7 @@ export const SearchField = () => {
   return (
     <div {...c()}>
       {isSearchOpen && <Field name="search" value={search} onValue={search$.setter()} />}
-      <Button
-        icon={Search}
-        color="primary"
-        onClick={() => isSearchOpen$.set((prev) => !prev)}
-      />
+      <Button icon={Search} color="primary" onClick={() => isSearchOpen$.set((prev) => !prev)} />
     </div>
   );
 };

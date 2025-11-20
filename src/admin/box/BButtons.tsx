@@ -117,11 +117,7 @@ export const BButtons = () => {
       {hasSelect && (
         <>
           <BButton icon={ClipboardX} onClick={() => cut(ctrl, selectIndex)} tooltip="Couper" />
-          <BButton
-            icon={ClipboardCopy}
-            onClick={() => copy(ctrl, selectIndex)}
-            tooltip="Copier"
-          />
+          <BButton icon={ClipboardCopy} onClick={() => copy(ctrl, selectIndex)} tooltip="Copier" />
           <BButton
             icon={ClipboardPaste}
             onClick={() => paste(ctrl, selectIndex)}
@@ -130,11 +126,7 @@ export const BButtons = () => {
         </>
       )}
       <div {...c('Sep')} />
-      <BButton
-        icon={SquarePlus}
-        onClick={() => addRect(ctrl)}
-        tooltip="Ajouter un rectangle"
-      />
+      <BButton icon={SquarePlus} onClick={() => addRect(ctrl)} tooltip="Ajouter un rectangle" />
       <div {...c('Sep')} />
       <BButton icon={Save} onClick={() => ctrl.save()} tooltip="Enregistrer" />
     </div>

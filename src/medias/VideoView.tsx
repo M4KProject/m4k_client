@@ -25,7 +25,7 @@ const c = Css('VideoView', {
 export type VideoViewProps = MediaViewProps<VideoModel>;
 
 export const VideoView = ({ media, onNext, fit, divProps }: VideoViewProps) => {
-    const api = useApi();
+  const api = useApi();
   const variants = api.getVariants(media);
   const videos = variants.filter((v) => v.type === 'video');
   const images = variants.filter((v) => v.type === 'image');

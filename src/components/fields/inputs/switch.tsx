@@ -36,7 +36,7 @@ const c = Css('SwitchInput', {
 
 const SwitchInput = () => {
   const { value, onChange, ...props } = useInputProps();
-  
+
   return (
     <div onClick={() => onChange(!value)} {...props} {...c('', value && '-selected', props)}>
       <div {...c('Handle')}></div>

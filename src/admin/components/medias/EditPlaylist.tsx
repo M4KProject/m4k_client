@@ -120,11 +120,7 @@ const playlistCols: GridCols<
           {...tooltip('Décendre')}
           onClick={() => ctx.moveItemIndex(index, index + 1)}
         />
-        <Button
-          icon={Copy}
-          {...tooltip('Dupliquer')}
-          onClick={() => ctx.duplicateItem(index)}
-        />
+        <Button icon={Copy} {...tooltip('Dupliquer')} onClick={() => ctx.duplicateItem(index)} />
         <Button
           icon={Trash2}
           color="error"

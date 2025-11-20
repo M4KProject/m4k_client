@@ -9,5 +9,9 @@ const c = Css('BRect', {
 });
 
 export const BRect: BComp = ({ item, props }) => {
-  return <div {...props} {...c(props, '')}>{bChildren(item)}</div>;
+  return (
+    <div {...props} {...c(props, '')}>
+      {bChildren(item)}
+    </div>
+  );
 };

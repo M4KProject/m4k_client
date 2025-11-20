@@ -12,14 +12,14 @@ const c = Css('B', {
     overflowX: 'hidden',
     overflowY: 'auto',
     boxSizing: 'border-box',
-  }
+  },
 });
 
 const computeProps = (ctrl: BCtrl, item: BItem): BCompProps['props'] => {
   const { i, t, c: cls, s } = item;
   const style = computeStyle(s);
   const a = item?.a;
-  
+
   if (a) {
     const [x, y, w, h] = a;
     style.position = 'absolute';

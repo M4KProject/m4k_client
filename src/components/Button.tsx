@@ -82,7 +82,7 @@ export interface ButtonProps extends BaseButtonProps {
   color?: 'default' | 'primary' | 'secondary' | 'success' | 'warn' | 'error';
   variant?: 'upload';
   selected?: boolean;
-  icon?: ComponentChildren|ComponentType<any>;
+  icon?: ComponentChildren | ComponentType<any>;
   before?: ComponentChildren;
   title?: string;
   link?: boolean;

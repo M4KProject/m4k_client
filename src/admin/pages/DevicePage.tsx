@@ -76,11 +76,7 @@ export const DevicePage = () => {
   return (
     <Page {...c()}>
       <Toolbar title={device.name || device.key}>
-        <Button
-          icon={RefreshCw}
-          tooltip="Rafraîchir"
-          onClick={() => executeAction('refresh')}
-        />
+        <Button icon={RefreshCw} tooltip="Rafraîchir" onClick={() => executeAction('refresh')} />
         <Button icon={Power} tooltip="Redémarrer" onClick={() => executeAction('reboot')} />
         <Button icon={LogOut} tooltip="Fermer le Kiosk" onClick={() => executeAction('exit')} />
       </Toolbar>

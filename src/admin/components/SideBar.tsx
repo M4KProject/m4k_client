@@ -104,12 +104,7 @@ export const SideBar = () => {
             ))
           : null} */}
           {isAdvanced && (
-            <SideButton
-              title="Jobs"
-              icon={Zap}
-              selected={page === 'jobs'}
-              onClick={go('jobs')}
-            />
+            <SideButton title="Jobs" icon={Zap} selected={page === 'jobs'} onClick={go('jobs')} />
           )}
         </>
       : null}

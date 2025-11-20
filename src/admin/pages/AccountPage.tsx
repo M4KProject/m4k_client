@@ -51,12 +51,7 @@ export const AccountPage = () => {
   return (
     <Page {...c()}>
       <Toolbar title="Account">
-        <Button
-          color="primary"
-          title="Deconnexion"
-          icon={LogOut}
-          onClick={() => api.pb.logout()}
-        />
+        <Button color="primary" title="Deconnexion" icon={LogOut} onClick={() => api.pb.logout()} />
         <Button
           color="primary"
           title="Changer de mot de passe"

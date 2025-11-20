@@ -116,7 +116,10 @@ const FlexAlignButton = ({
   const fAlign = flex[0] as StyleFlexAlign;
   const fJustify = flex[1] as StyleFlexJustify;
 
-  const v = start ? "start" : end ? "end" : "center";
+  const v =
+    start ? 'start'
+    : end ? 'end'
+    : 'center';
 
   const selected = (row ? !!fRow : !!fCol) && (justify ? fJustify === v : fAlign === v);
 

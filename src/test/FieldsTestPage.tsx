@@ -74,65 +74,55 @@ export const FieldsTestPage = () => {
           label="Texte"
           type="text"
           value={v.text}
-          onValue={v => up({ text: v })}
+          onValue={(v) => up({ text: v })}
           placeholder="Entrez du texte"
         />
         <Field
           label="Nombre"
           type="number"
           value={v.number}
-          onValue={v => up({ number: v })}
+          onValue={(v) => up({ number: v })}
           min={0}
           max={100}
         />
         <Field label="Switch" type="switch" value={v.boolean} onValue={(v) => up({ boolean: v })} />
         <Field label="Check" type="check" value={v.boolean} onValue={(v) => up({ boolean: v })} />
-        <Field
-          label="Email"
-          type="email"
-          value={v.email}
-          onValue={v => up({ email: v })}
-        />
-        <Field
-          label="Date"
-          type="date"
-          value={v.date}
-          onValue={v => up({ date: v })}
-        />
+        <Field label="Email" type="email" value={v.email} onValue={(v) => up({ email: v })} />
+        <Field label="Date" type="date" value={v.date} onValue={(v) => up({ date: v })} />
         <Field
           label="Date"
           type="datetime"
           value={v.datetime}
-          onValue={v => up({ datetime: v })}
+          onValue={(v) => up({ datetime: v })}
         />
         <Field
           label="Multiline"
           type="multiline"
           value={v.multiline}
-          onValue={v => up({ multiline: v })}
+          onValue={(v) => up({ multiline: v })}
         />
         <Field
           label="Password"
           type="password"
           value={v.password}
-          onValue={v => up({ password: v })}
+          onValue={(v) => up({ password: v })}
         />
         <Field
           label="Seconds"
           type="seconds"
           value={v.seconds}
-          onValue={v => up({ seconds: v })}
+          onValue={(v) => up({ seconds: v })}
         />
         <Field
           label="Picker"
           name="picker"
           type="picker"
           value={v.select}
-          onValue={v => up({ select: v })}
+          onValue={(v) => up({ select: v })}
           items={[
-            [10, "10"],
-            [20, "20"],
-            [30, "30"],
+            [10, '10'],
+            [20, '20'],
+            [30, '30'],
           ]}
         />
         <Field
@@ -140,19 +130,14 @@ export const FieldsTestPage = () => {
           name="select"
           type="select"
           value={v.select}
-          onValue={v => up({ select: v })}
+          onValue={(v) => up({ select: v })}
           items={[
-            [10, "10"],
-            [20, "20"],
-            [30, "30"],
+            [10, '10'],
+            [20, '20'],
+            [30, '30'],
           ]}
         />
-        <Field
-          label="Color"
-          type="color"
-          value={v.color}
-          onValue={v => up({ color: v })}
-        />
+        <Field label="Color" type="color" value={v.color} onValue={(v) => up({ color: v })} />
       </Form>
     </div>
   );

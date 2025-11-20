@@ -18,7 +18,7 @@ const c = Css('EditPage', {
 export const EditPage = ({ page }: { page: PageModel }) => {
   const api = useApi();
   const ctrl = useMemo(() => new BCtrl(api, page.id), [api, page.id]);
-  
+
   useEffect(() => {
     sideOpen$.set(false);
     return () => {

@@ -5,19 +5,26 @@ import { FieldState } from './types';
 
 export const useFieldController = () => useContext(FieldContext)!;
 
-export const useFieldState = <V, R>(ctrl: FieldController<V, R>, ...props: (keyof FieldState<V, R>)[]): FieldState<V, R> => {
+export const useFieldState = <V, R>(
+  ctrl: FieldController<V, R>,
+  ...props: (keyof FieldState<V, R>)[]
+): FieldState<V, R> => {
   const [state, setState] = useState(ctrl.state);
 
-  useEffect(() => ctrl.subscribe((state) => {
-    setState(prev => {
-      for (const prop of props) {
-        if (prev[prop] !== state[prop]) {
-          return state;
-        }
-      }
-      return prev;
-    });
-  }), [ctrl]);
+  useEffect(
+    () =>
+      ctrl.subscribe((state) => {
+        setState((prev) => {
+          for (const prop of props) {
+            if (prev[prop] !== state[prop]) {
+              return state;
+            }
+          }
+          return prev;
+        });
+      }),
+    [ctrl]
+  );
 
   return state;
 };
