@@ -8,11 +8,10 @@ const log = logger('BHierarchy');
 const c = Css('BHierarchy', {
   '': {
     flex: 1,
-    m: 4,
     overflowX: 'hidden',
     overflowY: 'auto',
     col: ['stretch', 'start'],
-    bb: 'border',
+    p: 8,
   },
   Item: {
     row: ['center', 'start'],

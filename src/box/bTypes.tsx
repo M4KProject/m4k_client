@@ -78,6 +78,7 @@ export interface BType {
   b?: BOnOff;
   a?: BOnOff;
   m?: BOnOff;
+  layout?: BOnOff;
 }
 
 // // Carousel

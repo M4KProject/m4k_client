@@ -55,7 +55,13 @@ export const SCREEN_SIZES: ScreenSize[] = [
 
 const BButton = (props: ButtonProps) => <Button {...c('Button')} color="primary" {...props} />;
 
-const addRect = (ctrl: BCtrl) => ctrl.add({ a: [25, 25, 50, 50], s: { bg: randColor() } });
+const addRect = (ctrl: BCtrl) => {
+  ctrl.add({
+    a: [25, 25, 50, 50],
+    s: { bg: randColor() },
+    p: ctrl.select$.get()?.i,
+  });
+}
 
 const cut = async (ctrl: BCtrl, index: number) => {
   const data = ctrl.getData(index);

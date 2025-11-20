@@ -38,7 +38,6 @@ import { BText } from './BText';
 import { BRect } from './BRect';
 import { BRoot } from './BRoot';
 import { BMedia } from './BMedia';
-import { PageModel } from '@/api/models';
 import { Api } from '@/api/Api';
 
 const log = logger('BCtrl');
@@ -128,8 +127,8 @@ const toData = (item: NBItem): NBData => {
   return d;
 };
 
-const rect: BType = { comp: BRect, label: 'Rectangle', r: 1, a: 1, icon: Square };
-const root: BType = { comp: BRoot, label: 'Racine', r: 1, icon: Home };
+const rect: BType = { comp: BRect, label: 'Rectangle', r: 1, a: 1, layout: 1, icon: Square };
+const root: BType = { comp: BRoot, label: 'Racine', r: 1, layout: 1, icon: Home };
 const text: BType = { comp: BText, label: 'Texte', b: 1, a: 1, icon: ALargeSmall };
 const carousel: BType = { comp: BCarousel, label: 'Carousel', r: 1, a: 1, icon: GalleryHorizontal };
 const media: BType = { comp: BMedia, label: 'Media', m: 1, a: 1, icon: FileIcon };

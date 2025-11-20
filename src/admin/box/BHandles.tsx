@@ -97,7 +97,7 @@ const startResize = (ctrl: BCtrl, dir: HandleDir, name: string, event: Event) =>
     const canvasH = canvasRect.height;
 
     const snap = (v: number) => {
-      const snapFactor = 48 / 100;
+      const snapFactor = 50 / 100; // 48 / 100;
       v = round(v * snapFactor) / snapFactor;
       v = round(v, 3);
       return v;

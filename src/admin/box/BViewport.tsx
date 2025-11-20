@@ -39,9 +39,8 @@ export const BViewport = () => {
       const [w, h] = SCREEN_SIZES[0]!;
       pz.setSize(w, h);
 
-      setTimeout(() => {
-        pz.fitToContainer();
-      }, 1000);
+      setTimeout(() => pz.fitToContainer(), 100);
+      setTimeout(() => pz.fitToContainer(), 1000);
     };
     ready();
 

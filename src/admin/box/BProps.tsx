@@ -44,11 +44,11 @@ import {
 } from 'lucide-react';
 import { BMedias } from './BMedias';
 import { FieldProps } from '@/components/fields/types';
+import { DivProps } from '@/components/types';
 
 const c = Css('BProps', {
   '': {
     flex: 2,
-    m: 4,
     overflowX: 'hidden',
     overflowY: 'auto',
     col: ['stretch', 'start'],
@@ -60,11 +60,14 @@ const c = Css('BProps', {
     w: 80,
   },
   Sep: {
-    my: 4,
-    mx: '10%',
-    w: '80%',
-    h: 2,
+    w: '100%',
+    h: 1,
     bg: 'g',
+  },
+  Panel: {
+    bt: 'border',
+    px: 8,
+    py: 4,
   },
 });
 
@@ -174,6 +177,14 @@ export const BDataField = () => {
   return <Field label="B" name="box" type="json" value={item} onValue={onValue} col />;
 };
 
+const Sep = () => (
+  <div {...c('Sep')} />
+);
+
+const Panel = (props: DivProps) => (
+  <div {...props} {...c('Panel', props)} />
+);
+
 export const BProps = () => {
   const ctrl = useBCtrl();
   const select = useFlux(ctrl.select$);
@@ -191,14 +202,36 @@ export const BProps = () => {
 
   return (
     <div {...c()} key={i}>
-      <div {...c('Sep')} />
-      <BField label="Nom" prop="n" />
-      <BStyleField label="Fond" prop="bg" type="color" />
-      <BStyleField label="Texte" prop="fg" type="color" />
-      <BStyleField label="Font Size" prop="fontSize" type="number" />
-
-      {config.a && (
-        <>
+      {config.r && (
+        <Panel>
+          <Field label="Ajouter">
+            {Object.entries(ctrl.registry).map(([t, config], key) => {
+              const Icon = config?.icon || Square;
+              if (t === 'root' || t === 'rect') return null;
+              return (
+                <Button
+                  key={key}
+                  icon={Icon}
+                  tooltip={config?.label || ''}
+                  onClick={() => {
+                    const next: Writable<Partial<BItem>> = { p: i, t };
+                    if (type === 'text') next.b = 'Mon texte !';
+                    ctrl.add(next);
+                  }}
+                />
+              );
+            })}
+          </Field>
+        </Panel>
+      )}
+      <Panel>
+        <BField label="Nom" prop="n" />
+        <BStyleField label="Fond" prop="bg" type="color" />
+        <BStyleField label="Texte" prop="fg" type="color" />
+        <BStyleField label="Font Size" prop="fontSize" type="number" />
+      </Panel>
+      {config.layout && (
+        <Panel>
           <Field name="row">
             <FlexAlignButton icon={AlignStartHorizontal} row start />
             <FlexAlignButton icon={AlignCenterHorizontal} row center />
@@ -215,12 +248,10 @@ export const BProps = () => {
             <FlexAlignButton icon={AlignVerticalJustifyCenter} justify center />
             <FlexAlignButton icon={AlignVerticalJustifyEnd} justify end />
           </Field>
-        </>
+        </Panel>
       )}
-
       {config.b && (
-        <>
-          <div {...c('Sep')} />
+        <Panel>
           <BField prop="b" type="multiline" col />
           <Field name="textAlign">
             <TextAlignButton icon={AlignLeft} v="left" />
@@ -228,62 +259,39 @@ export const BProps = () => {
             <TextAlignButton icon={AlignJustify} v="justify" />
             <TextAlignButton icon={AlignRight} v="right" />
           </Field>
-        </>
+        </Panel>
       )}
-
-      {/* <Field label="Bordure" Comp={() => (
-        <>
-          <BStyleField prop="borderColor" type="color" />
-          <BStyleField prop="borderWidth" type="number" />
-        </>
-      )} /> */}
-
-      {config.r && (
-        <Field label="Ajouter">
-          {Object.entries(ctrl.registry).map(([t, config], key) => {
-            const Icon = config?.icon || Square;
-            if (t === 'root' || t === 'rect') return null;
-            return (
-              <Button
-                key={key}
-                icon={Icon}
-                tooltip={config?.label || ''}
-                onClick={() => {
-                  const next: Writable<Partial<BItem>> = { p: i, t };
-                  if (type === 'text') next.b = 'Mon texte !';
-                  ctrl.add(next);
-                }}
-              />
-            );
-          })}
-        </Field>
+      <Panel>
+        <Field
+          type="switch"
+          label="Avancé"
+          name="advanced"
+          value={isAdvanced}
+          onValue={setIsAdvanced}
+        />
+        {isAdvanced && (
+          <>
+            <BField label="Type" prop="t" type="select" defaultValue="box" items={types} />
+            <Field label="Contour">
+              <BStyleField prop="border" type="number" />
+              <BStyleField prop="rounded" type="number" />
+              <BStyleField prop="borderColor" type="color" />
+            </Field>
+            <BStyleField label="Marge" prop="p" type="number" />
+            <BStyleField label="Cacher" prop="hide" type="switch" />
+            <BField label="Classe" prop="c" />
+            <BField label="Media ID" prop="m" />
+            <BField label="Init" prop="init" type="json" col />
+            <BField label="Click" prop="click" type="json" col />
+            <BDataField />
+          </>
+        )}
+      </Panel>
+      {config.m && (
+        <Panel>
+          <BMedias />
+        </Panel>
       )}
-      <div {...c('Sep')} />
-      <Field
-        type="switch"
-        label="Avancé"
-        name="advanced"
-        value={isAdvanced}
-        onValue={setIsAdvanced}
-      />
-      {isAdvanced && (
-        <>
-          <BField label="Type" prop="t" type="select" defaultValue="box" items={types} />
-          <Field label="Contour">
-            <BStyleField prop="border" type="number" />
-            <BStyleField prop="rounded" type="number" />
-            <BStyleField prop="borderColor" type="color" />
-          </Field>
-          <BStyleField label="Marge" prop="p" type="number" />
-          <BStyleField label="Cacher" prop="hide" type="switch" />
-          <BField label="Classe" prop="c" />
-          <BField label="Media ID" prop="m" />
-          <BField label="Init" prop="init" type="json" col />
-          <BField label="Click" prop="click" type="json" col />
-          <BDataField />
-        </>
-      )}
-      {config.m && <BMedias />}
     </div>
   );
 };

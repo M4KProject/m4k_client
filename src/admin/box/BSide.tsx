@@ -12,7 +12,6 @@ const c = Css('BSide', {
   },
   Content: {
     position: 'absolute',
-    p: 4,
     wh: '100%',
     bg: 'bg',
     overflowX: 'hidden',
