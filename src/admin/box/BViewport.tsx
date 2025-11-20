@@ -10,6 +10,7 @@ const c = Css('BViewport', {
   '': {
     position: 'relative',
     flex: 1,
+    bg: 'bg0',
   },
   Body: {
     position: 'absolute',

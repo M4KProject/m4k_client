@@ -136,7 +136,7 @@ export const BButtons = () => {
         tooltip="Ajouter un rectangle"
       />
       <div {...c('Sep')} />
-      <BButton icon={Save} onClick={() => {}} tooltip="Enregistrer" />
+      <BButton icon={Save} onClick={() => ctrl.save()} tooltip="Enregistrer" />
     </div>
   );
 };

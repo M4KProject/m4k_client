@@ -39,6 +39,7 @@ import { BRect } from './BRect';
 import { BRoot } from './BRoot';
 import { BMedia } from './BMedia';
 import { PageModel } from '@/api/models';
+import { Api } from '@/api/Api';
 
 const log = logger('BCtrl');
 
@@ -149,12 +150,30 @@ export class BCtrl {
 
   readonly panZoom = new PanZoomCtrl();
 
-  constructor() {
+  readonly api: Api;
+  readonly pageId: string;
+
+  constructor(api: Api, pageId: string) {
+    this.api = api;
+    this.pageId = pageId;
     app.boxCtrl = this;
+    this.load();
   }
 
-  setPage(page: PageModel) {
-    this.setAllData(page.data?.boxes || []);
+  async load() {
+    const page = await this.api.media.coll.get(this.pageId);
+    console.debug('BCtrl load', this.pageId, media);
+    if (page?.type === 'page') {
+      this.setAllData(page.data?.boxes || []);
+    }
+  }
+
+  async save() {
+    const boxes = this.getAllData();
+    console.debug('BCtrl save', this.pageId, boxes);
+    await this.api.media.update(this.pageId, {
+      data: { boxes },
+    });
   }
 
   register(type: string, boxConfig: BType) {
@@ -238,7 +257,7 @@ export class BCtrl {
     return this.getItems().map(toData);
   }
 
-  setAllData(data: BData[]) {
+  setAllData(data: NBData[]) {
     log.d('setAllData', data);
     const items = toItems(data);
     if (!items.length) {
