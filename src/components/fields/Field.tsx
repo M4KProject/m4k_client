@@ -1,13 +1,13 @@
 import { Css, isDefined, isNotEmpty } from 'fluxio';
-import { useEffect, useMemo } from 'preact/hooks';
 import { DivProps } from '@/components/types';
 import { Tr } from '@/components/Tr';
-import { FieldProps, FieldComponent } from './types';
+import { FieldProps } from './types';
 import { FieldController, FieldProvider } from './FieldController';
 import { FIELD_HEIGHT, LABEL_WIDTH } from './constants';
 import { Button } from '@/components/Button';
 import { XIcon } from 'lucide-react';
-import { useFieldConfig, useFieldController, useFieldError, useFieldValue } from './hooks';
+import { useFieldController, useFieldState } from './hooks';
+import { useConstant } from '@/hooks/useConstant';
 
 export const c = Css('Field', {
   '': {
@@ -92,11 +92,10 @@ export const c = Css('Field', {
 
 const ClearButton = () => {
   const ctrl = useFieldController();
-  const config = useFieldConfig(ctrl);
-  const value = useFieldValue(ctrl);
+  const { config, value } = useFieldState(ctrl, 'config', 'value');
+
   const { clearable, readonly } = config;
   const showClear = clearable && isDefined(value) && !readonly;
-  console.debug('ClearButton render', value, showClear);
   return showClear ?
       <Button
         {...c('Clear')}
@@ -108,17 +107,14 @@ const ClearButton = () => {
 };
 
 export const Field = <V = any, R = any>(props: FieldProps<V, R>) => {
-  const ctrl = useMemo(() => new FieldController<V, R>(), []);
+  const ctrl = useConstant(() => new FieldController<V, R>());
   ctrl.setProps(props);
 
-  const config = useFieldConfig(ctrl);
-  const error = useFieldError(ctrl);
+  const { config, error } = useFieldState(ctrl, 'config', 'error');
 
   const { input: Input, children, label, helper, col, type, containerProps } = config;
 
   const isComposed = isNotEmpty(children);
-
-  console.debug('Field container render', { ctrl, config, error, isComposed });
 
   return (
     <FieldProvider value={ctrl}>

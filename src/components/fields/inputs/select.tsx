@@ -5,7 +5,7 @@ import { isArray } from 'fluxio';
 import { isSearched } from 'fluxio';
 import { ChevronDown } from 'lucide-react';
 import { FieldProps } from '../types';
-import { useFieldConfig, useFieldController, useInputProps } from '../hooks';
+import { useFieldController, useFieldState } from '../hooks';
 
 const FIELD_HEIGHT = 22;
 
@@ -263,17 +263,15 @@ const Select = ({
 
 const SelectInput = () => {
   const ctrl = useFieldController();
-  const config = useFieldConfig(ctrl);
-  const { value, onChange, name, required, placeholder } = useInputProps();
-  console.debug('SelectInput render', value, name);
+  const { config, value } = useFieldState(ctrl, 'config', 'value');
   return (
     <Select
       items={config.items}
       value={value}
-      onChange={onChange}
-      name={name}
-      required={required}
-      placeholder={placeholder}
+      onChange={ctrl.onChange}
+      name={config.name}
+      required={config.required}
+      placeholder={config.placeholder}
     />
   );
 };

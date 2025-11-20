@@ -29,7 +29,6 @@ const Multiline = () => {
     adjustHeight();
   }, [props.value]);
 
-  console.debug('Multiline render', props);
   return <textarea ref={textareaRef} {...props} {...c('', props)} />;
 };
 
@@ -40,7 +39,6 @@ const multiline: FieldProps<string, string> = {
 const json: FieldProps<any, string> = {
   input: Multiline,
   toRaw: (value: any) => {
-    console.debug('json toRaw', value);
     try {
       return isDefined(value) ? JSON.stringify(value, undefined, 2) : undefined;
     } catch (error) {
@@ -49,7 +47,6 @@ const json: FieldProps<any, string> = {
     }
   },
   toValue: (value: any) => {
-    console.debug('json toValue', value);
     try {
       return isString(value) ? JSON.parse(value) : undefined;
     } catch (error) {

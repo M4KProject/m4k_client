@@ -5,10 +5,9 @@ import { Button } from '@/components/Button';
 import { EyeIcon, EyeOffIcon } from 'lucide-react';
 import { formatSeconds, parseSeconds, toNumber, toString } from 'fluxio';
 
-const getInput = <V = string,>(type: string): FieldProps<V, string> => ({
+const getInput = <V = string>(type: string): FieldProps<V, string> => ({
   input: () => {
     const props = useInputProps();
-    console.debug('input render', type, props);
     return <input {...props} type={type} />;
   },
 });
@@ -25,7 +24,6 @@ const password: FieldProps<string, string> = {
   input: () => {
     const [show, setShow] = useState(false);
     const props = useInputProps();
-    console.debug('password render', props, show);
     return (
       <>
         <input {...props} type={show ? 'text' : 'password'} />
@@ -44,7 +42,6 @@ const password: FieldProps<string, string> = {
 const seconds: FieldProps<number, string> = {
   input: () => {
     const props = useInputProps();
-    console.debug('seconds render', props);
     return <input {...props} type="text" placeholder={props.placeholder || '00:00:00'} />;
   },
   toValue: parseSeconds,

@@ -35,7 +35,6 @@ const c = Css('CheckInput', {
 
 const CheckInput = () => {
   const { value, onChange, ...props } = useInputProps();
-  console.debug('CheckInput render', value, props);
   return (
     <div onClick={() => onChange(!value)} {...props} {...c('', value && '-selected', props)}>
       <CheckIcon />

@@ -2,7 +2,7 @@ import { ComponentChildren } from 'preact';
 import { Css } from 'fluxio';
 import { Button } from '@/components/Button';
 import { isArray } from 'fluxio';
-import { useFieldConfig, useFieldController, useInputProps } from '../hooks';
+import { useFieldController, useFieldState } from '../hooks';
 import { FieldProps } from '../types';
 
 const c = Css('Picker', {
@@ -68,16 +68,15 @@ const Picker = ({ name, required, value = '', onChange, items = [], ...props }: 
 
 const PickerInput = () => {
   const ctrl = useFieldController();
-  const config = useFieldConfig(ctrl);
-  const { value, onChange, name, required } = useInputProps();
-  console.debug('PickerInput render', value, name);
+  const { config, value } = useFieldState(ctrl, 'config', 'value');
+
   return (
     <Picker
       items={config.items}
       value={value}
-      onChange={onChange}
-      name={name}
-      required={required}
+      onChange={ctrl.onChange}
+      name={config.name}
+      required={config.required}
     />
   );
 };

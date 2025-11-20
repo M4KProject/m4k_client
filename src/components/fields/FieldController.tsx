@@ -40,7 +40,6 @@ export class FieldController<V, R> {
   }
 
   setProps(props: FieldProps<V, R>) {
-    this.log.d('setProps', props);
     const { value, error, ...rest } = props;
 
     const hash = Object.values(rest).join(';');
@@ -50,14 +49,16 @@ export class FieldController<V, R> {
       return;
     }
 
-    if (!isDeepEqual(this.propsValue, props.value)) {
-      this.log.d('setProps value', this.propsValue, '->', props.value);
+    if (this.propsValue === props.value || isDeepEqual(this.propsValue, props.value)) {
+      // No change, skip
+    } else {
       this.propsValue = props.value;
       this.update({ value: props.value });
     }
 
-    if (!isDeepEqual(this.propsError, props.error)) {
-      this.log.d('setProps error', this.propsError, '->', props.error);
+    if (this.propsError === props.error || isDeepEqual(this.propsError, props.error)) {
+      // No change, skip
+    } else {
       this.propsError = props.error;
       this.update({ error: props.error });
     }
@@ -71,8 +72,7 @@ export class FieldController<V, R> {
       type,
     });
 
-    this.log = logger(`${config.name}(${type})`);
-    this.log.d('reset', this);
+    this.log = logger(`Field:${config.name || type}`);
 
     const value = config.stored ? getStorage().get(config.stored, config.value) : config.value;
     this.propsValue = props.value;
@@ -84,7 +84,7 @@ export class FieldController<V, R> {
       raw = isDefined(value) ? ((config.toRaw || toMe)(value) as any) : undefined;
     } catch (e) {
       error = toError(e);
-      this.log.e('reset toRaw error', value, error);
+      this.log.e('toRaw error', value, error);
     }
 
     this.state = {
@@ -99,32 +99,31 @@ export class FieldController<V, R> {
 
   update(next?: NextState<Partial<FieldState<V, R>>>) {
     const prev = this.next || this.state;
-    this.log.d('update', prev, '->', next);
     const changes = isFunction(next) ? next(prev) : next;
-    this.log.d('update changes', changes);
     this.next = { ...prev, ...changes };
     const delay = toNumber(this.config.delay, 400);
-    this.log.d('update delay', delay);
+
     if (this.timer) clearTimeout(this.timer);
-    this.timer = setTimeout(() => this.apply(), delay);
+
+    if (delay === 0) {
+      this.apply();
+    } else {
+      this.timer = setTimeout(() => this.apply(), delay);
+    }
   }
 
   apply() {
-    this.log.d('apply');
     const changes = this.next && getChanges(this.state, this.next);
     if (isNotEmpty(changes)) {
-      this.log.d('apply changes', changes);
-
       let { value, raw, event, error } = changes;
       const config = this.config;
 
       if ('value' in changes) {
         try {
           raw = isDefined(value) ? ((config.toRaw || toMe)(value) as any) : undefined;
-          this.log.d('apply value to raw', value, raw);
         } catch (e) {
           error = toError(e);
-          this.log.d('apply value to raw error', value, error);
+          this.log.e('toRaw error', value, error);
         }
       } else if ('raw' in changes) {
         try {
@@ -135,11 +134,9 @@ export class FieldController<V, R> {
             if (isNumber(min) && value < min) value = min;
             else if (isNumber(max) && value > max) value = max;
           }
-
-          this.log.d('apply raw to value', raw, value);
         } catch (e) {
           error = toError(e);
-          this.log.d('apply raw to value error', raw, error);
+          this.log.e('toValue error', raw, error);
         }
       }
 
@@ -151,7 +148,6 @@ export class FieldController<V, R> {
 
   notify() {
     const state = this.state;
-    this.log.d('notify', state);
     const value = state.value;
 
     if (isDefined(value)) {
@@ -162,20 +158,17 @@ export class FieldController<V, R> {
       try {
         listener(state);
       } catch (error) {
-        this.log.e('notify error', this, listener, error);
+        this.log.e('listener error', error);
       }
     }
   }
 
-  onChange(event: any) {
-    this.log.d('onChange', event);
+  private _onChange(event: any) {
     if (this.config.readonly) return;
-
     const raw = event instanceof Event ? (event.target as any).value : event;
-    this.log.d('onChange raw', event, raw);
-
     this.update({ raw, event });
   }
+  onChange = this._onChange.bind(this);
 }
 
 export const FieldContext = createContext<FieldController<any, any> | undefined>(undefined);
