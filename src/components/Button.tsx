@@ -1,6 +1,6 @@
-import { ComponentChildren } from 'preact';
+import { ComponentChildren, ComponentType, createElement } from 'preact';
 import { useRef } from 'preact/hooks';
-import { Css } from 'fluxio';
+import { Css, isFunction } from 'fluxio';
 import { Tr } from './Tr';
 import { Props } from './types';
 import { tooltip } from './Tooltip';
@@ -82,7 +82,7 @@ export interface ButtonProps extends BaseButtonProps {
   color?: 'default' | 'primary' | 'secondary' | 'success' | 'warn' | 'error';
   variant?: 'upload';
   selected?: boolean;
-  icon?: ComponentChildren;
+  icon?: ComponentChildren|ComponentType<any>;
   before?: ComponentChildren;
   title?: string;
   link?: boolean;
@@ -116,7 +116,7 @@ export const Button = ({
     <>
       <div {...c('Sfx')} />
       {before}
-      {icon && <div {...c('Icon')}>{icon}</div>}
+      {icon && <div {...c('Icon')}>{isFunction(icon) ? createElement(icon, {}) : icon}</div>}
       <div {...c('Content')}>
         {title && <Tr>{title}</Tr>}
         {children}

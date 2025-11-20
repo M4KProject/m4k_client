@@ -81,7 +81,7 @@ export const Side = ({ children, ...props }: DivProps) => {
     <div {...props} {...c('', open ? '-open' : '-close', props)}>
       <div {...c('Mask')}>
         <div {...c('Content')}>
-          <Button icon={<Menu />} onClick={toggleOpen}>
+          <Button icon={Menu} onClick={toggleOpen}>
             Ouvrir
           </Button>
           {children}

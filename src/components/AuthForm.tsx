@@ -76,7 +76,7 @@ export const AuthForm = () => {
             />
             <div {...c('Col')}>
               <Button
-                icon={<LogIn />}
+                icon={LogIn}
                 title="Se connecter"
                 onClick={async () => {
                   setPage('');
@@ -92,12 +92,12 @@ export const AuthForm = () => {
               />
               <Button
                 title="Mot de passe oublié ?"
-                icon={<Key />}
+                icon={Key}
                 onClick={() => setPage('forgot-password')}
               />
               <Button
                 title="Vous n'avez pas de compte ? Inscrivez-vous"
-                icon={<UserPlus />}
+                icon={UserPlus}
                 onClick={() => setPage('sign-up')}
               />
             </div>
@@ -125,11 +125,11 @@ export const AuthForm = () => {
                   setPage('sign-in');
                 }}
                 color="primary"
-                icon={<UserPlus />}
+                icon={UserPlus}
               />
               <Button
                 title="Vous avez déjà un compte ? Connectez-vous"
-                icon={<LogIn />}
+                icon={LogIn}
                 onClick={() => setPage('sign-in')}
               />
             </div>
@@ -147,11 +147,11 @@ export const AuthForm = () => {
                   // setPage('code');
                 }}
                 color="primary"
-                icon={<Mail />}
+                icon={Mail}
               />
               <Button
                 title="Vous avez déjà un compte ? Connectez-vous"
-                icon={<ArrowLeft />}
+                icon={ArrowLeft}
                 onClick={() => setPage('sign-in')}
               />
             </div>
@@ -167,12 +167,12 @@ export const AuthForm = () => {
                   /* signWithCode(email, password) */
                 }}
                 color="primary"
-                icon={<Key />}
+                icon={Key}
               />
               <Button
                 title="Vous avez déjà un compte ? Connectez-vous"
                 onClick={() => setPage('sign-in')}
-                icon={<ArrowLeft />}
+                icon={ArrowLeft}
               />
             </div>
           </>

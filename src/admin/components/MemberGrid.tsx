@@ -47,7 +47,7 @@ const cols: GridCols<MemberModel, { deviceById: Dictionary<DeviceModel>; api: Ap
     'Actions',
     ({ id }, { api }) => (
       <Button
-        icon={<Trash2 />}
+        icon={Trash2}
         color="error"
         {...tooltip('Supprimer')}
         onClick={() => api.member.delete(id)}

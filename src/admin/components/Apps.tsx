@@ -46,7 +46,7 @@ export const AppButton = ({
   return (
     <Button
       {...c('AppButton')}
-      icon={<Download />}
+      icon={Download}
       color="primary"
       onClick={(e) => {
         if (m4k.isInterface) {

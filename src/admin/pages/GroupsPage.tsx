@@ -38,7 +38,7 @@ export const GroupsPage = () => {
   return (
     <Page {...c()}>
       <Toolbar title="Gestionnaire de groupes">
-        <Button title="Ajouter" icon={<Plus />} color="primary" onClick={handleAdd} />
+        <Button title="Ajouter" icon={Plus} color="primary" onClick={handleAdd} />
         <SearchField />
       </Toolbar>
       <PageBody>

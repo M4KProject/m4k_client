@@ -72,13 +72,13 @@ export const AuthPage = () => {
       <AuthForm />
       <div {...c('BottomButtons')}>
         <Button
-          icon={<Download />}
+          icon={Download}
           color="secondary"
           onClick={() => setShowApplications(!showApplications)}
           title="Téléchargement"
         />
         <Button
-          icon={<Monitor />}
+          icon={Monitor}
           color="secondary"
           onClick={() => {
             isDevice$.set(true);

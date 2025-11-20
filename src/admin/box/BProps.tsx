@@ -15,7 +15,7 @@ import { useFlux, useFluxMemo } from '@/hooks/useFlux';
 import { BType, BData, BItem, BPropNext, BNext } from '@/box/bTypes';
 import { ComponentChildren } from 'preact';
 import { isAdvanced$, setIsAdvanced } from '@/router';
-import { Button } from '@/components/Button';
+import { Button, ButtonProps } from '@/components/Button';
 import {
   // Texte
   AlignLeft,
@@ -97,12 +97,15 @@ const FlexAlignButton = ({
   icon,
   row,
   justify,
-  v,
+  start,
+  end,
 }: {
-  icon: ComponentChildren;
+  icon: ButtonProps['icon'];
   row?: true;
   justify?: true;
-  v: StyleFlexJustify & StyleFlexAlign;
+  start?: true;
+  center?: true;
+  end?: true;
 }) => {
   const [style, setStyle] = useProp('s');
   const s = style || ({} as Style);
@@ -112,6 +115,8 @@ const FlexAlignButton = ({
   const flex = fRow || fCol || ['', ''];
   const fAlign = flex[0] as StyleFlexAlign;
   const fJustify = flex[1] as StyleFlexJustify;
+
+  const v = start ? "start" : end ? "end" : "center";
 
   const selected = (row ? !!fRow : !!fCol) && (justify ? fJustify === v : fAlign === v);
 
@@ -192,20 +197,20 @@ export const BProps = () => {
       {config.a && (
         <>
           <Field name="row">
-            <FlexAlignButton icon={<AlignStartHorizontal />} row v="start" />
-            <FlexAlignButton icon={<AlignCenterHorizontal />} row v="center" />
-            <FlexAlignButton icon={<AlignEndHorizontal />} row v="end" />
-            <FlexAlignButton icon={<AlignHorizontalJustifyStart />} row justify v="start" />
-            <FlexAlignButton icon={<AlignHorizontalJustifyCenter />} row justify v="center" />
-            <FlexAlignButton icon={<AlignHorizontalJustifyEnd />} row justify v="end" />
+            <FlexAlignButton icon={AlignStartHorizontal} row start />
+            <FlexAlignButton icon={AlignCenterHorizontal} row center />
+            <FlexAlignButton icon={AlignEndHorizontal} row end />
+            <FlexAlignButton icon={AlignHorizontalJustifyStart} row justify start />
+            <FlexAlignButton icon={AlignHorizontalJustifyCenter} row justify center />
+            <FlexAlignButton icon={AlignHorizontalJustifyEnd} row justify end />
           </Field>
           <Field name="col">
-            <FlexAlignButton icon={<AlignStartVertical />} v="start" />
-            <FlexAlignButton icon={<AlignCenterVertical />} v="center" />
-            <FlexAlignButton icon={<AlignEndVertical />} v="end" />
-            <FlexAlignButton icon={<AlignVerticalJustifyStart />} justify v="start" />
-            <FlexAlignButton icon={<AlignVerticalJustifyCenter />} justify v="center" />
-            <FlexAlignButton icon={<AlignVerticalJustifyEnd />} justify v="end" />
+            <FlexAlignButton icon={AlignStartVertical} start />
+            <FlexAlignButton icon={AlignCenterVertical} center />
+            <FlexAlignButton icon={AlignEndVertical} end />
+            <FlexAlignButton icon={AlignVerticalJustifyStart} justify start />
+            <FlexAlignButton icon={AlignVerticalJustifyCenter} justify center />
+            <FlexAlignButton icon={AlignVerticalJustifyEnd} justify end />
           </Field>
         </>
       )}
@@ -215,10 +220,10 @@ export const BProps = () => {
           <div {...c('Sep')} />
           <BField prop="b" type="multiline" col />
           <Field name="textAlign">
-            <TextAlignButton icon={<AlignLeft />} v="left" />
-            <TextAlignButton icon={<AlignCenter />} v="center" />
-            <TextAlignButton icon={<AlignJustify />} v="justify" />
-            <TextAlignButton icon={<AlignRight />} v="right" />
+            <TextAlignButton icon={AlignLeft} v="left" />
+            <TextAlignButton icon={AlignCenter} v="center" />
+            <TextAlignButton icon={AlignJustify} v="justify" />
+            <TextAlignButton icon={AlignRight} v="right" />
           </Field>
         </>
       )}
@@ -238,7 +243,7 @@ export const BProps = () => {
             return (
               <Button
                 key={key}
-                icon={<Icon />}
+                icon={Icon}
                 tooltip={config?.label || ''}
                 onClick={() => {
                   const next: Writable<Partial<BItem>> = { p: i, t };

@@ -84,36 +84,36 @@ const DeviceAppContent = () => {
           <SideSep />
           <SideButton
             selected={page === ''}
-            icon={<MonitorSpeaker />}
+            icon={MonitorSpeaker}
             title="Kiosk"
             onClick={go('kiosk')}
           />
           <SideButton
             selected={page === 'actions'}
-            icon={<Wrench />}
+            icon={Wrench}
             title="Actions"
             onClick={go('actions')}
           />
           {/* <SideButton icon={<KeyRound />} page="password" title="Mot de passe" /> */}
           <SideButton
             selected={page === 'playlist'}
-            icon={<List />}
+            icon={List}
             title="Playlist"
             onClick={go('playlist')}
           />
           <SideButton
             selected={page === 'configPlaylist'}
-            icon={<Settings />}
+            icon={Settings}
             title="Config"
             onClick={go('configPlaylist')}
           />
           {/* <SideButton icon={<MdWifi />} page="wifi" title="Wifi" /> */}
           <SideSep />
-          <SideButton selected={page === 'test'} icon={<Bug />} title="Test" onClick={go('test')} />
+          <SideButton selected={page === 'test'} icon={Bug} title="Test" onClick={go('test')} />
           {/* <SideButton icon={<MdListAlt />} page="logs" title="Logs" /> */}
           <SideButton
             selected={page === 'events'}
-            icon={<Calendar />}
+            icon={Calendar}
             title="Events"
             onClick={go('events')}
           />

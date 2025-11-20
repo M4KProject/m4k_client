@@ -57,7 +57,7 @@ export const SideBar = () => {
       <SideSep />
       <SideButton
         title={group?.name || 'Groups'}
-        icon={<Home />}
+        icon={Home}
         selected={page === 'groups'}
         onClick={go('groups')}
       />
@@ -66,13 +66,13 @@ export const SideBar = () => {
         <>
           <SideButton
             title="Members"
-            icon={<Users />}
+            icon={Users}
             selected={page === 'members'}
             onClick={go('members')}
           />
           <SideButton
             title="Devices"
-            icon={<Monitor />}
+            icon={Monitor}
             selected={page === 'devices'}
             onClick={go('devices')}
           />
@@ -106,7 +106,7 @@ export const SideBar = () => {
           {isAdvanced && (
             <SideButton
               title="Jobs"
-              icon={<Zap />}
+              icon={Zap}
               selected={page === 'jobs'}
               onClick={go('jobs')}
             />
@@ -117,7 +117,7 @@ export const SideBar = () => {
       <div {...c('Version')}>2.2</div>
       <SideButton
         title="Account"
-        icon={<User />}
+        icon={User}
         selected={page === 'account'}
         onClick={go('account')}
       />

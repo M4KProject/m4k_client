@@ -91,7 +91,7 @@ const cols: GridCols<
     'Actions',
     (item, { api }) => (
       <Button
-        icon={<Trash2 />}
+        icon={Trash2}
         color="error"
         {...tooltip('Supprimer')}
         onClick={() => api.group.delete(item.id)}

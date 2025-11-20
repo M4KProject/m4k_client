@@ -111,22 +111,22 @@ const playlistCols: GridCols<
     (_entry, ctx, index) => (
       <div style={{ display: 'flex', gap: '0.5em' }}>
         <Button
-          icon={<ArrowUp />}
+          icon={ArrowUp}
           {...tooltip('Monter')}
           onClick={() => ctx.moveItemIndex(index, index - 1)}
         />
         <Button
-          icon={<ArrowDown />}
+          icon={ArrowDown}
           {...tooltip('Décendre')}
           onClick={() => ctx.moveItemIndex(index, index + 1)}
         />
         <Button
-          icon={<Copy />}
+          icon={Copy}
           {...tooltip('Dupliquer')}
           onClick={() => ctx.duplicateItem(index)}
         />
         <Button
-          icon={<Trash2 />}
+          icon={Trash2}
           color="error"
           {...tooltip('Supprimer')}
           onClick={() => ctx.deleteItem(index)}
@@ -146,7 +146,7 @@ export const AddPlaylistItemButton = ({ playlist }: { playlist: PlaylistModel })
       }
     });
   };
-  return <Button title="Ajouter une entrée" icon={<Plus />} color="primary" onClick={newItem} />;
+  return <Button title="Ajouter une entrée" icon={Plus} color="primary" onClick={newItem} />;
 };
 
 export const EditPlaylist = ({ playlist }: { playlist: PlaylistModel }) => {

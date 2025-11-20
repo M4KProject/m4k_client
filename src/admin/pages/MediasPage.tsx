@@ -70,11 +70,11 @@ export const MediasPage = () => {
 
         {media &&
           (isEdit ?
-            <Button icon={<Play />} title="Afficher le media" onClick={() => setIsEdit(false)} />
-          : <Button icon={<Edit />} title="Éditer le media" onClick={() => setIsEdit(true)} />)}
+            <Button icon={Play} title="Afficher le media" onClick={() => setIsEdit(false)} />
+          : <Button icon={Edit} title="Éditer le media" onClick={() => setIsEdit(true)} />)}
 
         {/* <Button
-          icon={<MapPlus />}
+          icon={MapPlus}
           {...tooltip('Ajouter à la playlist')}
           onClick={handleAddToPlaylist}
         >
@@ -83,7 +83,7 @@ export const MediasPage = () => {
 
         {type === 'playlist' && (
           <Button
-            icon={<MapPlus />}
+            icon={MapPlus}
             {...tooltip('Créer une playlist')}
             onClick={() => addPlaylist(api)}
           >
@@ -92,12 +92,12 @@ export const MediasPage = () => {
         )}
 
         {type === 'page' && (
-          <Button icon={<FilePlus />} {...tooltip('Créer une page')} onClick={() => addPage(api)} />
+          <Button icon={FilePlus} {...tooltip('Créer une page')} onClick={() => addPage(api)} />
         )}
 
         {type === '' && (
           <Button
-            icon={<FolderPlus />}
+            icon={FolderPlus}
             {...tooltip('Créer un nouveau dossier')}
             onClick={() => {
               api.media.create({
@@ -115,7 +115,7 @@ export const MediasPage = () => {
 
         <UploadButton
           {...tooltip('Téléverser des medias')}
-          icon={<Upload />}
+          icon={Upload}
           color="primary"
           onFiles={(files) => {
             if (media?.type === 'playlist') {

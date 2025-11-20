@@ -185,7 +185,7 @@ const testCols: GridCols<TestData, { play: (test: TestData) => void }> = {
   error: ['Erreur', (test) => test.result?.error || ''],
   actions: [
     'Actions',
-    (item, { play }) => <Button icon={<Play />} onClick={() => play(item)} />,
+    (item, { play }) => <Button icon={Play} onClick={() => play(item)} />,
     { w: 240 },
   ],
 };

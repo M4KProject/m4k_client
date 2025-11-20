@@ -22,7 +22,7 @@ export const SearchField = () => {
     <div {...c()}>
       {isSearchOpen && <Field name="search" value={search} onValue={search$.setter()} />}
       <Button
-        icon={<Search />}
+        icon={Search}
         color="primary"
         onClick={() => isSearchOpen$.set((prev) => !prev)}
       />

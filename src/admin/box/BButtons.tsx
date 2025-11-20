@@ -92,48 +92,51 @@ export const BButtons = () => {
     ctrl.panZoom.setSize(w, h);
   };
 
-  if (!isUInt(selectIndex)) {
-    return (
-      <div {...c()}>
-        <BButton
-          icon={<SizeIcon />}
-          onClick={toggleScreenSize}
-          tooltip={`${sizeTitle} (${sizeWidth}x${sizeHeight})`}
-        />
-        <BButton icon={<RotateCw />} onClick={() => pz.switchSize()} tooltip="Tourner l'écran" />
-        <div {...c('Sep')} />
-        <BButton icon={<ZoomIn />} onClick={() => pz.zoomIn()} tooltip="Zoom +" />
-        <BButton icon={<ZoomOut />} onClick={() => pz.zoomOut()} tooltip="Zoom -" />
-        <BButton
-          icon={<Maximize2 />}
-          onClick={() => pz.fitToContainer()}
-          tooltip="Ajuster au conteneur"
-        />
-        <div {...c('Sep')} />
-        <BButton
-          icon={<SquarePlus />}
-          onClick={() => addRect(ctrl)}
-          tooltip="Ajouter un rectangle"
-        />
-        <div {...c('Sep')} />
-        <BButton icon={<Save />} onClick={() => {}} tooltip="Enregistrer" />
-      </div>
-    );
-  } else {
-    return (
-      <div {...c()}>
-        <BButton icon={<ClipboardX />} onClick={() => cut(ctrl, selectIndex)} tooltip="Couper" />
-        <BButton
-          icon={<ClipboardCopy />}
-          onClick={() => copy(ctrl, selectIndex)}
-          tooltip="Copier"
-        />
-        <BButton
-          icon={<ClipboardPaste />}
-          onClick={() => paste(ctrl, selectIndex)}
-          tooltip="Coller"
-        />
-      </div>
-    );
-  }
+  const hasSelect = isUInt(selectIndex);
+
+  return (
+    <div {...c()}>
+      {!hasSelect && (
+        <>
+          <BButton
+            icon={SizeIcon}
+            onClick={toggleScreenSize}
+            tooltip={`${sizeTitle} (${sizeWidth}x${sizeHeight})`}
+          />
+          <BButton icon={RotateCw} onClick={() => pz.switchSize()} tooltip="Tourner l'écran" />
+          <div {...c('Sep')} />
+          <BButton icon={ZoomIn} onClick={() => pz.zoomIn()} tooltip="Zoom +" />
+          <BButton icon={ZoomOut} onClick={() => pz.zoomOut()} tooltip="Zoom -" />
+          <BButton
+            icon={Maximize2}
+            onClick={() => pz.fitToContainer()}
+            tooltip="Ajuster au conteneur"
+          />
+        </>
+      )}
+      {hasSelect && (
+        <>
+          <BButton icon={ClipboardX} onClick={() => cut(ctrl, selectIndex)} tooltip="Couper" />
+          <BButton
+            icon={ClipboardCopy}
+            onClick={() => copy(ctrl, selectIndex)}
+            tooltip="Copier"
+          />
+          <BButton
+            icon={ClipboardPaste}
+            onClick={() => paste(ctrl, selectIndex)}
+            tooltip="Coller"
+          />
+        </>
+      )}
+      <div {...c('Sep')} />
+      <BButton
+        icon={SquarePlus}
+        onClick={() => addRect(ctrl)}
+        tooltip="Ajouter un rectangle"
+      />
+      <div {...c('Sep')} />
+      <BButton icon={Save} onClick={() => {}} tooltip="Enregistrer" />
+    </div>
+  );
 };

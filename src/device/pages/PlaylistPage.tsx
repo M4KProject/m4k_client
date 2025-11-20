@@ -98,13 +98,13 @@ const playlistItemCols: GridCols<
     (_item, ctx, i) => (
       <div style={{ display: 'flex', gap: '0.5em' }}>
         <Button
-          icon={<ArrowUp />}
+          icon={ArrowUp}
           color="primary"
           {...tooltip(i === 0 ? 'Aller à la fin' : 'Monter')}
           onClick={() => ctx.handleMoveUp(i)}
         />
         <Button
-          icon={<ArrowDown />}
+          icon={ArrowDown}
           color="primary"
           {...tooltip(
             i === (ctx.playlist?.items?.length || 0) - 1 ? 'Aller au début' : 'Descendre'
@@ -112,13 +112,13 @@ const playlistItemCols: GridCols<
           onClick={() => ctx.handleMoveDown(i)}
         />
         <Button
-          icon={<Copy />}
+          icon={Copy}
           color="primary"
           {...tooltip('Dupliquer')}
           onClick={() => ctx.handleDuplicate(i)}
         />
         <Button
-          icon={<Trash2 />}
+          icon={Trash2}
           color="error"
           {...tooltip('Supprimer')}
           onClick={() => ctx.handleDelete(i)}

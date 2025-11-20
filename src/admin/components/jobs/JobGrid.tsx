@@ -50,7 +50,7 @@ const cols: GridCols<JobModel, { mediaById: Dictionary<MediaModel>; api: Api }> 
     'Actions',
     (job, { api }) => (
       <Button
-        icon={<Trash2 />}
+        icon={Trash2}
         color="error"
         {...tooltip('Supprimer')}
         onClick={() => api.job.delete(job.id)}

@@ -88,23 +88,23 @@ const deviceCols: GridCols<
     (d, { api, isAdvanced, handleRemote }) => (
       <div style={{ display: 'flex', gap: '0.5em' }}>
         <Button
-          icon={<RefreshCw />}
+          icon={RefreshCw}
           color="primary"
           {...tooltip('Rafraîchir')}
           onClick={() => api.device.update(d.id, { action: 'reload' })}
         />
         <Button
-          icon={<Power />}
+          icon={Power}
           color="primary"
           {...tooltip('Redémarrer')}
           onClick={() => api.device.update(d.id, { action: 'reboot' })}
         />
         {isAdvanced && (
-          <Button icon={<Settings />} {...tooltip('Mode remote')} onClick={() => handleRemote(d)} />
+          <Button icon={Settings} {...tooltip('Mode remote')} onClick={() => handleRemote(d)} />
         )}
         {isAdvanced && (
           <Button
-            icon={<Trash2 />}
+            icon={Trash2}
             color="error"
             {...tooltip('Supprimer')}
             onClick={() => api.device.delete(d.id)}
@@ -181,7 +181,7 @@ export const DevicesPage = () => {
   return (
     <Page {...c()}>
       <Toolbar title="Les écrans">
-        <Button icon={<Plus />} color="primary" onClick={handleAdd}>
+        <Button icon={Plus} color="primary" onClick={handleAdd}>
           Ajouter
         </Button>
         <SearchField />

@@ -54,14 +54,14 @@ export const AccountPage = () => {
         <Button
           color="primary"
           title="Deconnexion"
-          icon={<LogOut />}
+          icon={LogOut}
           onClick={() => api.pb.logout()}
         />
         <Button
           color="primary"
           title="Changer de mot de passe"
           onClick={handleUpdatePassword}
-          icon={<KeyRound />}
+          icon={KeyRound}
         />
       </Toolbar>
       <PageBody>

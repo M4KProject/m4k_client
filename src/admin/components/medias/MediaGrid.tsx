@@ -94,7 +94,7 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
       <>
         {type === 'folder' && selectedIds.length > 0 && (
           <Button
-            icon={<FolderInput />}
+            icon={FolderInput}
             {...tooltip(`Ajouter ${selectedIds.length} élément(s) au dossier`)}
             onClick={async () => {
               for (const selectId of selectedIds) {
@@ -107,7 +107,7 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
         {type === 'playlist' && (
           <>
             <Button
-              icon={<Edit />}
+              icon={Edit}
               {...tooltip(`Configurer la playlist`)}
               onClick={() => {
                 updateRoute({
@@ -120,7 +120,7 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
             />
             {selectedIds.length > 0 && (
               <Button
-                icon={<PlusSquare />}
+                icon={PlusSquare}
                 {...tooltip(`Ajouter ${selectedIds.length} élément(s) à la playlist`)}
                 onClick={async () => {
                   updatePlaylist(api, id, (playlist) => {
@@ -140,7 +140,7 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
         )}
         {type === 'page' && (
           <Button
-            icon={<Edit />}
+            icon={Edit}
             {...tooltip(`Éditer la page`)}
             onClick={() => {
               updateRoute({
@@ -153,7 +153,7 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
           />
         )}
         <Button
-          icon={<Eye />}
+          icon={Eye}
           {...tooltip('Afficher le media')}
           onClick={() => {
             updateRoute({ mediaKey: key, isEdit: false });
@@ -161,13 +161,13 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
         />
         {type !== 'folder' && type !== 'playlist' && (
           <Button
-            icon={<Download />}
+            icon={Download}
             {...tooltip('Télécharger')}
             onClick={() => api.startMediaDownload(id)}
           />
         )}
         <Button
-          icon={<Trash2 />}
+          icon={Trash2}
           color="error"
           {...tooltip('Supprimer')}
           onClick={async () => {

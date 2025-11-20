@@ -94,7 +94,7 @@ export const PdfView = ({ media, divProps }: PdfViewProps) => {
 
       <div {...c('Toolbar')}>
         <Button
-          icon={<ChevronLeft />}
+          icon={ChevronLeft}
           color={currentPage <= 0 ? 'secondary' : 'primary'}
           onClick={currentPage <= 0 ? undefined : handlePreviousPage}
         />
@@ -102,7 +102,7 @@ export const PdfView = ({ media, divProps }: PdfViewProps) => {
           {currentPage + 1} / {totalPages}
         </div>
         <Button
-          icon={<ChevronRight />}
+          icon={ChevronRight}
           color={currentPage >= totalPages - 1 ? 'secondary' : 'primary'}
           onClick={currentPage >= totalPages - 1 ? undefined : handleNextPage}
         />

@@ -62,11 +62,11 @@ export const CodePinView = ({ open$ }: { open$: Flux<boolean> }) => {
     <Form {...c()}>
       <Field type="password" label="Code PIN" value={codePin} onValue={setCodePin} />
       <div {...c('Buttons')}>
-        <Button title="Valider" color="primary" icon={<Lock />} onClick={handleClose} />
+        <Button title="Valider" color="primary" icon={Lock} onClick={handleClose} />
         <div {...c('Sep')} />
         <Button
           title="Online"
-          icon={<Globe />}
+          icon={Globe}
           onClick={() => {
             offlineMode$.set(false);
           }}
