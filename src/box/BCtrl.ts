@@ -130,9 +130,9 @@ const toData = (item: NBItem): NBData => {
 
 const rect: BType = { comp: BRect, label: 'Rectangle', r: 1, a: 1, icon: Square };
 const root: BType = { comp: BRoot, label: 'Racine', r: 1, icon: Home };
-const text: BType = { comp: BText, label: 'Texte', b: 1, icon: ALargeSmall };
-const carousel: BType = { comp: BCarousel, label: 'Carousel', r: 1, icon: GalleryHorizontal };
-const media: BType = { comp: BMedia, label: 'Media', m: 1, icon: FileIcon };
+const text: BType = { comp: BText, label: 'Texte', b: 1, a: 1, icon: ALargeSmall };
+const carousel: BType = { comp: BCarousel, label: 'Carousel', r: 1, a: 1, icon: GalleryHorizontal };
+const media: BType = { comp: BMedia, label: 'Media', m: 1, a: 1, icon: FileIcon };
 
 export class BCtrl {
   readonly registry: Dictionary<BType> = { root, rect, text, carousel, media };

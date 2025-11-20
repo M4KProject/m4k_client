@@ -84,7 +84,11 @@ const startResize = (ctrl: BCtrl, dir: HandleDir, name: string, event: Event) =>
 
     const i = mustExist(ctrl.select$.get()?.i, 'i');
     const box = mustExist(ctrl.get(i), 'box');
-    const a = mustExist(box.a, 'a');
+    const a = box.a || [0, 0, 100, 100];
+
+    if (!box.a) {
+      ctrl.update(i, { a });
+    }
 
     const [xDir, yDir, wDir, hDir] = dir;
 
