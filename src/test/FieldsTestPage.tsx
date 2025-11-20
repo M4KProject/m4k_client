@@ -40,17 +40,17 @@ refreshTheme();
 
 export const FieldsTestPage = () => {
   const [v, set] = useState({
-    // text: '',
-    // number: 5,
+    text: '',
+    number: 5,
     boolean: true,
-    // color: '#FF0000',
-    // email: 'toto@gmail.com',
-    // date: '',
-    // datetime: '',
-    // multiline: '',
-    // password: '',
-    // seconds: 0,
-    // select: 0,
+    color: '#FF0000',
+    email: 'toto@gmail.com',
+    date: '',
+    datetime: '',
+    multiline: '',
+    password: '',
+    seconds: 0,
+    select: 0,
   });
 
   const up = (changes: Partial<typeof v>) => {
@@ -70,7 +70,7 @@ export const FieldsTestPage = () => {
           value={v}
           onValue={(v) => v && set(v)}
         />
-        {/* <Field
+        <Field
           label="Texte"
           type="text"
           value={v.text}
@@ -84,10 +84,10 @@ export const FieldsTestPage = () => {
           onValue={v => up({ number: v })}
           min={0}
           max={100}
-        /> */}
+        />
         <Field label="Switch" type="switch" value={v.boolean} onValue={(v) => up({ boolean: v })} />
         <Field label="Check" type="check" value={v.boolean} onValue={(v) => up({ boolean: v })} />
-        {/* <Field
+        <Field
           label="Email"
           type="email"
           value={v.email}
@@ -146,13 +146,13 @@ export const FieldsTestPage = () => {
             [20, "20"],
             [30, "30"],
           ]}
-        /> */}
-        {/* <Field
+        />
+        <Field
           label="Color"
           type="color"
           value={v.color}
           onValue={v => up({ color: v })}
-        /> */}
+        />
       </Form>
     </div>
   );
