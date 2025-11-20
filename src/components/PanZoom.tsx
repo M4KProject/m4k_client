@@ -301,16 +301,18 @@ export class PanZoomCtrl {
   }
 
   fitToContainer() {
-    const rect = this.viewportRect();
+    const viewport = this.viewport();
+    const viewportWidth = viewport.offsetWidth;
+    const viewportHeight = viewport.offsetHeight;
 
     const [contentWidth, contentHeight] = this.getSize();
 
-    const scaleX = rect.width / contentWidth;
-    const scaleY = rect.height / contentHeight;
+    const scaleX = viewportWidth / contentWidth;
+    const scaleY = viewportHeight / contentHeight;
     const scale = Math.min(scaleX, scaleY) * 0.95;
 
-    const x = (rect.width - contentWidth * scale) / 2;
-    const y = (rect.height - contentHeight * scale) / 2;
+    const x = (viewportWidth - contentWidth * scale) / 2;
+    const y = (viewportHeight - contentHeight * scale) / 2;
 
     this.applyTransform(x, y, scale);
   }

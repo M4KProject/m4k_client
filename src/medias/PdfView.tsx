@@ -1,12 +1,13 @@
 import { Css } from 'fluxio';
 import { groupBy, sortItems } from 'fluxio';
-import { useState } from 'preact/hooks';
+import { useState, useEffect, useMemo } from 'preact/hooks';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { MediaViewProps } from './MediaView';
-import { PanZoom } from '../components/PanZoom';
+import { PanZoom, PanZoomCtrl } from '../components/PanZoom';
 import { PdfModel } from '@/api/models';
 import { Button } from '../components/Button';
 import { useApi } from '@/hooks/apiHooks';
+import { app } from '@/app';
 
 const c = Css('PdfView', {
   '': {
@@ -55,6 +56,7 @@ export type PdfViewProps = MediaViewProps<PdfModel>;
 export const PdfView = ({ media, divProps }: PdfViewProps) => {
   const api = useApi();
   const [currentPage, setCurrentPage] = useState(0);
+  const panZoomCtrl = useMemo(() => new PanZoomCtrl(), []);
 
   const variants = api.getVariants(media);
   const images = variants.filter((v) => v.type === 'image');
@@ -66,6 +68,16 @@ export const PdfView = ({ media, divProps }: PdfViewProps) => {
 
   const currentPageKey = pages[currentPage] || '';
   const currentImage = imagesByPage[currentPageKey]?.[0];
+
+  useEffect(() => {
+    app.pdfPanZoomCtrl = panZoomCtrl;
+    const unsubscribe = panZoomCtrl.ready$.on(() => {
+      if (currentImage?.width && currentImage?.height) {
+        panZoomCtrl.setSize(currentImage.width, currentImage.height);
+      }
+    });
+    return unsubscribe;
+  }, [currentImage, panZoomCtrl]);
 
   const handlePreviousPage = () => {
     if (currentPage > 0) {
@@ -81,12 +93,14 @@ export const PdfView = ({ media, divProps }: PdfViewProps) => {
 
   return (
     <div {...divProps} {...c(divProps)}>
-      <PanZoom {...c('Container')}>
+      <PanZoom ctrl={panZoomCtrl} {...c('Container')}>
         {currentImage && (
           <div
             {...c('Page')}
             style={{
               backgroundImage: `url('${api.getMediaUrl(currentImage)}')`,
+              width: `${currentImage.width}px`,
+              height: `${currentImage.height}px`,
             }}
           />
         )}
