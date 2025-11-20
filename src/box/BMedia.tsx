@@ -4,9 +4,7 @@ import { MediaView } from '../medias/MediaView';
 import { useMedia, useMediaById } from '@/hooks/apiHooks';
 
 const c = Css('BMedia', {
-  '': {
-    wh: '100%',
-  },
+  '': { wh: '100%' },
 });
 
 export const BMedia: BComp = ({ i, item, props, ctrl }) => {

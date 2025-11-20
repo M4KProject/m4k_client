@@ -1,7 +1,9 @@
 import { Css } from 'fluxio';
 import { BComp } from './bTypes';
 
-const c = Css('BCarousel', {});
+const c = Css('BCarousel', {
+  '': { wh: '100%' },
+});
 
 export const BCarousel: BComp = ({ i, item, props, ctrl }) => {
   console.debug('BCarousel', i, item, props, ctrl);
