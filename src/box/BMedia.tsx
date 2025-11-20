@@ -1,7 +1,9 @@
 import { Css } from 'fluxio';
 import { BComp } from './bTypes';
 import { MediaView } from '../medias/MediaView';
-import { useMedia, useMediaById } from '@/hooks/apiHooks';
+import { useMediaById, useApi } from '@/hooks/apiHooks';
+import { useFlux } from '@/hooks/useFlux';
+import '../medias/registers';
 
 const c = Css('BMedia', {
   '': { wh: '100%' },
@@ -10,8 +12,17 @@ const c = Css('BMedia', {
 export const BMedia: BComp = ({ i, item, props, ctrl }) => {
   console.debug('BMedia', i, item, props, ctrl);
   const mediaId = item.m;
-  const media = useMedia(mediaId);
+  const api = useApi();
+  const media = useFlux(mediaId ? api.media.find$(mediaId) : undefined);
   const mediaById = useMediaById();
+
+  if (!media) {
+    return (
+      <div {...props} {...c('', props)}>
+        {mediaId ? `Chargement du média ${mediaId}...` : 'Aucun média sélectionné'}
+      </div>
+    );
+  }
 
   return (
     <div {...props} {...c('', props)}>
