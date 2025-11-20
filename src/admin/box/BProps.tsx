@@ -232,12 +232,12 @@ export const BProps = () => {
 
       {config.r && (
         <Field label="Ajouter">
-          {Object.entries(ctrl.registry).map(([t, config], i) => {
+          {Object.entries(ctrl.registry).map(([t, config], key) => {
             const Icon = config?.icon || Square;
             if (t === 'root' || t === 'rect') return null;
             return (
               <Button
-                key={i}
+                key={key}
                 icon={<Icon />}
                 tooltip={config?.label || ''}
                 onClick={() => {

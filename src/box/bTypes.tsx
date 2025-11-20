@@ -30,14 +30,6 @@ export interface BItem extends BData {
   readonly e?: HTMLElement; // Element HTML
 }
 
-// export interface BHierarchy {
-//   readonly i: number;
-//   readonly parent?: BHierarchy;
-//   readonly children: BHierarchy[];
-//   readonly depth: number;
-//   readonly item: BItem;
-// }
-
 export type NBData = BData | undefined | null;
 export type NBItem = BItem | undefined | null;
 export type NBItems = Readonly<NBItem[]>;

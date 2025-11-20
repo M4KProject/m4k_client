@@ -1,4 +1,4 @@
-import { Css, isItem, isString, isUInt, normalizeIndex, randColor } from 'fluxio';
+import { Css, isItem, isUInt, normalizeIndex, randColor } from 'fluxio';
 import {
   RotateCw,
   Monitor,
@@ -20,7 +20,7 @@ import { BCtrl, useBCtrl } from '@/box/BCtrl';
 import { Button, ButtonProps } from '@/components/Button';
 import { useFlux } from '@/hooks/useFlux';
 import { clipboardCopy, clipboardPaste } from '@/utils/clipboard';
-import { BData, NBData } from '@/box/bTypes';
+import { BData } from '@/box/bTypes';
 
 const c = Css('BButtons', {
   '': {

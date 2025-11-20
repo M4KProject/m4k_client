@@ -13,8 +13,6 @@ import {
   uniq,
   isInt,
   isUInt,
-  isNotEmpty,
-  removeIndex,
 } from 'fluxio';
 import {
   BFun,
@@ -60,7 +58,7 @@ const applyChanges = (items: Writable<NBItems>, index: number, prev: NBItem, nex
     if (prevParent) {
       items[prevParent.i] = {
         ...prevParent,
-        r: removeIndex([...(prevParent.r || [])], index),
+        r: removeItem([...(prevParent.r || [])], index),
       };
     }
 
@@ -71,18 +69,6 @@ const applyChanges = (items: Writable<NBItems>, index: number, prev: NBItem, nex
       };
     }
   }
-
-  // const prevChildIds = prev?.childIds || [];
-  // const nextChildIds = next?.childIds || [];
-  // const removed: Dictionary<1> = {};
-  // const added: Dictionary<1> = {};
-  // for (const id of prevChildIds) removed[id] = 1;
-  // for (const id of nextChildIds) {
-  //   if (id in removed) delete removed[id];
-  //   else added[id] = 1;
-  // }
-  // if (!isEmpty(removed)) console.warn(`unauthorized remove childId`);
-  // if (!isEmpty(added)) console.warn(`unauthorized added childId`);
 
   return items;
 };
@@ -247,16 +233,6 @@ export class BCtrl {
   getData(index?: number) {
     return toData(this.get(index));
   }
-
-  // getDataWithChildren(index: number): BData|undefined {
-  //   const items = this.getItems();
-  //   const results: Writable<BData>[] = [];
-  //   const add = (index: number) => {
-
-  //   }
-  //   const data = toData(items[index]);
-  //   return results;
-  // }
 
   getAllData() {
     return this.getItems().map(toData);

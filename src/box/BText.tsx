@@ -3,16 +3,16 @@ import { BComp } from './bTypes';
 import { createElement } from 'preact';
 
 const c = Css('BText', {
-  '': {},
+  '': {
+    position: 'relative',
+    display: 'inline-block',
+    m: '1%',
+    p: '1%',
+  },
 });
 
 export const BText: BComp = ({ item, props }) => {
   console.debug('BText', props);
-
-  const divProps = {
-    ...props,
-    ...c('', props),
-  };
 
   const children = [];
   const text = item.b;
@@ -31,5 +31,5 @@ export const BText: BComp = ({ item, props }) => {
     }
   }
 
-  return createElement('div', divProps, ...children);
+  return createElement('div', { ...props, ...c(props, '') }, ...children);
 };

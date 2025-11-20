@@ -1,31 +1,25 @@
 import { BCtrl, useBCtrl } from './BCtrl';
-import { useFlux, useFluxMemo } from '@/hooks/useFlux';
+import { useFluxMemo } from '@/hooks/useFlux';
 import { BCompProps, BFactoryProps, BItem } from './bTypes';
-import { computeStyle, Css, CssStyle, firstUpper, logger } from 'fluxio';
+import { computeStyle, Css, logger } from 'fluxio';
 import { useMemo } from 'preact/hooks';
 
 const log = logger('B');
 
 const c = Css('B', {
   '': {
-    position: 'absolute',
-    col: 1,
+    position: 'relative',
     overflowX: 'hidden',
     overflowY: 'auto',
     boxSizing: 'border-box',
-  },
-  '-text': {
-    position: 'relative',
-    display: 'inline-block',
-    m: '1%',
-    p: '1%',
-  },
+  }
 });
 
 const computeProps = (ctrl: BCtrl, item: BItem): BCompProps['props'] => {
   const { i, t, c: cls, s } = item;
   const style = computeStyle(s);
   const a = item?.a;
+  
   if (a) {
     const [x, y, w, h] = a;
     style.position = 'absolute';
@@ -34,12 +28,14 @@ const computeProps = (ctrl: BCtrl, item: BItem): BCompProps['props'] => {
     style.width = `${w}%`;
     style.height = `${h}%`;
   }
+
   const props: BCompProps['props'] = {
-    ...c('', `-${t}`, String(i), cls),
+    ...c('', String(i), cls),
     style,
     onClick: ctrl.getClick(i),
     ref: ctrl.getRef(i),
   };
+
   log.d('computeProps', item, props);
   return props;
 };
