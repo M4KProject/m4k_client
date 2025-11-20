@@ -45,6 +45,7 @@ export const VideoView = ({ media, onNext, fit, divProps }: VideoViewProps) => {
         controls={false}
         autoPlay={true}
         muted={true}
+        loop={true}
         onEnded={onNext}
         onError={(e) => {
           console.warn('Video load error:', e);
