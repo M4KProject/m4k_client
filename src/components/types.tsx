@@ -1,4 +1,4 @@
-import { JSX } from 'preact';
+import { ComponentChildren, ComponentType, JSX } from 'preact';
 
 export type GetProps<T> = Omit<T, 'style'> & { style?: any };
 
@@ -7,3 +7,5 @@ export type Props = {
 };
 
 export type DivProps = Props['div'];
+
+export type Content = null | undefined | ComponentChildren | ComponentType<any>

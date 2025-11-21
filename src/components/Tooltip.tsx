@@ -4,7 +4,8 @@ import { onEvent } from 'fluxio';
 import { Css } from 'fluxio';
 import { Tr } from './Tr';
 import { addOverlay, removeOverlay } from 'fluxio';
-import { DivProps } from './types';
+import { Content, DivProps } from './types';
+import { getContent } from './getContent';
 
 const c = Css('Tooltip', {
   '': {
@@ -65,7 +66,9 @@ export const Tooltip = ({ target, children, ...props }: TooltipProps) => {
 };
 // , pos?: 'top'|'bottom'|'left'|'right'
 
-export const getTooltipProps = (content: undefined | ComponentChildren | (() => ComponentChildren)) => {
+export type TooltipContent = Content;
+
+export const getTooltipProps = (content: TooltipContent) => {
   if (!content) return {};
   let intervalRef: any;
   let overlay: HTMLDivElement | null = null;
@@ -109,7 +112,7 @@ export const getTooltipProps = (content: undefined | ComponentChildren | (() => 
       if (!overlay) overlay = addOverlay();
 
       render(
-        <Tooltip target={target}>{typeof content === 'function' ? content() : content}</Tooltip>,
+        <Tooltip target={target}>{getContent(content)}</Tooltip>,
         overlay
       );
     },

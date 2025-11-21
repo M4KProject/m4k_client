@@ -2,7 +2,7 @@ import { ComponentChildren, ComponentType, createElement } from 'preact';
 import { useRef } from 'preact/hooks';
 import { Css, isFunction } from 'fluxio';
 import { Tr } from './Tr';
-import { Props } from './types';
+import { Content, Props } from './types';
 import { getTooltipProps } from './Tooltip';
 
 const c = Css('Button', {
@@ -59,18 +59,18 @@ const c = Css('Button', {
   ':hover': { elevation: 0, fg: 'handle' },
   ':hover &Sfx': { scaleX: 1 },
 
-  '-icon': { bg: 'transparent', fg: 't', elevation: 0 },
+  '-icon': { bg: 'transparent', fg: 't', elevation: 0, border: 0 },
   '-icon&-primary': { fg: 'p' },
   '-icon&-secondary': { fg: 's' },
   '-icon&-success': { fg: 'success' },
   '-icon&-warn': { fg: 'warn' },
   '-icon&-error': { fg: 'error' },
-  '-selected&-icon': { bg: 'p', fg: 'handle' },
-  '-selected&-icon&-primary': { bg: 'p' },
-  '-selected&-icon&-secondary': { bg: 's' },
-  '-selected&-icon&-success': { bg: 'success' },
-  '-selected&-icon&-warn': { bg: 'warn' },
-  '-selected&-icon&-error': { bg: 'error' },
+  '-selected&-icon,:hover&-icon': { bg: 'p', fg: 'handle', border: 0 },
+  '-selected&-icon&-primary,:hover&-icon&-primary': { bg: 'p' },
+  '-selected&-icon&-secondary,:hover&-icon&-secondary': { bg: 's' },
+  '-selected&-icon&-success,:hover&-icon&-success': { bg: 'success' },
+  '-selected&-icon&-warn,:hover&-icon&-warn': { bg: 'warn' },
+  '-selected&-icon&-error,:hover&-icon&-error': { bg: 'error' },
 });
 
 type BaseButtonProps = Omit<Props['button'] & Props['a'], 'onClick'> & {
@@ -82,7 +82,7 @@ export interface ButtonProps extends BaseButtonProps {
   color?: 'default' | 'primary' | 'secondary' | 'success' | 'warn' | 'error';
   variant?: 'upload';
   selected?: boolean;
-  icon?: ComponentChildren | ComponentType<any>;
+  icon?: Content;
   before?: ComponentChildren;
   title?: string;
   link?: boolean;
@@ -98,7 +98,7 @@ export const Button = ({
   children,
   before,
   link,
-  tooltip: tooltipContent,
+  tooltip,
   ...props
 }: ButtonProps) => {
   const isIcon = icon && !(children || title);
@@ -116,7 +116,7 @@ export const Button = ({
     <>
       <div {...c('Sfx')} />
       {before}
-      {icon && <div {...c('Icon')}>{isFunction(icon) ? createElement(icon, {}) : icon}</div>}
+      {icon && <div {...c('Icon')}>{getContent(icon)}</div>}
       <div {...c('Content')}>
         {title && <Tr>{title}</Tr>}
         {children}
@@ -133,7 +133,7 @@ export const Button = ({
   }
 
   return (
-    <button {...props} {...clsProps} {...getTooltipProps(tooltipContent)}>
+    <button {...props} {...clsProps} {...getTooltipProps(tooltip)}>
       {content}
     </button>
   );
