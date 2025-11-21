@@ -19,6 +19,7 @@
     "localforage": "^1.10.0"
   },
   "devDependencies": {
+    "tsup": "^8.0.0",
     "@babel/core": "^7.28.4",
     "@babel/helpers": "^7.28.4",
     "@preact/preset-vite": "^2.9.3",

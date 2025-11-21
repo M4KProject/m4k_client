@@ -1,8 +1,9 @@
 import { Css } from 'fluxio';
-import { Button, Field } from '@common/components';
-import { DeviceModel } from '@/api';
 import { useState } from 'preact/hooks';
 import { Send, RefreshCw, FileJson } from 'lucide-react';
+import { DeviceModel } from '@/api/models';
+import { Field } from '@/components/Field';
+import { Button } from '@/components/Button';
 
 const c = Css('DeviceConsole', {
   '': {
