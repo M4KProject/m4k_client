@@ -1,9 +1,11 @@
 import { FieldProps } from '../types';
 import { useInputProps } from '../hooks';
-import { addHsl, Css, isFloat, round, setHsl, setRgb, toHsl, toRgb } from 'fluxio';
-import { useState } from 'preact/hooks';
+import { addHsl, Css, isFloat, round, setHsl, setRgb, toHsl, toRgb, toHex } from 'fluxio';
+import { useState, useRef } from 'preact/hooks';
 import { Field } from '@/components/Field';
 import { theme$ } from '@/utils/theme';
+import { showWindow } from '@/components/Window';
+import { Button } from '@/components/Button';
 
 const c = Css('ColorPicker', {
   '': {
@@ -36,15 +38,19 @@ const c = Css('ColorPicker', {
 
 const ColorInput = () => <input type="color" {...useInputProps()} />;
 
-const ColorPicker = () => {
-  const [color, setColor] = useState<string | undefined>('#697689');
+interface ColorPickerProps {
+  value?: string;
+  onChange?: (color: string) => void;
+}
+
+const ColorPickerContent = ({ value, onChange }: ColorPickerProps) => {
+  const [color, setColor] = useState<string | undefined>(value || '#697689');
   const hsl = toHsl(color);
   const rgb = toRgb(color);
 
   const theme = theme$.get();
   const p = theme.primary || '#28A8D9';
   const s = theme.secondary || addHsl(p, { h: 360 / 3 });
-  const g = setHsl(color, { s: 0, l: 50 });
 
   const ls = [10, 20, 40, 60, 80, 90];
 
@@ -54,18 +60,23 @@ const ColorPicker = () => {
     ls.map((l) => setHsl(color, { l })),
   ];
 
+  const updateColor = (col: string | undefined) => {
+    setColor(col);
+    if (col && onChange) onChange(col);
+  };
+
   return (
     <div {...c()}>
-      <Field input={ColorInput} label="Couleur" value={color} onValue={setColor} />
+      <Field input={ColorInput} label="Couleur" value={color} onValue={updateColor} />
 
-      {variations.map((v) => (
-        <div {...c('Variations')}>
+      {variations.map((v, i) => (
+        <div key={i} {...c('Variations')}>
           {v.map((col) => (
             <div
               key={col}
               {...c('Color')}
               style={{ backgroundColor: col }}
-              onClick={() => setColor(col)}
+              onClick={() => updateColor(col)}
             />
           ))}
         </div>
@@ -74,7 +85,7 @@ const ColorPicker = () => {
         <Field
           type="number"
           value={round(hsl.h)}
-          onValue={(h) => setColor(setHsl(color, { h }))}
+          onValue={(h) => updateColor(setHsl(color, { h }))}
           min={0}
           max={360}
         />
@@ -82,7 +93,7 @@ const ColorPicker = () => {
         <Field
           type="number"
           value={round(hsl.s)}
-          onValue={(s) => setColor(setHsl(color, { s }))}
+          onValue={(s) => updateColor(setHsl(color, { s }))}
           min={0}
           max={100}
         />
@@ -90,7 +101,7 @@ const ColorPicker = () => {
         <Field
           type="number"
           value={round(hsl.l)}
-          onValue={(l) => setColor(setHsl(color, { l }))}
+          onValue={(l) => updateColor(setHsl(color, { l }))}
           min={0}
           max={100}
         />
@@ -99,21 +110,21 @@ const ColorPicker = () => {
         <Field
           type="number"
           value={rgb.r}
-          onValue={(r) => setColor(setRgb(color, { r }))}
+          onValue={(r) => updateColor(setRgb(color, { r }))}
           min={0}
           max={100}
         />
         <Field
           type="number"
           value={rgb.g}
-          onValue={(g) => setColor(setRgb(color, { g }))}
+          onValue={(g) => updateColor(setRgb(color, { g }))}
           min={0}
           max={100}
         />
         <Field
           type="number"
           value={rgb.b}
-          onValue={(b) => setColor(setRgb(color, { b }))}
+          onValue={(b) => updateColor(setRgb(color, { b }))}
           min={0}
           max={100}
         />
@@ -122,7 +133,7 @@ const ColorPicker = () => {
         label="Alpha"
         type="number"
         value={rgb.a * 100}
-        onValue={(a) => isFloat(a) && setColor(setRgb(color, { a: a / 100 }))}
+        onValue={(a) => isFloat(a) && updateColor(setRgb(color, { a: a / 100 }))}
         min={0}
         max={100}
       />
@@ -132,15 +143,41 @@ const ColorPicker = () => {
 
 const ColorButton = () => {
   const { value, onChange, ...props } = useInputProps();
+  const ref = useRef<HTMLDivElement>(null);
+
+  const openPicker = () => {
+    if (!ref.current) return;
+    showWindow(
+      'Couleur',
+      <ColorPickerContent value={value} onChange={onChange} />,
+      {
+        target: ref.current,
+        w: 300,
+        h: 400,
+        min: [250, 300],
+      }
+    );
+  };
+
   return (
-    <div {...props}>
-      <ColorPicker />
-    </div>
+    <div
+      ref={ref}
+      {...props}
+      onClick={openPicker}
+      style={{
+        cursor: 'pointer',
+        minWidth: '60px',
+        height: '32px',
+        backgroundColor: value || '#ccc',
+        borderRadius: '4px',
+        border: '1px solid var(--border-color)',
+      }}
+    />
   );
 };
 
 const color: FieldProps<string, string> = {
-  input: ColorInput,
+  input: ColorButton,
   clearable: true,
   delay: 0,
 };

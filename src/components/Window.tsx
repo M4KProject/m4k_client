@@ -191,6 +191,7 @@ const c = Css('Window', {
 export interface WindowProps extends DivProps {
   open$: Flux<boolean>;
   ctrl?: WindowController;
+  target?: HTMLElement;
   w?: number;
   h?: number;
   min?: [number, number];
@@ -202,6 +203,7 @@ export interface WindowProps extends DivProps {
 const WindowRender = ({
   open$,
   ctrl: ctrlProp,
+  target,
   title,
   children,
   w = 400,
@@ -216,6 +218,15 @@ const WindowRender = ({
   const ctrl = useMemo(() => {
     const c = ctrlProp ?? new WindowController();
     c.init({ w, h, min, max, draggable, resizable });
+    if (target) {
+      const rect = target.getBoundingClientRect();
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
+      c.pos$.set({
+        x: rect.left + rect.width / 2 - centerX,
+        y: rect.bottom - centerY + 10,
+      });
+    }
     return c;
   }, []);
 
@@ -233,7 +244,7 @@ const WindowRender = ({
     minHeight: `${min[1]}px`,
     ...(max[0] && { maxWidth: `${max[0]}px` }),
     ...(max[1] && { maxHeight: `${max[1]}px` }),
-    ...((draggable || resizable) && { transform: `translate(${pos.x}px, ${pos.y}px)` }),
+    ...((draggable || resizable || target) && { transform: `translate(${pos.x}px, ${pos.y}px)` }),
   };
 
   return (
