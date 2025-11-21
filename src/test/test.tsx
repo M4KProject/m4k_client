@@ -1,5 +1,5 @@
 import { render } from 'preact';
-import { FieldsTestPage } from './FieldsTestPage';
+import { WindowTestPage } from './WindowTestPage';
 import { refreshTheme } from '../utils/theme';
 import { addFont } from '../utils/addFont';
 
@@ -10,5 +10,5 @@ refreshTheme();
 // Mount the test page
 const root = document.getElementById('app');
 if (root) {
-  render(<FieldsTestPage />, root);
+  render(<WindowTestPage />, root);
 }

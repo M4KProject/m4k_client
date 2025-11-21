@@ -52,7 +52,7 @@ const N: R = -1;
 type HandleDir = [M, M, R, R];
 type HandleStyle = [P, P, string] | [P, P, string, CssStyle];
 
-const compressed: [string, HandleDir, HandleStyle][] = [
+const HANDLES: [string, HandleDir, HandleStyle][] = [
   ['●', [1, 1, 0, 0], [H, H, 'move', { borderRadius: 99 }]],
   ['↑', [0, 1, 0, N], [H, 0, 'n-resize']],
   ['↗', [0, 1, 1, N], [1, 0, 'ne-resize']],
@@ -64,7 +64,7 @@ const compressed: [string, HandleDir, HandleStyle][] = [
   ['↖', [1, 1, N, N], [0, 0, 'se-resize']],
 ];
 
-const handles: [string, HandleDir, CssStyle][] = compressed.map(
+const handles: [string, HandleDir, CssStyle][] = HANDLES.map(
   ([name, config, [l, r, cursor, style]]) => [
     name,
     config,
