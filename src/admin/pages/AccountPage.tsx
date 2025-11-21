@@ -1,11 +1,10 @@
-import { computeStyle, Css } from 'fluxio';
+import { Css } from 'fluxio';
 import { LogOut, KeyRound } from 'lucide-react';
 import { useState } from 'preact/hooks';
 import { LoadingPage } from './LoadingPage';
 import { useIsAdvanced } from '@/router/hooks';
 import { setIsAdvanced } from '@/router/setters';
 import { Branding } from '@/device/components/Branding';
-import { tooltip } from '@/components/Tooltip';
 import { useFlux } from '@/hooks/useFlux';
 import { theme$, updateTheme } from '@/utils/theme';
 import { Page, PageBody } from '@/components/Page';
@@ -15,17 +14,7 @@ import { Form } from '@/components/Form';
 import { Field } from '@/components/Field';
 import { useApi } from '@/hooks/apiHooks';
 
-const c = Css('AccountPage', {
-  Color: {
-    h: 1,
-    w: 8,
-    bg: 'red',
-  },
-});
-
-export const Color = ({ color }: { color: string }) => (
-  <div {...tooltip(color)} {...c('Color')} style={computeStyle({ bg: color }) as any} />
-);
+const c = Css('AccountPage', {});
 
 export const AccountPage = () => {
   const api = useApi();

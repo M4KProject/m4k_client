@@ -5,7 +5,6 @@ import { playlist$ } from '../messages';
 import { Grid, GridCols } from '@/components/Grid';
 import { Field } from '@/components/Field';
 import { Button } from '@/components/Button';
-import { tooltip } from '@/components/Tooltip';
 import { useFlux } from '@/hooks/useFlux';
 import { Page, PageBody } from '@/components/Page';
 import { Toolbar } from '@/components/Toolbar';
@@ -100,27 +99,25 @@ const playlistItemCols: GridCols<
         <Button
           icon={ArrowUp}
           color="primary"
-          {...tooltip(i === 0 ? 'Aller à la fin' : 'Monter')}
+          tooltip={i === 0 ? 'Aller à la fin' : 'Monter'}
           onClick={() => ctx.handleMoveUp(i)}
         />
         <Button
           icon={ArrowDown}
           color="primary"
-          {...tooltip(
-            i === (ctx.playlist?.items?.length || 0) - 1 ? 'Aller au début' : 'Descendre'
-          )}
+          tooltip={i === (ctx.playlist?.items?.length || 0) - 1 ? 'Aller au début' : 'Descendre'}
           onClick={() => ctx.handleMoveDown(i)}
         />
         <Button
           icon={Copy}
           color="primary"
-          {...tooltip('Dupliquer')}
+          tooltip="Dupliquer"
           onClick={() => ctx.handleDuplicate(i)}
         />
         <Button
           icon={Trash2}
           color="error"
-          {...tooltip('Supprimer')}
+          tooltip="Supprimer"
           onClick={() => ctx.handleDelete(i)}
         />
       </div>

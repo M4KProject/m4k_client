@@ -65,7 +65,7 @@ export const Tooltip = ({ target, children, ...props }: TooltipProps) => {
 };
 // , pos?: 'top'|'bottom'|'left'|'right'
 
-export const tooltip = (content: undefined | ComponentChildren | (() => ComponentChildren)) => {
+export const getTooltipProps = (content: undefined | ComponentChildren | (() => ComponentChildren)) => {
   if (!content) return {};
   let intervalRef: any;
   let overlay: HTMLDivElement | null = null;

@@ -1,4 +1,4 @@
-import { Css } from 'fluxio';
+import { Css, humanize } from 'fluxio';
 import { jsonStringify, toDate, toError, toTime } from 'fluxio';
 import { RefreshCw, Trash2, Settings, Plus, Power } from 'lucide-react';
 import { useState } from 'preact/hooks';
@@ -10,7 +10,6 @@ import { formatDate, formatDateTime } from 'fluxio';
 import { Grid, GridCols } from '@/components/Grid';
 import { DeviceModel, MediaModel } from '@/api/models';
 import { Field } from '@/components/Field';
-import { tooltip } from '@/components/Tooltip';
 import { Button } from '@/components/Button';
 import { useFlux } from '@/hooks/useFlux';
 import { Form } from '@/components/Form';
@@ -38,18 +37,21 @@ const deviceCols: GridCols<
   key: [
     'Clé',
     (d, { api }) => (
-      <Field {...tooltip(d.id)} value={d.key} onValue={(key) => api.device.update(d.id, { key })} />
+      <Button tooltip={d.id}>
+        <Field value={d.key} onValue={(key) => api.device.update(d.id, { key })} />
+      </Button>
     ),
     { if: (_col, ctx) => !!ctx.isAdvanced },
   ],
   type: [
     'Type',
     (d) => (
-      <Field
-        {...tooltip(() => jsonStringify(d.info))}
-        value={`${d.info?.type || ''} ${d.info?.version || ''}`}
-        readonly
-      />
+      <Button tooltip={() => humanize(d.info)}>
+        <Field
+          value={`${d.info?.type || ''} ${d.info?.version || ''}`}
+          readonly
+        />
+      </Button>
     ),
     { if: (_col, ctx) => !!ctx.isAdvanced },
   ],
@@ -61,12 +63,13 @@ const deviceCols: GridCols<
   online: [
     'Online',
     (d, ctx) => (
-      <Field
-        {...tooltip(formatDateTime(toDate(d.online)))}
-        type="switch"
-        value={d.online && toTime(d.online) > ctx.onlineMin}
-        readonly
-      />
+      <Button tooltip={formatDateTime(toDate(d.online))}>
+        <Field
+          type="switch"
+          value={d.online && toTime(d.online) > ctx.onlineMin}
+          readonly
+        />
+      </Button>
     ),
   ],
   created: ['Création', (d) => formatDate(d.created)],
@@ -90,23 +93,23 @@ const deviceCols: GridCols<
         <Button
           icon={RefreshCw}
           color="primary"
-          {...tooltip('Rafraîchir')}
+          tooltip="Rafraîchir"
           onClick={() => api.device.update(d.id, { action: 'reload' })}
         />
         <Button
           icon={Power}
           color="primary"
-          {...tooltip('Redémarrer')}
+          tooltip="Redémarrer"
           onClick={() => api.device.update(d.id, { action: 'reboot' })}
         />
         {isAdvanced && (
-          <Button icon={Settings} {...tooltip('Mode remote')} onClick={() => handleRemote(d)} />
+          <Button icon={Settings} tooltip="Mode remote" onClick={() => handleRemote(d)} />
         )}
         {isAdvanced && (
           <Button
             icon={Trash2}
             color="error"
-            {...tooltip('Supprimer')}
+            tooltip="Supprimer"
             onClick={() => api.device.delete(d.id)}
           />
         )}

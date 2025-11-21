@@ -11,7 +11,6 @@ import { Grid, GridCols } from '@/components/Grid';
 import { JobModel, MediaModel } from '@/api/models';
 import { Tr } from '@/components/Tr';
 import { Button } from '@/components/Button';
-import { tooltip } from '@/components/Tooltip';
 import { useFlux } from '@/hooks/useFlux';
 import { Api } from '@/api/Api';
 
@@ -52,7 +51,7 @@ const cols: GridCols<JobModel, { mediaById: Dictionary<MediaModel>; api: Api }> 
       <Button
         icon={Trash2}
         color="error"
-        {...tooltip('Supprimer')}
+        tooltip="Supprimer"
         onClick={() => api.job.delete(job.id)}
       />
     ),

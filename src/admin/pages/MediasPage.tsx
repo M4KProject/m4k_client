@@ -12,7 +12,6 @@ import { Page, PageBody } from '@/components/Page';
 import { MediaView } from '@/medias/MediaView';
 import { Toolbar } from '@/components/Toolbar';
 import { Button, UploadButton } from '@/components/Button';
-import { tooltip } from '@/components/Tooltip';
 import { Api } from '@/api/Api';
 
 const c = Css('MediasPage', {});
@@ -75,7 +74,7 @@ export const MediasPage = () => {
 
         {/* <Button
           icon={MapPlus}
-          {...tooltip('Ajouter à la playlist')}
+          tooltip="Ajouter à la playlist"
           onClick={handleAddToPlaylist}
         >
           Ajouter à la Playlist
@@ -84,7 +83,7 @@ export const MediasPage = () => {
         {type === 'playlist' && (
           <Button
             icon={MapPlus}
-            {...tooltip('Créer une playlist')}
+            tooltip="Créer une playlist"
             onClick={() => addPlaylist(api)}
           >
             Crée une Playlist
@@ -92,13 +91,13 @@ export const MediasPage = () => {
         )}
 
         {type === 'page' && (
-          <Button icon={FilePlus} {...tooltip('Créer une page')} onClick={() => addPage(api)} />
+          <Button icon={FilePlus} tooltip="Créer une page" onClick={() => addPage(api)} />
         )}
 
         {type === '' && (
           <Button
             icon={FolderPlus}
-            {...tooltip('Créer un nouveau dossier')}
+            tooltip="Créer un nouveau dossier"
             onClick={() => {
               api.media.create({
                 title: getNextTitle(api, 'Dossier'),
@@ -114,7 +113,7 @@ export const MediasPage = () => {
         )}
 
         <UploadButton
-          {...tooltip('Téléverser des medias')}
+          tooltip="Téléverser des medias"
           icon={Upload}
           color="primary"
           onFiles={(files) => {

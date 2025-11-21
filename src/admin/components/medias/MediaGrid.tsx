@@ -17,7 +17,6 @@ import { MediaModel } from '@/api/models';
 import { Grid, GridCols } from '@/components/Grid';
 import { Field } from '@/components/Field';
 import { Button } from '@/components/Button';
-import { tooltip } from '@/components/Tooltip';
 import { useFlux } from '@/hooks/useFlux';
 import { Api } from '@/api/Api';
 
@@ -95,7 +94,7 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
         {type === 'folder' && selectedIds.length > 0 && (
           <Button
             icon={FolderInput}
-            {...tooltip(`Ajouter ${selectedIds.length} élément(s) au dossier`)}
+            tooltip={`Ajouter ${selectedIds.length} élément(s) au dossier`}
             onClick={async () => {
               for (const selectId of selectedIds) {
                 selectedById$.setItem(selectId, undefined);
@@ -108,7 +107,7 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
           <>
             <Button
               icon={Edit}
-              {...tooltip(`Configurer la playlist`)}
+              tooltip="Configurer la playlist"
               onClick={() => {
                 updateRoute({
                   page: 'medias',
@@ -121,7 +120,7 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
             {selectedIds.length > 0 && (
               <Button
                 icon={PlusSquare}
-                {...tooltip(`Ajouter ${selectedIds.length} élément(s) à la playlist`)}
+                tooltip={`Ajouter ${selectedIds.length} élément(s) à la playlist`}
                 onClick={async () => {
                   updatePlaylist(api, id, (playlist) => {
                     if (playlist.data && playlist.data.items) {
@@ -141,7 +140,7 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
         {type === 'page' && (
           <Button
             icon={Edit}
-            {...tooltip(`Éditer la page`)}
+            tooltip="Éditer la page"
             onClick={() => {
               updateRoute({
                 page: 'medias',
@@ -154,7 +153,7 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
         )}
         <Button
           icon={Eye}
-          {...tooltip('Afficher le media')}
+          tooltip="Afficher le media"
           onClick={() => {
             updateRoute({ mediaKey: key, isEdit: false });
           }}
@@ -162,14 +161,14 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
         {type !== 'folder' && type !== 'playlist' && (
           <Button
             icon={Download}
-            {...tooltip('Télécharger')}
+            tooltip="Télécharger"
             onClick={() => api.startMediaDownload(id)}
           />
         )}
         <Button
           icon={Trash2}
           color="error"
-          {...tooltip('Supprimer')}
+          tooltip="Supprimer"
           onClick={async () => {
             for (const c of getChildren(id)) {
               api.media.update(c.id, { parent: null as any });

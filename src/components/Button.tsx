@@ -3,7 +3,7 @@ import { useRef } from 'preact/hooks';
 import { Css, isFunction } from 'fluxio';
 import { Tr } from './Tr';
 import { Props } from './types';
-import { tooltip } from './Tooltip';
+import { getTooltipProps } from './Tooltip';
 
 const c = Css('Button', {
   '': {
@@ -133,7 +133,7 @@ export const Button = ({
   }
 
   return (
-    <button {...props} {...clsProps} {...tooltip(tooltipContent)}>
+    <button {...props} {...clsProps} {...getTooltipProps(tooltipContent)}>
       {content}
     </button>
   );

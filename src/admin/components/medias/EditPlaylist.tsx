@@ -10,7 +10,6 @@ import { JobModel, MediaModel, PlaylistEntry, PlaylistModel } from '@/api/models
 import { Field } from '@/components/Field';
 import { Flag } from '@/components/Flag';
 import { Button } from '@/components/Button';
-import { tooltip } from '@/components/Tooltip';
 
 const c = Css('EditPlaylist', {
   '': {
@@ -112,19 +111,19 @@ const playlistCols: GridCols<
       <div style={{ display: 'flex', gap: '0.5em' }}>
         <Button
           icon={ArrowUp}
-          {...tooltip('Monter')}
+          tooltip="Monter"
           onClick={() => ctx.moveItemIndex(index, index - 1)}
         />
         <Button
           icon={ArrowDown}
-          {...tooltip('Décendre')}
+          tooltip="Décendre"
           onClick={() => ctx.moveItemIndex(index, index + 1)}
         />
-        <Button icon={Copy} {...tooltip('Dupliquer')} onClick={() => ctx.duplicateItem(index)} />
+        <Button icon={Copy} tooltip="Dupliquer" onClick={() => ctx.duplicateItem(index)} />
         <Button
           icon={Trash2}
           color="error"
-          {...tooltip('Supprimer')}
+          tooltip="Supprimer"
           onClick={() => ctx.deleteItem(index)}
         />
       </div>

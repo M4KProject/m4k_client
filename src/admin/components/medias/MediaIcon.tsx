@@ -1,5 +1,5 @@
 import { MediaType } from '@/api/models';
-import { tooltip } from '@/components/Tooltip';
+import { Button } from '@/components/Button';
 import { Css } from 'fluxio';
 import {
   FolderOpen,
@@ -54,7 +54,7 @@ export const MediaIcon = ({ type, isOpen, hasChildren }: MediaIconProps) => {
 
   return (
     <div {...c()}>
-      <Icon {...tooltip(title)} />
+      <Button icon={Icon} tooltip={title} />
       {hasChildren && (
         <span>
           {isOpen ?

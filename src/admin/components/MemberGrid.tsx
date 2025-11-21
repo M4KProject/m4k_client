@@ -6,7 +6,6 @@ import { useApi, useDeviceById, useGroupMembers } from '@/hooks/apiHooks';
 import { DeviceModel, MemberModel } from '@/api/models';
 import { Field } from '@/components/Field';
 import { Button } from '@/components/Button';
-import { tooltip } from '@/components/Tooltip';
 import { Api } from '@/api/Api';
 
 const c = Css('MemberGrid', {
@@ -49,7 +48,7 @@ const cols: GridCols<MemberModel, { deviceById: Dictionary<DeviceModel>; api: Ap
       <Button
         icon={Trash2}
         color="error"
-        {...tooltip('Supprimer')}
+        tooltip="Supprimer"
         onClick={() => api.member.delete(id)}
       />
     ),

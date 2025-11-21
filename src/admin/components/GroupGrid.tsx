@@ -5,7 +5,6 @@ import { useGroupKey, useIsAdvanced } from '@/router/hooks';
 import { useApi, useGroups } from '@/hooks/apiHooks';
 import { GroupModel } from '@/api/models';
 import { Field } from '@/components/Field';
-import { tooltip } from '@/components/Tooltip';
 import { Button } from '@/components/Button';
 import { Api } from '@/api/Api';
 
@@ -31,11 +30,12 @@ const cols: GridCols<
   key: [
     'Clé',
     (item, { api }) => (
-      <Field
-        {...tooltip(item.id)}
-        value={item.key}
-        onValue={(key) => api.group.update(item.id, { key })}
-      />
+      <Button tooltip={item.id}>
+        <Field
+          value={item.key}
+          onValue={(key) => api.group.update(item.id, { key })}
+        />
+      </Button>
     ),
     { if: (_, { isAdvanced }) => isAdvanced },
   ],
@@ -93,7 +93,7 @@ const cols: GridCols<
       <Button
         icon={Trash2}
         color="error"
-        {...tooltip('Supprimer')}
+        tooltip="Supprimer"
         onClick={() => api.group.delete(item.id)}
       />
     ),
