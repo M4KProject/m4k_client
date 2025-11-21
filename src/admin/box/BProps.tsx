@@ -12,8 +12,7 @@ import { useBCtrl } from '@/box/BCtrl';
 import { Field } from '@/components/Field';
 import { Tr } from '@/components/Tr';
 import { useFlux, useFluxMemo } from '@/hooks/useFlux';
-import { BType, BData, BItem, BPropNext, BNext } from '@/box/bTypes';
-import { ComponentChildren } from 'preact';
+import { BType, BData, BItem, BPropNext } from '@/box/bTypes';
 import { isAdvanced$, setIsAdvanced } from '@/router';
 import { Button, ButtonProps } from '@/components/Button';
 import {
@@ -44,7 +43,7 @@ import {
 } from 'lucide-react';
 import { BMedias } from './BMedias';
 import { FieldProps } from '@/components/fields/types';
-import { DivProps } from '@/components/types';
+import { Content, DivProps } from '@/components/types';
 
 const c = Css('BProps', {
   '': {
@@ -143,7 +142,7 @@ const FlexAlignButton = ({
   return <Button icon={icon} selected={selected} onClick={handleClick} />;
 };
 
-const TextAlignButton = ({ icon, v }: { icon: ComponentChildren; v: Style['textAlign'] }) => {
+const TextAlignButton = ({ icon, v }: { icon: Content; v: Style['textAlign'] }) => {
   const [style, setStyle] = useProp('s');
   const s = style || ({} as Style);
 
@@ -192,7 +191,7 @@ export const BProps = () => {
   const i = select.i;
   const item = select.item;
   const types = Object.entries(ctrl.registry).map(
-    ([type, config]) => [type, <Tr>{config.label}</Tr>] as [string, ComponentChildren]
+    ([type, config]) => [type, <Tr>{config.label}</Tr>] as [string, Content]
   );
   const [nType] = useProp('t');
   const type = nType || 'box';

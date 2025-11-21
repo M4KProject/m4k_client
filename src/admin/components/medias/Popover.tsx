@@ -1,8 +1,9 @@
 import { useRef, useEffect, useMemo } from 'preact/hooks';
-import { ComponentChildren } from 'preact';
 import { Flux, uuid } from 'fluxio';
 import { Css } from 'fluxio';
 import { useFlux } from '@/hooks/useFlux';
+import { Content } from '@/components/types';
+import { getContent } from '@/components/getContent';
 
 const over$ = new Flux('');
 
@@ -53,7 +54,7 @@ export const setIsOver = (id: string, next: boolean) =>
 
 interface PopoverProps {
   id?: string;
-  children: ComponentChildren;
+  children: Content;
   class?: string;
   title?: string;
 }
@@ -85,7 +86,7 @@ export const Popover = ({ id, children, class: className = '', title }: PopoverP
       onMouseLeave={() => setIsOver(overId, false)}
     >
       <div ref={floatRef} {...c('Float')}>
-        {children}
+        {getContent(children)}
         {title && <span {...c('Title')}>{title}</span>}
       </div>
     </div>

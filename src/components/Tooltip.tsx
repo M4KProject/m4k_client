@@ -1,11 +1,8 @@
-import { ComponentChildren } from 'preact';
-import { render } from 'preact';
-import { onEvent } from 'fluxio';
+import { onHtmlEvent, Unsubscribe } from 'fluxio';
 import { Css } from 'fluxio';
-import { Tr } from './Tr';
-import { addOverlay, removeOverlay } from 'fluxio';
 import { Content, DivProps } from './types';
 import { getContent } from './getContent';
+import { portal } from './Portal';
 
 const c = Css('Tooltip', {
   '': {
@@ -45,76 +42,52 @@ const c = Css('Tooltip', {
 
 export interface TooltipProps extends Omit<DivProps, 'title'> {
   target: HTMLElement;
-  children: ComponentChildren;
+  children: Content;
 }
 export const Tooltip = ({ target, children, ...props }: TooltipProps) => {
   const { top, left, width, height } = target.getBoundingClientRect();
 
-  console.debug('top', top);
-
   if (!children) return null;
 
-  const pos: string = top > 40 ? 'top' : 'bottom';
+  const pos: string = top > 200 ? 'top' : 'bottom';
   return (
     <div {...props} {...c('', `-${pos}`, props)} style={{ top, left, width, height }}>
       <div {...c('Arrow')} />
       <div {...c('Content')}>
-        <Tr>{children}</Tr>
+        {getContent(children)}
       </div>
     </div>
   );
 };
-// , pos?: 'top'|'bottom'|'left'|'right'
 
-export type TooltipContent = Content;
+const createTooltip = (eventOrTarget: Event|HTMLElement, content: Content) => {
+  const target = eventOrTarget instanceof Event ? (eventOrTarget.currentTarget || eventOrTarget.target) as HTMLElement : eventOrTarget;
+  if (!(target instanceof HTMLElement)) return;
+  
+  const disposes: Unsubscribe[] = [];
 
-export const getTooltipProps = (content: TooltipContent) => {
-  if (!content) return {};
-  let intervalRef: any;
-  let overlay: HTMLDivElement | null = null;
-  let root: any = null;
-  let removeLeaveListener: (() => void) | null = null;
-  let removeClickListener: (() => void) | null = null;
-  const remove = async () => {
-    clearInterval(intervalRef);
-    if (removeLeaveListener) {
-      removeLeaveListener();
-      removeLeaveListener = null;
+  const dispose = () => {
+    for (const d of disposes) d();
+    disposes.length = 0;
+  }
+
+  const interval = setInterval(() => {
+    if (!target.isConnected) {
+      dispose();
     }
-    if (removeClickListener) {
-      removeClickListener();
-      removeClickListener = null;
-    }
-    if (overlay) {
-      await removeOverlay(overlay);
-      overlay = null;
-    }
-    if (root) {
-      root.unmount();
-      root = null;
-    }
-  };
+  }, 500);
+  disposes.push(() => clearInterval(interval));
+
+  disposes.push(onHtmlEvent(target, 'mouseleave', dispose));
+  disposes.push(onHtmlEvent(0, 'click', dispose));
+
+  disposes.push(portal(<Tooltip target={target}>{content}</Tooltip>));
+}
+
+export const tooltipProps = (content: Content) => {
   return {
-    onMouseOver: (event: any) => {
-      const target = (event.currentTarget || event.target) as HTMLElement;
-
-      clearInterval(intervalRef);
-      intervalRef = setInterval(() => {
-        if (!target.isConnected) remove();
-      }, 500);
-
-      if (removeLeaveListener) removeLeaveListener();
-      removeLeaveListener = onEvent(target, 'mouseleave', remove);
-
-      if (removeClickListener) removeClickListener();
-      removeClickListener = onEvent(0, 'click', remove);
-
-      if (!overlay) overlay = addOverlay();
-
-      render(
-        <Tooltip target={target}>{getContent(content)}</Tooltip>,
-        overlay
-      );
+    onMouseOver: (event: Event) => {
+      createTooltip(event, content);
     },
   };
 };

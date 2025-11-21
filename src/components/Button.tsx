@@ -1,9 +1,9 @@
-import { ComponentChildren, ComponentType, createElement } from 'preact';
 import { useRef } from 'preact/hooks';
-import { Css, isFunction } from 'fluxio';
+import { Css } from 'fluxio';
 import { Tr } from './Tr';
 import { Content, Props } from './types';
-import { getTooltipProps } from './Tooltip';
+import { tooltipProps } from './Tooltip';
+import { getContent } from './getContent';
 
 const c = Css('Button', {
   '': {
@@ -82,11 +82,11 @@ export interface ButtonProps extends BaseButtonProps {
   color?: 'default' | 'primary' | 'secondary' | 'success' | 'warn' | 'error';
   variant?: 'upload';
   selected?: boolean;
-  icon?: Content;
-  before?: ComponentChildren;
+  icon?: Content|true;
+  before?: Content;
   title?: string;
   link?: boolean;
-  tooltip?: string;
+  tooltip?: Content;
 }
 
 export const Button = ({
@@ -101,7 +101,7 @@ export const Button = ({
   tooltip,
   ...props
 }: ButtonProps) => {
-  const isIcon = icon && !(children || title);
+  const isIcon = icon === true || icon && !(children || title);
 
   const clsProps = c(
     '',
@@ -115,8 +115,8 @@ export const Button = ({
   const content = (
     <>
       <div {...c('Sfx')} />
-      {before}
-      {icon && <div {...c('Icon')}>{getContent(icon)}</div>}
+      {getContent(before)}
+      {icon && icon !== true && <div {...c('Icon')}>{getContent(icon)}</div>}
       <div {...c('Content')}>
         {title && <Tr>{title}</Tr>}
         {children}
@@ -133,7 +133,7 @@ export const Button = ({
   }
 
   return (
-    <button {...props} {...clsProps} {...getTooltipProps(tooltip)}>
+    <button {...props} {...clsProps} {...tooltipProps(tooltip)}>
       {content}
     </button>
   );
@@ -143,7 +143,7 @@ export interface UploadButtonProps extends ButtonProps {
   onFiles?: (files: File[]) => void;
   accept?: string;
   multiple?: boolean;
-  icon?: ComponentChildren;
+  icon?: Content;
 }
 
 export const UploadButton = ({

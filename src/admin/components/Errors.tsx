@@ -3,7 +3,7 @@ import { isItem, removeItem, ReqError, toError } from 'fluxio';
 import { Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'preact/hooks';
 import { Grid, GridCols } from '@/components/Grid';
-import { getTooltipProps } from '@/components/Tooltip';
+import { tooltipProps } from '@/components/Tooltip';
 import { Button } from '@/components/Button';
 import { useApi } from '@/hooks/apiHooks';
 
@@ -30,7 +30,7 @@ interface ErrorItem {
 }
 
 const cols: GridCols<any> = {
-  name: ['Nom', (item) => item.name, { props: (item) => getTooltipProps(item.stack) }],
+  name: ['Nom', (item) => item.name, { props: (item) => tooltipProps(item.stack) }],
   message: ['Message', (item) => item.message],
   actions: [
     '',

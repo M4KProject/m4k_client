@@ -4,12 +4,17 @@ import { useMemo } from 'preact/hooks';
 import { Popover, useIsOver } from './Popover';
 import { MediaModel } from '@/api/models';
 import { useApi } from '@/hooks/apiHooks';
+import { Button } from '@/components/Button';
 
 const c = Css('MediaPreview', {
+  '': {
+    wh: '100%',
+    bgMode: 'contain',
+  },
+
+
   Video: {
-    flex: 1,
-    w: '100%',
-    m: 2,
+    w: 200,
   },
   'Video video': {
     wh: '100%',
@@ -18,9 +23,7 @@ const c = Css('MediaPreview', {
     cursor: 'pointer',
   },
   Image: {
-    flex: 1,
-    w: '100%',
-    m: 2,
+    wh: 200,
     bgMode: 'contain',
   },
 });
@@ -36,10 +39,13 @@ export const MediaPreview = ({ media }: { media?: MediaModel }) => {
   if (!media) return null;
 
   return (
-    <Popover id={overId} {...c()} title={media.title}>
-      {isOver && videos.length ?
-        <div {...c('Video')}>
+    <Button
+      {...c()}
+      icon
+      tooltip={() => (
+        videos.length ? (
           <video
+            {...c('Video')}
             controls={false}
             muted
             autoPlay
@@ -55,15 +61,46 @@ export const MediaPreview = ({ media }: { media?: MediaModel }) => {
               <source key={i} type={v.mime} src={api.getMediaUrl(v)} />
             ))}
           </video>
-        </div>
-      : images.length ?
-        <div
-          {...c('Image')}
-          style={{
-            backgroundImage: `url('${api.getMediaUrl(images[0], 360)}')`,
-          }}
-        />
-      : null}
-    </Popover>
+        ) : (
+          <div
+            {...c('Image')}
+            style={{
+              backgroundImage: `url('${api.getMediaUrl(images[0], 360)}')`,
+            }}
+          />
+        )
+      )}
+      style={{
+        backgroundImage: `url('${api.getMediaUrl(images[0], 360)}')`,
+      }}
+    />
   );
+
+
+
+
+  //   <Popover id={overId} {...c()} title={media.title}>
+  //     {isOver && videos.length ?
+  //       <div {...c('Video')}>
+  //         <video
+  //           controls={false}
+  //           muted
+  //           autoPlay
+  //           loop
+  //           onLoadStart={(e) => {
+  //             e.currentTarget.currentTime = 0;
+  //           }}
+  //           onError={(e) => {
+  //             console.warn('Video preview error:', e);
+  //           }}
+  //         >
+  //           {videos.map((v, i) => (
+  //             <source key={i} type={v.mime} src={api.getMediaUrl(v)} />
+  //           ))}
+  //         </video>
+  //       </div>
+  //     : images.length ?
+  //     : null}
+  //   </Popover>
+  // );
 };
