@@ -1,6 +1,6 @@
 import { FieldProps } from '../types';
 import { useInputProps } from '../hooks';
-import { addHsl, Css, isFloat, round, setHsl, setRgb, toHsl, toRgb, toHex } from 'fluxio';
+import { addHsl, Css, isFloat, round, setHsl, setRgb, toHsl, toRgb, isLight } from 'fluxio';
 import { useState, useRef } from 'preact/hooks';
 import { Field } from '@/components/Field';
 import { theme$ } from '@/utils/theme';
@@ -159,20 +159,16 @@ const ColorButton = () => {
     );
   };
 
+  const color = value || '#ccc';
   return (
-    <div
-      ref={ref}
-      {...props}
-      onClick={openPicker}
-      style={{
-        cursor: 'pointer',
-        minWidth: '60px',
-        height: '32px',
-        backgroundColor: value || '#ccc',
-        borderRadius: '4px',
-        border: '1px solid var(--border-color)',
-      }}
-    />
+    <div ref={ref} style={{ width: '100%' }}>
+      <Button
+        {...props}
+        onClick={openPicker}
+        title={value || 'Aucune'}
+        style={{ width: '100%', backgroundColor: color, color: isLight(color) ? '#000' : '#fff' }}
+      />
+    </div>
   );
 };
 
