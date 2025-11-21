@@ -13,6 +13,7 @@ import {
   uniq,
   isInt,
   isUInt,
+  isUFloat,
 } from 'fluxio';
 import {
   BFun,
@@ -248,6 +249,10 @@ export class BCtrl {
     return isUInt(index) ? this.getItems()[index] : null;
   }
 
+  getSelectIndex() {
+    return this.select$.get()?.i;
+  }
+  
   getData(index?: number) {
     return toData(this.get(index));
   }

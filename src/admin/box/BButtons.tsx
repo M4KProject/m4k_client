@@ -1,4 +1,4 @@
-import { Css, isItem, isUInt, normalizeIndex, randColor } from 'fluxio';
+import { Css, isItem, isUInt, normalizeIndex, randColor, onEvent, onHtmlEvent } from 'fluxio';
 import {
   RotateCw,
   Monitor,
@@ -15,7 +15,7 @@ import {
   ClipboardX,
   Save,
 } from 'lucide-react';
-import { useState } from 'preact/hooks';
+import { useEffect, useState } from 'preact/hooks';
 import { BCtrl, useBCtrl } from '@/box/BCtrl';
 import { Button, ButtonProps } from '@/components/Button';
 import { useFlux } from '@/hooks/useFlux';
@@ -63,23 +63,31 @@ const addRect = (ctrl: BCtrl) => {
   });
 }
 
-const cut = async (ctrl: BCtrl, index: number) => {
+const bRemove = async (ctrl: BCtrl) => {
+  const index = ctrl.getSelectIndex();
+  ctrl.delete(index);
+};
+
+const bCut = async (ctrl: BCtrl) => {
+  const index = ctrl.getSelectIndex();
   const data = ctrl.getData(index);
   await clipboardCopy(data);
   ctrl.delete(index);
 };
 
-const copy = async (ctrl: BCtrl, index: number) => {
+const bCopy = async (ctrl: BCtrl) => {
+  const index = ctrl.getSelectIndex();
   const data = ctrl.getData(index);
   await clipboardCopy(data);
 };
 
-const paste = async (ctrl: BCtrl, index: number) => {
+const bPaste = async (ctrl: BCtrl) => {
+  const index = ctrl.getSelectIndex();
   const item = ctrl.get(index);
   if (!item) return;
   const d: BData = await clipboardPaste();
   if (isItem(d)) {
-    ctrl.add({ ...d, p: item.t === d.t ? item.p : index });
+    ctrl.add({ ...d, p: item.t === d.t ? item.p : item.i });
   }
 };
 
@@ -99,6 +107,35 @@ export const BButtons = () => {
   };
 
   const hasSelect = isUInt(selectIndex);
+
+  useEffect(() => onHtmlEvent(0, 'keydown', e => {
+    const key =
+      ((e.ctrlKey ? "ctrl+" : "") +
+      (e.metaKey ? "meta+" : "") +
+      (e.shiftKey ? "shift+" : "") +
+      (e.altKey ? "alt+" : "") +
+      e.key).toLowerCase();
+      
+    console.debug('keydown', e.metaKey, key, e);
+
+    switch (key) {
+      case "ctrl+x":
+      case "meta+x":
+        bCut(ctrl);
+        break;
+      case "ctrl+c":
+      case "meta+c":
+        bCopy(ctrl);
+        break;
+      case "ctrl+v":
+      case "meta+v":
+        bPaste(ctrl);
+        break;
+      case "backspace":
+        bRemove(ctrl);
+        break;
+    }
+  }), []);
 
   return (
     <div {...c()}>
@@ -122,11 +159,11 @@ export const BButtons = () => {
       )}
       {hasSelect && (
         <>
-          <BButton icon={ClipboardX} onClick={() => cut(ctrl, selectIndex)} tooltip="Couper" />
-          <BButton icon={ClipboardCopy} onClick={() => copy(ctrl, selectIndex)} tooltip="Copier" />
+          <BButton icon={ClipboardX} onClick={() => bCut(ctrl)} tooltip="Couper" />
+          <BButton icon={ClipboardCopy} onClick={() => bCopy(ctrl)} tooltip="Copier" />
           <BButton
             icon={ClipboardPaste}
-            onClick={() => paste(ctrl, selectIndex)}
+            onClick={() => bPaste(ctrl)}
             tooltip="Coller"
           />
         </>
