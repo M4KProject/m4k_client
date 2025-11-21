@@ -159,7 +159,7 @@ const c = Css('Window', {
     resize: 'both',
     scale: 0.9,
     opacity: 0,
-    transition: 0.3,
+    transition: 0.1,
   },
   Header: {
     row: ['center', 'between'],
