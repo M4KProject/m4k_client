@@ -2,7 +2,7 @@ import { useState, useEffect } from 'preact/hooks';
 import { Css } from 'fluxio';
 import { Download } from 'lucide-react';
 import { sortItems } from 'fluxio';
-import { m4k } from '@/m4kBridge';
+import { bridge } from '@/bridge';
 import { Button } from '@/components/Button';
 import { ApplicationModel } from '@/api/models';
 import { useApi } from '@/hooks/apiHooks';
@@ -49,9 +49,9 @@ export const AppButton = ({
       icon={Download}
       color="primary"
       onClick={(e) => {
-        if (m4k.isInterface) {
+        if (bridge.isInterface) {
           e.preventDefault();
-          m4k.installApk(url);
+          bridge.installApk(url);
         }
       }}
       href={url}

@@ -2,8 +2,16 @@ import { Css } from 'fluxio';
 import { BComp } from './bTypes';
 import { useMediaById, useApi } from '@/hooks/apiHooks';
 import { useFlux } from '@/hooks/useFlux';
-import { MediaView } from '@/components/medias/MediaView';
-import '@/admin/components/medias/registers';
+import { addComp, MediaView } from '@/components/medias/MediaView';
+import { ImageView } from '../medias/ImageView';
+import { VideoView } from '../medias/VideoView';
+import { PlaylistView } from '../medias/PlaylistView';
+import { PdfView } from '../medias/PdfView';
+
+addComp('image', ImageView);
+addComp('video', VideoView);
+addComp('playlist', PlaylistView);
+addComp('pdf', PdfView);
 
 const c = Css('BMedia', {
   '': { wh: '100%' },

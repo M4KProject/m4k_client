@@ -4,7 +4,7 @@ import { useState } from 'preact/hooks';
 import { LoadingPage } from './LoadingPage';
 import { useIsAdvanced } from '@/router/hooks';
 import { setIsAdvanced } from '@/router/setters';
-import { Branding } from '@/device/components/Branding';
+import { Branding } from '@/components/device/Branding';
 import { useFlux } from '@/hooks/useFlux';
 import { theme$, updateTheme } from '@/utils/theme';
 import { Page, PageBody } from '@/components/Page';

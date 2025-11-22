@@ -1,0 +1,249 @@
+import { Css } from 'fluxio';
+import { getStorage, glb, toError } from 'fluxio';
+import copyPlaylist from '@/controllers/copyPlaylist';
+import { newProgressDialog } from '@/components/device/ProgressView';
+import { Apps } from '@/admin/components/Apps';
+import { usePromise } from '@/hooks/usePromise';
+import { Button } from '@/components/Button';
+import { copyDir$, url$ } from '@/controllers/deviceMessages';
+import { bridge } from '@/bridge';
+
+const c = Css('Actions', {
+  '': {
+    flex: 1,
+    p: 4,
+  },
+  Buttons: {
+    flex: 1,
+    m: 4,
+    row: ['center', 'around'],
+    flexWrap: 'wrap',
+  },
+  ' .bridgeButton': {
+    flex: 1,
+    minWidth: '10em',
+    m: '0.5em',
+  },
+  Info: {
+    row: ['center', 'around'],
+    flexWrap: 'wrap',
+    p: 4,
+  },
+  ' .bridgeInfo div': {
+    m: 4,
+  },
+});
+
+// const updateBridgeioskApk = async () => {
+//     const prog = newProgressDialog("Mise à jour")
+
+//     const infoUrl = 'https://k.bridge.fr/info.json?t=' + Date.now()
+//     prog(0.1, 'info', `Lecture : "${infoUrl}"`)
+
+//     const infoJson = await bridge.read(infoUrl);
+//     prog(0.4, 'info', `Remote Info : "${infoJson}"`)
+
+//     const info = jsonParse(infoJson!);
+
+//     const remoteVersion = info?.version
+//     prog(0.4, 'info', `Remote Version : "${remoteVersion}"`)
+
+//     const currVersion = (await bridge.deviceInfo()).version
+//     prog(0.5, 'info', `Current Version : "${currVersion}"`)
+
+//     if (remoteVersion && remoteVersion !== currVersion) {
+//         const downloadUrl = String(info.apkUrl)
+//         const downloadPath = `@cache/${info.apkName}`
+//         prog(0.5, 'info', `Télécharger : "${downloadUrl}" -> "${downloadPath}"`)
+
+//         await bridge.download(downloadUrl, downloadPath)
+
+//         prog(0.5, 'info', `Installer : "${downloadPath}"`)
+//         await bridge.installApk(downloadPath)
+
+//         prog(1, 'info', `OK`)
+//         return
+//     }
+
+//     prog(1, 'info', `Pas de mise à jour`)
+// }
+
+const installApk = async (fileName: string) => {
+  const prog = newProgressDialog('Installer AutoStart');
+
+  const downloadUrl = `https://i.m4k.fr/${fileName}`;
+  const downloadPath = `@cache/${fileName}`;
+  prog(0.1, 'info', `Télécharger : "${downloadUrl}" -> "${downloadPath}"`);
+
+  await bridge.download(downloadUrl, downloadPath);
+
+  prog(0.5, 'info', `Installer : "${downloadPath}"`);
+  await bridge.installApk(downloadPath);
+
+  prog(1, 'info', `OK`);
+};
+
+const textToBinary = (text: string) => {
+  const INIT = '\x1B\x40';
+  const UTF8 = '\x1B\x74\x10';
+  const LINE = '\x0A';
+  const CUT = '\x1D\x56\x00';
+  const binaryParts = [INIT, UTF8, LINE, LINE, LINE, LINE];
+  const len = text.length;
+  for (let i = 0; i < len; i++) {
+    const char = text.charAt(i);
+    const code = char.charCodeAt(0);
+    const codeMap: Record<number, number> = { 8364: 128, 8230: 133 };
+    const code2 = codeMap[code] || code;
+    let byte = String.fromCharCode(code2);
+    if (code2 >= 256) byte = ' ';
+    binaryParts.push(byte);
+  }
+  binaryParts.push(LINE, LINE, LINE, LINE, CUT);
+  const binary = binaryParts.join('');
+  return binary;
+};
+
+const testPrint = async () => {
+  const binary = textToBinary('Mon test ! \n\n <([{ e:éè a:à euro:€ }])>');
+  const base64 = btoa(binary);
+  const result = await bridge.startIntent({ uri: `rawbt:base64,${base64}` });
+  console.debug('testPrint', result);
+};
+
+const clearCacheAndReload = async () => {
+  const prog = newProgressDialog('Nettoyage du cache');
+
+  prog(0.2, 'info', 'Suppression du cache Service Worker...');
+
+  try {
+    getStorage().clear();
+    prog(0.8, 'info', 'Cache supprimé, rechargement de la page...');
+
+    setTimeout(() => {
+      glb.location.reload();
+    }, 1000);
+  } catch (e) {
+    const error = toError(e);
+    prog(1, 'error', `Erreur: ${error}`);
+    console.error('Failed to clear SW cache:', error);
+  }
+};
+
+export const ActionsPage = () => {
+  const [info] = usePromise(() => bridge.deviceInfo(), []);
+
+  return (
+    <div {...c()}>
+      <div {...c('Info')}>
+        {Object.entries(info || {}).map(([k, v], i) => (
+          <div key={i}>
+            {k}: <b>{v}</b>
+          </div>
+        ))}
+      </div>
+
+      <div {...c('Buttons')}>
+        <Button color="primary" onClick={() => installApk('bridge.apk')}>
+          Installer la derniére version du Kiosk
+        </Button>
+        <Button color="secondary" onClick={clearCacheAndReload}>
+          Vider le cache et recharger
+        </Button>
+        <Button
+          onClick={async () => {
+            await copyPlaylist(`@storage/${copyDir$.get()}`);
+          }}
+        >
+          Copier la playlist locale
+        </Button>
+        <Button onClick={() => bridge.exit()}>Quitter</Button>
+      </div>
+
+      <div {...c('Buttons')}>
+        <h3>Installer :</h3>
+        <Button onClick={() => installApk('autostart22.apk')}>AutoStart</Button>
+        <Button onClick={() => installApk('RawBT609.apk')}>RawBt Printer V6.0.9</Button>
+        <Button onClick={() => installApk('RawBT703.apk')}>RawBt Printer V7.0.3</Button>
+        <Button onClick={() => installApk('TeamViewerHost.apk')}>TeamViewer Host</Button>
+        <Button onClick={() => installApk('TeamViewerQS.apk')}>TeamViewer QuickSupport</Button>
+        <Button onClick={() => installApk('WebView132.apk')}>WebView 132</Button>
+      </div>
+
+      <div {...c('Buttons')}>
+        <h3>Installer WebView :</h3>
+        {/* https://www.apkmirror.com/apk/google-inc/android-system-webview/ */}
+        <Button onClick={() => installApk('webview134_arm64_a8.apk')}>
+          WebView 134 ARM64 Android8+
+        </Button>
+      </div>
+
+      <div {...c('Buttons')}>
+        <h3>Ouvrir :</h3>
+        <Button onClick={testPrint}>Test Impression</Button>
+        <Button
+          onClick={() =>
+            bridge.startIntent({
+              component: 'ru.a402d.rawbtprinter/ru.a402d.rawbtprinter.activity.MainActivity',
+              flags: ['newTask'],
+            })
+          }
+        >
+          RawBt Printer
+        </Button>
+        <Button
+          onClick={() =>
+            bridge.startIntent({
+              component: 'com.teamviewer.host.market/com.teamviewer.host.ui.HostActivity',
+              flags: ['newTask'],
+            })
+          }
+        >
+          TeamViewer Host
+        </Button>
+        <Button
+          onClick={() =>
+            bridge.startIntent({
+              component:
+                'com.teamviewer.quicksupport.market/com.teamviewer.quicksupport.ui.QSActivity',
+              flags: ['newTask'],
+            })
+          }
+        >
+          TeamViewer QuickSupport
+        </Button>
+        {/* <Button onClick={() => bridge.openAutoStart()}>AutoStart</Button> */}
+      </div>
+
+      {/* <b>Rotation :</b>
+            <div className="bridgeActions">
+                <Button onClick={() => bridge.set("screenOrientation", "landscape")}>Landscape</Button>
+                <Button onClick={() => bridge.set("screenOrientation", "portrait")}>Portrait</Button>
+                <Button onClick={() => bridge.set("screenOrientation", "reverse_landscape")}>Reverse Landscape</Button>
+                <Button onClick={() => bridge.set("screenOrientation", "reverse_portrait")}>Reverse Portrait</Button>
+            </div> */}
+
+      <div {...c('Buttons')}>
+        <h3>Autre :</h3>
+        <Button
+          onClick={async () => {
+            url$.set('https://boardscreen.fr/');
+            await bridge.restart();
+          }}
+        >
+          Boardscreen
+        </Button>
+        <Button
+          onClick={async () => {
+            localStorage.clear();
+            location.href = '/';
+          }}
+        >
+          Supprimer le Device
+        </Button>
+      </div>
+
+      <Apps />
+    </div>
+  );
+};

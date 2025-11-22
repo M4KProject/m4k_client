@@ -1,11 +1,10 @@
 import './app';
 import { isNil, logger } from 'fluxio';
-import { m4k } from '@/m4kBridge';
-import { mountDevice } from './device/mountDevice';
+import { bridge } from '@/bridge';
+import { mountDevice } from './mountDevice';
 import { mountAdmin } from './admin/mountAdmin';
 import { initServiceWorker } from './initServiceWorker';
 import { isDevice$ } from './router/isDevice$';
-import { addResponsiveListener } from './utils/responsive';
 
 const log = logger('main');
 
@@ -19,7 +18,7 @@ const main = async () => {
   log.d('isDevice', isDevice);
 
   if (isNil(isDevice)) {
-    if (m4k.isInterface) {
+    if (bridge.isInterface) {
       isDevice = true;
       log.d('isInterface');
     }

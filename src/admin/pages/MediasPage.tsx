@@ -1,6 +1,5 @@
 import { Css } from 'fluxio';
 import { MediaGrid } from '@/admin/components/medias/MediaGrid';
-import { getNextTitle, uploadMedia } from '@/admin/controllers';
 import { AddPlaylistItemButton, EditPlaylist } from '@/admin/components/medias/EditPlaylist';
 import { EditPage } from '@/admin/components/medias/EditPage';
 import { Edit, FolderPlus, MapPlus, FilePlus, Play, Upload } from 'lucide-react';
@@ -14,6 +13,8 @@ import { Toolbar } from '@/components/Toolbar';
 import { Button, UploadButton } from '@/components/Button';
 import { Api } from '@/api/Api';
 import { AdminSideBar } from '@/admin/components/AdminSideBar';
+import { getNextTitle } from '@/controllers/getNextTitle';
+import { uploadMedia } from '@/controllers/media';
 
 const c = Css('MediasPage', {});
 

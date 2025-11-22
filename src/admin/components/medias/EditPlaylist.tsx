@@ -1,7 +1,6 @@
 import { Css } from 'fluxio';
 import { addItem, removeIndex, deepClone, moveIndex } from 'fluxio';
 import { Plus, Trash2, Copy, ArrowUp, ArrowDown } from 'lucide-react';
-import { updatePlaylist } from '@/admin/controllers';
 import { JobGrid } from '@/admin/components/jobs/JobGrid';
 import { MediaPreview } from './MediaPreview';
 import { useGroupMedias, useApi } from '@/hooks/apiHooks';
@@ -10,6 +9,7 @@ import { JobModel, MediaModel, PlaylistEntry, PlaylistModel } from '@/api/models
 import { Field } from '@/components/Field';
 import { Flag } from '@/components/Flag';
 import { Button } from '@/components/Button';
+import { updatePlaylist } from '@/controllers/media';
 
 const c = Css('EditPlaylist', {
   '': {

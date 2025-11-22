@@ -1,14 +1,13 @@
 import { Css } from 'fluxio';
 import { byId, groupBy, sortItems, fluxDictionary, isUFloat } from 'fluxio';
 import { JobGrid } from '@/admin/components/jobs/JobGrid';
-import { selectedById$ } from '@/admin/controllers/selected';
+import { selectedById$ } from '@/controllers/selected';
 import { useApi, useGroupMedias } from '@/hooks/apiHooks';
 import { useIsAdvanced } from '@/router/hooks';
 import { Dictionary, round } from 'fluxio';
 import { Trash2, FolderInput, PlusSquare, Edit, Eye, Download } from 'lucide-react';
 import { SelectedField } from '@/admin/components/SelectedField';
 import { MediaPreview } from './MediaPreview';
-import { updatePlaylist } from '@/admin/controllers';
 import { MediaIcon } from './MediaIcon';
 import { updateRoute } from '@/router/setters';
 import { useMemo } from 'preact/hooks';
@@ -19,6 +18,7 @@ import { Field } from '@/components/Field';
 import { Button } from '@/components/Button';
 import { useFlux } from '@/hooks/useFlux';
 import { Api } from '@/api/Api';
+import { updatePlaylist } from '@/controllers/media';
 
 addTr({
   pending: 'en attente',

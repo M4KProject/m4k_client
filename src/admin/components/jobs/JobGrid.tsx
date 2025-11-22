@@ -1,6 +1,5 @@
 import { Trash2 } from 'lucide-react';
 import { JobStatus } from './JobStatus';
-import { UploadItem, uploadMediaJobs$ } from '@/admin/controllers';
 import { Css } from 'fluxio';
 import { MediaPreview } from '@/admin/components/medias/MediaPreview';
 import { byId } from 'fluxio';
@@ -13,6 +12,7 @@ import { Tr } from '@/components/Tr';
 import { Button } from '@/components/Button';
 import { useFlux } from '@/hooks/useFlux';
 import { Api } from '@/api/Api';
+import { UploadItem, uploadMediaJobs$ } from '@/controllers/media';
 
 // Ajout des traductions pour les actions de job
 addTr({ convert: 'Convertion du media', addMember: 'Ajouter membre' });
