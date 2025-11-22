@@ -1,7 +1,7 @@
 import { Css } from 'fluxio';
 import { addItem, removeIndex, deepClone, moveIndex } from 'fluxio';
 import { Plus, Trash2, Copy, ArrowUp, ArrowDown } from 'lucide-react';
-import { JobGrid } from '@/admin/components/jobs/JobGrid';
+import { JobGrid } from '@/components/admin/JobGrid';
 import { MediaPreview } from './MediaPreview';
 import { useGroupMedias, useApi } from '@/hooks/apiHooks';
 import { Grid, GridCols } from '@/components/Grid';

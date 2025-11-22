@@ -1,7 +1,7 @@
 import { Css } from 'fluxio';
-import { MediaGrid } from '@/admin/components/medias/MediaGrid';
-import { AddPlaylistItemButton, EditPlaylist } from '@/admin/components/medias/EditPlaylist';
-import { EditPage } from '@/admin/components/medias/EditPage';
+import { MediaGrid } from '@/components/admin/MediaGrid';
+import { AddPlaylistItemButton, EditPlaylist } from '@/components/admin/EditPlaylist';
+import { EditPage } from '@/components/admin/EditPage';
 import { Edit, FolderPlus, MapPlus, FilePlus, Play, Upload } from 'lucide-react';
 import { useIsEdit, useMediaType } from '@/router/hooks';
 import { setIsEdit, setMediaKey, setMediaType } from '@/router/setters';
@@ -12,7 +12,7 @@ import { MediaView } from '@/components/medias/MediaView';
 import { Toolbar } from '@/components/Toolbar';
 import { Button, UploadButton } from '@/components/Button';
 import { Api } from '@/api/Api';
-import { AdminSideBar } from '@/admin/components/AdminSideBar';
+import { AdminSideBar } from '@/components/admin/AdminSideBar';
 import { getNextTitle } from '@/controllers/getNextTitle';
 import { uploadMedia } from '@/controllers/media';
 

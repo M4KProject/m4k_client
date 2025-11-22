@@ -1,7 +1,7 @@
 import { Trash2 } from 'lucide-react';
 import { JobStatus } from './JobStatus';
 import { Css } from 'fluxio';
-import { MediaPreview } from '@/admin/components/medias/MediaPreview';
+import { MediaPreview } from '@/components/admin/MediaPreview';
 import { byId } from 'fluxio';
 import { useApi, useGroupJobs, useGroupMedias } from '@/hooks/apiHooks';
 import { filterItems, Dictionary } from 'fluxio';

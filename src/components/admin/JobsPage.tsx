@@ -1,9 +1,9 @@
 import { Css } from 'fluxio';
-import { JobGrid } from '@/admin/components/jobs/JobGrid';
-import { SearchField } from '@/admin/components/SearchField';
+import { JobGrid } from '@/components/admin/JobGrid';
+import { SearchField } from '@/components/admin/SearchField';
 import { Page, PageBody } from '@/components/Page';
 import { Toolbar } from '@/components/Toolbar';
-import { AdminSideBar } from '@/admin/components/AdminSideBar';
+import { AdminSideBar } from '@/components/admin/AdminSideBar';
 
 const c = Css('Jobs', {});
 

@@ -1,5 +1,5 @@
 import { Css } from 'fluxio';
-import { JobGrid } from '@/admin/components/jobs/JobGrid';
+import { JobGrid } from '@/components/admin/JobGrid';
 import { useEffect, useMemo } from 'preact/hooks';
 import { BContext, BCtrl } from '@/components/box/BCtrl';
 import { PageModel } from '@/api/models';

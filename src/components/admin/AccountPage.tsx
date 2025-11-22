@@ -13,7 +13,7 @@ import { Button } from '@/components/Button';
 import { Form } from '@/components/Form';
 import { Field } from '@/components/Field';
 import { useApi } from '@/hooks/apiHooks';
-import { AdminSideBar } from '@/admin/components/AdminSideBar';
+import { AdminSideBar } from '@/components/admin/AdminSideBar';
 
 const c = Css('AccountPage', {});
 

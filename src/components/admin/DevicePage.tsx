@@ -1,14 +1,14 @@
 import { Css, toString } from 'fluxio';
 import { useEffect, useState } from 'preact/hooks';
 import { RefreshCw, Power, LogOut } from 'lucide-react';
-import { DeviceScreen } from '@/admin/components/devices/DeviceScreen';
-import { DeviceConsole } from '@/admin/components/devices/DeviceConsole';
+import { DeviceScreen } from '@/components/admin/DeviceScreen';
+import { DeviceConsole } from '@/components/admin/DeviceConsole';
 import { glb, jsonStringify } from 'fluxio';
 import { useApi, useDevice } from '@/hooks/apiHooks';
 import { Page, PageBody } from '@/components/Page';
 import { Toolbar } from '@/components/Toolbar';
 import { Button } from '@/components/Button';
-import { AdminSideBar } from '@/admin/components/AdminSideBar';
+import { AdminSideBar } from '@/components/admin/AdminSideBar';
 
 const c = Css('DevicePage', {
   Body: {

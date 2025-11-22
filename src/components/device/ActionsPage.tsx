@@ -2,7 +2,7 @@ import { Css } from 'fluxio';
 import { getStorage, glb, toError } from 'fluxio';
 import copyPlaylist from '@/controllers/copyPlaylist';
 import { newProgressDialog } from '@/components/device/ProgressView';
-import { Apps } from '@/admin/components/Apps';
+import { Apps } from '@/components/admin/Apps';
 import { usePromise } from '@/hooks/usePromise';
 import { Button } from '@/components/Button';
 import { copyDir$, url$ } from '@/controllers/deviceMessages';

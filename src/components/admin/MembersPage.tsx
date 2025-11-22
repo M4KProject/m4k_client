@@ -2,8 +2,8 @@ import { Css } from 'fluxio';
 import { randString, ReqError } from 'fluxio';
 import { Plus } from 'lucide-react';
 import { useState } from 'preact/hooks';
-import { MemberGrid } from '@/admin/components/MemberGrid';
-import { SearchField } from '@/admin/components/SearchField';
+import { MemberGrid } from '@/components/admin/MemberGrid';
+import { SearchField } from '@/components/admin/SearchField';
 import { Role } from '@/api/models';
 import { Form } from '@/components/Form';
 import { Field } from '@/components/Field';
@@ -12,7 +12,7 @@ import { showDialog } from '@/components/Dialog';
 import { Page, PageBody } from '@/components/Page';
 import { Toolbar } from '@/components/Toolbar';
 import { useApi } from '@/hooks/apiHooks';
-import { AdminSideBar } from '@/admin/components/AdminSideBar';
+import { AdminSideBar } from '@/components/admin/AdminSideBar';
 
 const c = Css('MembersPage', {});
 

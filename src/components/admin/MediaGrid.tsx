@@ -1,12 +1,12 @@
 import { Css } from 'fluxio';
 import { byId, groupBy, sortItems, fluxDictionary, isUFloat } from 'fluxio';
-import { JobGrid } from '@/admin/components/jobs/JobGrid';
+import { JobGrid } from '@/components/admin/JobGrid';
 import { selectedById$ } from '@/controllers/selected';
 import { useApi, useGroupMedias } from '@/hooks/apiHooks';
 import { useIsAdvanced } from '@/router/hooks';
 import { Dictionary, round } from 'fluxio';
 import { Trash2, FolderInput, PlusSquare, Edit, Eye, Download } from 'lucide-react';
-import { SelectedField } from '@/admin/components/SelectedField';
+import { SelectedField } from '@/components/admin/SelectedField';
 import { MediaPreview } from './MediaPreview';
 import { MediaIcon } from './MediaIcon';
 import { updateRoute } from '@/router/setters';

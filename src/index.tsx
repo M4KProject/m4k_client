@@ -2,7 +2,7 @@ import './app';
 import { isNil, logger } from 'fluxio';
 import { bridge } from '@/bridge';
 import { mountDevice } from './mountDevice';
-import { mountAdmin } from './admin/mountAdmin';
+import { mountAdmin } from './mountAdmin';
 import { initServiceWorker } from './initServiceWorker';
 import { isDevice$ } from './router/isDevice$';
 
