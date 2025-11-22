@@ -1,4 +1,4 @@
-import { useFlux } from '../hooks/useFlux';
+import { useFlux } from '@/hooks/useFlux';
 import { Css } from 'fluxio';
 import { ComponentChildren } from 'preact';
 import { Flux } from 'fluxio';

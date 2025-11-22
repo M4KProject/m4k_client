@@ -1,15 +1,15 @@
 import { Css } from 'fluxio';
 import { toNumber } from 'fluxio';
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { openCodePinDialog } from '../components/CodePinView';
-import { bgColor$, itemAnim$, itemDurationMs$, itemFit$, playlist$, url$ } from '../messages';
+import { openCodePinDialog } from '@/admin/components/CodePinView';
+import { bgColor$, itemAnim$, itemDurationMs$, itemFit$, playlist$, url$ } from '@/device/messages';
 import { m4k } from '@/m4kBridge';
 import { logger } from 'fluxio';
-import { KioskVideo } from '../components/KioskVideo';
+import { KioskVideo } from '@/admin/components/KioskVideo';
 import { usePromise } from '@/hooks/usePromise';
 import { useFlux } from '@/hooks/useFlux';
 import { Button } from '@/components/Button';
-import { useDeviceCtrl } from '../controllers/DeviceCtrl';
+import { useDeviceCtrl } from '@/device/controllers/DeviceCtrl';
 
 const log = logger('KioskPage');
 

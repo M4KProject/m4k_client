@@ -1,7 +1,7 @@
 import { Css } from 'fluxio';
 import { DivProps } from './types';
 import { Tr } from './Tr';
-import { addTr } from '../hooks/useTr';
+import { addTr } from '@/hooks/useTr';
 
 const c = Css('Loading', {
   '': {

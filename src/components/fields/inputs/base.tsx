@@ -1,6 +1,6 @@
 import { useState } from 'preact/hooks';
-import { useInputProps } from '../hooks';
-import { FieldProps } from '../types';
+import { useInputProps } from '@/components/fields/hooks';
+import { FieldProps } from '@/components/fields/types';
 import { Button } from '@/components/Button';
 import { EyeIcon, EyeOffIcon } from 'lucide-react';
 import { formatSeconds, parseSeconds, toNumber, toString } from 'fluxio';

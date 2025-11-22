@@ -1,9 +1,9 @@
 import { Css } from 'fluxio';
 import { BComp } from './bTypes';
-import { MediaView } from '../medias/MediaView';
 import { useMediaById, useApi } from '@/hooks/apiHooks';
 import { useFlux } from '@/hooks/useFlux';
-import '../medias/registers';
+import { MediaView } from '@/components/medias/MediaView';
+import '@/admin/components/medias/registers';
 
 const c = Css('BMedia', {
   '': { wh: '100%' },

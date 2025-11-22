@@ -8,7 +8,7 @@ import {
   codePin$,
   url$,
   bgColor$,
-} from '../messages';
+} from '@/device/messages';
 import { isNil, round, toBoolean, toNumber } from 'fluxio';
 import { useState } from 'preact/hooks';
 import { m4k } from '@/m4kBridge';

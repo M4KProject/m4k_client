@@ -1,5 +1,5 @@
 import { Css } from 'fluxio';
-import { dialog$ } from '../messages/dialog$';
+import { dialog$ } from '@/device/messages/dialog$';
 import { useFlux } from '@/hooks/useFlux';
 
 const c = Css('DialogContainer', {

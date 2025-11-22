@@ -16,11 +16,11 @@ import {
   Save,
 } from 'lucide-react';
 import { useEffect, useState } from 'preact/hooks';
-import { BCtrl, useBCtrl } from '@/box/BCtrl';
+import { BCtrl, useBCtrl } from '@/components/box/BCtrl';
 import { Button, ButtonProps } from '@/components/Button';
 import { useFlux } from '@/hooks/useFlux';
 import { clipboardCopy, clipboardPaste } from '@/utils/clipboard';
-import { BData } from '@/box/bTypes';
+import { BData } from '@/components/box/bTypes';
 
 const c = Css('BButtons', {
   '': {

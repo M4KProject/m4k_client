@@ -1,11 +1,11 @@
 import { Css } from 'fluxio';
-import { page$ } from '../messages/page$';
-import { offlineMode$ } from '../messages';
-import { Branding } from '../components/Branding';
+import { page$ } from '@/device/messages/page$';
+import { offlineMode$ } from '@/device/messages';
+import { Branding } from '@/admin/components/Branding';
 import { useFlux } from '@/hooks/useFlux';
 import { LoadingSpinner } from '@/components/Loading';
 import { Button } from '@/components/Button';
-import { useDeviceCtrl } from '../controllers/DeviceCtrl';
+import { useDeviceCtrl } from '@/device/controllers/DeviceCtrl';
 
 const c = Css('PairingPage', {
   '': {

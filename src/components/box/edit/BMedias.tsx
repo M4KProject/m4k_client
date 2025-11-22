@@ -1,7 +1,7 @@
 import { useApi, useGroupMedias } from '@/hooks/apiHooks';
 import { Css, fluxCombine } from 'fluxio';
 import { MediaModel } from '@/api/models';
-import { useBCtrl } from '@/box/BCtrl';
+import { useBCtrl } from '@/components/box/BCtrl';
 import { useFluxMemo } from '@/hooks/useFlux';
 import { Button } from '@/components/Button';
 

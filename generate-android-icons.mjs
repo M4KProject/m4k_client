@@ -16,7 +16,7 @@ const iconSizes = {
 };
 
 const svgPath = join(__dirname, 'src/admin/assets/logoWithoutText.svg');
-const baseOutputPath = join(__dirname, '../app/src/main/res');
+const baseOutputPath = join(__dirname, '@/admin/app/src/main/res');
 
 async function generateIcons() {
   console.log('📱 Generating Android app icons...\n');

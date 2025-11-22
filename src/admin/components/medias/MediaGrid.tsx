@@ -1,14 +1,14 @@
 import { Css } from 'fluxio';
 import { byId, groupBy, sortItems, fluxDictionary, isUFloat } from 'fluxio';
-import { JobGrid } from '../jobs/JobGrid';
+import { JobGrid } from '@/admin/components/jobs/JobGrid';
 import { selectedById$ } from '@/admin/controllers/selected';
 import { useApi, useGroupMedias } from '@/hooks/apiHooks';
 import { useIsAdvanced } from '@/router/hooks';
 import { Dictionary, round } from 'fluxio';
 import { Trash2, FolderInput, PlusSquare, Edit, Eye, Download } from 'lucide-react';
-import { SelectedField } from '../SelectedField';
+import { SelectedField } from '@/admin/components/SelectedField';
 import { MediaPreview } from './MediaPreview';
-import { updatePlaylist } from '../../controllers';
+import { updatePlaylist } from '@/admin/controllers';
 import { MediaIcon } from './MediaIcon';
 import { updateRoute } from '@/router/setters';
 import { useMemo } from 'preact/hooks';

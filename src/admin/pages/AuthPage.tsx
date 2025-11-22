@@ -3,7 +3,7 @@ import { Css } from 'fluxio';
 import logoUrl from '@/assets/logo.svg';
 import loginUrl from '@/assets/login.svg';
 import { Download, Monitor } from 'lucide-react';
-import { Apps } from '../components/Apps';
+import { Apps } from '@/admin/components/Apps';
 import { isDevice$ } from '@/router';
 import { AuthForm } from '@/components/AuthForm';
 import { Button } from '@/components/Button';

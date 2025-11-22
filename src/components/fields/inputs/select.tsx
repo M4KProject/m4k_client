@@ -4,8 +4,8 @@ import { Css } from 'fluxio';
 import { isArray } from 'fluxio';
 import { isSearched } from 'fluxio';
 import { ChevronDown } from 'lucide-react';
-import { FieldProps } from '../types';
-import { useFieldController, useFieldState } from '../hooks';
+import { FieldProps } from '@/components/fields/types';
+import { useFieldController, useFieldState } from '@/components/fields/hooks';
 
 const FIELD_HEIGHT = 22;
 

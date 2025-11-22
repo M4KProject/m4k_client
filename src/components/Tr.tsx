@@ -1,5 +1,5 @@
 import { JSX } from 'preact';
-import { useTr } from '../hooks/useTr';
+import { useTr } from '@/hooks/useTr';
 import { isString } from 'fluxio';
 
 export interface TrProps extends JSX.HTMLAttributes<HTMLDivElement> {

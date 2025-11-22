@@ -1,9 +1,9 @@
 import { Css } from 'fluxio';
 import { Flux } from 'fluxio';
 import { useEffect, useState } from 'preact/hooks';
-import { page$ } from '../messages/page$';
+import { page$ } from '@/device/messages/page$';
 import { Globe, Lock } from 'lucide-react';
-import { codePin$, offlineMode$ } from '../messages';
+import { codePin$, offlineMode$ } from '@/device/messages';
 import { Branding } from './Branding';
 import { useFlux } from '@/hooks/useFlux';
 import { useInterval } from '@/hooks/useInterval';
@@ -12,7 +12,7 @@ import { Field } from '@/components/Field';
 import { Button } from '@/components/Button';
 import { showDialog } from '@/components/Dialog';
 import { useApi } from '@/hooks/apiHooks';
-import { useDeviceCtrl } from '../controllers/DeviceCtrl';
+import { useDeviceCtrl } from '@/device/controllers/DeviceCtrl';
 
 const c = Css('CodePinView', {
   '': {

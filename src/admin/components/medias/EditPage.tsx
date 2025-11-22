@@ -1,11 +1,11 @@
 import { Css } from 'fluxio';
-import { JobGrid } from '../jobs/JobGrid';
+import { JobGrid } from '@/admin/components/jobs/JobGrid';
 import { useEffect, useMemo } from 'preact/hooks';
-import { BContext, BCtrl } from '@/box/BCtrl';
+import { BContext, BCtrl } from '@/components/box/BCtrl';
 import { PageModel } from '@/api/models';
 import { sideOpen$ } from '@/components/Side';
-import { BViewport } from '@/admin/box/BViewport';
-import { BSide } from '@/admin/box/BSide';
+import { BViewport } from '@/components/box/edit/BViewport';
+import { BSide } from '@/components/box/edit/BSide';
 import { useApi } from '@/hooks/apiHooks';
 
 const c = Css('EditPage', {

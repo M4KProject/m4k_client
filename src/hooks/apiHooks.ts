@@ -1,5 +1,5 @@
 import { useFlux, useFluxMemo } from '@/hooks/useFlux';
-import { useDeviceKey, useGroupKey, useMediaKey, useIsAdvanced } from '../router/hooks';
+import { useDeviceKey, useGroupKey, useMediaKey, useIsAdvanced } from '@/router/hooks';
 import { useMemo } from 'preact/hooks';
 import { PbModel, PbWhere } from 'pblite';
 import { createContext } from 'preact';

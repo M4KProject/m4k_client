@@ -2,8 +2,8 @@ import { ComponentChildren } from 'preact';
 import { Css } from 'fluxio';
 import { Button } from '@/components/Button';
 import { isArray } from 'fluxio';
-import { useFieldController, useFieldState } from '../hooks';
-import { FieldProps } from '../types';
+import { useFieldController, useFieldState } from '@/components/fields/hooks';
+import { FieldProps } from '@/components/fields/types';
 
 const c = Css('Picker', {
   '': {

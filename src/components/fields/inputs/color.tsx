@@ -1,5 +1,5 @@
-import { FieldProps } from '../types';
-import { useInputProps } from '../hooks';
+import { FieldProps } from '@/components/fields/types';
+import { useInputProps } from '@/components/fields/hooks';
 import { addHsl, Css, isFloat, round, setHsl, setRgb, toHsl, toRgb, isLight } from 'fluxio';
 import { useState, useRef } from 'preact/hooks';
 import { Field } from '@/components/Field';

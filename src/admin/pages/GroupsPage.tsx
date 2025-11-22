@@ -1,13 +1,13 @@
 import { Plus } from 'lucide-react';
 import { Css } from 'fluxio';
-import { SearchField } from '../components/SearchField';
-import { GroupGrid } from '../components/GroupGrid';
+import { SearchField } from '@/admin/components/SearchField';
+import { GroupGrid } from '@/admin/components/GroupGrid';
 import { Role } from '@/api/models';
 import { Page, PageBody } from '@/components/Page';
 import { Toolbar } from '@/components/Toolbar';
 import { Button } from '@/components/Button';
 import { useApi } from '@/hooks/apiHooks';
-import { AdminSideBar } from '../components/AdminSideBar';
+import { AdminSideBar } from '@/admin/components/AdminSideBar';
 
 const c = Css('GroupsPage', {});
 

@@ -1,5 +1,5 @@
 import { Css, autoScrollEnd } from 'fluxio';
-import { dialog$ } from '../messages/dialog$';
+import { dialog$ } from '@/device/messages/dialog$';
 import { useEffect, useRef } from 'preact/hooks';
 import { flux } from 'fluxio';
 import { useFlux } from '@/hooks/useFlux';

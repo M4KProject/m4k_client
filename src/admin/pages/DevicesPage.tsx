@@ -2,8 +2,8 @@ import { Css, humanize } from 'fluxio';
 import { jsonStringify, toDate, toError, toTime } from 'fluxio';
 import { RefreshCw, Trash2, Settings, Plus, Power } from 'lucide-react';
 import { useState } from 'preact/hooks';
-import { SearchField } from '../components/SearchField';
-import { setDeviceKey, setPage } from '../../router/setters';
+import { SearchField } from '@/admin/components/SearchField';
+import { setDeviceKey, setPage } from '@/router/setters';
 import { useIsAdvanced } from '@/router/hooks';
 import { useApi, useGroupDevices, useGroupMedias } from '@/hooks/apiHooks';
 import { formatDate, formatDateTime } from 'fluxio';
@@ -17,7 +17,7 @@ import { showDialog } from '@/components/Dialog';
 import { Page, PageBody } from '@/components/Page';
 import { Toolbar } from '@/components/Toolbar';
 import { Api } from '@/api/Api';
-import { AdminSideBar } from '../components/AdminSideBar';
+import { AdminSideBar } from '@/admin/components/AdminSideBar';
 
 const c = Css('DevicesPage', {
   Buttons: {

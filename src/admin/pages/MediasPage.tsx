@@ -1,19 +1,19 @@
 import { Css } from 'fluxio';
-import { MediaGrid } from '../components/medias/MediaGrid';
-import { getNextTitle, uploadMedia } from '../controllers';
-import { AddPlaylistItemButton, EditPlaylist } from '../components/medias/EditPlaylist';
-import { EditPage } from '../components/medias/EditPage';
+import { MediaGrid } from '@/admin/components/medias/MediaGrid';
+import { getNextTitle, uploadMedia } from '@/admin/controllers';
+import { AddPlaylistItemButton, EditPlaylist } from '@/admin/components/medias/EditPlaylist';
+import { EditPage } from '@/admin/components/medias/EditPage';
 import { Edit, FolderPlus, MapPlus, FilePlus, Play, Upload } from 'lucide-react';
 import { useIsEdit, useMediaType } from '@/router/hooks';
 import { setIsEdit, setMediaKey, setMediaType } from '@/router/setters';
 import { useApi, useMedia, useMediaById } from '@/hooks/apiHooks';
 import { MediaModel, PageModel, PlaylistModel } from '@/api/models';
 import { Page, PageBody } from '@/components/Page';
-import { MediaView } from '@/medias/MediaView';
+import { MediaView } from '@/components/medias/MediaView';
 import { Toolbar } from '@/components/Toolbar';
 import { Button, UploadButton } from '@/components/Button';
 import { Api } from '@/api/Api';
-import { AdminSideBar } from '../components/AdminSideBar';
+import { AdminSideBar } from '@/admin/components/AdminSideBar';
 
 const c = Css('MediasPage', {});
 

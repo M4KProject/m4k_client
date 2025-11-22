@@ -1,6 +1,6 @@
 import { Search } from 'lucide-react';
 import { Css } from 'fluxio';
-import { search$ } from '../controllers/search';
+import { search$ } from '@/admin/controllers/search';
 import { Flux } from 'fluxio';
 import { useFlux } from '@/hooks/useFlux';
 import { Field } from '@/components/Field';

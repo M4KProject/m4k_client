@@ -1,6 +1,6 @@
 import { Css } from 'fluxio';
-import { FieldProps } from '../types';
-import { useInputProps } from '../hooks';
+import { FieldProps } from '@/components/fields/types';
+import { useInputProps } from '@/components/fields/hooks';
 
 const c = Css('UploadInput', {
   '': {},

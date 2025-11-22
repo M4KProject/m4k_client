@@ -1,6 +1,6 @@
-import { codePin$ } from '../messages';
+import { codePin$ } from '@/device/messages';
 import { useEffect, useState } from 'preact/hooks';
-import { page$ } from '../messages/page$';
+import { page$ } from '@/device/messages/page$';
 import { Page, PageBody } from '@/components/Page';
 import { Toolbar } from '@/components/Toolbar';
 import { Form } from '@/components/Form';

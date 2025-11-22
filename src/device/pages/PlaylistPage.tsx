@@ -1,7 +1,7 @@
 import { Css } from 'fluxio';
 import { round } from 'fluxio';
 import { ArrowUp, ArrowDown, Copy, Trash2 } from 'lucide-react';
-import { playlist$ } from '../messages';
+import { playlist$ } from '@/device/messages';
 import { Grid, GridCols } from '@/components/Grid';
 import { Field } from '@/components/Field';
 import { Button } from '@/components/Button';

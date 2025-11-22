@@ -1,4 +1,4 @@
-import { MediaType } from '../api/models';
+import { MediaType } from '@/api/models';
 import { toBoolean, toString, isDeepEqual, getUrlParams } from 'fluxio';
 import { Page, Route } from './types';
 import { getRoute } from './getters';

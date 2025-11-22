@@ -1,4 +1,4 @@
-import { BData, NBData } from '@/box/bTypes';
+import { BData, NBData } from '@/components/box/bTypes';
 import {
   _DeviceModel,
   _MediaModel,
@@ -10,7 +10,6 @@ import {
   _SuperuserModel,
   _ApplicationModel,
 } from './models.generated';
-import { Dictionary } from 'fluxio';
 
 export * from './models.generated';
 

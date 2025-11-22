@@ -2,8 +2,8 @@ import { PanZoom } from '@/components/PanZoom';
 import { Css, onHtmlEvent } from 'fluxio';
 import { BButtons, SCREEN_SIZES } from './BButtons';
 import { BHandles } from './BHandles';
-import { useBCtrl } from '@/box/BCtrl';
-import { BFactory } from '@/box/BFactory';
+import { useBCtrl } from '@/components/box/BCtrl';
+import { BFactory } from '@/components/box/BFactory';
 import { useEffect } from 'preact/hooks';
 
 const c = Css('BViewport', {

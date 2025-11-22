@@ -1,6 +1,6 @@
-import { useInputProps } from '../hooks';
+import { useInputProps } from '@/components/fields/hooks';
 import { Css } from 'fluxio';
-import { FIELD_HEIGHT } from '../constants';
+import { FIELD_HEIGHT } from '@/components/fields/constants';
 
 const HANDLE_SIZE = FIELD_HEIGHT - 6;
 const HANDLE_X = HANDLE_SIZE - 4;

@@ -1,5 +1,5 @@
 import { Css, logger, truncate } from 'fluxio';
-import { useBCtrl } from '@/box/BCtrl';
+import { useBCtrl } from '@/components/box/BCtrl';
 import { useFluxMemo } from '@/hooks/useFlux';
 import { Square } from 'lucide-react';
 

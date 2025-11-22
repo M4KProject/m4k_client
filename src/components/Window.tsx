@@ -1,5 +1,5 @@
 import { Css, Flux, onHtmlEvent, Unsubscribe, stopEvent } from 'fluxio';
-import { useFlux } from '../hooks/useFlux';
+import { useFlux } from '@/hooks/useFlux';
 import { portal } from './Portal';
 import { Content, DivProps } from './types';
 import { getContent } from './getContent';

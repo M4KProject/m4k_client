@@ -1,8 +1,8 @@
 import { Trash2 } from 'lucide-react';
 import { JobStatus } from './JobStatus';
-import { UploadItem, uploadMediaJobs$ } from '../../controllers';
+import { UploadItem, uploadMediaJobs$ } from '@/admin/controllers';
 import { Css } from 'fluxio';
-import { MediaPreview } from '../medias/MediaPreview';
+import { MediaPreview } from '@/admin/components/medias/MediaPreview';
 import { byId } from 'fluxio';
 import { useApi, useGroupJobs, useGroupMedias } from '@/hooks/apiHooks';
 import { filterItems, Dictionary } from 'fluxio';
@@ -69,7 +69,7 @@ export const JobGrid = ({ filter, panel, ...props }: JobGridProps) => {
   const jobs = useGroupJobs();
   const uploadJobs = useFlux(uploadMediaJobs$);
   const uploadJobsList = Object.values(uploadJobs).filter((j) => j !== undefined);
-  const allJobs: (JobModel | UploadItem)[] = [...jobs, ...uploadJobsList];
+  const allJobs: (JobModel | UploadItem)[] = [...jobs, ...uploadJobsList] as any;
   filterItems(allJobs, filter);
   // sortItems(allJobs, job => -new Date(job.updated).getTime());
 

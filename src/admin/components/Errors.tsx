@@ -79,7 +79,7 @@ const useErrorItems = () => {
   };
 
   useEffect(() =>
-    api.pb.error$.on((e) => {
+    api.pb.error$.on((e: any) => {
       pushItem(errorToItem(e));
     })
   );

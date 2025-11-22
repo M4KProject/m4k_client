@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'preact/hooks';
 import { logger } from 'fluxio';
 import { Css } from 'fluxio';
-import { hasVideoMuted$ } from '../messages';
+import { hasVideoMuted$ } from '@/device/messages';
 import { useFlux } from '@/hooks/useFlux';
 import { useConstant } from '@/hooks/useConstant';
 

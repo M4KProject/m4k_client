@@ -8,11 +8,11 @@ import {
   StyleFlexJustify,
   Writable,
 } from 'fluxio';
-import { useBCtrl } from '@/box/BCtrl';
+import { useBCtrl } from '@/components/box/BCtrl';
 import { Field } from '@/components/Field';
 import { Tr } from '@/components/Tr';
 import { useFlux, useFluxMemo } from '@/hooks/useFlux';
-import { BType, BData, BItem, BPropNext } from '@/box/bTypes';
+import { BType, BData, BItem, BPropNext } from '@/components/box/bTypes';
 import { isAdvanced$, setIsAdvanced } from '@/router';
 import { Button, ButtonProps } from '@/components/Button';
 import {

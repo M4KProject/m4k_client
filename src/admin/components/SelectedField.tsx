@@ -1,5 +1,5 @@
 import { useFluxItem } from '@/hooks/useFlux';
-import { selectedById$ } from '../controllers/selected';
+import { selectedById$ } from '@/admin/controllers/selected';
 import { Field } from '@/components/Field';
 
 export const SelectedField = ({ id }: { id: string }) => {

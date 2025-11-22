@@ -10,7 +10,7 @@ import {
   round,
   stopEvent,
 } from 'fluxio';
-import { BCtrl, useBCtrl } from '@/box/BCtrl';
+import { BCtrl, useBCtrl } from '@/components/box/BCtrl';
 import { useFluxMemo } from '@/hooks/useFlux';
 
 const log = logger('BHandles');

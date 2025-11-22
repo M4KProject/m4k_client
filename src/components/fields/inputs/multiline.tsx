@@ -1,6 +1,6 @@
 import { isDefined, isString, Css } from 'fluxio';
-import { useInputProps } from '../hooks';
-import { FieldProps } from '../types';
+import { useInputProps } from '@/components/fields/hooks';
+import { FieldProps } from '@/components/fields/types';
 import { useEffect, useRef } from 'preact/hooks';
 
 const c = Css('Multiline', {

@@ -1,4 +1,4 @@
-import { MediaModel } from '../api/models';
+import { MediaModel } from '@/api/models';
 
 export type Page = '' | 'account' | 'groups' | 'members' | 'devices' | 'medias' | 'jobs';
 

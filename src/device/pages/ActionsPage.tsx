@@ -1,9 +1,9 @@
 import { Css } from 'fluxio';
 import { getStorage, glb, toError } from 'fluxio';
 import { m4k } from '@/m4kBridge';
-import copyPlaylist from '../copyPlaylist';
-import { newProgressDialog } from '../components/ProgressView';
-import { copyDir$, url$ } from '../messages';
+import copyPlaylist from '@/admin/copyPlaylist';
+import { newProgressDialog } from '@/admin/components/ProgressView';
+import { copyDir$, url$ } from '@/device/messages';
 import { Apps } from '@/admin/components/Apps';
 import { usePromise } from '@/hooks/usePromise';
 import { Button } from '@/components/Button';
