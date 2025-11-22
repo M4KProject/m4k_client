@@ -8,6 +8,7 @@ import { useApi, useDevice } from '@/hooks/apiHooks';
 import { Page, PageBody } from '@/components/Page';
 import { Toolbar } from '@/components/Toolbar';
 import { Button } from '@/components/Button';
+import { AdminSideBar } from '../components/AdminSideBar';
 
 const c = Css('DevicePage', {
   Body: {
@@ -45,7 +46,7 @@ export const DevicePage = () => {
 
   if (!device) {
     return (
-      <Page {...c()}>
+      <Page {...c()} side={AdminSideBar}>
         <Toolbar title="Mode Remote"></Toolbar>
         <PageBody>
           <div>Device non trouvé</div>
@@ -74,7 +75,7 @@ export const DevicePage = () => {
     device.capture ? api.device.coll.getFileUrl(device.id, toString(device.capture)) : '';
 
   return (
-    <Page {...c()}>
+    <Page {...c()} side={AdminSideBar}>
       <Toolbar title={device.name || device.key}>
         <Button icon={RefreshCw} tooltip="Rafraîchir" onClick={() => executeAction('refresh')} />
         <Button icon={Power} tooltip="Redémarrer" onClick={() => executeAction('reboot')} />

@@ -17,6 +17,7 @@ import { showDialog } from '@/components/Dialog';
 import { Page, PageBody } from '@/components/Page';
 import { Toolbar } from '@/components/Toolbar';
 import { Api } from '@/api/Api';
+import { AdminSideBar } from '../components/AdminSideBar';
 
 const c = Css('DevicesPage', {
   Buttons: {
@@ -182,7 +183,7 @@ export const DevicesPage = () => {
   // };
 
   return (
-    <Page {...c()}>
+    <Page {...c()} side={AdminSideBar}>
       <Toolbar title="Les écrans">
         <Button icon={Plus} color="primary" onClick={handleAdd}>
           Ajouter

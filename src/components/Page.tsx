@@ -1,11 +1,16 @@
 import { Css } from 'fluxio';
-import { DivProps } from './types';
+import { DivProps, Content } from './types';
+import { getContent } from './getContent';
 
 const c = Css('Page', {
   '': {
-    col: 1,
+    row: 'stretch',
     flex: 1,
     position: 'relative',
+  },
+  Body: {
+    col: 1,
+    flex: 1,
   },
   Container: {
     col: 1,
@@ -30,7 +35,16 @@ const c = Css('Page', {
 //   return <div {...props} {...c('Actions', props)} />;
 // };
 
-export const Page = (props: DivProps) => <div {...props} {...c('', props)} />;
+export interface PageProps extends DivProps {
+  side?: Content;
+}
+
+export const Page = ({ side, children, ...props }: PageProps) => (
+  <div {...props} {...c('', props)}>
+    {getContent(side)}
+    <div {...c('Body')}>{children}</div>
+  </div>
+);
 
 export const PageSection = (props: DivProps) => <div {...props} {...c('Section', props)} />;
 

@@ -34,7 +34,7 @@ addTr({
   Account: 'Mon Compte',
 });
 
-export const SideBar = () => {
+export const AdminSideBar = () => {
   const isAdvanced = useIsAdvanced();
   const group = useGroup();
   const page = usePage();
@@ -119,3 +119,5 @@ export const SideBar = () => {
     </Side>
   );
 };
+
+export const SideBar = AdminSideBar;

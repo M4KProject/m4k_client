@@ -13,6 +13,7 @@ import { MediaView } from '@/medias/MediaView';
 import { Toolbar } from '@/components/Toolbar';
 import { Button, UploadButton } from '@/components/Button';
 import { Api } from '@/api/Api';
+import { AdminSideBar } from '../components/AdminSideBar';
 
 const c = Css('MediasPage', {});
 
@@ -41,15 +42,19 @@ export const MediasPage = () => {
 
   let content = null;
 
-  if (type === 'playlist' && media?.type === 'playlist' && isEdit) {
+  const isPlaylist = type === 'playlist' && media?.type === 'playlist' && isEdit;
+  const isPage = type === 'page' && media?.type === 'page' && isEdit;
+  const isMedia = media && !isEdit;
+
+  if (isPlaylist) {
     content = (
       <PageBody>
         <EditPlaylist playlist={media as PlaylistModel} />
       </PageBody>
     );
-  } else if (type === 'page' && media?.type === 'page' && isEdit) {
+  } else if (isPage) {
     content = <EditPage page={media as PageModel} />;
-  } else if (media && !isEdit) {
+  } else if (isMedia) {
     content = <MediaView media={media} mediaById={mediaById} />;
   } else {
     content = (
@@ -60,7 +65,7 @@ export const MediasPage = () => {
   }
 
   return (
-    <Page {...c('Page')}>
+    <Page {...c('Page')} side={isPage ? null : AdminSideBar}>
       <Toolbar title="Medias">
         {/* {media && <BackButton onClick={() => setMediaKey('')} />} */}
 

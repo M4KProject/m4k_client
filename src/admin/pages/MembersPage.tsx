@@ -12,6 +12,7 @@ import { showDialog } from '@/components/Dialog';
 import { Page, PageBody } from '@/components/Page';
 import { Toolbar } from '@/components/Toolbar';
 import { useApi } from '@/hooks/apiHooks';
+import { AdminSideBar } from '../components/AdminSideBar';
 
 const c = Css('MembersPage', {});
 
@@ -72,7 +73,7 @@ export const MembersPage = () => {
   };
 
   return (
-    <Page {...c()}>
+    <Page {...c()} side={AdminSideBar}>
       <Toolbar title="Les membres">
         <Button title="Ajouter un membre" icon={Plus} color="primary" onClick={handleCreate} />
         <SearchField />

@@ -13,6 +13,7 @@ import { Button } from '@/components/Button';
 import { Form } from '@/components/Form';
 import { Field } from '@/components/Field';
 import { useApi } from '@/hooks/apiHooks';
+import { AdminSideBar } from '../components/AdminSideBar';
 
 const c = Css('AccountPage', {});
 
@@ -38,7 +39,7 @@ export const AccountPage = () => {
   };
 
   return (
-    <Page {...c()}>
+    <Page {...c()} side={AdminSideBar}>
       <Toolbar title="Account">
         <Button color="primary" title="Deconnexion" icon={LogOut} onClick={() => api.pb.logout()} />
         <Button

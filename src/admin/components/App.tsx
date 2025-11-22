@@ -1,4 +1,3 @@
-import { SideBar } from './SideBar';
 import { Css } from 'fluxio';
 import { JSX } from 'preact';
 import { GroupsPage } from '../pages/GroupsPage';
@@ -68,7 +67,6 @@ const AppContent = () => {
 
   return (
     <div {...c()}>
-      <SideBar />
       <AppRouter />
       <Errors />
     </div>

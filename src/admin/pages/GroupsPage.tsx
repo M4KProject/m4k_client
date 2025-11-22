@@ -7,6 +7,7 @@ import { Page, PageBody } from '@/components/Page';
 import { Toolbar } from '@/components/Toolbar';
 import { Button } from '@/components/Button';
 import { useApi } from '@/hooks/apiHooks';
+import { AdminSideBar } from '../components/AdminSideBar';
 
 const c = Css('GroupsPage', {});
 
@@ -25,7 +26,7 @@ export const GroupsPage = () => {
   console.debug('GroupsPage');
 
   return (
-    <Page {...c()}>
+    <Page {...c()} side={AdminSideBar}>
       <Toolbar title="Gestionnaire de groupes">
         <Button title="Ajouter" icon={Plus} color="primary" onClick={handleAdd} />
         <SearchField />
