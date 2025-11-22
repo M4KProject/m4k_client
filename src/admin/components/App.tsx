@@ -17,6 +17,7 @@ import { refreshTheme, updateTheme } from '@/utils/theme';
 import { addFont } from '@/utils/addFont';
 import { ApiContext, useApi, useGroup } from '@/hooks/apiHooks';
 import { Api } from '@/api/Api';
+import { getContent } from '@/components/getContent';
 
 const c = Css('App', {
   '': {
@@ -51,8 +52,7 @@ const CompByPage: Record<Page, () => JSX.Element> = {
 
 const AppRouter = () => {
   const page = usePage();
-  const Page = page ? (CompByPage[page] ?? GroupsPage) : GroupsPage;
-  return <Page />;
+  return getContent(page ? (CompByPage[page] ?? GroupsPage) : GroupsPage);
 };
 
 const AppContent = () => {
