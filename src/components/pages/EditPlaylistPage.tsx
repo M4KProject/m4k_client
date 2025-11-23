@@ -1,7 +1,7 @@
 import { Css } from 'fluxio';
 import { JobGrid } from '@/components/admin/JobGrid';
 import { useEffect, useMemo } from 'preact/hooks';
-import { BContext, BCtrl } from '@/components/box/BCtrl';
+import { BContext, BController } from '@/components/box/BController';
 import { PageModel } from '@/api/models';
 import { sideOpen$ } from '@/components/common/Side';
 import { BViewport } from '@/components/box/edit/BViewport';
@@ -20,7 +20,7 @@ const c = Css('EditPlaylistPage', {
 export const EditPlaylistPage = () => {
   const api = useApi();
   const playlistKey = useMediaKey();
-  const ctrl = useMemo(() => new BCtrl(api, playlistKey), [api, playlistKey]);
+  const ctrl = useMemo(() => new BController(api, playlistKey), [api, playlistKey]);
 
   useEffect(() => {
     sideOpen$.set(false);
@@ -31,10 +31,10 @@ export const EditPlaylistPage = () => {
 
   return (
     <Page {...c()}>
-      <BContext.Provider value={ctrl}>
+      <BContext value={ctrl}>
         <BViewport />
         <BSide />
-      </BContext.Provider>
+      </BContext>
       <JobGrid filter={(job) => job.status !== 'finished'} panel={true} />
     </Page>
   );

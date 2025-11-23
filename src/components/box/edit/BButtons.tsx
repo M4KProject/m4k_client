@@ -16,7 +16,7 @@ import {
   Save,
 } from 'lucide-react';
 import { useEffect, useState } from 'preact/hooks';
-import { BCtrl, useBCtrl } from '@/components/box/BCtrl';
+import { BController, useBController } from '@/components/box/BController';
 import { Button, ButtonProps } from '@/components/common/Button';
 import { useFlux } from '@/hooks/useFlux';
 import { clipboardCopy, clipboardPaste } from '@/utils/clipboard';
@@ -55,7 +55,7 @@ export const SCREEN_SIZES: ScreenSize[] = [
 
 const BButton = (props: ButtonProps) => <Button {...c('Button')} color="primary" {...props} />;
 
-const addRect = (ctrl: BCtrl) => {
+const addRect = (ctrl: BController) => {
   ctrl.add({
     a: [25, 25, 50, 50],
     s: { bg: randColor() },
@@ -63,25 +63,25 @@ const addRect = (ctrl: BCtrl) => {
   });
 }
 
-const bRemove = async (ctrl: BCtrl) => {
+const bRemove = async (ctrl: BController) => {
   const index = ctrl.getSelectIndex();
   ctrl.delete(index);
 };
 
-const bCut = async (ctrl: BCtrl) => {
+const bCut = async (ctrl: BController) => {
   const index = ctrl.getSelectIndex();
   const data = ctrl.getData(index);
   await clipboardCopy(data);
   ctrl.delete(index);
 };
 
-const bCopy = async (ctrl: BCtrl) => {
+const bCopy = async (ctrl: BController) => {
   const index = ctrl.getSelectIndex();
   const data = ctrl.getData(index);
   await clipboardCopy(data);
 };
 
-const bPaste = async (ctrl: BCtrl) => {
+const bPaste = async (ctrl: BController) => {
   const index = ctrl.getSelectIndex();
   const item = ctrl.get(index);
   if (!item) return;
@@ -92,7 +92,7 @@ const bPaste = async (ctrl: BCtrl) => {
 };
 
 export const BButtons = () => {
-  const ctrl = useBCtrl();
+  const ctrl = useBController();
   const select = useFlux(ctrl.select$);
   const selectIndex = select.i;
   const pz = ctrl.panZoom;

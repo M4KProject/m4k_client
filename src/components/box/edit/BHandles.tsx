@@ -10,7 +10,7 @@ import {
   round,
   stopEvent,
 } from 'fluxio';
-import { BCtrl, useBCtrl } from '@/components/box/BCtrl';
+import { BController, useBController } from '@/components/box/BController';
 import { useFluxMemo } from '@/hooks/useFlux';
 
 const log = logger('BHandles');
@@ -77,7 +77,7 @@ const handles: [string, HandleDir, CssStyle][] = HANDLES.map(
   ]
 );
 
-const startResize = (ctrl: BCtrl, dir: HandleDir, name: string, event: Event) => {
+const startResize = (ctrl: BController, dir: HandleDir, name: string, event: Event) => {
   try {
     log.d('startResize', dir, name, event);
     stopEvent(event);
@@ -153,7 +153,7 @@ const startResize = (ctrl: BCtrl, dir: HandleDir, name: string, event: Event) =>
 };
 
 const BHandlesContent = () => {
-  const ctrl = useBCtrl();
+  const ctrl = useBController();
   return (
     <>
       {handles.map(([name, config, style]) => (
@@ -168,7 +168,7 @@ const BHandlesContent = () => {
 };
 
 export const BHandles = () => {
-  const ctrl = useBCtrl();
+  const ctrl = useBController();
   const { x, y, w, h, a, show } =
     useFluxMemo(() => {
       if (!ctrl) return;

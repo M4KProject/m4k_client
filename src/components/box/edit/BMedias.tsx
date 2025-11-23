@@ -1,7 +1,7 @@
 import { useApi, useGroupMedias } from '@/hooks/apiHooks';
 import { Css, fluxCombine } from 'fluxio';
 import { MediaModel } from '@/api/models';
-import { useBCtrl } from '@/components/box/BCtrl';
+import { useBController } from '@/components/box/BController';
 import { useFluxMemo } from '@/hooks/useFlux';
 import { Button } from '@/components/common/Button';
 
@@ -33,7 +33,7 @@ const c = Css('BMedias', {
 
 const BMediasItem = ({ media }: { media: MediaModel }) => {
   const api = useApi();
-  const ctrl = useBCtrl();
+  const ctrl = useBController();
   const mediaId = media.id;
   const selected = useFluxMemo(
     () => fluxCombine(ctrl.select$, ctrl.items$).map(([click]) => ctrl.get(click.i)?.m === mediaId),

@@ -503,10 +503,10 @@ The Box system provides a visual editor for creating layouts with draggable, res
 const ctrl = useMemo(() => new BoxCtrl(), []);
 
 return (
-  <BoxContext.Provider value={ctrl}>
+  <BContext.Provider value={ctrl}>
     {/* Box components can now access ctrl via useBoxCtrl() */}
     <Box i={0} />
-  </BoxContext.Provider>
+  </BContext.Provider>
 );
 ```
 
@@ -545,7 +545,7 @@ interface BoxData {
 **Usage Pattern:**
 
 ```typescript
-// In a component within BoxContext
+// In a component within BContext
 const ctrl = useBoxCtrl();
 const item = useFlux(ctrl.item$(i));
 

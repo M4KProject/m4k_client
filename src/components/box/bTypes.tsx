@@ -1,7 +1,7 @@
 import type { Style, Dictionary, Item, NextState } from 'fluxio';
 import type { BoxIcon } from 'lucide-react';
 import type { ComponentChildren } from 'preact';
-import type { BCtrl } from './BCtrl';
+import type { BController } from './BController';
 
 export interface BFun {
   readonly name?: string;
@@ -44,7 +44,7 @@ export interface BFactoryProps {
 }
 export interface BCompProps {
   readonly i: number;
-  readonly ctrl: BCtrl;
+  readonly ctrl: BController;
   readonly item: BItem;
   readonly props: {
     readonly class: string;

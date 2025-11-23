@@ -8,7 +8,7 @@ import {
   StyleFlexJustify,
   Writable,
 } from 'fluxio';
-import { useBCtrl } from '@/components/box/BCtrl';
+import { useBController } from '@/components/box/BController';
 import { Field } from '@/components/fields/Field';
 import { Tr } from '@/components/common/Tr';
 import { useFlux, useFluxMemo } from '@/hooks/useFlux';
@@ -73,7 +73,7 @@ const c = Css('BProps', {
 const useProp = <K extends keyof BItem>(
   prop: K
 ): [BItem[K] | undefined, (next: BPropNext<K>) => void] => {
-  const ctrl = useBCtrl();
+  const ctrl = useBController();
   const i = useFlux(ctrl.select$).i;
   const value = useFluxMemo(() => ctrl.prop$(i, prop), [i, prop]);
   return [value, (next: BPropNext<K>) => ctrl.setProp(i, prop, next)];
@@ -167,7 +167,7 @@ const BStyleField = ({ prop, ...props }: FieldProps<any, any> & { prop: string }
 };
 
 export const BDataField = () => {
-  const ctrl = useBCtrl();
+  const ctrl = useBController();
   const i = useFlux(ctrl.select$).i;
   const item = useFluxMemo(() => ctrl.item$(i), [i]);
   const onValue = (next: any) => {
@@ -185,7 +185,7 @@ const Panel = (props: DivProps) => (
 );
 
 export const BProps = () => {
-  const ctrl = useBCtrl();
+  const ctrl = useBController();
   const select = useFlux(ctrl.select$);
   const isAdvanced = useFlux(isAdvanced$);
   const i = select.i;

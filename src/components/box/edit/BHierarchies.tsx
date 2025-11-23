@@ -1,5 +1,5 @@
 import { Css, logger, truncate } from 'fluxio';
-import { useBCtrl } from '@/components/box/BCtrl';
+import { useBController } from '@/components/box/BController';
 import { useFluxMemo } from '@/hooks/useFlux';
 import { Square } from 'lucide-react';
 
@@ -31,7 +31,7 @@ const c = Css('BHierarchy', {
 });
 
 const BHierarchyItem = ({ i }: { i: number }) => {
-  const ctrl = useBCtrl();
+  const ctrl = useBController();
   const item = useFluxMemo(() => ctrl.item$(i), [ctrl, i]);
   const selected = useFluxMemo(() => ctrl.select$.map((e) => e.i === i), [ctrl, i]);
   const type = ctrl.getType(item?.t);

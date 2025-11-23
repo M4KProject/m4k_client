@@ -2,7 +2,7 @@ import { PanZoom } from '@/components/common/PanZoom';
 import { Css, onHtmlEvent } from 'fluxio';
 import { BButtons, SCREEN_SIZES } from './BButtons';
 import { BHandles } from './BHandles';
-import { useBCtrl } from '@/components/box/BCtrl';
+import { useBController } from '@/components/box/BController';
 import { BFactory } from '@/components/box/BFactory';
 import { useEffect } from 'preact/hooks';
 
@@ -22,7 +22,7 @@ const c = Css('BViewport', {
 });
 
 export const BViewport = () => {
-  const ctrl = useBCtrl();
+  const ctrl = useBController();
 
   useEffect(() => {
     console.debug('BViewport useEffect');

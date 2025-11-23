@@ -1,4 +1,4 @@
-import { BCtrl, useBCtrl } from './BCtrl';
+import { BController, useBController } from './BController';
 import { useFluxMemo } from '@/hooks/useFlux';
 import { BCompProps, BFactoryProps, BItem } from './bTypes';
 import { computeStyle, Css, logger } from 'fluxio';
@@ -15,7 +15,7 @@ const c = Css('B', {
   },
 });
 
-const computeProps = (ctrl: BCtrl, item: BItem): BCompProps['props'] => {
+const computeProps = (ctrl: BController, item: BItem): BCompProps['props'] => {
   const { i, t, c: cls, s } = item;
   const style = computeStyle(s);
   const a = item?.a;
@@ -43,7 +43,7 @@ const computeProps = (ctrl: BCtrl, item: BItem): BCompProps['props'] => {
 export const BFactory = ({ i }: BFactoryProps) => {
   log.d('BFactory', i);
 
-  const ctrl = useBCtrl();
+  const ctrl = useBController();
   const item = useFluxMemo(() => ctrl.item$(i), [ctrl, i]);
   const type = ctrl.getType(item?.t);
   const Comp = type.comp;

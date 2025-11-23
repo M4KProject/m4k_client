@@ -41,7 +41,7 @@ import { BRoot } from './BRoot';
 import { BMedia } from './BMedia';
 import { Api } from '@/api/Api';
 
-const log = logger('BCtrl');
+const log = logger('BController');
 
 const applyChanges = (items: Writable<NBItems>, index: number, prev: NBItem, next: NBItem) => {
   console.debug('applyChanges', index, 'prev:', prev, 'next:', next);
@@ -162,7 +162,7 @@ export class BController {
 
   async load() {
     const page = await this.api.media.get(this.playlistKey);
-    console.debug('BCtrl load', this.playlistKey, media);
+    console.debug('BController load', this.playlistKey, media);
     if (page?.type === 'page') {
       this.setAllData(page.data?.boxes || []);
     }
@@ -170,7 +170,7 @@ export class BController {
 
   async save() {
     const boxes = this.getAllData();
-    console.debug('BCtrl save', this.playlistKey, boxes);
+    console.debug('BController save', this.playlistKey, boxes);
     await this.api.media.update(this.playlistKey, {
       data: { boxes },
     });
@@ -352,6 +352,6 @@ export class BController {
   }
 }
 
-export const BContext = createContext<BCtrl | undefined>(undefined);
+export const BContext = createContext<BController | undefined>(undefined);
 
-export const useBCtrl = () => useContext(BContext)!;
+export const useBController = () => useContext(BContext)!;
