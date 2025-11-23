@@ -15,9 +15,8 @@ import { useFlux } from '@/hooks/useFlux';
 import { refreshTheme, updateTheme } from '@/utils/theme';
 import { addFont } from '@/utils/addFont';
 import { useApi, useGroup } from '@/hooks/apiHooks';
-import { Api } from '@/api/Api';
 import { getContent } from '@/components/common/getContent';
-import { EditPlaylistPage } from '../pages/EditPlaylistPage';
+import { EditPlaylistPage } from '@/components/pages/EditPlaylistPage';
 
 const c = Css('App', {
   '': {

@@ -1,25 +1,24 @@
-import { render } from 'preact';
-import { App } from '@/components/admin/App';
+// import { render } from 'preact';
+// import { App } from '@/components/admin/App';
 
-console.debug('loaded');
+// console.debug('loaded');
 
-// let _rootEl: HTMLElement | null = null;
+// // let _rootEl: HTMLElement | null = null;
 
-export const mountAdmin = () => {
-  console.debug('admin mount');
+// export const mountAdmin = () => {
+//   console.debug('admin mount');
 
-  // addResponsiveListener();
+//   // addResponsiveListener();
 
-  // _rootEl = setEl('div', { id: 'app', parent: 'body' });
-  render(<App />, document.body);
+//   // _rootEl = setEl('div', { id: 'app', parent: 'body' });
 
-  console.debug('admin mounted');
+//   console.debug('admin mounted');
 
-  // return () => {
-  //   console.debug('admin unmount');
-  //   if (_rootEl) {
-  //     _rootEl.remove();
-  //     _rootEl = null;
-  //   }
-  // };
-};
+//   // return () => {
+//   //   console.debug('admin unmount');
+//   //   if (_rootEl) {
+//   //     _rootEl.remove();
+//   //     _rootEl = null;
+//   //   }
+//   // };
+// };

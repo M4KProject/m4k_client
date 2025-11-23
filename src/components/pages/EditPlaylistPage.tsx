@@ -2,7 +2,6 @@ import { Css } from 'fluxio';
 import { JobGrid } from '@/components/admin/JobGrid';
 import { useEffect, useMemo } from 'preact/hooks';
 import { BContext, BController } from '@/components/box/BController';
-import { PageModel } from '@/api/models';
 import { sideOpen$ } from '@/components/common/Side';
 import { BViewport } from '@/components/box/edit/BViewport';
 import { BSide } from '@/components/box/edit/BSide';
