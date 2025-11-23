@@ -2,14 +2,14 @@ import { useState } from 'preact/hooks';
 import { bridge } from '@/bridge';
 import { logger, randHex, jsonStringify, toError, truncate, withTimeout } from 'fluxio';
 import { Grid, Play } from 'lucide-react';
-import { GridCols } from '@/components/Grid';
-import { Button } from '@/components/Button';
+import { GridCols } from '@/components/common/Grid';
+import { Button } from '@/components/common/Button';
 import { useConstant } from '@/hooks/useConstant';
 import { useAsyncEffect } from '@/hooks/useAsyncEffect';
-import { Page, PageBody } from '@/components/Page';
-import { Toolbar } from '@/components/Toolbar';
-import { Form } from '@/components/Form';
-import { Field } from '@/components/Field';
+import { Page, PageBody } from '@/components/common/Page';
+import { Toolbar } from '@/components/common/Toolbar';
+import { Form } from '@/components/common/Form';
+import { Field } from '@/components/fields/Field';
 
 const log = logger('TestPage');
 

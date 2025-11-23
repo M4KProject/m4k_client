@@ -1,4 +1,4 @@
-import { PanZoom } from '@/components/PanZoom';
+import { PanZoom } from '@/components/common/PanZoom';
 import { Css, onHtmlEvent } from 'fluxio';
 import { BButtons, SCREEN_SIZES } from './BButtons';
 import { BHandles } from './BHandles';

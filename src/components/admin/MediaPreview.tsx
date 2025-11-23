@@ -4,7 +4,7 @@ import { useMemo } from 'preact/hooks';
 import { Popover, useIsOver } from './Popover';
 import { MediaModel } from '@/api/models';
 import { useApi } from '@/hooks/apiHooks';
-import { Button } from '@/components/Button';
+import { Button } from '@/components/common/Button';
 
 const c = Css('MediaPreview', {
   '': {

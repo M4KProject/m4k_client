@@ -4,11 +4,11 @@ import { Plus, Trash2, Copy, ArrowUp, ArrowDown } from 'lucide-react';
 import { JobGrid } from '@/components/admin/JobGrid';
 import { MediaPreview } from './MediaPreview';
 import { useGroupMedias, useApi } from '@/hooks/apiHooks';
-import { Grid, GridCols } from '@/components/Grid';
+import { Grid, GridCols } from '@/components/common/Grid';
 import { JobModel, MediaModel, PlaylistEntry, PlaylistModel } from '@/api/models';
-import { Field } from '@/components/Field';
-import { Flag } from '@/components/Flag';
-import { Button } from '@/components/Button';
+import { Field } from '@/components/fields/Field';
+import { Flag } from '@/components/common/Flag';
+import { Button } from '@/components/common/Button';
 import { updatePlaylist } from '@/controllers/media';
 
 const c = Css('EditPlaylist', {

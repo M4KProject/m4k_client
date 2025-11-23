@@ -2,12 +2,12 @@ import { Css } from 'fluxio';
 import { round } from 'fluxio';
 import { ArrowUp, ArrowDown, Copy, Trash2 } from 'lucide-react';
 import { playlist$ } from '@/controllers/deviceMessages';
-import { Grid, GridCols } from '@/components/Grid';
-import { Field } from '@/components/Field';
-import { Button } from '@/components/Button';
+import { Grid, GridCols } from '@/components/common/Grid';
+import { Field } from '@/components/fields/Field';
+import { Button } from '@/components/common/Button';
 import { useFlux } from '@/hooks/useFlux';
-import { Page, PageBody } from '@/components/Page';
-import { Toolbar } from '@/components/Toolbar';
+import { Page, PageBody } from '@/components/common/Page';
+import { Toolbar } from '@/components/common/Toolbar';
 
 const c = Css('Playlist', {
   Preview: {

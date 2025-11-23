@@ -3,7 +3,7 @@ import { dialog$ } from '@/controllers/dialog$';
 import { useEffect, useRef } from 'preact/hooks';
 import { flux } from 'fluxio';
 import { useFlux } from '@/hooks/useFlux';
-import { Progress } from '@/components/Progress';
+import { Progress } from '@/components/common/Progress';
 
 const c = Css('ProgressView', {
   '': {

@@ -1,7 +1,7 @@
 import { useState } from 'preact/hooks';
 import { Css } from 'fluxio';
-import { Field } from '@/components/Field';
-import { Form } from '@/components/Form';
+import { Field } from '@/components/fields/Field';
+import { Form } from '@/components/common/Form';
 import { refreshTheme, updateTheme } from '@/utils/theme';
 
 const c = Css('FieldsTestPage', {

@@ -16,7 +16,7 @@ import { useEffect } from 'preact/hooks';
 import { offlineMode$ } from '@/controllers/deviceMessages';
 import { DialogContainer } from './DialogContainer';
 import { useFlux } from '@/hooks/useFlux';
-import { Side, SideButton, SideSep } from '@/components/Side';
+import { Side, SideButton, SideSep } from '@/components/common/Side';
 import { useDeviceController } from '@/hooks/useDeviceController';
 
 const c = Css('DeviceApp', {

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'preact/hooks';
-import { Page, PageBody } from '@/components/Page';
-import { Toolbar } from '@/components/Toolbar';
-import { Form } from '@/components/Form';
-import { Field } from '@/components/Field';
+import { Page, PageBody } from '@/components/common/Page';
+import { Toolbar } from '@/components/common/Toolbar';
+import { Form } from '@/components/common/Form';
+import { Field } from '@/components/fields/Field';
 import { codePin$, page$ } from '@/controllers/deviceMessages';
 
 export const CodePinPage = () => {

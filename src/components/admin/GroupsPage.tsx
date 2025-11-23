@@ -3,9 +3,9 @@ import { Css } from 'fluxio';
 import { SearchField } from '@/components/admin/SearchField';
 import { GroupGrid } from '@/components/admin/GroupGrid';
 import { Role } from '@/api/models';
-import { Page, PageBody } from '@/components/Page';
-import { Toolbar } from '@/components/Toolbar';
-import { Button } from '@/components/Button';
+import { Page, PageBody } from '@/components/common/Page';
+import { Toolbar } from '@/components/common/Toolbar';
+import { Button } from '@/components/common/Button';
 import { useApi } from '@/hooks/apiHooks';
 import { AdminSideBar } from '@/components/admin/AdminSideBar';
 

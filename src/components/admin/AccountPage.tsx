@@ -7,11 +7,11 @@ import { setIsAdvanced } from '@/router/setters';
 import { Branding } from '@/components/device/Branding';
 import { useFlux } from '@/hooks/useFlux';
 import { theme$, updateTheme } from '@/utils/theme';
-import { Page, PageBody } from '@/components/Page';
-import { Toolbar } from '@/components/Toolbar';
-import { Button } from '@/components/Button';
-import { Form } from '@/components/Form';
-import { Field } from '@/components/Field';
+import { Page, PageBody } from '@/components/common/Page';
+import { Toolbar } from '@/components/common/Toolbar';
+import { Button } from '@/components/common/Button';
+import { Form } from '@/components/common/Form';
+import { Field } from '@/components/fields/Field';
 import { useApi } from '@/hooks/apiHooks';
 import { AdminSideBar } from '@/components/admin/AdminSideBar';
 

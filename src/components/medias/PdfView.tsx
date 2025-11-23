@@ -3,9 +3,9 @@ import { groupBy, sortItems } from 'fluxio';
 import { useState, useEffect, useMemo } from 'preact/hooks';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { MediaViewProps } from './MediaView';
-import { PanZoom, PanZoomCtrl } from '@/components/PanZoom';
+import { PanZoom, PanZoomCtrl } from '@/components/common/PanZoom';
 import { PdfModel } from '@/api/models';
-import { Button } from '@/components/Button';
+import { Button } from '@/components/common/Button';
 import { useApi } from '@/hooks/apiHooks';
 import { app } from '@/app';
 

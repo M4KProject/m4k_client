@@ -3,8 +3,8 @@ import { Css } from 'fluxio';
 import { search$ } from '@/controllers/search';
 import { Flux } from 'fluxio';
 import { useFlux } from '@/hooks/useFlux';
-import { Field } from '@/components/Field';
-import { Button } from '@/components/Button';
+import { Field } from '@/components/fields/Field';
+import { Button } from '@/components/common/Button';
 
 const c = Css('SearchField', {
   '': {

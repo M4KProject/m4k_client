@@ -3,7 +3,7 @@ import { Home, Users, Monitor, User, Zap } from 'lucide-react';
 import { setGroupKey, setPage, updateRoute } from '@/router/setters';
 import { useIsAdvanced, useMediaType, usePage } from '@/router/hooks';
 import { Page } from '@/router/types';
-import { Side, SIDE_MIN, SideButton, SideSep } from '@/components/Side';
+import { Side, SIDE_MIN, SideButton, SideSep } from '@/components/common/Side';
 import { addTr } from '@/hooks/useTr';
 import { MediaType } from '@/api/models';
 import { useGroup, useGroups } from '@/hooks/apiHooks';

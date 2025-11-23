@@ -1,6 +1,6 @@
 import { Css } from 'fluxio';
-import { Button } from '@/components/Button';
-import { showWindow } from '@/components/Window';
+import { Button } from '@/components/common/Button';
+import { showWindow } from '@/components/common/Window';
 import { refreshTheme, updateTheme } from '@/utils/theme';
 
 const c = Css('WindowTestPage', {

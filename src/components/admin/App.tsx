@@ -5,7 +5,7 @@ import { MembersPage } from '@/components/admin/MembersPage';
 import { MediasPage } from '@/components/admin/MediasPage';
 import { JobsPage } from '@/components/admin/JobsPage';
 import { DevicesPage } from '@/components/admin/DevicesPage';
-import { AuthPage } from '@/components/admin/AuthPage';
+import { AuthPage } from '@/components/auth/AuthPage';
 import { AccountPage } from '@/components/admin/AccountPage';
 import { useEffect, useMemo } from 'preact/hooks';
 import { Page } from '@/router/types';
@@ -16,7 +16,8 @@ import { refreshTheme, updateTheme } from '@/utils/theme';
 import { addFont } from '@/utils/addFont';
 import { useApi, useGroup } from '@/hooks/apiHooks';
 import { Api } from '@/api/Api';
-import { getContent } from '@/components/getContent';
+import { getContent } from '@/components/common/getContent';
+import { EditPlaylistPage } from '../pages/EditPlaylistPage';
 
 const c = Css('App', {
   '': {
@@ -41,6 +42,7 @@ const CompByPage: Record<Page, () => JSX.Element> = {
   jobs: JobsPage,
   devices: DevicesPage,
   account: AccountPage,
+  playlist: EditPlaylistPage,
   // contents: ContentsPage,
   // playlists: PlaylistsPage,
   // videos: VideosPage,

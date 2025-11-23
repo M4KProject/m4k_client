@@ -2,10 +2,10 @@ import { FieldProps } from '@/components/fields/types';
 import { useInputProps } from '@/components/fields/hooks';
 import { addHsl, Css, isFloat, round, setHsl, setRgb, toHsl, toRgb, isLight } from 'fluxio';
 import { useState, useRef } from 'preact/hooks';
-import { Field } from '@/components/Field';
+import { Field } from '@/components/fields/Field';
 import { theme$ } from '@/utils/theme';
-import { showWindow } from '@/components/Window';
-import { Button } from '@/components/Button';
+import { showWindow } from '@/components/common/Window';
+import { Button } from '@/components/common/Button';
 
 const c = Css('ColorPicker', {
   '': {

@@ -2,9 +2,9 @@ import { Css } from 'fluxio';
 import { isItem, removeItem, ReqError, toError } from 'fluxio';
 import { Trash2 } from 'lucide-react';
 import { useEffect, useState } from 'preact/hooks';
-import { Grid, GridCols } from '@/components/Grid';
-import { tooltipProps } from '@/components/Tooltip';
-import { Button } from '@/components/Button';
+import { Grid, GridCols } from '@/components/common/Grid';
+import { tooltipProps } from '@/components/common/Tooltip';
+import { Button } from '@/components/common/Button';
 import { useApi } from '@/hooks/apiHooks';
 
 const c = Css('Errors', {

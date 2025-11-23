@@ -9,12 +9,12 @@ import {
   Writable,
 } from 'fluxio';
 import { useBCtrl } from '@/components/box/BCtrl';
-import { Field } from '@/components/Field';
-import { Tr } from '@/components/Tr';
+import { Field } from '@/components/fields/Field';
+import { Tr } from '@/components/common/Tr';
 import { useFlux, useFluxMemo } from '@/hooks/useFlux';
 import { BType, BData, BItem, BPropNext } from '@/components/box/bTypes';
 import { isAdvanced$, setIsAdvanced } from '@/router';
-import { Button, ButtonProps } from '@/components/Button';
+import { Button, ButtonProps } from '@/components/common/Button';
 import {
   // Texte
   AlignLeft,
@@ -43,7 +43,7 @@ import {
 } from 'lucide-react';
 import { BMedias } from './BMedias';
 import { FieldProps } from '@/components/fields/types';
-import { Content, DivProps } from '@/components/types';
+import { Content, DivProps } from '@/components/common/types';
 
 const c = Css('BProps', {
   '': {

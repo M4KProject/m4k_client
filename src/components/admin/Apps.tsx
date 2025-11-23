@@ -3,7 +3,7 @@ import { Css } from 'fluxio';
 import { Download } from 'lucide-react';
 import { sortItems } from 'fluxio';
 import { bridge } from '@/bridge';
-import { Button } from '@/components/Button';
+import { Button } from '@/components/common/Button';
 import { ApplicationModel } from '@/api/models';
 import { useApi } from '@/hooks/apiHooks';
 

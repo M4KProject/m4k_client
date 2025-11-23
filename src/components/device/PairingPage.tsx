@@ -3,8 +3,8 @@ import { page$ } from '@/controllers/page$';
 import { offlineMode$ } from '@/controllers/deviceMessages';
 import { Branding } from '@/components/device/Branding';
 import { useFlux } from '@/hooks/useFlux';
-import { LoadingSpinner } from '@/components/Loading';
-import { Button } from '@/components/Button';
+import { LoadingSpinner } from '@/components/common/Loading';
+import { Button } from '@/components/common/Button';
 import { useDeviceController } from '@/hooks/useDeviceController';
 
 const c = Css('PairingPage', {

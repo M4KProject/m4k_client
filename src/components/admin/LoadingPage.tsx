@@ -1,4 +1,4 @@
-import { Loading } from '@/components/Loading';
+import { Loading } from '@/components/common/Loading';
 import { Css } from 'fluxio';
 
 const c = Css('LoadingPage', {

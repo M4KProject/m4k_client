@@ -1,10 +1,10 @@
 import { Css, isDefined, isNotEmpty } from 'fluxio';
-import { DivProps } from '@/components/types';
-import { Tr } from '@/components/Tr';
+import { DivProps } from '@/components/common/types';
+import { Tr } from '@/components/common/Tr';
 import { FieldProps } from './types';
 import { FieldController, FieldProvider } from './FieldController';
 import { FIELD_HEIGHT, LABEL_WIDTH } from './constants';
-import { Button } from '@/components/Button';
+import { Button } from '@/components/common/Button';
 import { XIcon } from 'lucide-react';
 import { useFieldController, useFieldState } from './hooks';
 import { useConstant } from '@/hooks/useConstant';

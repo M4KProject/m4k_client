@@ -1,9 +1,9 @@
 import { useState } from 'preact/hooks';
 import { Css } from 'fluxio';
-import { Loading } from './Loading';
-import { Field } from './Field';
-import { Button } from './Button';
-import { Form } from './Form';
+import { Loading } from '@/components/common/Loading';
+import { Field } from '@/components/fields/Field';
+import { Button } from '@/components/common/Button';
+import { Form } from '@/components/common/Form';
 import { toError } from 'fluxio';
 import { addTr } from '@/hooks/useTr';
 import { LogIn, UserPlus, Mail, Key, ArrowLeft } from 'lucide-react';

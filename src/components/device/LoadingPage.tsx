@@ -1,5 +1,5 @@
-import { Loading } from '@/components/Loading';
-import { Page } from '@/components/Page';
+import { Loading } from '@/components/common/Loading';
+import { Page } from '@/components/common/Page';
 import { Css } from 'fluxio';
 
 const c = Css('LoadingPage', {

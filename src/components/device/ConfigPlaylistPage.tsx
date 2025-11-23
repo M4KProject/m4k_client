@@ -14,10 +14,10 @@ import { useState } from 'preact/hooks';
 import { bridge } from '@/bridge';
 import { useAsyncEffect } from '@/hooks/useAsyncEffect';
 import { useFluxState } from '@/hooks/useFlux';
-import { Page, PageBody } from '@/components/Page';
-import { Toolbar } from '@/components/Toolbar';
-import { Form } from '@/components/Form';
-import { Field } from '@/components/Field';
+import { Page, PageBody } from '@/components/common/Page';
+import { Toolbar } from '@/components/common/Toolbar';
+import { Form } from '@/components/common/Form';
+import { Field } from '@/components/fields/Field';
 
 const useSetting = (key: string): [string | null, (next: string | null) => Promise<void>] => {
   const [value, setValue] = useState<string | null>('');

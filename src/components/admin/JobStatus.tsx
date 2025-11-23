@@ -3,8 +3,8 @@ import { Play, Square, AlertCircle, CheckCircle, Clock } from 'lucide-react';
 import { Dictionary } from 'fluxio';
 import { addTr } from '@/hooks/useTr';
 import { JobModel } from '@/api/models';
-import { Progress } from '@/components/Progress';
-import { Tr } from '@/components/Tr';
+import { Progress } from '@/components/common/Progress';
+import { Tr } from '@/components/common/Tr';
 
 const c = Css('JobStatus', {
   '': {

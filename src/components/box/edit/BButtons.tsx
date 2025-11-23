@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 import { useEffect, useState } from 'preact/hooks';
 import { BCtrl, useBCtrl } from '@/components/box/BCtrl';
-import { Button, ButtonProps } from '@/components/Button';
+import { Button, ButtonProps } from '@/components/common/Button';
 import { useFlux } from '@/hooks/useFlux';
 import { clipboardCopy, clipboardPaste } from '@/utils/clipboard';
 import { BData } from '@/components/box/bTypes';

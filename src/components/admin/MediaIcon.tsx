@@ -1,5 +1,5 @@
 import { MediaType } from '@/api/models';
-import { Button } from '@/components/Button';
+import { Button } from '@/components/common/Button';
 import { Css } from 'fluxio';
 import {
   FolderOpen,

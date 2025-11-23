@@ -5,9 +5,9 @@ import { DeviceScreen } from '@/components/admin/DeviceScreen';
 import { DeviceConsole } from '@/components/admin/DeviceConsole';
 import { glb, jsonStringify } from 'fluxio';
 import { useApi, useDevice } from '@/hooks/apiHooks';
-import { Page, PageBody } from '@/components/Page';
-import { Toolbar } from '@/components/Toolbar';
-import { Button } from '@/components/Button';
+import { Page, PageBody } from '@/components/common/Page';
+import { Toolbar } from '@/components/common/Toolbar';
+import { Button } from '@/components/common/Button';
 import { AdminSideBar } from '@/components/admin/AdminSideBar';
 
 const c = Css('DevicePage', {

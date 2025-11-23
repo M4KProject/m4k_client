@@ -29,7 +29,7 @@ import {
   NBItem,
 } from './bTypes';
 import { BCarousel } from './BCarousel';
-import { PanZoomCtrl } from '@/components/PanZoom';
+import { PanZoomCtrl } from '@/components/common/PanZoom';
 import { createContext } from 'preact';
 import { useContext } from 'preact/hooks';
 import { fluxUndefined } from 'fluxio/flux/fluxUndefined';
@@ -134,7 +134,7 @@ const text: BType = { comp: BText, label: 'Texte', b: 1, a: 1, icon: ALargeSmall
 const carousel: BType = { comp: BCarousel, label: 'Carousel', r: 1, a: 1, icon: GalleryHorizontal };
 const media: BType = { comp: BMedia, label: 'Media', m: 1, a: 1, icon: FileIcon };
 
-export class BCtrl {
+export class BController {
   readonly registry: Dictionary<BType> = { root, rect, text, carousel, media };
 
   readonly funs: Dictionary<(boxEvent: BEvent) => void> = {};
@@ -151,18 +151,18 @@ export class BCtrl {
   readonly panZoom = new PanZoomCtrl();
 
   readonly api: Api;
-  readonly pageId: string;
+  readonly playlistKey: string;
 
-  constructor(api: Api, pageId: string) {
+  constructor(api: Api, playlistKey: string) {
     this.api = api;
-    this.pageId = pageId;
+    this.playlistKey = playlistKey;
     app.boxCtrl = this;
     this.load();
   }
 
   async load() {
-    const page = await this.api.media.coll.get(this.pageId);
-    console.debug('BCtrl load', this.pageId, media);
+    const page = await this.api.media.get(this.playlistKey);
+    console.debug('BCtrl load', this.playlistKey, media);
     if (page?.type === 'page') {
       this.setAllData(page.data?.boxes || []);
     }
@@ -170,8 +170,8 @@ export class BCtrl {
 
   async save() {
     const boxes = this.getAllData();
-    console.debug('BCtrl save', this.pageId, boxes);
-    await this.api.media.update(this.pageId, {
+    console.debug('BCtrl save', this.playlistKey, boxes);
+    await this.api.media.update(this.playlistKey, {
       data: { boxes },
     });
   }

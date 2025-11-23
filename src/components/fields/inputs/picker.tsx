@@ -1,6 +1,6 @@
 import { ComponentChildren } from 'preact';
 import { Css } from 'fluxio';
-import { Button } from '@/components/Button';
+import { Button } from '@/components/common/Button';
 import { isArray } from 'fluxio';
 import { useFieldController, useFieldState } from '@/components/fields/hooks';
 import { FieldProps } from '@/components/fields/types';

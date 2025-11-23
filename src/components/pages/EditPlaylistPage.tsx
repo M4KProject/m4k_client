@@ -3,21 +3,24 @@ import { JobGrid } from '@/components/admin/JobGrid';
 import { useEffect, useMemo } from 'preact/hooks';
 import { BContext, BCtrl } from '@/components/box/BCtrl';
 import { PageModel } from '@/api/models';
-import { sideOpen$ } from '@/components/Side';
+import { sideOpen$ } from '@/components/common/Side';
 import { BViewport } from '@/components/box/edit/BViewport';
 import { BSide } from '@/components/box/edit/BSide';
 import { useApi } from '@/hooks/apiHooks';
+import { Page } from '@/components/common/Page';
+import { useMediaKey } from '@/router';
 
-const c = Css('EditPage', {
+const c = Css('EditPlaylistPage', {
   '': {
     row: 'stretch',
     flex: 1,
   },
 });
 
-export const EditPage = ({ page }: { page: PageModel }) => {
+export const EditPlaylistPage = () => {
   const api = useApi();
-  const ctrl = useMemo(() => new BCtrl(api, page.id), [api, page.id]);
+  const playlistKey = useMediaKey();
+  const ctrl = useMemo(() => new BCtrl(api, playlistKey), [api, playlistKey]);
 
   useEffect(() => {
     sideOpen$.set(false);
@@ -27,12 +30,12 @@ export const EditPage = ({ page }: { page: PageModel }) => {
   }, []);
 
   return (
-    <div {...c()}>
+    <Page {...c()}>
       <BContext.Provider value={ctrl}>
         <BViewport />
         <BSide />
       </BContext.Provider>
       <JobGrid filter={(job) => job.status !== 'finished'} panel={true} />
-    </div>
+    </Page>
   );
 };

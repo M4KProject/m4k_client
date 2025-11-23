@@ -1,11 +1,11 @@
 import { Css } from 'fluxio';
 import { Dictionary, toNumber, toString } from 'fluxio';
 import { Trash2 } from 'lucide-react';
-import { Grid, GridCols } from '@/components/Grid';
+import { Grid, GridCols } from '@/components/common/Grid';
 import { useApi, useDeviceById, useGroupMembers } from '@/hooks/apiHooks';
 import { DeviceModel, MemberModel } from '@/api/models';
-import { Field } from '@/components/Field';
-import { Button } from '@/components/Button';
+import { Field } from '@/components/fields/Field';
+import { Button } from '@/components/common/Button';
 import { Api } from '@/api/Api';
 
 const c = Css('MemberGrid', {

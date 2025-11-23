@@ -3,7 +3,7 @@ import { Css, fluxCombine } from 'fluxio';
 import { MediaModel } from '@/api/models';
 import { useBCtrl } from '@/components/box/BCtrl';
 import { useFluxMemo } from '@/hooks/useFlux';
-import { Button } from '@/components/Button';
+import { Button } from '@/components/common/Button';
 
 const c = Css('BMedias', {
   '': {

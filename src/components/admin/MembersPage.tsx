@@ -5,12 +5,12 @@ import { useState } from 'preact/hooks';
 import { MemberGrid } from '@/components/admin/MemberGrid';
 import { SearchField } from '@/components/admin/SearchField';
 import { Role } from '@/api/models';
-import { Form } from '@/components/Form';
-import { Field } from '@/components/Field';
-import { Button } from '@/components/Button';
-import { showDialog } from '@/components/Dialog';
-import { Page, PageBody } from '@/components/Page';
-import { Toolbar } from '@/components/Toolbar';
+import { Form } from '@/components/common/Form';
+import { Field } from '@/components/fields/Field';
+import { Button } from '@/components/common/Button';
+import { showDialog } from '@/components/common/Dialog';
+import { Page, PageBody } from '@/components/common/Page';
+import { Toolbar } from '@/components/common/Toolbar';
 import { useApi } from '@/hooks/apiHooks';
 import { AdminSideBar } from '@/components/admin/AdminSideBar';
 

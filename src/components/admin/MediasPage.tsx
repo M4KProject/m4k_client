@@ -1,16 +1,15 @@
 import { Css } from 'fluxio';
 import { MediaGrid } from '@/components/admin/MediaGrid';
 import { AddPlaylistItemButton, EditPlaylist } from '@/components/admin/EditPlaylist';
-import { EditPage } from '@/components/admin/EditPage';
 import { Edit, FolderPlus, MapPlus, FilePlus, Play, Upload } from 'lucide-react';
 import { useIsEdit, useMediaType } from '@/router/hooks';
 import { setIsEdit, setMediaKey, setMediaType } from '@/router/setters';
 import { useApi, useMedia, useMediaById } from '@/hooks/apiHooks';
 import { MediaModel, PageModel, PlaylistModel } from '@/api/models';
-import { Page, PageBody } from '@/components/Page';
+import { Page, PageBody } from '@/components/common/Page';
 import { MediaView } from '@/components/medias/MediaView';
-import { Toolbar } from '@/components/Toolbar';
-import { Button, UploadButton } from '@/components/Button';
+import { Toolbar } from '@/components/common/Toolbar';
+import { Button, UploadButton } from '@/components/common/Button';
 import { Api } from '@/api/Api';
 import { AdminSideBar } from '@/components/admin/AdminSideBar';
 import { getNextTitle } from '@/controllers/getNextTitle';
@@ -54,7 +53,7 @@ export const MediasPage = () => {
       </PageBody>
     );
   } else if (isPage) {
-    content = <EditPage page={media as PageModel} />;
+    // content = <EditPage page={media as PageModel} />;
   } else if (isMedia) {
     content = <MediaView media={media} mediaById={mediaById} />;
   } else {

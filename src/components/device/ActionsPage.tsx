@@ -4,7 +4,7 @@ import copyPlaylist from '@/controllers/copyPlaylist';
 import { newProgressDialog } from '@/components/device/ProgressView';
 import { Apps } from '@/components/admin/Apps';
 import { usePromise } from '@/hooks/usePromise';
-import { Button } from '@/components/Button';
+import { Button } from '@/components/common/Button';
 import { copyDir$, url$ } from '@/controllers/deviceMessages';
 import { bridge } from '@/bridge';
 

@@ -2,8 +2,8 @@ import { Css } from 'fluxio';
 import { jsonStringify } from 'fluxio';
 import { bridge, BridgeSignalEvent } from '@/bridge';
 import { useEffect, useState } from 'preact/hooks';
-import { Page, PageBody } from '@/components/Page';
-import { Toolbar } from '@/components/Toolbar';
+import { Page, PageBody } from '@/components/common/Page';
+import { Toolbar } from '@/components/common/Toolbar';
 
 const c = Css('EventsPage', {
   ' pre': {

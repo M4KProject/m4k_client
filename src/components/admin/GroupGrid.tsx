@@ -1,11 +1,11 @@
 import { Trash2 } from 'lucide-react';
-import { Grid, GridCols } from '@/components/Grid';
+import { Grid, GridCols } from '@/components/common/Grid';
 import { setGroupKey } from '@/router/setters';
 import { useGroupKey, useIsAdvanced } from '@/router/hooks';
 import { useApi, useGroups } from '@/hooks/apiHooks';
 import { GroupModel } from '@/api/models';
-import { Field } from '@/components/Field';
-import { Button } from '@/components/Button';
+import { Field } from '@/components/fields/Field';
+import { Button } from '@/components/common/Button';
 import { Api } from '@/api/Api';
 
 const cols: GridCols<

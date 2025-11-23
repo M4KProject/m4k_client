@@ -5,8 +5,8 @@ import loginUrl from '@/assets/login.svg';
 import { Download, Monitor } from 'lucide-react';
 import { Apps } from '@/components/admin/Apps';
 import { isDevice$ } from '@/router';
-import { AuthForm } from '@/components/AuthForm';
-import { Button } from '@/components/Button';
+import { AuthForm } from '@/components/auth/AuthForm';
+import { Button } from '@/components/common/Button';
 
 const c = Css('AuthPage', {
   '': {

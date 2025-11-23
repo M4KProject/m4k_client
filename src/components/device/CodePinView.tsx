@@ -5,10 +5,10 @@ import { Globe, Lock } from 'lucide-react';
 import { Branding } from './Branding';
 import { useFlux } from '@/hooks/useFlux';
 import { useInterval } from '@/hooks/useInterval';
-import { Form } from '@/components/Form';
-import { Field } from '@/components/Field';
-import { Button } from '@/components/Button';
-import { showDialog } from '@/components/Dialog';
+import { Form } from '@/components/common/Form';
+import { Field } from '@/components/fields/Field';
+import { Button } from '@/components/common/Button';
+import { showDialog } from '@/components/common/Dialog';
 import { codePin$, offlineMode$, page$ } from '@/controllers/deviceMessages';
 import { useDeviceController } from '@/hooks/useDeviceController';
 

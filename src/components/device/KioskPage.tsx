@@ -8,7 +8,7 @@ import { logger } from 'fluxio';
 import { KioskVideo } from '@/components/device/KioskVideo';
 import { usePromise } from '@/hooks/usePromise';
 import { useFlux } from '@/hooks/useFlux';
-import { Button } from '@/components/Button';
+import { Button } from '@/components/common/Button';
 import { useDeviceController } from '@/hooks/useDeviceController';
 
 const log = logger('KioskPage');

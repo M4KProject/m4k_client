@@ -1,14 +1,15 @@
 import { Css } from 'fluxio';
 import { DivProps, Content } from './types';
 import { getContent } from './getContent';
+import { Toolbar } from './Toolbar';
 
 const c = Css('Page', {
   '': {
-    row: 'stretch',
+    col: 1,
     flex: 1,
     position: 'relative',
   },
-  Body: {
+  Content: {
     col: 1,
     flex: 1,
   },
@@ -41,8 +42,13 @@ export interface PageProps extends DivProps {
 
 export const Page = ({ side, children, ...props }: PageProps) => (
   <div {...props} {...c('', props)}>
-    {getContent(side)}
-    <div {...c('Body')}>{children}</div>
+    <Toolbar title="Medias">
+      
+    </Toolbar>
+    <div {...c('Content')}>
+      {getContent(side)}
+      {children}
+    </div>
   </div>
 );
 
