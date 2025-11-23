@@ -12,15 +12,12 @@ import { ActionsPage } from '@/components/device/ActionsPage';
 import { EventsPage } from '@/components/device/EventsPage';
 import { PlaylistPage } from '@/components/device/PlaylistPage';
 import { PairingPage } from '@/components/device/PairingPage';
-import { useEffect, useMemo } from 'preact/hooks';
+import { useEffect } from 'preact/hooks';
 import { offlineMode$ } from '@/controllers/deviceMessages';
 import { DialogContainer } from './DialogContainer';
 import { useFlux } from '@/hooks/useFlux';
 import { Side, SideButton, SideSep } from '@/components/Side';
-import { DeviceContext, useDeviceController } from '@/hooks/useDeviceController';
-import { Api } from '@/api/Api';
-import { ApiContext } from '@/hooks/apiHooks';
-import { DeviceController } from '@/controllers/DeviceController';
+import { useDeviceController } from '@/hooks/useDeviceController';
 
 const c = Css('DeviceApp', {
   '': {
@@ -131,14 +128,7 @@ const DeviceAppContent = () => {
 };
 
 export const DeviceApp = () => {
-  const api = useMemo(() => new Api(), []);
-  const deviceCtrl = useMemo(() => new DeviceController(api), []);
-
   return (
-    <ApiContext value={api}>
-      <DeviceContext value={deviceCtrl}>
-        <DeviceAppContent />
-      </DeviceContext>
-    </ApiContext>
+    <DeviceAppContent />
   );
 };

@@ -2,15 +2,12 @@ import { useFlux, useFluxMemo } from '@/hooks/useFlux';
 import { useDeviceKey, useGroupKey, useMediaKey, useIsAdvanced } from '@/router/hooks';
 import { useMemo } from 'preact/hooks';
 import { PbModel, PbWhere } from 'pblite';
-import { createContext } from 'preact';
-import { useContext } from 'preact/hooks';
 import { GroupModel, MediaModel } from '@/api/models';
 import { Sync } from '@/api/sync';
 import { Api } from '@/api/Api';
+import { useSingleton } from '@/utils/ioc';
 
-export const ApiContext = createContext<Api | undefined>(undefined);
-
-export const useApi = () => useContext(ApiContext)!;
+export const useApi = () => useSingleton(Api);
 
 const useItemKey = <T extends PbModel & { key?: string }>(
   sync: Sync<T>,

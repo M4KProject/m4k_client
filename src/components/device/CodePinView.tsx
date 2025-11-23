@@ -9,8 +9,8 @@ import { Form } from '@/components/Form';
 import { Field } from '@/components/Field';
 import { Button } from '@/components/Button';
 import { showDialog } from '@/components/Dialog';
-import { useDeviceController } from '@/hooks/useDeviceController';
 import { codePin$, offlineMode$, page$ } from '@/controllers/deviceMessages';
+import { useDeviceController } from '@/hooks/useDeviceController';
 
 const c = Css('CodePinView', {
   '': {

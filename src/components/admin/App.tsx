@@ -14,7 +14,7 @@ import { Errors } from '@/components/admin/Errors';
 import { useFlux } from '@/hooks/useFlux';
 import { refreshTheme, updateTheme } from '@/utils/theme';
 import { addFont } from '@/utils/addFont';
-import { ApiContext, useApi, useGroup } from '@/hooks/apiHooks';
+import { useApi, useGroup } from '@/hooks/apiHooks';
 import { Api } from '@/api/Api';
 import { getContent } from '@/components/getContent';
 
@@ -100,15 +100,11 @@ export const App = () => {
     addFont('Roboto');
     refreshTheme();
   }, []);
-
-  const apiCtrl = useMemo(() => new Api(), []);
-
+  
   return (
-    <ApiContext value={apiCtrl}>
-      <div id="app" {...c('')}>
-        <AppSync />
-        <AppContent />
-      </div>
-    </ApiContext>
+    <div id="app" {...c('')}>
+      <AppSync />
+      <AppContent />
+    </div>
   );
 };

@@ -1,7 +1,4 @@
-import { DeviceController } from "@/controllers/DeviceController";
-import { createContext } from "preact";
-import { useContext } from "preact/hooks";
+import { DeviceController } from '@/controllers/DeviceController';
+import { useSingleton } from '@/utils/ioc';
 
-export const DeviceContext = createContext<DeviceController | undefined>(undefined);
-
-export const useDeviceController = () => useContext(DeviceContext)!;
+export const useDeviceController = () => useSingleton(DeviceController);
