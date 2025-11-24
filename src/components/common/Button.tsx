@@ -1,11 +1,22 @@
 import { useRef } from 'preact/hooks';
-import { Css } from 'fluxio';
+import { Css, Dictionary, Style } from 'fluxio';
 import { Tr } from './Tr';
-import { Content, Props } from './types';
+import { Props } from './types';
 import { tooltipProps } from './Tooltip';
-import { getContent } from './getContent';
+import { comp, Comp } from '@/utils/comp';
 
-const c = Css('Button', {
+const addColors = (styles: Dictionary<Style>) => {
+  const colors = ['primary', 'secondary', 'success', 'warn', 'error'];
+  for (const color of colors) {
+    styles[`-${color}`] = { bg: color, fg: 'handle' };
+    styles[`-icon&-${color}`] = { fg: color };
+    styles[`-selected&-icon&-${color}`] = { bg: color };
+    styles[`:hover&-icon&-${color}`] = { bg: color };
+  }
+  return styles;
+}
+
+const c = Css('Button', addColors({
   '': {
     row: ['center', 'start'],
     position: 'relative',
@@ -48,11 +59,10 @@ const c = Css('Button', {
     rounded: 5,
   },
 
-  '-primary': { bg: 'p', fg: 'handle' },
-  '-secondary': { bg: 's', fg: 'handle' },
-  '-success': { bg: 'success', fg: 'handle' },
-  '-warn': { bg: 'warn', fg: 'handle' },
-  '-error': { bg: 'error', fg: 'handle' },
+  // '-primary': { bg: 'p', fg: 'handle' },
+  // '-secondary': { bg: 's', fg: 'handle' },
+  // '-success': { bg: 'success', fg: 'handle' },
+  // '-warn': { bg: 'warn', fg: 'handle' },
 
   ':active': { bg: 'p', fg: 'handle' },
   '-selected': { bg: 'p', fg: 'handle' },
@@ -60,18 +70,20 @@ const c = Css('Button', {
   ':hover &Sfx': { scaleX: 1 },
 
   '-icon': { bg: 'transparent', fg: 't', elevation: 0, border: 0 },
-  '-icon&-primary': { fg: 'p' },
-  '-icon&-secondary': { fg: 's' },
-  '-icon&-success': { fg: 'success' },
-  '-icon&-warn': { fg: 'warn' },
-  '-icon&-error': { fg: 'error' },
+
+  // '-icon&-primary': { fg: 'p' },
+  // '-icon&-secondary': { fg: 's' },
+  // '-icon&-success': { fg: 'success' },
+  // '-icon&-warn': { fg: 'warn' },
+
   '-selected&-icon,:hover&-icon': { bg: 'p', fg: 'handle', border: 0 },
-  '-selected&-icon&-primary,:hover&-icon&-primary': { bg: 'p' },
-  '-selected&-icon&-secondary,:hover&-icon&-secondary': { bg: 's' },
-  '-selected&-icon&-success,:hover&-icon&-success': { bg: 'success' },
-  '-selected&-icon&-warn,:hover&-icon&-warn': { bg: 'warn' },
-  '-selected&-icon&-error,:hover&-icon&-error': { bg: 'error' },
-});
+
+  // '-selected&-icon&-primary,:hover&-icon&-primary': { bg: 'p' },
+  // '-selected&-icon&-secondary,:hover&-icon&-secondary': { bg: 's' },
+  // '-selected&-icon&-success,:hover&-icon&-success': { bg: 'success' },
+  // '-selected&-icon&-warn,:hover&-icon&-warn': { bg: 'warn' },
+
+}));
 
 type BaseButtonProps = Omit<Props['button'] & Props['a'], 'onClick'> & {
   onClick?: (e: Event) => void;
@@ -82,11 +94,11 @@ export interface ButtonProps extends BaseButtonProps {
   color?: 'default' | 'primary' | 'secondary' | 'success' | 'warn' | 'error';
   variant?: 'upload';
   selected?: boolean;
-  icon?: Content|true;
-  before?: Content;
+  icon?: Comp|true;
+  before?: Comp;
   title?: string;
   link?: boolean;
-  tooltip?: Content;
+  tooltip?: Comp;
 }
 
 export const Button = ({
@@ -115,8 +127,8 @@ export const Button = ({
   const content = (
     <>
       <div {...c('Sfx')} />
-      {getContent(before)}
-      {icon && icon !== true && <div {...c('Icon')}>{getContent(icon)}</div>}
+      {comp(before)}
+      {icon && icon !== true && <div {...c('Icon')}>{comp(icon)}</div>}
       <div {...c('Content')}>
         {title && <Tr>{title}</Tr>}
         {children}
@@ -143,7 +155,7 @@ export interface UploadButtonProps extends ButtonProps {
   onFiles?: (files: File[]) => void;
   accept?: string;
   multiple?: boolean;
-  icon?: Content;
+  icon?: Comp;
 }
 
 export const UploadButton = ({

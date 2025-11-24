@@ -1,8 +1,8 @@
 import { Css, Flux, onHtmlEvent, Unsubscribe, stopEvent } from 'fluxio';
 import { useFlux } from '@/hooks/useFlux';
 import { portal } from './Portal';
-import { Content, DivProps } from './types';
-import { getContent } from './getContent';
+import { DivProps } from './types';
+import { comp, Comp } from '@/utils/comp';
 import { useEffect, useMemo } from 'preact/hooks';
 import { X } from 'lucide-react';
 import { Button } from './Button';
@@ -264,13 +264,13 @@ const WindowRender = ({
   );
 };
 
-export const showWindow = (title: string, content: Content, props?: Partial<WindowProps>) => {
+export const showWindow = (title: string, content: Comp, props?: Partial<WindowProps>) => {
   const open$ = new Flux(false);
   const ctrl = new WindowController();
 
   const dispose = portal(
     <WindowRender open$={open$} ctrl={ctrl} title={title} {...props}>
-      {getContent(content)}
+      {comp(content)}
     </WindowRender>
   );
 

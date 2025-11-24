@@ -5,7 +5,7 @@ import { PbModel, PbWhere } from 'pblite';
 import { GroupModel, MediaModel } from '@/api/models';
 import { Sync } from '@/api/sync';
 import { Api } from '@/api/Api';
-import { useSingleton } from '@/utils/ioc';
+import { useSingleton } from './useSingleton';
 
 export const useApi = () => useSingleton(Api);
 

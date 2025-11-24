@@ -1,21 +1,12 @@
 import { Css } from 'fluxio';
-import { JSX } from 'preact';
-import { GroupsPage } from '@/components/admin/GroupsPage';
-import { MembersPage } from '@/components/admin/MembersPage';
-import { MediasPage } from '@/components/admin/MediasPage';
-import { JobsPage } from '@/components/admin/JobsPage';
-import { DevicesPage } from '@/components/admin/DevicesPage';
-import { AuthPage } from '@/components/auth/AuthPage';
-import { AccountPage } from '@/components/admin/AccountPage';
 import { useEffect } from 'preact/hooks';
 import { Errors } from '@/components/admin/Errors';
-import { useFlux } from '@/hooks/useFlux';
-import { refreshTheme, updateTheme } from '@/utils/theme';
+import { refreshTheme } from '@/utils/theme';
 import { addFont } from '@/utils/addFont';
-import { useApi } from '@/hooks/apiHooks';
-import { getContent } from '@/components/common/getContent';
 import { EditPage } from '@/components/pages/EditPage';
-import { Page, usePath } from '@/hooks/usePath';
+import { useRoute, Page } from '@/hooks/useRoute';
+import { Comp, comp } from '@/utils/comp';
+import { DashboardPage } from './pages/DashboardPage';
 
 const c = Css('App', {
   '': {
@@ -26,42 +17,38 @@ const c = Css('App', {
     bg: 'bg',
     fg: 't',
     fontFamily: 'Roboto',
+    fontSize: '14px',
   },
   '-loading': {
     center: 1,
   },
 });
 
-const CompByPage: Record<Page, () => JSX.Element> = {
-  '': GroupsPage,
-  groups: GroupsPage,
-  members: MembersPage,
-  medias: MediasPage,
-  jobs: JobsPage,
-  devices: DevicesPage,
-  account: AccountPage,
+const CompByPage: Partial<Record<Page, Comp>> = {
+  '': DashboardPage,
+  // groups: GroupsPage,
+  // members: MembersPage,
+  // medias: MediasPage,
+  // jobs: JobsPage,
+  // devices: DevicesPage,
+  // account: AccountPage,
   edit: EditPage,
-  // contents: ContentsPage,
-  // playlists: PlaylistsPage,
-  // videos: VideosPage,
-  // images: ImagesPage,
-  // device: DevicePage,
-  // content: ContentPage,
 };
 
 const AppRouter = () => {
-  const { page } = usePath();
-  return getContent(page ? (CompByPage[page] ?? GroupsPage) : GroupsPage);
+  const { page } = useRoute();
+  return comp(CompByPage[page||''] || DashboardPage);
 };
 
 const AppContent = () => {
-  const api = useApi();
-  const auth = useFlux(api.pb.auth$);
+  // const api = useApi();
 
-  // console.debug("AppContent", { c, auth });
-  if (!auth) {
-    return <AuthPage />;
-  }
+  // const auth = useFlux(api.pb.auth$);
+
+  // // console.debug("AppContent", { c, auth });
+  // if (!auth) {
+  //   return <AuthPage />;
+  // }
 
   // console.debug("Div", { c, auth });
 
@@ -73,25 +60,25 @@ const AppContent = () => {
   );
 };
 
-export const AppSync = () => {
-  const api = useApi();
-  const { group: groupKey } = usePath();
-  const group = useFlux(groupKey ? api.group.find$({ key: groupKey }) : undefined);
-  const groupId = group?.id;
-  const { isDark, primary, secondary } = group?.data || {};
+// export const AppSync = () => {
+//   const api = useApi();
+//   const { group: groupKey } = useRoute();
+//   const group = useFlux(groupKey ? api.group.find$({ key: groupKey }) : undefined);
+//   const groupId = group?.id;
+//   const { isDark, primary, secondary } = group?.data || {};
 
-  useEffect(() => {
-    api.groupId$.set(groupId ?? '');
-  }, [groupId]);
+//   useEffect(() => {
+//     api.groupId$.set(groupId ?? '');
+//   }, [groupId]);
 
-  useEffect(() => {
-    updateTheme({ isDark, primary, secondary });
-  }, [isDark, primary, secondary]);
+//   useEffect(() => {
+//     updateTheme({ isDark, primary, secondary });
+//   }, [isDark, primary, secondary]);
 
-  console.debug('AppSync', { groupKey, group, groupId });
+//   console.debug('AppSync', { groupKey, group, groupId });
 
-  return null;
-};
+//   return null;
+// };
 
 export const App = () => {
   console.debug('App');
@@ -103,7 +90,7 @@ export const App = () => {
   
   return (
     <div id="app" {...c('')}>
-      <AppSync />
+      {/* <AppSync /> */}
       <AppContent />
     </div>
   );

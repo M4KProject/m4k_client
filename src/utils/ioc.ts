@@ -1,4 +1,3 @@
-import { useMemo } from 'preact/hooks';
 import type { Dictionary } from 'fluxio';
 
 type Class<T = any> = new (...args: any[]) => T;
@@ -83,15 +82,4 @@ export const register = <T>(clazz: Class<T>, factory?: Factory<T>): void => {
  */
 export const getSingleton = <T>(clazz: Class<T>): T => {
   return ioc.get(clazz);
-};
-
-/**
- * Hook to get singleton instance from IoC container
- * Returns stable reference across renders
- *
- * @example
- * const deviceCtrl = useSingleton(DeviceController);
- */
-export const useSingleton = <T>(clazz: Class<T>): T => {
-  return useMemo(() => ioc.get(clazz), [clazz]);
 };

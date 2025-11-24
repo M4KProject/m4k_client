@@ -69,6 +69,9 @@ export const refreshTheme = () => {
   const btn = isD ? setHsl(p, { s: 10, l: 5 }) : setHsl(p, { s: 10, l: 95 });
   const media = isD ? setHsl(p, { s: 100, l: 5 }) : setHsl(p, { s: 100, l: 5 });
 
+  const toolbarBg = p;
+  const toolbarFg = w;
+
   Object.assign(theme, {
     handle,
     bg,
@@ -86,6 +89,8 @@ export const refreshTheme = () => {
     shadow,
     btn,
     media,
+    toolbarBg,
+    toolbarFg,
   });
 
   setCssColors(theme as Dictionary<string>);

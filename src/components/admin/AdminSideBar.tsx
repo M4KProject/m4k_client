@@ -108,14 +108,6 @@ export const AdminSideBar = () => {
           )}
         </>
       : null}
-      <SideSep />
-      <div {...c('Version')}>2.2</div>
-      <SideButton
-        title="Account"
-        icon={User}
-        selected={page === 'account'}
-        onClick={go('account')}
-      />
     </Side>
   );
 };

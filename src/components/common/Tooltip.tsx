@@ -1,7 +1,7 @@
 import { onHtmlEvent, Unsubscribe } from 'fluxio';
 import { Css } from 'fluxio';
-import { Content, DivProps } from './types';
-import { getContent } from './getContent';
+import { DivProps } from './types';
+import { comp, Comp } from '@/utils/comp';
 import { portal } from './Portal';
 
 const c = Css('Tooltip', {
@@ -42,7 +42,7 @@ const c = Css('Tooltip', {
 
 export interface TooltipProps extends Omit<DivProps, 'title'> {
   target: HTMLElement;
-  children: Content;
+  children: Comp;
 }
 export const Tooltip = ({ target, children, ...props }: TooltipProps) => {
   const { top, left, width, height } = target.getBoundingClientRect();
@@ -54,13 +54,13 @@ export const Tooltip = ({ target, children, ...props }: TooltipProps) => {
     <div {...props} {...c('', `-${pos}`, props)} style={{ top, left, width, height }}>
       <div {...c('Arrow')} />
       <div {...c('Content')}>
-        {getContent(children)}
+        {comp(children)}
       </div>
     </div>
   );
 };
 
-const createTooltip = (eventOrTarget: Event|HTMLElement, content: Content) => {
+const createTooltip = (eventOrTarget: Event|HTMLElement, content: Comp) => {
   const target = eventOrTarget instanceof Event ? (eventOrTarget.currentTarget || eventOrTarget.target) as HTMLElement : eventOrTarget;
   if (!(target instanceof HTMLElement)) return;
   
@@ -84,7 +84,7 @@ const createTooltip = (eventOrTarget: Event|HTMLElement, content: Content) => {
   disposes.push(portal(<Tooltip target={target}>{content}</Tooltip>));
 }
 
-export const tooltipProps = (content: Content) => {
+export const tooltipProps = (content: Comp) => {
   return {
     onMouseOver: (event: Event) => {
       createTooltip(event, content);

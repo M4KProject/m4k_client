@@ -4,15 +4,14 @@ import { useEffect } from 'preact/hooks';
 import { setEl, ElOptions } from 'fluxio';
 import { logger } from 'fluxio/logger';
 import { useConstant } from '@/hooks/useConstant';
-import { Content } from './types';
-import { getContent } from './getContent';
+import { comp, Comp } from '@/utils/comp';
 
 const log = logger('portal');
 
-export const portal = (content: Content, options?: ElOptions) => {
+export const portal = (content: Comp, options?: ElOptions) => {
   const el = setEl('div', { parent: 'body', ...options });
   log.d('add');
-  render(getContent(content), el);
+  render(comp(content), el);
   return () => {
     log.d('remove');
     render(null, el);
@@ -25,8 +24,8 @@ export const portal = (content: Content, options?: ElOptions) => {
 //   return null;
 // };
 
-export const Portal = ({ children, options }: { children: Content; options?: ElOptions }) => {
+export const Portal = ({ children, options }: { children: Comp; options?: ElOptions }) => {
   const el = useConstant(() => setEl('div', { parent: 'body', ...options }));
   useEffect(() => () => el.remove(), []);
-  return createPortal(getContent(children), el);
+  return createPortal(comp(children), el);
 };
