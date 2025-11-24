@@ -7,16 +7,15 @@ import { JobsPage } from '@/components/admin/JobsPage';
 import { DevicesPage } from '@/components/admin/DevicesPage';
 import { AuthPage } from '@/components/auth/AuthPage';
 import { AccountPage } from '@/components/admin/AccountPage';
-import { useEffect, useMemo } from 'preact/hooks';
-import { Page } from '@/router/types';
-import { useGroupKey, usePage } from '@/router/hooks';
+import { useEffect } from 'preact/hooks';
 import { Errors } from '@/components/admin/Errors';
 import { useFlux } from '@/hooks/useFlux';
 import { refreshTheme, updateTheme } from '@/utils/theme';
 import { addFont } from '@/utils/addFont';
-import { useApi, useGroup } from '@/hooks/apiHooks';
+import { useApi } from '@/hooks/apiHooks';
 import { getContent } from '@/components/common/getContent';
-import { EditPlaylistPage } from '@/components/pages/EditPlaylistPage';
+import { EditPage } from '@/components/pages/EditPage';
+import { Page, usePath } from '@/hooks/usePath';
 
 const c = Css('App', {
   '': {
@@ -41,7 +40,7 @@ const CompByPage: Record<Page, () => JSX.Element> = {
   jobs: JobsPage,
   devices: DevicesPage,
   account: AccountPage,
-  playlist: EditPlaylistPage,
+  edit: EditPage,
   // contents: ContentsPage,
   // playlists: PlaylistsPage,
   // videos: VideosPage,
@@ -51,7 +50,7 @@ const CompByPage: Record<Page, () => JSX.Element> = {
 };
 
 const AppRouter = () => {
-  const page = usePage();
+  const { page } = usePath();
   return getContent(page ? (CompByPage[page] ?? GroupsPage) : GroupsPage);
 };
 
@@ -76,8 +75,8 @@ const AppContent = () => {
 
 export const AppSync = () => {
   const api = useApi();
-  const groupKey = useGroupKey();
-  const group = useGroup();
+  const { group: groupKey } = usePath();
+  const group = useFlux(groupKey ? api.group.find$({ key: groupKey }) : undefined);
   const groupId = group?.id;
   const { isDark, primary, secondary } = group?.data || {};
 

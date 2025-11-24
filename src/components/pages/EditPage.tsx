@@ -9,14 +9,14 @@ import { useApi } from '@/hooks/apiHooks';
 import { Page } from '@/components/common/Page';
 import { useMediaKey } from '@/router';
 
-const c = Css('EditPlaylistPage', {
+const c = Css('EditPage', {
   '': {
     row: 'stretch',
     flex: 1,
   },
 });
 
-export const EditPlaylistPage = () => {
+export const EditPage = () => {
   const api = useApi();
   const playlistKey = useMediaKey();
   const ctrl = useMemo(() => new BController(api, playlistKey), [api, playlistKey]);
