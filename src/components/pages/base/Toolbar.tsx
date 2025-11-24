@@ -7,39 +7,33 @@ import { useRouteController } from '@/hooks/useRouteController';
 
 const c = Css('Toolbar', {
     '': {
-        h: 32,
+        h: 34,
         w: '100%',
     },
   Fixed: {
     position: 'fixed',
+    xy: 0,
     w: '100%',
-    h: 32,
-    bg: 'toolbarBg',
-    fg: 'toolbarFg',
-    elevation: 2,
-    row: 1,
+    h: 34,
+    bg: 'barBg',
+    fg: 'barFg',
+    elevation: 3,
+    row: ['center', 'center'],
     zIndex: 20,
   },
   ' .Button': {
     m: 0,
     border: 0,
-    fg: 'toolbarFg',
+    fg: 'barFg',
   },
   Title: {
-    flex: 1,
     bold: 1,
   },
   Sep: {
     flex: 1
   },
   Version: {
-    color: 'p',
-    bold: 1,
-    borderBottom: 1,
-    borderColor: 'p',
     opacity: 0.3,
-    fontSize: '12px',
-    center: 1,
   },
 });
 
@@ -67,11 +61,10 @@ export const Toolbar = ({ title, openMenu$ }: { title: string, openMenu$: Flux<b
                 {comp(title)}
             </div>
             <div {...c('Sep')} />
-            <div {...c('Version')}>2.2</div>
+            <div {...c('Version')}>2.3</div>
             <Button
                 icon={UserIcon}
-                // selected={page === 'account'}
-                // onClick={go('account')}
+                onClick={() => routeController.go({ page: 'dashboard' })}
             />
         </div>
     </div>

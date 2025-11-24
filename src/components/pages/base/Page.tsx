@@ -13,9 +13,14 @@ const c = Css('Page', {
     col: ['stretch', 'start'],
     position: 'relative',
   },
+  Body: {
+    row: ['stretch', 'start'],
+    flex: 1,
+  },
   Content: {
     col: 1,
     flex: 1,
+    p: 8,
   },
   Section: {
     flex: 1,
@@ -44,9 +49,11 @@ export const Page = ({ title, menu, children, ...props }: PageProps) => {
   return (
     <div {...props} {...c('')}>
       <Toolbar title={title} openMenu$={openMenu$} />
-      <div {...c('Content', props)}>
+      <div {...c('Body')}>
         <Menu openMenu$={openMenu$} menu={menu} />
-        {children}
+        <div {...c('Content', props)}>
+          {children}
+        </div>
       </div>
     </div>
   )

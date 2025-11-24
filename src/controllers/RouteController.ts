@@ -28,18 +28,23 @@ export class RouteController {
   private parse = (url: string): Route => {
     const params = getUrlParams(url);
     const path = params.path;
-    const [groupKey, page, id] = (path||'').split('/');
+    const segments = (path||'').split('/').filter(s => s);
+    const [groupKey, page, id] = segments;
     const isDevice = !!(params.d || params.device);
 
     if (isStringValid(groupKey)) this.groupKey$.set(groupKey);
     if (isBoolean(isDevice)) this.isDevice$.set(isDevice);
 
-    return {
+    const route = {
       groupKey: groupKey || this.groupKey$.get(),
       page: (page as Page) || 'dashboard',
       id,
       isDevice: isDevice || this.isDevice$.get(),
     };
+
+    this.log.d('parse', route);
+
+    return route;
   };
 
   private sync = () => {
@@ -57,8 +62,15 @@ export class RouteController {
     this.log.d('go', changes);
 
     const current = this.route$.get();
-    const { groupKey, page, id, isDevice } = { ...current, ...changes };
-    const segments = 
+    const route = { ...current, ...changes };
+
+    // Reset id if page changes
+    if (changes.page && changes.page !== current.page) {
+      route.id = undefined;
+    }
+
+    const { groupKey, page, id, isDevice } = route;
+    const segments =
       id ? [groupKey, page, id] :
       page ? [groupKey, page] :
       groupKey ? [groupKey] :

@@ -5,7 +5,8 @@ import { Props } from './types';
 import { tooltipProps } from './Tooltip';
 import { comp, Comp } from '@/utils/comp';
 
-const addColors = (styles: Dictionary<Style>) => {
+const addColors = () => {
+  const styles: Dictionary<Style> = {};
   const colors = ['primary', 'secondary', 'success', 'warn', 'error'];
   for (const color of colors) {
     styles[`-${color}`] = { bg: color, fg: 'handle' };
@@ -13,10 +14,11 @@ const addColors = (styles: Dictionary<Style>) => {
     styles[`-selected&-icon&-${color}`] = { bg: color };
     styles[`:hover&-icon&-${color}`] = { bg: color };
   }
+  console.debug('addColors', styles);
   return styles;
 }
 
-const c = Css('Button', addColors({
+const c = Css('Button', {
   '': {
     row: ['center', 'start'],
     position: 'relative',
@@ -67,7 +69,7 @@ const c = Css('Button', addColors({
   ':active': { bg: 'p', fg: 'handle' },
   '-selected': { bg: 'p', fg: 'handle' },
   ':hover': { elevation: 0, fg: 'handle' },
-  ':hover &Sfx': { scaleX: 1 },
+  ':hover > &Sfx': { scaleX: 1 },
 
   '-icon': { bg: 'transparent', fg: 't', elevation: 0, border: 0 },
 
@@ -83,7 +85,9 @@ const c = Css('Button', addColors({
   // '-selected&-icon&-success,:hover&-icon&-success': { bg: 'success' },
   // '-selected&-icon&-warn,:hover&-icon&-warn': { bg: 'warn' },
 
-}));
+  ...addColors(),
+
+});
 
 type BaseButtonProps = Omit<Props['button'] & Props['a'], 'onClick'> & {
   onClick?: (e: Event) => void;

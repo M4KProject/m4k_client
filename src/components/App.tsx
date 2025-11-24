@@ -17,7 +17,7 @@ const c = Css('App', {
     bg: 'bg',
     fg: 't',
     fontFamily: 'Roboto',
-    fontSize: '14px',
+    fontSize: '18px',
   },
   '-loading': {
     center: 1,
@@ -25,7 +25,7 @@ const c = Css('App', {
 });
 
 const CompByPage: Partial<Record<Page, Comp>> = {
-  '': DashboardPage,
+  dashboard: DashboardPage,
   // groups: GroupsPage,
   // members: MembersPage,
   // medias: MediasPage,
@@ -37,7 +37,7 @@ const CompByPage: Partial<Record<Page, Comp>> = {
 
 const AppRouter = () => {
   const { page } = useRoute();
-  return comp(CompByPage[page||''] || DashboardPage);
+  return comp(CompByPage[page||'dashboard'] || DashboardPage);
 };
 
 const AppContent = () => {
