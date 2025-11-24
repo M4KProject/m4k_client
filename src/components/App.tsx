@@ -7,6 +7,9 @@ import { EditPage } from '@/components/pages/EditPage';
 import { useRoute, Page } from '@/hooks/useRoute';
 import { Comp, comp } from '@/utils/comp';
 import { DashboardPage } from './pages/DashboardPage';
+import { MembersPage } from './pages/MembersPage';
+import { MediasPage } from './pages/MediasPage';
+import { DevicesPage } from './pages/DevicesPage';
 
 const c = Css('App', {
   '': {
@@ -26,12 +29,9 @@ const c = Css('App', {
 
 const CompByPage: Partial<Record<Page, Comp>> = {
   dashboard: DashboardPage,
-  // groups: GroupsPage,
-  // members: MembersPage,
-  // medias: MediasPage,
-  // jobs: JobsPage,
-  // devices: DevicesPage,
-  // account: AccountPage,
+  members: MembersPage,
+  medias: MediasPage,
+  devices: DevicesPage,
   edit: EditPage,
 };
 

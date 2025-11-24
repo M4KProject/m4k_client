@@ -13,18 +13,16 @@ import { getUrlParams } from 'fluxio';
 
 export type Page =
   | 'dashboard'
-  | 'account'
-  | 'groups'
   | 'members'
   | 'devices'
   | 'medias'
-  | 'jobs'
+  | 'media'
   | 'edit';
 
 export interface Route {
   groupKey?: string;
   page?: Page;
-  id?: string;
+  key?: string;
   isDevice?: boolean;
 }
 
@@ -84,12 +82,12 @@ export class RouteController {
 
     // Reset id if page changes
     if (changes.page && changes.page !== current.page) {
-      route.id = undefined;
+      route.key = undefined;
     }
 
-    const { groupKey, page, id, isDevice } = route;
+    const { groupKey, page, key, isDevice } = route;
     const segments =
-      id ? [groupKey, page, id]
+      key ? [groupKey, page, key]
       : page ? [groupKey, page]
       : groupKey ? [groupKey]
       : [];

@@ -1,11 +1,11 @@
 import { useFlux, useFluxMemo } from '@/hooks/useFlux';
-import { useDeviceKey, useGroupKey, useMediaKey, useIsAdvanced } from '@/router/hooks';
 import { useMemo } from 'preact/hooks';
 import { PbModel, PbWhere } from 'pblite';
 import { GroupModel, MediaModel } from '@/api/models';
 import { Sync } from '@/api/sync';
 import { Api } from '@/api/Api';
 import { useSingleton } from './useSingleton';
+import { useRoute } from './useRoute';
 
 export const useApi = () => useSingleton(Api);
 
@@ -36,9 +36,16 @@ const useById = <T extends PbModel>(sync: Sync<T>, _where?: PbWhere<T>) => useFl
 
 export const useDevice = () => useItemKey(useApi().device, useDeviceKey());
 
-export const useMedia = (key?: string) => useItemKey(useApi().media, key || useMediaKey());
+export const useMedia = (key?: string) => {
+  const { page, key } = useRoute();
+  const mediaId = page === "media" ? key : '';
+  useItemKey(useApi().media, key || mediaId);
+}
 
-export const useGroup = () => useItemKey(useApi().group, useGroupKey());
+export const useGroup = () => {
+  const { groupKey } = useRoute();
+  return useItemKey(useApi().group, groupKey);
+}
 
 export const useGroups = (): GroupModel[] => useItems(useApi().group) as GroupModel[];
 

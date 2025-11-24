@@ -116,10 +116,10 @@ export const Menu = ({ openMenu$, menu, ...props }: MenuProps) => {
               <MenuButton title="Appareils" icon={MonitorIcon} page="devices" />
               <MenuButton title="Bibliothèque" icon={FolderIcon} page="medias" />
               <MenuButton title="Membres" icon={UsersIcon} page="members" />
-              <MenuButton title="Jobs" icon={ZapIcon} page="jobs" />
+              {/* <MenuButton title="Jobs" icon={ZapIcon} page="jobs" /> */}
               <div {...c('Sep')} />
-              <MenuButton title="Mon compte" icon={UserIcon} page="account" />
-              <div {...c('Sep')} />
+              {/* <MenuButton title="Mon compte" icon={UserIcon} page="account" />
+              <div {...c('Sep')} /> */}
             </>
           }
         </div>

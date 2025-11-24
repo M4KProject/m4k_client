@@ -4,6 +4,7 @@ import { DivProps } from '@/components/common/types';
 import { Button } from '@/components/common/Button';
 import { UserIcon, MenuIcon } from 'lucide-react';
 import { useRouteController } from '@/hooks/useRouteController';
+import { useGroup } from '@/hooks/apiHooks';
 
 const c = Css('Toolbar', {
   '': {
@@ -37,24 +38,19 @@ const c = Css('Toolbar', {
   },
 });
 
-// export interface PageActionsProps extends DivProps {}
-// export const PageActions = (props: PageActionsProps) => {
-//   return <div {...props} {...c('Actions', props)} />;
-// };
-
-export interface PageProps extends DivProps {
-  title: string;
-  side?: Comp;
+export interface ToolbarProps extends DivProps {
+  openMenu$: Flux<boolean>
 }
 
-export const Toolbar = ({ title, openMenu$ }: { title: string; openMenu$: Flux<boolean> }) => {
+export const Toolbar = ({ openMenu$ }: ToolbarProps) => {
   const routeController = useRouteController();
+  const group = useGroup();
   return (
     <div {...c('')}>
       <div {...c('Fixed')}>
         <Button icon={MenuIcon} onClick={() => openMenu$.set((prev) => !prev)} />
         <div {...c('Sep')} />
-        <div {...c('Title')}>{comp(title)}</div>
+        <div {...c('Title')}>{group?.name}</div>
         <div {...c('Sep')} />
         <div {...c('Version')}>2.3</div>
         <Button icon={UserIcon} onClick={() => routeController.go({ page: 'dashboard' })} />
