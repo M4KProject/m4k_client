@@ -35,12 +35,7 @@ const cols: GridCols<any> = {
   actions: [
     '',
     (item, { deleteItem }) => (
-      <Button
-        icon={Trash2}
-        color="error"
-        tooltip="Supprimer"
-        onClick={() => deleteItem(item)}
-      />
+      <Button icon={Trash2} color="error" tooltip="Supprimer" onClick={() => deleteItem(item)} />
     ),
   ],
 };

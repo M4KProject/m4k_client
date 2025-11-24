@@ -176,13 +176,9 @@ export const BDataField = () => {
   return <Field label="B" name="box" type="json" value={item} onValue={onValue} col />;
 };
 
-const Sep = () => (
-  <div {...c('Sep')} />
-);
+const Sep = () => <div {...c('Sep')} />;
 
-const Panel = (props: DivProps) => (
-  <div {...props} {...c('Panel', props)} />
-);
+const Panel = (props: DivProps) => <div {...props} {...c('Panel', props)} />;
 
 export const BProps = () => {
   const ctrl = useBController();

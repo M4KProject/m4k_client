@@ -16,7 +16,7 @@ const addColors = () => {
   }
   console.debug('addColors', styles);
   return styles;
-}
+};
 
 const c = Css('Button', {
   '': {
@@ -86,7 +86,6 @@ const c = Css('Button', {
   // '-selected&-icon&-warn,:hover&-icon&-warn': { bg: 'warn' },
 
   ...addColors(),
-
 });
 
 type BaseButtonProps = Omit<Props['button'] & Props['a'], 'onClick'> & {
@@ -98,7 +97,7 @@ export interface ButtonProps extends BaseButtonProps {
   color?: 'default' | 'primary' | 'secondary' | 'success' | 'warn' | 'error';
   variant?: 'upload';
   selected?: boolean;
-  icon?: Comp|true;
+  icon?: Comp | true;
   before?: Comp;
   title?: string;
   link?: boolean;
@@ -117,7 +116,7 @@ export const Button = ({
   tooltip,
   ...props
 }: ButtonProps) => {
-  const isIcon = icon === true || icon && !(children || title);
+  const isIcon = icon === true || (icon && !(children || title));
 
   const clsProps = c(
     '',

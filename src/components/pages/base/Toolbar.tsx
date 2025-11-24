@@ -6,10 +6,10 @@ import { UserIcon, MenuIcon } from 'lucide-react';
 import { useRouteController } from '@/hooks/useRouteController';
 
 const c = Css('Toolbar', {
-    '': {
-        h: 34,
-        w: '100%',
-    },
+  '': {
+    h: 34,
+    w: '100%',
+  },
   Fixed: {
     position: 'fixed',
     xy: 0,
@@ -30,7 +30,7 @@ const c = Css('Toolbar', {
     bold: 1,
   },
   Sep: {
-    flex: 1
+    flex: 1,
   },
   Version: {
     opacity: 0.3,
@@ -47,26 +47,18 @@ export interface PageProps extends DivProps {
   side?: Comp;
 }
 
-export const Toolbar = ({ title, openMenu$ }: { title: string, openMenu$: Flux<boolean> }) => {
+export const Toolbar = ({ title, openMenu$ }: { title: string; openMenu$: Flux<boolean> }) => {
   const routeController = useRouteController();
   return (
     <div {...c('')}>
-        <div {...c('Fixed')}>
-            <Button
-                icon={MenuIcon}
-                onClick={() => openMenu$.set(prev => !prev)}
-            />
-            <div {...c('Sep')} />
-            <div {...c('Title')}>
-                {comp(title)}
-            </div>
-            <div {...c('Sep')} />
-            <div {...c('Version')}>2.3</div>
-            <Button
-                icon={UserIcon}
-                onClick={() => routeController.go({ page: 'dashboard' })}
-            />
-        </div>
+      <div {...c('Fixed')}>
+        <Button icon={MenuIcon} onClick={() => openMenu$.set((prev) => !prev)} />
+        <div {...c('Sep')} />
+        <div {...c('Title')}>{comp(title)}</div>
+        <div {...c('Sep')} />
+        <div {...c('Version')}>2.3</div>
+        <Button icon={UserIcon} onClick={() => routeController.go({ page: 'dashboard' })} />
+      </div>
     </div>
-  )
-}
+  );
+};

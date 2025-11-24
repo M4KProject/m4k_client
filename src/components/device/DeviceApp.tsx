@@ -128,7 +128,5 @@ const DeviceAppContent = () => {
 };
 
 export const DeviceApp = () => {
-  return (
-    <DeviceAppContent />
-  );
+  return <DeviceAppContent />;
 };

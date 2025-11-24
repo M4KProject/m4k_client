@@ -3,7 +3,14 @@ import { useFlux } from '@/hooks/useFlux';
 import { Button, ButtonProps } from '@/components/common/Button';
 import { DivProps } from '@/components/common/types';
 import { comp, Comp } from '@/utils/comp';
-import { LayoutDashboardIcon, MonitorIcon, FolderIcon, UsersIcon, ZapIcon, UserIcon } from 'lucide-react';
+import {
+  LayoutDashboardIcon,
+  MonitorIcon,
+  FolderIcon,
+  UsersIcon,
+  ZapIcon,
+  UserIcon,
+} from 'lucide-react';
 import { useRouteController } from '@/hooks/useRouteController';
 import { useRoute } from '@/hooks/useRoute';
 import { Page } from '@/controllers/RouteController';
@@ -86,7 +93,7 @@ export const MenuButton = ({ tab, page, ...props }: MenuButtonProps) => {
         routeController.go({ page });
       }}
     />
-  )
+  );
 };
 
 export interface MenuProps extends DivProps {
@@ -100,44 +107,21 @@ export const Menu = ({ openMenu$, menu, ...props }: MenuProps) => {
     <div {...props} {...c('', open ? '-open' : '-close', props)}>
       <div {...c('Mask')}>
         <div {...c('Content')}>
-          {isDefined(menu) ? comp(menu) : (
-            <>
-               <div {...c('Sep')} />
-              <MenuButton
-                title="Tableau de bord"
-                icon={LayoutDashboardIcon}
-                page="dashboard"
-              />
-               <div {...c('Sep')} />
-              <MenuButton
-                title="Appareils"
-                icon={MonitorIcon}
-                page="devices"
-              />
-              <MenuButton
-                title="Bibliothèque"
-                icon={FolderIcon}
-                page="medias"
-              />
-              <MenuButton
-                title="Membres"
-                icon={UsersIcon}
-                page="members"
-              />
-              <MenuButton
-                title="Jobs"
-                icon={ZapIcon}
-                page="jobs"
-              />
-               <div {...c('Sep')} />
-              <MenuButton
-                title="Mon compte"
-                icon={UserIcon}
-                page="account"
-              />
-               <div {...c('Sep')} />
+          {isDefined(menu) ?
+            comp(menu)
+          : <>
+              <div {...c('Sep')} />
+              <MenuButton title="Tableau de bord" icon={LayoutDashboardIcon} page="dashboard" />
+              <div {...c('Sep')} />
+              <MenuButton title="Appareils" icon={MonitorIcon} page="devices" />
+              <MenuButton title="Bibliothèque" icon={FolderIcon} page="medias" />
+              <MenuButton title="Membres" icon={UsersIcon} page="members" />
+              <MenuButton title="Jobs" icon={ZapIcon} page="jobs" />
+              <div {...c('Sep')} />
+              <MenuButton title="Mon compte" icon={UserIcon} page="account" />
+              <div {...c('Sep')} />
             </>
-          )}
+          }
         </div>
       </div>
     </div>

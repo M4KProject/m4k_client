@@ -147,16 +147,12 @@ const ColorButton = () => {
 
   const openPicker = () => {
     if (!ref.current) return;
-    showWindow(
-      'Couleur',
-      <ColorPickerContent value={value} onChange={onChange} />,
-      {
-        target: ref.current,
-        w: 300,
-        h: 400,
-        min: [250, 300],
-      }
-    );
+    showWindow('Couleur', <ColorPickerContent value={value} onChange={onChange} />, {
+      target: ref.current,
+      w: 300,
+      h: 400,
+      min: [250, 300],
+    });
   };
 
   const color = value || '#ccc';

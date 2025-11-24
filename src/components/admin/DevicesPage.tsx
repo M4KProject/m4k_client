@@ -48,10 +48,7 @@ const deviceCols: GridCols<
     'Type',
     (d) => (
       <Button tooltip={() => humanize(d.info)}>
-        <Field
-          value={`${d.info?.type || ''} ${d.info?.version || ''}`}
-          readonly
-        />
+        <Field value={`${d.info?.type || ''} ${d.info?.version || ''}`} readonly />
       </Button>
     ),
     { if: (_col, ctx) => !!ctx.isAdvanced },
@@ -65,11 +62,7 @@ const deviceCols: GridCols<
     'Online',
     (d, ctx) => (
       <Button tooltip={formatDateTime(toDate(d.online))}>
-        <Field
-          type="switch"
-          value={d.online && toTime(d.online) > ctx.onlineMin}
-          readonly
-        />
+        <Field type="switch" value={d.online && toTime(d.online) > ctx.onlineMin} readonly />
       </Button>
     ),
   ],

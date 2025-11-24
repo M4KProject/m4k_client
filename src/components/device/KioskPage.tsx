@@ -2,7 +2,14 @@ import { Css } from 'fluxio';
 import { toNumber } from 'fluxio';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { openCodePinDialog } from '@/components/device/CodePinView';
-import { bgColor$, itemAnim$, itemDurationMs$, itemFit$, playlist$, url$ } from '@/controllers/deviceMessages';
+import {
+  bgColor$,
+  itemAnim$,
+  itemDurationMs$,
+  itemFit$,
+  playlist$,
+  url$,
+} from '@/controllers/deviceMessages';
 import { bridge } from '@/bridge';
 import { logger } from 'fluxio';
 import { KioskVideo } from '@/components/device/KioskVideo';

@@ -376,10 +376,7 @@ export interface Bridge {
   log: Logger;
 }
 
-export type BridgeAsyncMethods = keyof Omit<
-  Bridge,
-  'isInterface' | 'app' | 'global' | 'log'
->;
+export type BridgeAsyncMethods = keyof Omit<Bridge, 'isInterface' | 'app' | 'global' | 'log'>;
 
 export type BridgeMethodAsyncOrSync<T> =
   T extends (...args: infer A) => Promise<infer R> ? (...args: A) => Promise<R> | R : T;

@@ -21,14 +21,12 @@ const c = Css('Panel', {
   'Header svg': {
     mx: 8,
   },
-  Content: {
-
-  },
+  Content: {},
 });
 
 export interface PanelProps extends DivProps {
-    icon: Comp;
-    title: string;
+  icon: Comp;
+  title: string;
 }
 
 export const Panel = ({ icon, title, children, ...props }: PanelProps) => {
@@ -38,9 +36,7 @@ export const Panel = ({ icon, title, children, ...props }: PanelProps) => {
         {comp(icon)}
         {title}
       </div>
-      <div {...c('Content')}>
-        {children}
-      </div>
+      <div {...c('Content')}>{children}</div>
     </div>
-  )
+  );
 };

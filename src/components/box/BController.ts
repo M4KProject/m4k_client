@@ -252,7 +252,7 @@ export class BController {
   getSelectIndex() {
     return this.select$.get()?.i;
   }
-  
+
   getData(index?: number) {
     return toData(this.get(index));
   }

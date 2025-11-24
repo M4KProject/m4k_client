@@ -93,7 +93,12 @@ export const AccountPanel = () => {
           onClick={handleUpdatePassword}
           icon={KeyRound}
         />
-        <Button color="secondary" title="Deconnexion" icon={LogOut} onClick={() => api.pb.logout()} />
+        <Button
+          color="secondary"
+          title="Deconnexion"
+          icon={LogOut}
+          onClick={() => api.pb.logout()}
+        />
       </Form>
     </Panel>
   );

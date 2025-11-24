@@ -220,7 +220,6 @@ export class DeviceController {
   }
 }
 
-
 // import { m4k } from "@common/m4k";
 // import supabase from "./supabase";
 // import { uuid } from "fluxio";

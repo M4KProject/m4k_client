@@ -27,9 +27,7 @@ const c = Css('GroupPanel', {
     m: 16,
     col: ['center', 'center'],
   },
-  'Group-selected': {
-
-  },
+  'Group-selected': {},
   AddButton: {
     m: 8,
   },
@@ -156,49 +154,49 @@ export const GroupPanel = () => {
       await api.member.create({ user: auth.id, group: group.id, role });
     }
   };
-  
+
   return (
     <Panel icon={UsersIcon} title="Mes Groups" {...c('')}>
       <div {...c('Groups')}>
-        {groups.map(group => (
+        {groups.map((group) => (
           <Button
             {...c('GroupButton')}
             selected={group.key === groupKey}
             onClick={() => routeController.go({ groupKey: group.key })}
           >
             <div {...c('GroupButtonContent')}>
-             <Field
-              label="Clé"
-               value={group.key}
-               onValue={(key) => {
-                 api.group.update(group.id, { key });
-               }}
-             />
-             <Field
-              label="Nom"
-               value={group.name}
-               onValue={(name) => {
-                 api.group.update(group.id, { name });
-               }}
-             />
-             <Field
-               type="color"
-               value={group.data?.primary}
-               onValue={(primary) => {
-                 api.group.apply(group.id, (prev) => {
-                   prev.data = { ...prev.data, primary };
-                 });
-               }}
-             />
-             <Field
-               type="color"
-               value={group.data?.secondary}
-               onValue={(secondary) => {
-                 api.group.apply(group.id, (prev) => {
-                   prev.data = { ...prev.data, secondary };
-                 });
-               }}
-             />
+              <Field
+                label="Clé"
+                value={group.key}
+                onValue={(key) => {
+                  api.group.update(group.id, { key });
+                }}
+              />
+              <Field
+                label="Nom"
+                value={group.name}
+                onValue={(name) => {
+                  api.group.update(group.id, { name });
+                }}
+              />
+              <Field
+                type="color"
+                value={group.data?.primary}
+                onValue={(primary) => {
+                  api.group.apply(group.id, (prev) => {
+                    prev.data = { ...prev.data, primary };
+                  });
+                }}
+              />
+              <Field
+                type="color"
+                value={group.data?.secondary}
+                onValue={(secondary) => {
+                  api.group.apply(group.id, (prev) => {
+                    prev.data = { ...prev.data, secondary };
+                  });
+                }}
+              />
             </div>
           </Button>
         ))}
@@ -212,4 +210,4 @@ export const GroupPanel = () => {
       {/* <GroupGrid /> */}
     </Panel>
   );
-}
+};

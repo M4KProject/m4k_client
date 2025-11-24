@@ -86,11 +86,7 @@ export const MediasPage = () => {
         </Button> */}
 
         {type === 'playlist' && (
-          <Button
-            icon={MapPlus}
-            tooltip="Créer une playlist"
-            onClick={() => addPlaylist(api)}
-          >
+          <Button icon={MapPlus} tooltip="Créer une playlist" onClick={() => addPlaylist(api)}>
             Crée une Playlist
           </Button>
         )}

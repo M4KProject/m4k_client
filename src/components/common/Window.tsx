@@ -8,7 +8,15 @@ import { X } from 'lucide-react';
 import { Button } from './Button';
 
 type ResizeDir = [number, number, number, number]; // [xDir, yDir, wDir, hDir]
-type EdgeStyle = { cursor: string; top?: string; left?: string; right?: string; bottom?: string; width?: string; height?: string };
+type EdgeStyle = {
+  cursor: string;
+  top?: string;
+  left?: string;
+  right?: string;
+  bottom?: string;
+  width?: string;
+  height?: string;
+};
 
 const S = 8; // edge hit size
 const H = 0.5;
@@ -36,12 +44,24 @@ const edges: [string, ResizeDir, EdgeStyle][] = EDGES.map(([name, dir, [top, lef
     {
       cursor,
       position: 'absolute',
-      top: top === 'auto' ? 'auto' : typeof top === 'number' ? `${top * 100}%` : top,
-      left: left === 'auto' ? 'auto' : typeof left === 'number' ? `${left * 100}%` : left,
+      top:
+        top === 'auto' ? 'auto'
+        : typeof top === 'number' ? `${top * 100}%`
+        : top,
+      left:
+        left === 'auto' ? 'auto'
+        : typeof left === 'number' ? `${left * 100}%`
+        : left,
       right: left === 'auto' ? '0' : undefined,
       bottom: top === 'auto' ? '0' : undefined,
-      width: isCorner ? `${S}px` : isVertical ? `calc(100% - ${S * 2}px)` : `${S}px`,
-      height: isCorner ? `${S}px` : isHorizontal ? `calc(100% - ${S * 2}px)` : `${S}px`,
+      width:
+        isCorner ? `${S}px`
+        : isVertical ? `calc(100% - ${S * 2}px)`
+        : `${S}px`,
+      height:
+        isCorner ? `${S}px`
+        : isHorizontal ? `calc(100% - ${S * 2}px)`
+        : `${S}px`,
       marginTop: isCorner || isVertical ? `-${S / 2}px` : undefined,
       marginLeft: isCorner || isHorizontal ? `-${S / 2}px` : undefined,
     } as EdgeStyle,
@@ -63,7 +83,14 @@ class WindowController {
   private startPos = { x: 0, y: 0 };
   private startSize = { w: 0, h: 0 };
 
-  init(options: { w?: number; h?: number; min?: [number, number]; max?: [number, number]; draggable?: boolean; resizable?: boolean }) {
+  init(options: {
+    w?: number;
+    h?: number;
+    min?: [number, number];
+    max?: [number, number];
+    draggable?: boolean;
+    resizable?: boolean;
+  }) {
     if (options.w) this.size$.set({ ...this.size$.get(), w: options.w });
     if (options.h) this.size$.set({ ...this.size$.get(), h: options.h });
     if (options.min) this.min = options.min;

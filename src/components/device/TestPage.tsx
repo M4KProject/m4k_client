@@ -76,7 +76,10 @@ const initTests = (): TestData[] => {
   return [
     t('js1', () => bridge.evalJs('1+1'), { success: true, value: 2 }),
     t('js2', () => bridge.evalJs('"abc" + "def"'), { success: true, value: 'abcdef' }),
-    t('js3', () => bridge.evalJs('Promise.resolve({ ok: 1 })'), { success: true, value: { ok: 1 } }),
+    t('js3', () => bridge.evalJs('Promise.resolve({ ok: 1 })'), {
+      success: true,
+      value: { ok: 1 },
+    }),
     t('js4', () => bridge.evalJs('() => { throw new Error("test") }'), {
       success: false,
       error: 'Error: test',

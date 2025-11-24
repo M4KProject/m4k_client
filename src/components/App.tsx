@@ -37,7 +37,7 @@ const CompByPage: Partial<Record<Page, Comp>> = {
 
 const AppRouter = () => {
   const { page } = useRoute();
-  return comp(CompByPage[page||'dashboard'] || DashboardPage);
+  return comp(CompByPage[page || 'dashboard'] || DashboardPage);
 };
 
 const AppContent = () => {
@@ -87,7 +87,7 @@ export const App = () => {
     addFont('Roboto');
     refreshTheme();
   }, []);
-  
+
   return (
     <div id="app" {...c('')}>
       {/* <AppSync /> */}

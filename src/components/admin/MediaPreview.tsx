@@ -12,7 +12,6 @@ const c = Css('MediaPreview', {
     bgMode: 'contain',
   },
 
-
   Video: {
     w: 200,
   },
@@ -42,8 +41,8 @@ export const MediaPreview = ({ media }: { media?: MediaModel }) => {
     <Button
       {...c()}
       icon
-      tooltip={() => (
-        videos.length ? (
+      tooltip={() =>
+        videos.length ?
           <video
             {...c('Video')}
             controls={false}
@@ -61,23 +60,18 @@ export const MediaPreview = ({ media }: { media?: MediaModel }) => {
               <source key={i} type={v.mime} src={api.getMediaUrl(v)} />
             ))}
           </video>
-        ) : (
-          <div
+        : <div
             {...c('Image')}
             style={{
               backgroundImage: `url('${api.getMediaUrl(images[0], 360)}')`,
             }}
           />
-        )
-      )}
+      }
       style={{
         backgroundImage: `url('${api.getMediaUrl(images[0], 360)}')`,
       }}
     />
   );
-
-
-
 
   //   <Popover id={overId} {...c()} title={media.title}>
   //     {isOver && videos.length ?

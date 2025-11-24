@@ -61,7 +61,7 @@ const addRect = (ctrl: BController) => {
     s: { bg: randColor() },
     p: ctrl.select$.get()?.i,
   });
-}
+};
 
 const bRemove = async (ctrl: BController) => {
   const index = ctrl.getSelectIndex();
@@ -108,34 +108,39 @@ export const BButtons = () => {
 
   const hasSelect = isUInt(selectIndex);
 
-  useEffect(() => onHtmlEvent(0, 'keydown', e => {
-    const key =
-      ((e.ctrlKey ? "ctrl+" : "") +
-      (e.metaKey ? "meta+" : "") +
-      (e.shiftKey ? "shift+" : "") +
-      (e.altKey ? "alt+" : "") +
-      e.key).toLowerCase();
-      
-    console.debug('keydown', e.metaKey, key, e);
+  useEffect(
+    () =>
+      onHtmlEvent(0, 'keydown', (e) => {
+        const key = (
+          (e.ctrlKey ? 'ctrl+' : '') +
+          (e.metaKey ? 'meta+' : '') +
+          (e.shiftKey ? 'shift+' : '') +
+          (e.altKey ? 'alt+' : '') +
+          e.key
+        ).toLowerCase();
 
-    switch (key) {
-      case "ctrl+x":
-      case "meta+x":
-        bCut(ctrl);
-        break;
-      case "ctrl+c":
-      case "meta+c":
-        bCopy(ctrl);
-        break;
-      case "ctrl+v":
-      case "meta+v":
-        bPaste(ctrl);
-        break;
-      case "backspace":
-        bRemove(ctrl);
-        break;
-    }
-  }), []);
+        console.debug('keydown', e.metaKey, key, e);
+
+        switch (key) {
+          case 'ctrl+x':
+          case 'meta+x':
+            bCut(ctrl);
+            break;
+          case 'ctrl+c':
+          case 'meta+c':
+            bCopy(ctrl);
+            break;
+          case 'ctrl+v':
+          case 'meta+v':
+            bPaste(ctrl);
+            break;
+          case 'backspace':
+            bRemove(ctrl);
+            break;
+        }
+      }),
+    []
+  );
 
   return (
     <div {...c()}>
@@ -161,11 +166,7 @@ export const BButtons = () => {
         <>
           <BButton icon={ClipboardX} onClick={() => bCut(ctrl)} tooltip="Couper" />
           <BButton icon={ClipboardCopy} onClick={() => bCopy(ctrl)} tooltip="Copier" />
-          <BButton
-            icon={ClipboardPaste}
-            onClick={() => bPaste(ctrl)}
-            tooltip="Coller"
-          />
+          <BButton icon={ClipboardPaste} onClick={() => bPaste(ctrl)} tooltip="Coller" />
         </>
       )}
       <div {...c('Sep')} />

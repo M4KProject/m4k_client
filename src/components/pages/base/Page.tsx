@@ -51,12 +51,10 @@ export const Page = ({ title, menu, children, ...props }: PageProps) => {
       <Toolbar title={title} openMenu$={openMenu$} />
       <div {...c('Body')}>
         <Menu openMenu$={openMenu$} menu={menu} />
-        <div {...c('Content', props)}>
-          {children}
-        </div>
+        <div {...c('Content', props)}>{children}</div>
       </div>
     </div>
-  )
+  );
 };
 
 // export const PageSection = (props: DivProps) => <div {...props} {...c('Section', props)} />;

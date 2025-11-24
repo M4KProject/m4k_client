@@ -53,23 +53,24 @@ export const Tooltip = ({ target, children, ...props }: TooltipProps) => {
   return (
     <div {...props} {...c('', `-${pos}`, props)} style={{ top, left, width, height }}>
       <div {...c('Arrow')} />
-      <div {...c('Content')}>
-        {comp(children)}
-      </div>
+      <div {...c('Content')}>{comp(children)}</div>
     </div>
   );
 };
 
-const createTooltip = (eventOrTarget: Event|HTMLElement, content: Comp) => {
-  const target = eventOrTarget instanceof Event ? (eventOrTarget.currentTarget || eventOrTarget.target) as HTMLElement : eventOrTarget;
+const createTooltip = (eventOrTarget: Event | HTMLElement, content: Comp) => {
+  const target =
+    eventOrTarget instanceof Event ?
+      ((eventOrTarget.currentTarget || eventOrTarget.target) as HTMLElement)
+    : eventOrTarget;
   if (!(target instanceof HTMLElement)) return;
-  
+
   const disposes: Unsubscribe[] = [];
 
   const dispose = () => {
     for (const d of disposes) d();
     disposes.length = 0;
-  }
+  };
 
   const interval = setInterval(() => {
     if (!target.isConnected) {
@@ -82,7 +83,7 @@ const createTooltip = (eventOrTarget: Event|HTMLElement, content: Comp) => {
   disposes.push(onHtmlEvent(0, 'click', dispose));
 
   disposes.push(portal(<Tooltip target={target}>{content}</Tooltip>));
-}
+};
 
 export const tooltipProps = (content: Comp) => {
   return {

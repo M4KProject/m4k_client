@@ -1,7 +1,25 @@
-import { createUrl, flux, fluxStored, glb, isBoolean, isString, isStringValid, logger, onEvent } from 'fluxio';
+import {
+  createUrl,
+  flux,
+  fluxStored,
+  glb,
+  isBoolean,
+  isString,
+  isStringValid,
+  logger,
+  onEvent,
+} from 'fluxio';
 import { getUrlParams } from 'fluxio';
 
-export type Page = 'dashboard' | 'account' | 'groups' | 'members' | 'devices' | 'medias' | 'jobs' | 'edit';
+export type Page =
+  | 'dashboard'
+  | 'account'
+  | 'groups'
+  | 'members'
+  | 'devices'
+  | 'medias'
+  | 'jobs'
+  | 'edit';
 
 export interface Route {
   groupKey?: string;
@@ -13,7 +31,7 @@ export interface Route {
 export class RouteController {
   log = logger('Route');
   url$ = flux('');
-  route$ = this.url$.map(url => this.parse(url));
+  route$ = this.url$.map((url) => this.parse(url));
   groupKey$ = fluxStored<string>('groupKey', 'demo', isString);
   isDevice$ = fluxStored<boolean>('isDevice', false, isBoolean);
 
@@ -28,7 +46,7 @@ export class RouteController {
   private parse = (url: string): Route => {
     const params = getUrlParams(url);
     const path = params.path;
-    const segments = (path||'').split('/').filter(s => s);
+    const segments = (path || '').split('/').filter((s) => s);
     const [groupKey, page, id] = segments;
     const isDevice = !!(params.d || params.device);
 
@@ -71,10 +89,10 @@ export class RouteController {
 
     const { groupKey, page, id, isDevice } = route;
     const segments =
-      id ? [groupKey, page, id] :
-      page ? [groupKey, page] :
-      groupKey ? [groupKey] :
-      [];
+      id ? [groupKey, page, id]
+      : page ? [groupKey, page]
+      : groupKey ? [groupKey]
+      : [];
     const path = `/${segments.join('/')}`;
 
     console.debug('go path', path);
@@ -86,10 +104,10 @@ export class RouteController {
     this.log.d('go url', url);
 
     this.goUrl(url);
-  };
+  }
 
   back() {
     this.log.d('back');
     glb.history?.back();
-  };
+  }
 }
