@@ -6,14 +6,14 @@ import { addFont } from '@/utils/addFont';
 import { EditPage } from '@/components/pages/EditPage';
 import { useIsKiosk, useRoute } from '@/hooks/useRoute';
 import { Comp, comp } from '@/utils/comp';
-import { DashboardPage } from './pages/DashboardPage';
-import { MembersPage } from './pages/MembersPage';
-import { MediasPage } from './pages/MediasPage';
-import { DevicesPage } from './pages/DevicesPage';
+import { DashboardPage } from '@/components/pages/DashboardPage';
+import { MembersPage } from '@/components/pages/MembersPage';
+import { MediasPage } from '@/components/pages/MediasPage';
+import { DevicesPage } from '@/components/pages/DevicesPage';
+import { KioskPage } from '@/components/pages/KioskPage';
+import { AuthPage } from '@/components/pages/AuthPage';
 import { useAuth } from '@/hooks/useApi';
 import { RoutePage } from '@/controllers/Router';
-import { KioskPage } from './pages/KioskPage';
-import { AuthPage } from './pages/AuthPage';
 
 const c = Css('App', {
   '': {

@@ -1,5 +1,5 @@
 import { Css } from 'fluxio';
-import { byId, groupBy, sortItems, fluxDictionary, isUFloat } from 'fluxio';
+import { byId, sortItems, fluxDictionary, isUFloat } from 'fluxio';
 import { JobGrid } from '@/components/admin/JobGrid';
 import { selectedById$ } from '@/controllers/selected';
 import { useApi, useGroupMedias } from '@/hooks/useApi';
@@ -7,8 +7,6 @@ import { useIsAdvanced } from '@/router/hooks';
 import { Dictionary, round } from 'fluxio';
 import { Trash2, FolderInput, PlusSquare, Edit, Eye, Download } from 'lucide-react';
 import { SelectedField } from '@/components/admin/SelectedField';
-import { MediaPreview } from './MediaPreview';
-import { MediaIcon } from './MediaIcon';
 import { updateRoute } from '@/router/setters';
 import { useMemo } from 'preact/hooks';
 import { addTr } from '@/hooks/useTr';
@@ -19,6 +17,8 @@ import { Button } from '@/components/common/Button';
 import { useFlux } from '@/hooks/useFlux';
 import { Api } from '@/api/Api';
 import { updatePlaylist } from '@/controllers/media';
+import { MediaIcon } from '../medias/MediaIcon';
+import { MediaPreview } from '../medias/MediaPreview';
 
 addTr({
   pending: 'en attente',
@@ -28,13 +28,13 @@ addTr({
   success: 'succès',
 });
 
-const c = Css('MediaTable', {
+const c = Css('MediasGridPanel', {
   Actions: {
     row: ['center', 'end'],
   },
 });
 
-interface MediaGridCtx {
+interface MediasGridContext {
   api: Api;
   isAdvanced: boolean;
   selectedIds: string[];
@@ -44,7 +44,7 @@ interface MediaGridCtx {
   getChildren: (id: string) => MediaModel[];
 }
 
-const cols: GridCols<MediaModel, MediaGridCtx> = {
+const cols: GridCols<MediaModel, MediasGridContext> = {
   select: ['', ({ id }) => <SelectedField id={id} />, { w: 30 }],
   title: [
     'Titre',
@@ -184,29 +184,14 @@ const cols: GridCols<MediaModel, MediaGridCtx> = {
 
 const openById$ = fluxDictionary<boolean>();
 
-export const getMediasByParent = (medias: MediaModel[]) => {
-  const mediaById = byId(medias);
-  const mediasByParent = groupBy(medias, (m) => m.parent || '');
-  const rootMedias = mediasByParent[''] || (mediasByParent[''] = []);
-  for (const parentId in mediasByParent) {
-    if (parentId) {
-      const parent = mediaById[parentId];
-      if (!parent && mediasByParent[parentId]) {
-        rootMedias.push(...mediasByParent[parentId]!);
-      }
-    }
-  }
-  return mediasByParent;
-};
-
-export const MediaGrid = ({ type }: { type?: MediaModel['type'] }) => {
+export const MediasGridPanel = ({ type }: { type?: MediaModel['type'] }) => {
   const api = useApi();
   const medias = useGroupMedias(type);
   const openById = useFlux(openById$);
   const isAdvanced = useIsAdvanced();
   const allSelectedById = useFlux(selectedById$);
   const mediaById = byId(medias);
-  const mediasByParent = useMemo(() => getMediasByParent(medias), [medias]);
+  const mediasByParent = useMemo(() => api.getMediasByParent(medias), [medias]);
   const selectedIds = Object.keys(allSelectedById).filter((id) => id && mediaById[id]);
 
   const tabById: Dictionary<number> = {};
@@ -228,7 +213,7 @@ export const MediaGrid = ({ type }: { type?: MediaModel['type'] }) => {
   };
   deep(rootMedias, 0);
 
-  const ctx: MediaGridCtx = {
+  const ctx: MediasGridContext = {
     api,
     isAdvanced: !!isAdvanced,
     selectedIds,

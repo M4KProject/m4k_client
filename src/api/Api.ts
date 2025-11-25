@@ -10,7 +10,7 @@ import {
   MemberModel,
   UserModel,
 } from './models';
-import { Dictionary, fluxStored, getExt, isString, logger, removeAccents, toError } from 'fluxio';
+import { byId, Dictionary, fluxStored, getExt, groupBy, isString, logger, removeAccents, toError } from 'fluxio';
 import { setUrlParams } from 'fluxio';
 import { isStringValid } from 'fluxio';
 import { app } from '@/app';
@@ -130,5 +130,20 @@ export class Api {
     const filename =
       removeAccents(media.title || String(media.source) || media.id).trim() + '.' + ext;
     startDownload(url, filename);
+  }
+
+  getMediasByParent(medias: MediaModel[]) {
+    const mediaById = byId(medias);
+    const mediasByParent = groupBy(medias, (m) => m.parent || '');
+    const rootMedias = mediasByParent[''] || (mediasByParent[''] = []);
+    for (const parentId in mediasByParent) {
+      if (parentId) {
+        const parent = mediaById[parentId];
+        if (!parent && mediasByParent[parentId]) {
+          rootMedias.push(...mediasByParent[parentId]!);
+        }
+      }
+    }
+    return mediasByParent;
   }
 }

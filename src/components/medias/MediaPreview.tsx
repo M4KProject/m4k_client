@@ -1,7 +1,4 @@
 import { Css } from 'fluxio';
-import { uuid } from 'fluxio';
-import { useMemo } from 'preact/hooks';
-import { Popover, useIsOver } from './Popover';
 import { MediaModel } from '@/api/models';
 import { useApi } from '@/hooks/useApi';
 import { Button } from '@/components/common/Button';
@@ -29,11 +26,9 @@ const c = Css('MediaPreview', {
 
 export const MediaPreview = ({ media }: { media?: MediaModel }) => {
   const api = useApi();
-  const overId = useMemo(uuid, []);
   const variants = api.getVariants(media);
   const images = variants.filter((v) => v.type === 'image');
   const videos = variants.filter((v) => v.type === 'video');
-  const isOver = useIsOver(overId);
 
   if (!media) return null;
 
