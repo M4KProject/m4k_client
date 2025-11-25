@@ -2,7 +2,7 @@ import { Css, Flux } from 'fluxio';
 import { DivProps } from '@/components/common/types';
 import { Button } from '@/components/common/Button';
 import { UserIcon, MenuIcon } from 'lucide-react';
-import { useRouteController } from '@/hooks/useRoute';
+import { useRouter } from '@/hooks/useRoute';
 import { useGroup } from '@/hooks/useApi';
 
 const c = Css('Toolbar', {
@@ -42,7 +42,7 @@ export interface ToolbarProps extends DivProps {
 }
 
 export const Toolbar = ({ openMenu$ }: ToolbarProps) => {
-  const routeController = useRouteController();
+  const routeController = useRouter();
   const group = useGroup();
   return (
     <div {...c('')}>

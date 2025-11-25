@@ -4,7 +4,7 @@ import { Field } from '@/components/fields/Field';
 import { Button } from '@/components/common/Button';
 import { Panel } from './base/Panel';
 import { Css } from 'fluxio';
-import { useRouteController, useGroupKey } from '@/hooks/useRoute';
+import { useRouter, useGroupKey } from '@/hooks/useRoute';
 import { Role } from '@/api/models';
 
 const c = Css('GroupPanel', {
@@ -142,7 +142,7 @@ export const GroupPanel = () => {
   const api = useApi();
   const groups = useGroups();
   const groupKey = useGroupKey();
-  const routeController = useRouteController();
+  const routeController = useRouter();
 
   const handleAdd = async () => {
     const auth = api.pb.getAuth();

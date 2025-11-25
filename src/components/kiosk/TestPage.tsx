@@ -6,10 +6,10 @@ import { GridCols } from '@/components/common/Grid';
 import { Button } from '@/components/common/Button';
 import { useConstant } from '@/hooks/useConstant';
 import { useAsyncEffect } from '@/hooks/useAsyncEffect';
-import { Page, PageBody } from '@/components/common/Page';
-import { Toolbar } from '@/components/common/Toolbar';
 import { Form } from '@/components/common/Form';
 import { Field } from '@/components/fields/Field';
+import { Page } from '../pages/base/Page';
+import { Panel } from '../panels/base/Panel';
 
 const log = logger('TestPage');
 
@@ -235,8 +235,7 @@ export const TestPage = () => {
 
   return (
     <Page>
-      <Toolbar title="Test des fonctions" />
-      <PageBody>
+      <Panel icon={null} title="Test des fonctions">
         <Form>
           <Field label="Script" required type="multiline" value={script} onValue={setScript} />
           <Field
@@ -275,7 +274,7 @@ export const TestPage = () => {
           }}
           items={tests}
         />
-      </PageBody>
+      </Panel>
     </Page>
   );
 };

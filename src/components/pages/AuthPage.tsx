@@ -7,7 +7,7 @@ import { Apps } from '@/components/admin/Apps';
 import { isDevice$ } from '@/router';
 import { AuthForm } from '@/components/panels/AuthForm';
 import { Button } from '@/components/common/Button';
-import { useRouteController } from '@/hooks/useRoute';
+import { useRouter } from '@/hooks/useRoute';
 
 const c = Css('AuthPage', {
   '': {
@@ -51,7 +51,7 @@ const c = Css('AuthPage', {
 });
 
 export const AuthPage = () => {
-  const routeController = useRouteController();
+  const routeController = useRouter();
   const [showApplications, setShowApplications] = useState(false);
 
   return (

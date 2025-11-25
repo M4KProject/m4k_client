@@ -1,9 +1,9 @@
 import { useEffect, useRef } from 'preact/hooks';
 import { logger } from 'fluxio';
 import { Css } from 'fluxio';
-import { hasVideoMuted$ } from '@/controllers/deviceMessages';
 import { useFlux } from '@/hooks/useFlux';
 import { useConstant } from '@/hooks/useConstant';
+import { useKiosk } from '@/hooks/useKiosk';
 
 const log = logger('KioskVideo');
 
@@ -20,9 +20,10 @@ export const KioskVideo = ({
   isCurr: boolean;
   onNext: () => void;
 }) => {
+  const kiosk = useKiosk();
   const ref = useRef<HTMLVideoElement>(null);
   const el = ref.current;
-  const hasVideoMuted = useFlux(hasVideoMuted$);
+  const hasVideoMuted = useFlux(kiosk.hasVideoMuted$);
 
   const tryPlay = () => {
     if (el && el.paused && !el.ended && v.isCurr) {

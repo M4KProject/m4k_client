@@ -1,6 +1,6 @@
 import { Loading } from '@/components/common/Loading';
-import { Page } from '@/components/common/Page';
 import { Css } from 'fluxio';
+import { Page } from '../pages/base/Page';
 
 const c = Css('LoadingPage', {
   '': {

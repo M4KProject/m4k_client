@@ -11,7 +11,7 @@ import { MembersPage } from './pages/MembersPage';
 import { MediasPage } from './pages/MediasPage';
 import { DevicesPage } from './pages/DevicesPage';
 import { useAuth } from '@/hooks/useApi';
-import { Page } from '@/controllers/RouteController';
+import { RoutePage } from '@/controllers/Router';
 import { KioskPage } from './pages/KioskPage';
 import { AuthPage } from './pages/AuthPage';
 
@@ -31,7 +31,7 @@ const c = Css('App', {
   },
 });
 
-const CompByPage: Partial<Record<Page, Comp>> = {
+const CompByPage: Partial<Record<RoutePage, Comp>> = {
   dashboard: DashboardPage,
   members: MembersPage,
   medias: MediasPage,

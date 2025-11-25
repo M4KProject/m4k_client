@@ -9,9 +9,9 @@ import {
   FolderIcon,
   UsersIcon,
 } from 'lucide-react';
-import { useRouteController } from '@/hooks/useRoute';
+import { useRouter } from '@/hooks/useRoute';
 import { useRoute } from '@/hooks/useRoute';
-import { Page } from '@/controllers/RouteController';
+import { RoutePage } from '@/controllers/Router';
 
 export const MENU_MIN = 32;
 export const MENU_OPEN = 180;
@@ -74,11 +74,15 @@ const c = Css('Menu', {
 
 export interface MenuButtonProps extends ButtonProps {
   tab?: boolean;
-  page?: Page;
+  page?: RoutePage;
 }
 
+export const MenuSep = () => (
+  <div {...c('Sep')} />
+);
+
 export const MenuButton = ({ tab, page, ...props }: MenuButtonProps) => {
-  const routeController = useRouteController();
+  const routeController = useRouter();
   const route = useRoute();
   const selected = page === route.page;
   console.debug('MenuButton', { tab, page, routePage: route.page, selected });
@@ -108,16 +112,16 @@ export const Menu = ({ openMenu$, menu, ...props }: MenuProps) => {
           {isDefined(menu) ?
             comp(menu)
           : <>
-              <div {...c('Sep')} />
+              <MenuSep />
               <MenuButton title="Tableau de bord" icon={LayoutDashboardIcon} page="dashboard" />
-              <div {...c('Sep')} />
+              <MenuSep />
               <MenuButton title="Appareils" icon={MonitorIcon} page="devices" />
               <MenuButton title="Bibliothèque" icon={FolderIcon} page="medias" />
               <MenuButton title="Membres" icon={UsersIcon} page="members" />
               {/* <MenuButton title="Jobs" icon={ZapIcon} page="jobs" /> */}
-              <div {...c('Sep')} />
+              <MenuSep />
               {/* <MenuButton title="Mon compte" icon={UserIcon} page="account" />
-              <div {...c('Sep')} /> */}
+              <MenuSep /> */}
             </>
           }
         </div>

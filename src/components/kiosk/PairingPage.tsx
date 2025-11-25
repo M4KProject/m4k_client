@@ -1,11 +1,9 @@
 import { Css } from 'fluxio';
-import { page$ } from '@/controllers/page$';
-import { offlineMode$ } from '@/controllers/deviceMessages';
 import { Branding } from '@/components/kiosk/Branding';
 import { useFlux } from '@/hooks/useFlux';
 import { LoadingSpinner } from '@/components/common/Loading';
 import { Button } from '@/components/common/Button';
-import { useDeviceController } from '@/hooks/useDeviceController';
+import { useKiosk } from '@/hooks/useKiosk';
 
 const c = Css('PairingPage', {
   '': {
@@ -53,8 +51,8 @@ const c = Css('PairingPage', {
 });
 
 export const PairingPage = () => {
-  const deviceCtrl = useDeviceController();
-  const device = useFlux(deviceCtrl.device$);
+  const kiosk = useKiosk();
+  const device = useFlux(kiosk.device$);
   const pairingCode = device?.key || device?.id || 'Chargement...';
 
   return (
@@ -71,8 +69,8 @@ export const PairingPage = () => {
             title="Mode Offline"
             color="secondary"
             onClick={() => {
-              offlineMode$.set(true);
-              page$.set('kiosk');
+              kiosk.offlineMode$.set(true);
+              kiosk.page$.set('kiosk');
             }}
           />
         </div>

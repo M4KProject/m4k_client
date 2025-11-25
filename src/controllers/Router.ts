@@ -14,17 +14,17 @@ import {
 } from 'fluxio';
 import { getUrlParams } from 'fluxio';
 
-export type Page = '' | 'dashboard' | 'members' | 'devices' | 'medias' | 'edit' | 'view';
+export type RoutePage = '' | 'dashboard' | 'members' | 'devices' | 'medias' | 'edit' | 'view';
 
 export interface Route {
   group?: string;
-  page?: Page;
+  page?: RoutePage;
   media?: string;
   device?: string;
 }
 
-export class RouteController {
-  log = logger('Route');
+export class Router {
+  log = logger('Router');
 
   url$ = flux('');
   route$ = flux<Route>({});
@@ -45,7 +45,7 @@ export class RouteController {
       const s = (p.path || '').split('/').filter((s) => s);
 
       const group = p.group || s[0] || this.group$.get();
-      const page = p.page as Page || s[1] as Page || this.page$.get();
+      const page = p.page as RoutePage || s[1] as RoutePage || this.page$.get();
       const media = p.media || s[2] || this.media$.get();
 
       if (isDefined(p.kiosk)) this.isKiosk$.set(isEmpty(p.kiosk) || toBoolean(p.kiosk));

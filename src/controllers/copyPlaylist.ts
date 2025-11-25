@@ -1,13 +1,13 @@
-import { newProgressDialog } from '@/components/device/ProgressView';
+import { newProgressDialog } from '@/components/kiosk/ProgressView';
 import { bridge, BridgeFileInfo } from '@/bridge';
 import { logger, sleep, jsonStringify, toError } from 'fluxio';
-import { playlist$ } from './deviceMessages';
+import { Kiosk } from './Kiosk';
 
 const log = logger('copyPlaylist');
 
 const PLAYLIST_DIR = 'playlist';
 
-const copyPlaylist = async (fromDir: string) => {
+const copyPlaylist = async (kiosk: Kiosk, fromDir: string) => {
   if (!bridge) return;
 
   const fromDirInfo = await bridge.fileInfo(fromDir);
@@ -167,7 +167,7 @@ const copyPlaylist = async (fromDir: string) => {
   );
 
   log.d('playlist items', items);
-  playlist$.set({ items });
+  kiosk.playlist$.set({ items });
 
   // Wait for localStorage persistence
   await sleep(5000);

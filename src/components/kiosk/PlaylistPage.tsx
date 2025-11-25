@@ -1,13 +1,13 @@
 import { Css } from 'fluxio';
 import { round } from 'fluxio';
 import { ArrowUp, ArrowDown, Copy, Trash2 } from 'lucide-react';
-import { playlist$ } from '@/controllers/deviceMessages';
 import { Grid, GridCols } from '@/components/common/Grid';
 import { Field } from '@/components/fields/Field';
 import { Button } from '@/components/common/Button';
 import { useFlux } from '@/hooks/useFlux';
-import { Page, PageBody } from '@/components/common/Page';
-import { Toolbar } from '@/components/common/Toolbar';
+import { useKiosk } from '@/hooks/useKiosk';
+import { Page } from '../pages/base/Page';
+import { Panel } from '../panels/base/Panel';
 
 const c = Css('Playlist', {
   Preview: {
@@ -126,7 +126,8 @@ const playlistItemCols: GridCols<
 };
 
 export const PlaylistPage = () => {
-  const playlist = useFlux(playlist$);
+  const kiosk = useKiosk();
+  const playlist = useFlux(kiosk.playlist$);
 
   const handleDurationUpdate = (index: number, newDuration: number) => {
     if (!playlist) return;
@@ -138,7 +139,7 @@ export const PlaylistPage = () => {
       ),
     };
 
-    playlist$.set(updatedPlaylist);
+    kiosk.playlist$.set(updatedPlaylist);
   };
 
   const handleDuplicate = (index: number) => {
@@ -154,7 +155,7 @@ export const PlaylistPage = () => {
       ],
     };
 
-    playlist$.set(updatedPlaylist);
+    kiosk.playlist$.set(updatedPlaylist);
   };
 
   const handleDelete = (index: number) => {
@@ -165,7 +166,7 @@ export const PlaylistPage = () => {
       items: playlist.items.filter((_, i) => i !== index),
     };
 
-    playlist$.set(updatedPlaylist);
+    kiosk.playlist$.set(updatedPlaylist);
   };
 
   const handleMoveUp = (index: number) => {
@@ -188,7 +189,7 @@ export const PlaylistPage = () => {
       items,
     };
 
-    playlist$.set(updatedPlaylist);
+    kiosk.playlist$.set(updatedPlaylist);
   };
 
   const handleMoveDown = (index: number) => {
@@ -211,12 +212,11 @@ export const PlaylistPage = () => {
       items,
     };
 
-    playlist$.set(updatedPlaylist);
+    kiosk.playlist$.set(updatedPlaylist);
   };
   return (
     <Page>
-      <Toolbar title="Élément dans la playlist" />
-      <PageBody>
+      <Panel icon={null} title="Élément dans la playlist">
         <Grid
           cols={playlistItemCols}
           ctx={{
@@ -229,7 +229,7 @@ export const PlaylistPage = () => {
           }}
           items={playlist?.items || []}
         />
-      </PageBody>
+      </Panel>
     </Page>
   );
 };

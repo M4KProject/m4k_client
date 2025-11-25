@@ -5,8 +5,8 @@ import { newProgressDialog } from '@/components/kiosk/ProgressView';
 import { Apps } from '@/components/admin/Apps';
 import { usePromise } from '@/hooks/usePromise';
 import { Button } from '@/components/common/Button';
-import { copyDir$, url$ } from '@/controllers/deviceMessages';
 import { bridge } from '@/bridge';
+import { useKiosk } from '@/hooks/useKiosk';
 
 const c = Css('Actions', {
   '': {
@@ -131,6 +131,7 @@ const clearCacheAndReload = async () => {
 };
 
 export const ActionsPage = () => {
+  const kiosk = useKiosk();
   const [info] = usePromise(() => bridge.deviceInfo(), []);
 
   return (
@@ -152,7 +153,7 @@ export const ActionsPage = () => {
         </Button>
         <Button
           onClick={async () => {
-            await copyPlaylist(`@storage/${copyDir$.get()}`);
+            await copyPlaylist(kiosk, `@storage/${kiosk.copyDir$.get()}`);
           }}
         >
           Copier la playlist locale
@@ -227,7 +228,7 @@ export const ActionsPage = () => {
         <h3>Autre :</h3>
         <Button
           onClick={async () => {
-            url$.set('https://boardscreen.fr/');
+            kiosk.url$.set('https://boardscreen.fr/');
             await bridge.restart();
           }}
         >

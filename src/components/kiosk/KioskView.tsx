@@ -2,27 +2,19 @@ import { Css } from 'fluxio';
 import { toNumber } from 'fluxio';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { openCodePinDialog } from '@/components/kiosk/CodePinView';
-import {
-  bgColor$,
-  itemAnim$,
-  itemDurationMs$,
-  itemFit$,
-  playlist$,
-  url$,
-} from '@/controllers/deviceMessages';
 import { bridge } from '@/bridge';
 import { logger } from 'fluxio';
 import { KioskVideo } from '@/components/kiosk/KioskVideo';
 import { usePromise } from '@/hooks/usePromise';
 import { useFlux } from '@/hooks/useFlux';
 import { Button } from '@/components/common/Button';
-import { useDeviceController } from '@/hooks/useDeviceController';
+import { useKiosk } from '@/hooks/useKiosk';
 
-const log = logger('KioskPage');
+const log = logger('KioskView');
 
 type PlaylistItem = any;
 
-const c = Css('Kiosk', {
+const c = Css('KioskView', {
   Container: {
     position: 'fixed',
     inset: 0,
@@ -143,19 +135,19 @@ const KioskItem = ({
   );
 };
 
-export const KioskPage = () => {
-  const deviceCtrl = useDeviceController();
-  const device = useFlux(deviceCtrl.device$);
+export const KioskView = () => {
+  const kiosk = useKiosk();
+  const device = useFlux(kiosk.device$);
 
   const [open, setOpen] = useState(false);
   const [count, setCount] = useState(0);
 
-  const url = useFlux(url$);
-  const bgColor = useFlux(bgColor$).trim();
-  const playlist = useFlux(playlist$);
-  const itemDurationMs = useFlux(itemDurationMs$);
-  const itemFit = useFlux(itemFit$);
-  const itemAnim = useFlux(itemAnim$);
+  const url = useFlux(kiosk.url$);
+  const bgColor = useFlux(kiosk.bgColor$).trim();
+  const playlist = useFlux(kiosk.playlist$);
+  const itemDurationMs = useFlux(kiosk.itemDurationMs$);
+  const itemFit = useFlux(kiosk.itemFit$);
+  const itemAnim = useFlux(kiosk.itemAnim$);
 
   const items = playlist?.items?.filter((i) => i) || [];
   const length = items?.length || 0;
@@ -173,7 +165,7 @@ export const KioskPage = () => {
   log.d('KioskPage', { prev, curr, next, device });
 
   useEffect(() => {
-    log.d('playlist', playlist$.get());
+    log.d('playlist', kiosk.playlist$.get());
   }, []);
 
   // Si un contenu est associé au device, l'afficher via ContentViewer

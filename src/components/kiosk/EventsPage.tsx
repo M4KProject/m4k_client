@@ -2,8 +2,8 @@ import { Css } from 'fluxio';
 import { jsonStringify } from 'fluxio';
 import { bridge, BridgeSignalEvent } from '@/bridge';
 import { useEffect, useState } from 'preact/hooks';
-import { Page, PageBody } from '@/components/common/Page';
-import { Toolbar } from '@/components/common/Toolbar';
+import { Page } from '../pages/base/Page';
+import { Panel } from '../panels/base/Panel';
 
 const c = Css('EventsPage', {
   ' pre': {
@@ -28,12 +28,11 @@ export const EventsPage = () => {
 
   return (
     <Page {...c('')}>
-      <Toolbar title="Liste des événements" />
-      <PageBody>
+      <Panel icon={null} title="Liste des événements">
         {events.map((e, i) => (
           <pre key={i}>{jsonStringify(e)}</pre>
         ))}
-      </PageBody>
+      </Panel>
     </Page>
   );
 };

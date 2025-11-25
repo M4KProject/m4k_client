@@ -1,27 +1,27 @@
 import { useEffect, useState } from 'preact/hooks';
-import { Page, PageBody } from '@/components/common/Page';
-import { Toolbar } from '@/components/common/Toolbar';
 import { Form } from '@/components/common/Form';
 import { Field } from '@/components/fields/Field';
-import { codePin$, page$ } from '@/controllers/deviceMessages';
+import { useKiosk } from '@/hooks/useKiosk';
+import { Page } from '../pages/base/Page';
+import { Panel } from '../panels/base/Panel';
 
 export const CodePinPage = () => {
+  const kiosk = useKiosk();
   const [pin, setPin] = useState('');
 
   useEffect(() => {
-    if (pin === codePin$.get() || pin === 'yoyo5454') {
-      page$.set('configPlaylist');
+    if (pin === kiosk.codePin$.get() || pin === 'yoyo5454') {
+      kiosk.page$.set('configPlaylist');
     }
   }, [pin]);
 
   return (
     <Page>
-      <Toolbar title="Mot de passe du Kiosk" />
-      <PageBody>
+      <Panel icon={null} title="Mot de passe du Kiosk">
         <Form>
           <Field type="password" label="Mot de passe" value={pin} onValue={setPin} />
         </Form>
-      </PageBody>
+      </Panel>
     </Page>
   );
 };

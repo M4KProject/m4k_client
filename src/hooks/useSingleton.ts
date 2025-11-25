@@ -8,7 +8,7 @@ type Class<T = any> = new (...args: any[]) => T;
  * Returns stable reference across renders
  *
  * @example
- * const deviceCtrl = useSingleton(DeviceController);
+ * const deviceCtrl = useSingleton(Kiosk);
  */
 export const useSingleton = <T>(clazz: Class<T>): T => {
   return useMemo(() => ioc.get(clazz), [clazz]);

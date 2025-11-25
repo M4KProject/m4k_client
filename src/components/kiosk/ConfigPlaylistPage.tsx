@@ -1,23 +1,14 @@
-import {
-  copyDir$,
-  hasVideoMuted$,
-  itemAnim$,
-  itemDurationMs$,
-  itemFit$,
-  contentRotation$,
-  codePin$,
-  url$,
-  bgColor$,
-} from '@/controllers/deviceMessages';
 import { isNil, round, toBoolean, toNumber } from 'fluxio';
 import { useState } from 'preact/hooks';
 import { bridge } from '@/bridge';
 import { useAsyncEffect } from '@/hooks/useAsyncEffect';
 import { useFluxState } from '@/hooks/useFlux';
-import { Page, PageBody } from '@/components/common/Page';
-import { Toolbar } from '@/components/common/Toolbar';
 import { Form } from '@/components/common/Form';
 import { Field } from '@/components/fields/Field';
+import { useKiosk } from '@/hooks/useKiosk';
+import { Page } from '../pages/base/Page';
+import { Panel } from '../panels/base/Panel';
+import { contentRotation$ } from '@/controllers/contentRotation$';
 
 const useSetting = (key: string): [string | null, (next: string | null) => Promise<void>] => {
   const [value, setValue] = useState<string | null>('');
@@ -57,14 +48,15 @@ const useNumberSetting = (
 };
 
 export const ConfigPlaylistPage = () => {
-  const [codePin, setCodePin] = useFluxState(codePin$);
-  const [url, setUrl] = useFluxState(url$);
-  const [bgColor, setBgColor] = useFluxState(bgColor$);
-  const [copyDir, setCopyDir] = useFluxState(copyDir$);
-  const [itemDurationMs, setItemDurationMs] = useFluxState(itemDurationMs$);
-  const [itemFit, setItemFit] = useFluxState(itemFit$);
-  const [itemAnim, setItemAnim] = useFluxState(itemAnim$);
-  const [hasVideoMuted, setHasVideoMuted] = useFluxState(hasVideoMuted$);
+  const kiosk = useKiosk();
+  const [codePin, setCodePin] = useFluxState(kiosk.codePin$);
+  const [url, setUrl] = useFluxState(kiosk.url$);
+  const [bgColor, setBgColor] = useFluxState(kiosk.bgColor$);
+  const [copyDir, setCopyDir] = useFluxState(kiosk.copyDir$);
+  const [itemDurationMs, setItemDurationMs] = useFluxState(kiosk.itemDurationMs$);
+  const [itemFit, setItemFit] = useFluxState(kiosk.itemFit$);
+  const [itemAnim, setItemAnim] = useFluxState(kiosk.itemAnim$);
+  const [hasVideoMuted, setHasVideoMuted] = useFluxState(kiosk.hasVideoMuted$);
   const [contentRotation, setContentRotation] = useFluxState(contentRotation$);
 
   const [isAutoPermissions, setIsAutoPermissions] = useBooleanSetting('isAutoPermissions', true);
@@ -73,8 +65,7 @@ export const ConfigPlaylistPage = () => {
 
   return (
     <Page>
-      <Toolbar title="Configuration" />
-      <PageBody>
+      <Panel icon={null} title="Configuration">
         <Form title="Configuration Kiosk">
           <Field
             type="password"
@@ -173,7 +164,7 @@ export const ConfigPlaylistPage = () => {
           />
           <Field label="URL de l'application" type="text" value={startUrl} onValue={setStartUrl} />
         </Form>
-      </PageBody>
+      </Panel>
     </Page>
   );
 };

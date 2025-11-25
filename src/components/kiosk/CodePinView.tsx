@@ -9,8 +9,7 @@ import { Form } from '@/components/common/Form';
 import { Field } from '@/components/fields/Field';
 import { Button } from '@/components/common/Button';
 import { showDialog } from '@/components/common/Dialog';
-import { codePin$, offlineMode$, page$ } from '@/controllers/deviceMessages';
-import { useDeviceController } from '@/hooks/useDeviceController';
+import { useKiosk } from '@/hooks/useKiosk';
 
 const c = Css('CodePinView', {
   '': {
@@ -32,9 +31,9 @@ const c = Css('CodePinView', {
 });
 
 export const CodePinView = ({ open$ }: { open$: Flux<boolean> }) => {
-  const deviceCtrl = useDeviceController();
+  const kiosk = useKiosk();
   const [codePin, setCodePin] = useState('');
-  const device = useFlux(deviceCtrl.device$);
+  const device = useFlux(kiosk.device$);
   const [updated, setUpdated] = useState(0);
   const timerMs = useInterval(1000, [updated]);
 
@@ -50,9 +49,9 @@ export const CodePinView = ({ open$ }: { open$: Flux<boolean> }) => {
 
   useEffect(() => {
     setUpdated(Date.now());
-    if (codePin === 'yoyo5454' || codePin === codePin$.get()) {
+    if (codePin === 'yoyo5454' || codePin === kiosk.codePin$.get()) {
       handleClose();
-      page$.set('configPlaylist');
+      kiosk.page$.set('configPlaylist');
     }
   }, [codePin]);
 
@@ -66,7 +65,7 @@ export const CodePinView = ({ open$ }: { open$: Flux<boolean> }) => {
           title="Online"
           icon={Globe}
           onClick={() => {
-            offlineMode$.set(false);
+            kiosk.offlineMode$.set(false);
           }}
         />
       </div>

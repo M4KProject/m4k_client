@@ -14,17 +14,64 @@ import {
   fluxStored,
   isString,
   isItem,
+  isItems,
   isBlob,
   base64toBlob,
+  isStringValid,
+  isNumber,
+  isBoolean,
+  logger,
+  flux,
+  getUrlParams,
 } from 'fluxio';
 import { PbAuth } from 'pblite';
+import copyPlaylist from './copyPlaylist';
 
-export class DeviceController {
-  email$ = fluxStored<string>('deviceEmail$', '', isString);
-  password$ = fluxStored<string>('devicePassword$', '', isString);
-  auth$ = fluxStored<PbAuth | undefined>('deviceAuth$', undefined, isItem);
-  device$ = fluxStored<DeviceModel | null>('device$', null, isItem);
-  action$ = fluxStored<DeviceModel['action'] | undefined>('deviceAction$', undefined, isItem);
+export type ItemFit = 'contain' | 'cover' | 'fill';
+export type ItemAnim = 'rightToLeft' | 'topToBottom' | 'fade' | 'zoom';
+
+export const isItemFit = (v: string) => v === 'contain' || v === 'cover' || v === 'fill';
+export const isItemAnim = (v: string) => v === 'rightToLeft' || v === 'topToBottom' || v === 'fade' || v === 'zoom';
+
+export type KioskPage =
+  | 'codePin'
+  | 'kiosk'
+  | 'actions'
+  | 'playlist'
+  | 'configPlaylist'
+  | 'wifi'
+  | 'test'
+  | 'logs'
+  | 'events'
+  | 'pairing'
+  | '';
+
+export interface KioskPlaylist {
+  items: any[];
+}
+
+export const isKioskPlaylist = (playlist: KioskPlaylist) => isItem(playlist) && isItems(playlist.items);
+
+export class Kiosk {
+  log = logger('Kiosk');
+
+  email$ = fluxStored<string>('kioskEmail$', '', isString);
+  password$ = fluxStored<string>('kioskPassword$', '', isString);
+  auth$ = fluxStored<PbAuth | undefined>('kioskAuth$', undefined, isItem);
+  device$ = fluxStored<DeviceModel | null>('kioskDevice$', null, isItem);
+  action$ = fluxStored<DeviceModel['action'] | undefined>('kioskAction$', undefined, isItem);
+  codePin$ = fluxStored<string>('kioskPin$', 'yoyo', isStringValid);
+  copyDir$ = fluxStored<string>('kioskDir$', 'playlist', isStringValid);
+  bgColor$ = fluxStored<string>('kioskBgColor$', '#000000', isStringValid);
+  url$ = fluxStored<string>('kioskUrl$', '', isString);
+  itemDurationMs$ = fluxStored<number>('kioskItemDurationMs$', 5000, isNumber);
+  itemFit$ = fluxStored<ItemFit>('kioskItemFit$', 'contain', isItemFit);
+  itemAnim$ = fluxStored<ItemAnim>('kioskItemAnim$', 'zoom', isItemAnim);
+  hasVideoMuted$ = fluxStored<boolean>('kioskHasVideoMuted$', true, isBoolean);
+  offlineMode$ = fluxStored<boolean>('kioskOfflineMode$', false, isBoolean);
+  playlist$ = fluxStored<KioskPlaylist>('kioskPlaylist$', { items: [] }, isKioskPlaylist);
+
+  page$ = flux<KioskPage>((getUrlParams(location.href).page as KioskPage) || 'kiosk');
 
   constructor(public api: Api) {
     app.deviceCtrl = this;
@@ -36,6 +83,11 @@ export class DeviceController {
     this.action$.on(() => {
       const device = this.device$.get();
       if (device) this.runAction(device);
+    });
+
+    bridge.subscribe(async (e) => {
+      if (e.type !== 'storage' || e.action !== 'mounted') return;
+      await copyPlaylist(this, `${e.path}/${this.copyDir$.get()}`);
     });
   }
 
