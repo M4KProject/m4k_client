@@ -5,7 +5,7 @@
 // import { Page } from '@/router/types';
 // import { addTr } from '@/hooks/useTr';
 // import { MediaType } from '@/api/models';
-// import { useGroup, useGroups } from '@/hooks/apiHooks';
+// import { useGroup, useGroups } from '@/hooks/useApi';
 // import { MediaIcon } from '@/components/admin/MediaIcon';
 // import { MENU_MIN } from '@/components/pages/base/Menu';
 

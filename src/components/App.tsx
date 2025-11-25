@@ -4,12 +4,16 @@ import { Errors } from '@/components/admin/Errors';
 import { refreshTheme } from '@/utils/theme';
 import { addFont } from '@/utils/addFont';
 import { EditPage } from '@/components/pages/EditPage';
-import { useRoute, Page } from '@/hooks/useRoute';
+import { useIsKiosk, useRoute } from '@/hooks/useRoute';
 import { Comp, comp } from '@/utils/comp';
 import { DashboardPage } from './pages/DashboardPage';
 import { MembersPage } from './pages/MembersPage';
 import { MediasPage } from './pages/MediasPage';
 import { DevicesPage } from './pages/DevicesPage';
+import { useAuth } from '@/hooks/useApi';
+import { Page } from '@/controllers/RouteController';
+import { KioskPage } from './pages/KioskPage';
+import { AuthPage } from './pages/AuthPage';
 
 const c = Css('App', {
   '': {
@@ -41,19 +45,29 @@ const AppRouter = () => {
 };
 
 const AppContent = () => {
-  // const api = useApi();
+  const auth = useAuth();
+  const isKiosk = useIsKiosk();
 
-  // const auth = useFlux(api.pb.auth$);
+  console.debug("AppContent", { c, auth, isKiosk });
 
-  // // console.debug("AppContent", { c, auth });
-  // if (!auth) {
-  //   return <AuthPage />;
-  // }
+  if (isKiosk) {
+    return (
+      <div {...c('')}>
+        <KioskPage />
+      </div>
+    )
+  }
 
-  // console.debug("Div", { c, auth });
+  if (!auth) {
+    return (
+      <div {...c('')}>
+        <AuthPage />
+      </div>
+    )
+  }
 
   return (
-    <div {...c()}>
+    <div {...c('')}>
       <AppRouter />
       <Errors />
     </div>

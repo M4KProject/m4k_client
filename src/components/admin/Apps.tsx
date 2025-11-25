@@ -5,7 +5,7 @@ import { sortItems } from 'fluxio';
 import { bridge } from '@/bridge';
 import { Button } from '@/components/common/Button';
 import { ApplicationModel } from '@/api/models';
-import { useApi } from '@/hooks/apiHooks';
+import { useApi } from '@/hooks/useApi';
 
 const c = Css('Apps', {
   '': {

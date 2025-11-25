@@ -1,6 +1,6 @@
 import { Css } from 'fluxio';
 import { BComp } from './bTypes';
-import { useMediaById, useApi } from '@/hooks/apiHooks';
+import { useMediaById, useApi } from '@/hooks/useApi';
 import { useFlux } from '@/hooks/useFlux';
 import { addComp, MediaView } from '@/components/medias/MediaView';
 import { ImageView } from '../medias/ImageView';

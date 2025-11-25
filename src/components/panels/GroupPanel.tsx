@@ -1,5 +1,5 @@
 import { PlusIcon, UsersIcon } from 'lucide-react';
-import { useApi, useGroups } from '@/hooks/apiHooks';
+import { useApi, useGroups } from '@/hooks/useApi';
 import { Field } from '@/components/fields/Field';
 import { Button } from '@/components/common/Button';
 import { Panel } from './base/Panel';

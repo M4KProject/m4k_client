@@ -4,7 +4,7 @@ import { useMemo } from 'preact/hooks';
 import { BContext, BController } from '@/components/box/BController';
 import { BViewport } from '@/components/box/edit/BViewport';
 import { BSide } from '@/components/box/edit/BSide';
-import { useApi } from '@/hooks/apiHooks';
+import { useApi } from '@/hooks/useApi';
 import { Page } from './base/Page';
 import { useMediaKey } from '@/router';
 

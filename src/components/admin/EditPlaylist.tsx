@@ -3,7 +3,7 @@ import { addItem, removeIndex, deepClone, moveIndex } from 'fluxio';
 import { Plus, Trash2, Copy, ArrowUp, ArrowDown } from 'lucide-react';
 import { JobGrid } from '@/components/admin/JobGrid';
 import { MediaPreview } from './MediaPreview';
-import { useGroupMedias, useApi } from '@/hooks/apiHooks';
+import { useGroupMedias, useApi } from '@/hooks/useApi';
 import { Grid, GridCols } from '@/components/common/Grid';
 import { JobModel, MediaModel, PlaylistEntry, PlaylistModel } from '@/api/models';
 import { Field } from '@/components/fields/Field';

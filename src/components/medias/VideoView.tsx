@@ -1,5 +1,5 @@
 import { Css } from 'fluxio';
-import { useApi } from '@/hooks/apiHooks';
+import { useApi } from '@/hooks/useApi';
 import { MediaViewProps } from './MediaView';
 import { VideoModel } from '@/api/models';
 

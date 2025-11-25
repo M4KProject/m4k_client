@@ -4,7 +4,7 @@ import { AddPlaylistItemButton, EditPlaylist } from '@/components/admin/EditPlay
 import { Edit, FolderPlus, MapPlus, FilePlus, Play, Upload } from 'lucide-react';
 import { useIsEdit, useMediaType } from '@/router/hooks';
 import { setIsEdit, setMediaKey, setMediaType } from '@/router/setters';
-import { useApi, useMedia, useMediaById } from '@/hooks/apiHooks';
+import { useApi, useMedia, useMediaById } from '@/hooks/useApi';
 import { MediaModel, PageModel, PlaylistModel } from '@/api/models';
 import { Page, PageBody } from '@/components/common/Page';
 import { MediaView } from '@/components/medias/MediaView';

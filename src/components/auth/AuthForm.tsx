@@ -7,7 +7,7 @@ import { Form } from '@/components/common/Form';
 import { toError } from 'fluxio';
 import { addTr } from '@/hooks/useTr';
 import { LogIn, UserPlus, Mail, Key, ArrowLeft } from 'lucide-react';
-import { useApi } from '@/hooks/apiHooks';
+import { useApi } from '@/hooks/useApi';
 
 addTr({
   'Failed to authenticate.': 'Échec, vérifier le mot de passe.',

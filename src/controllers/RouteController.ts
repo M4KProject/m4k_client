@@ -34,7 +34,7 @@ export class RouteController {
   media$ = this.route$.map(r => r.media);
   device$ = flux<string>('');
 
-  isDevice$ = fluxStored<boolean>('isDevice', false, isBoolean);
+  isKiosk$ = fluxStored<boolean>('isKiosk', false, isBoolean);
   isAdvanced$ = fluxStored<boolean>('isAdvanced', false, isBoolean);
 
   constructor() {
@@ -48,8 +48,7 @@ export class RouteController {
       const page = p.page as Page || s[1] as Page || this.page$.get();
       const media = p.media || s[2] || this.media$.get();
 
-      if (isDefined(p.d)) this.isDevice$.set(isEmpty(p.d) || toBoolean(p.d));
-      if (isDefined(p.device)) this.isDevice$.set(isEmpty(p.device) || toBoolean(p.device));
+      if (isDefined(p.kiosk)) this.isKiosk$.set(isEmpty(p.kiosk) || toBoolean(p.kiosk));
       if (isDefined(p.advanced)) this.isAdvanced$.set(isEmpty(p.advanced) || toBoolean(p.advanced));
 
       const route: Route = {
@@ -85,7 +84,7 @@ export class RouteController {
     const route = { ...current, ...changes };
 
     const { group, page, media } = route;
-    const isDevice = this.isDevice$.get();
+    const isKiosk = this.isKiosk$.get();
     const isAdvanced = this.isAdvanced$.get();
 
     const segments = media ? [group, page, media] : page ? [group, page] : group ? [group] : [];
@@ -94,7 +93,7 @@ export class RouteController {
     console.debug('go path', path);
 
     const url = createUrl(null, path, {
-      device: isDevice || undefined,
+      kiosk: isKiosk || undefined,
       advanced: isAdvanced || undefined,
     });
 

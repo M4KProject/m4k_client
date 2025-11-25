@@ -3,7 +3,7 @@ import { JobStatus } from './JobStatus';
 import { Css } from 'fluxio';
 import { MediaPreview } from '@/components/admin/MediaPreview';
 import { byId } from 'fluxio';
-import { useApi, useGroupJobs, useGroupMedias } from '@/hooks/apiHooks';
+import { useApi, useGroupJobs, useGroupMedias } from '@/hooks/useApi';
 import { filterItems, Dictionary } from 'fluxio';
 import { addTr } from '@/hooks/useTr';
 import { Grid, GridCols } from '@/components/common/Grid';

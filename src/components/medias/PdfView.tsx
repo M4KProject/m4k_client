@@ -6,7 +6,7 @@ import { MediaViewProps } from './MediaView';
 import { PanZoom, PanZoomCtrl } from '@/components/common/PanZoom';
 import { PdfModel } from '@/api/models';
 import { Button } from '@/components/common/Button';
-import { useApi } from '@/hooks/apiHooks';
+import { useApi } from '@/hooks/useApi';
 import { app } from '@/app';
 
 const c = Css('PdfView', {

@@ -7,7 +7,7 @@ import { useFlux } from '@/hooks/useFlux';
 import { theme$, updateTheme } from '@/utils/theme';
 import { Form } from '@/components/common/Form';
 import { Field } from '@/components/fields/Field';
-import { useApi } from '@/hooks/apiHooks';
+import { useApi } from '@/hooks/useApi';
 import { Panel } from './base/Panel';
 import { Button } from '../common/Button';
 

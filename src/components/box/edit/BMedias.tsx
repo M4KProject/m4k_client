@@ -1,4 +1,4 @@
-import { useApi, useGroupMedias } from '@/hooks/apiHooks';
+import { useApi, useGroupMedias } from '@/hooks/useApi';
 import { Css, fluxCombine } from 'fluxio';
 import { MediaModel } from '@/api/models';
 import { useBController } from '@/components/box/BController';

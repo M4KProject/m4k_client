@@ -3,7 +3,7 @@ import { DivProps } from '@/components/common/types';
 import { Button } from '@/components/common/Button';
 import { UserIcon, MenuIcon } from 'lucide-react';
 import { useRouteController } from '@/hooks/useRoute';
-import { useGroup } from '@/hooks/apiHooks';
+import { useGroup } from '@/hooks/useApi';
 
 const c = Css('Toolbar', {
   '': {

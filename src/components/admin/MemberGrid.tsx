@@ -2,7 +2,7 @@ import { Css } from 'fluxio';
 import { Dictionary, toNumber, toString } from 'fluxio';
 import { Trash2 } from 'lucide-react';
 import { Grid, GridCols } from '@/components/common/Grid';
-import { useApi, useDeviceById, useGroupMembers } from '@/hooks/apiHooks';
+import { useApi, useDeviceById, useGroupMembers } from '@/hooks/useApi';
 import { DeviceModel, MemberModel } from '@/api/models';
 import { Field } from '@/components/fields/Field';
 import { Button } from '@/components/common/Button';

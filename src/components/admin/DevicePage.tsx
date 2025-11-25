@@ -4,7 +4,7 @@ import { RefreshCw, Power, LogOut } from 'lucide-react';
 import { DeviceScreen } from '@/components/admin/DeviceScreen';
 import { DeviceConsole } from '@/components/admin/DeviceConsole';
 import { glb, jsonStringify } from 'fluxio';
-import { useApi, useDevice } from '@/hooks/apiHooks';
+import { useApi, useDevice } from '@/hooks/useApi';
 import { Page, PageBody } from '@/components/common/Page';
 import { Toolbar } from '@/components/common/Toolbar';
 import { Button } from '@/components/common/Button';

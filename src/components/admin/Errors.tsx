@@ -5,7 +5,7 @@ import { useEffect, useState } from 'preact/hooks';
 import { Grid, GridCols } from '@/components/common/Grid';
 import { tooltipProps } from '@/components/common/Tooltip';
 import { Button } from '@/components/common/Button';
-import { useApi } from '@/hooks/apiHooks';
+import { useApi } from '@/hooks/useApi';
 
 const c = Css('Errors', {
   '': {

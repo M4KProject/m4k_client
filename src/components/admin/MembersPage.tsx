@@ -11,7 +11,7 @@ import { Button } from '@/components/common/Button';
 import { showDialog } from '@/components/common/Dialog';
 import { Page, PageBody } from '@/components/common/Page';
 import { Toolbar } from '@/components/common/Toolbar';
-import { useApi } from '@/hooks/apiHooks';
+import { useApi } from '@/hooks/useApi';
 import { AdminSideBar } from '@/components/admin/AdminSideBar';
 
 const c = Css('MembersPage', {});

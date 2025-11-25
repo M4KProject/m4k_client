@@ -4,7 +4,7 @@ import { RefreshCw, Trash2, Settings, Plus, Power, MonitorIcon } from 'lucide-re
 import { useState } from 'preact/hooks';
 import { setDeviceKey, setPage } from '@/router/setters';
 import { useIsAdvanced } from '@/router/hooks';
-import { useApi, useGroupDevices, useGroupMedias } from '@/hooks/apiHooks';
+import { useApi, useGroupDevices, useGroupMedias } from '@/hooks/useApi';
 import { formatDate, formatDateTime } from 'fluxio';
 import { Grid, GridCols } from '@/components/common/Grid';
 import { DeviceModel, MediaModel } from '@/api/models';

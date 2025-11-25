@@ -66,3 +66,5 @@ export const useDeviceById = () => useById(useApi().device);
 export const useMediaById = () => useById(useApi().media);
 
 export const useJobById = () => useById(useApi().job);
+
+export const useAuth = () => useFlux(useApi().pb.auth$);

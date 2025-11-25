@@ -2,7 +2,7 @@ import { Css } from 'fluxio';
 import { byId, groupBy, sortItems, fluxDictionary, isUFloat } from 'fluxio';
 import { JobGrid } from '@/components/admin/JobGrid';
 import { selectedById$ } from '@/controllers/selected';
-import { useApi, useGroupMedias } from '@/hooks/apiHooks';
+import { useApi, useGroupMedias } from '@/hooks/useApi';
 import { useIsAdvanced } from '@/router/hooks';
 import { Dictionary, round } from 'fluxio';
 import { Trash2, FolderInput, PlusSquare, Edit, Eye, Download } from 'lucide-react';

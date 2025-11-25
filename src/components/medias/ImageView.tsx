@@ -1,7 +1,7 @@
 import { Css } from 'fluxio';
 import { MediaViewProps } from './MediaView';
 import { ImageModel } from '@/api/models';
-import { useApi } from '@/hooks/apiHooks';
+import { useApi } from '@/hooks/useApi';
 
 const c = Css('ImageView', {});
 
