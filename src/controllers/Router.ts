@@ -1,3 +1,4 @@
+import { app } from '@/app';
 import {
   createUrl,
   flux,
@@ -20,7 +21,6 @@ export interface Route {
   group?: string;
   page?: RoutePage;
   media?: string;
-  device?: string;
 }
 
 export class Router {
@@ -33,11 +33,13 @@ export class Router {
   page$ = this.route$.map(r => r.page);
   media$ = this.route$.map(r => r.media);
   device$ = flux<string>('');
+  search$ = flux<string>('');
 
   isKiosk$ = fluxStored<boolean>('isKiosk', false, isBoolean);
   isAdvanced$ = fluxStored<boolean>('isAdvanced', false, isBoolean);
 
   constructor() {
+    app.router = this;
     this.route$.isEqual = isDeepEqual;
 
     this.url$.on(url => {

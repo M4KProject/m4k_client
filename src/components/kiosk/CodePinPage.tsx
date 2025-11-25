@@ -2,7 +2,6 @@ import { useEffect, useState } from 'preact/hooks';
 import { Form } from '@/components/common/Form';
 import { Field } from '@/components/fields/Field';
 import { useKiosk } from '@/hooks/useKiosk';
-import { Page } from '../pages/base/Page';
 import { Panel } from '../panels/base/Panel';
 
 export const CodePinPage = () => {
@@ -16,12 +15,10 @@ export const CodePinPage = () => {
   }, [pin]);
 
   return (
-    <Page>
-      <Panel icon={null} title="Mot de passe du Kiosk">
-        <Form>
-          <Field type="password" label="Mot de passe" value={pin} onValue={setPin} />
-        </Form>
-      </Panel>
-    </Page>
+    <Panel icon={null} title="Mot de passe du Kiosk">
+      <Form>
+        <Field type="password" label="Mot de passe" value={pin} onValue={setPin} />
+      </Form>
+    </Panel>
   );
 };

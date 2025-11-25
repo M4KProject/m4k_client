@@ -2,7 +2,6 @@ import { Css } from 'fluxio';
 import { jsonStringify } from 'fluxio';
 import { bridge, BridgeSignalEvent } from '@/bridge';
 import { useEffect, useState } from 'preact/hooks';
-import { Page } from '../pages/base/Page';
 import { Panel } from '../panels/base/Panel';
 
 const c = Css('EventsPage', {
@@ -27,12 +26,10 @@ export const EventsPage = () => {
   }, [bridge]);
 
   return (
-    <Page {...c('')}>
-      <Panel icon={null} title="Liste des événements">
-        {events.map((e, i) => (
-          <pre key={i}>{jsonStringify(e)}</pre>
-        ))}
-      </Panel>
-    </Page>
+    <Panel {...c('')} icon={null} title="Liste des événements">
+      {events.map((e, i) => (
+        <pre key={i}>{jsonStringify(e)}</pre>
+      ))}
+    </Panel>
   );
 };

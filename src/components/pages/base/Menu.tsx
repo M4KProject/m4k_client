@@ -84,16 +84,16 @@ export const MenuSep = () => (
 export const MenuButton = ({ tab, page, ...props }: MenuButtonProps) => {
   const routeController = useRouter();
   const route = useRoute();
-  const selected = page === route.page;
+  const selected = props.selected || page === route.page;
   console.debug('MenuButton', { tab, page, routePage: route.page, selected });
   return (
     <Button
       {...props}
       selected={selected}
       {...c('Button', tab && 'Button-tab', props)}
-      onClick={() => {
+      onClick={props.onClick || (() => {
         routeController.go({ page });
-      }}
+      })}
     />
   );
 };

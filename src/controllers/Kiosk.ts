@@ -26,6 +26,7 @@ import {
 } from 'fluxio';
 import { PbAuth } from 'pblite';
 import copyPlaylist from './copyPlaylist';
+import { getSingleton } from '@/utils/ioc';
 
 export type ItemFit = 'contain' | 'cover' | 'fill';
 export type ItemAnim = 'rightToLeft' | 'topToBottom' | 'fade' | 'zoom';
@@ -55,6 +56,8 @@ export const isKioskPlaylist = (playlist: KioskPlaylist) => isItem(playlist) && 
 export class Kiosk {
   log = logger('Kiosk');
 
+  api = getSingleton(Api);
+
   email$ = fluxStored<string>('kioskEmail$', '', isString);
   password$ = fluxStored<string>('kioskPassword$', '', isString);
   auth$ = fluxStored<PbAuth | undefined>('kioskAuth$', undefined, isItem);
@@ -71,10 +74,10 @@ export class Kiosk {
   offlineMode$ = fluxStored<boolean>('kioskOfflineMode$', false, isBoolean);
   playlist$ = fluxStored<KioskPlaylist>('kioskPlaylist$', { items: [] }, isKioskPlaylist);
 
-  page$ = flux<KioskPage>((getUrlParams(location.href).page as KioskPage) || 'kiosk');
+  page$ = flux<KioskPage>('kiosk');
 
-  constructor(public api: Api) {
-    app.deviceCtrl = this;
+  constructor() {
+    app.kiosk = this;
 
     this.device$.on((device) => {
       this.action$.set(device?.action);

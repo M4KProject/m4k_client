@@ -1,6 +1,5 @@
 import { Loading } from '@/components/common/Loading';
 import { Css } from 'fluxio';
-import { Page } from '../pages/base/Page';
 
 const c = Css('LoadingPage', {
   '': {
@@ -10,8 +9,8 @@ const c = Css('LoadingPage', {
 
 export const LoadingPage = () => {
   return (
-    <Page {...c('')}>
+    <div {...c('')}>
       <Loading />
-    </Page>
+    </div>
   );
 };

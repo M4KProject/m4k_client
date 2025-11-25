@@ -234,47 +234,45 @@ export const TestPage = () => {
   }, []);
 
   return (
-    <Page>
-      <Panel icon={null} title="Test des fonctions">
-        <Form>
-          <Field label="Script" required type="multiline" value={script} onValue={setScript} />
-          <Field
-            label="Type"
-            type="select"
-            value={type}
-            onValue={setType}
-            items={[
-              ['js', 'JS'],
-              ['su', 'SU'],
-              ['sh', 'SH'],
-            ]}
-          />
-          <Field
-            label="Résultat"
-            type="multiline"
-            value={jsonStringify(result) || String(result)}
-          />
-          <Field
-            label="Valeur"
-            type="multiline"
-            value={jsonStringify(result?.value) || String(result?.value)}
-          />
-          <Button onClick={handleExec}>Executer</Button>
-        </Form>
-        <Grid
-          cols={testCols}
-          ctx={{ play }}
-          rowProps={(test: any) => {
-            const result = test.result || {};
-            const mode =
-              result.success ? 'success'
-              : result.error ? 'error'
-              : undefined;
-            return { mode };
-          }}
-          items={tests}
+    <Panel icon={null} title="Test des fonctions">
+      <Form>
+        <Field label="Script" required type="multiline" value={script} onValue={setScript} />
+        <Field
+          label="Type"
+          type="select"
+          value={type}
+          onValue={setType}
+          items={[
+            ['js', 'JS'],
+            ['su', 'SU'],
+            ['sh', 'SH'],
+          ]}
         />
-      </Panel>
-    </Page>
+        <Field
+          label="Résultat"
+          type="multiline"
+          value={jsonStringify(result) || String(result)}
+        />
+        <Field
+          label="Valeur"
+          type="multiline"
+          value={jsonStringify(result?.value) || String(result?.value)}
+        />
+        <Button onClick={handleExec}>Executer</Button>
+      </Form>
+      <Grid
+        cols={testCols}
+        ctx={{ play }}
+        rowProps={(test: any) => {
+          const result = test.result || {};
+          const mode =
+            result.success ? 'success'
+            : result.error ? 'error'
+            : undefined;
+          return { mode };
+        }}
+        items={tests}
+      />
+    </Panel>
   );
 };

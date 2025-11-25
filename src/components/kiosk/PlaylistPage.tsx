@@ -6,7 +6,6 @@ import { Field } from '@/components/fields/Field';
 import { Button } from '@/components/common/Button';
 import { useFlux } from '@/hooks/useFlux';
 import { useKiosk } from '@/hooks/useKiosk';
-import { Page } from '../pages/base/Page';
 import { Panel } from '../panels/base/Panel';
 
 const c = Css('Playlist', {
@@ -215,21 +214,19 @@ export const PlaylistPage = () => {
     kiosk.playlist$.set(updatedPlaylist);
   };
   return (
-    <Page>
-      <Panel icon={null} title="Élément dans la playlist">
-        <Grid
-          cols={playlistItemCols}
-          ctx={{
-            handleDurationUpdate,
-            handleMoveUp,
-            handleMoveDown,
-            handleDuplicate,
-            handleDelete,
-            playlist,
-          }}
-          items={playlist?.items || []}
-        />
-      </Panel>
-    </Page>
+    <Panel icon={null} title="Élément dans la playlist">
+      <Grid
+        cols={playlistItemCols}
+        ctx={{
+          handleDurationUpdate,
+          handleMoveUp,
+          handleMoveDown,
+          handleDuplicate,
+          handleDelete,
+          playlist,
+        }}
+        items={playlist?.items || []}
+      />
+    </Panel>
   );
 };
