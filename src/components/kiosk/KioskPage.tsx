@@ -1,7 +1,7 @@
 import { Css } from 'fluxio';
 import { toNumber } from 'fluxio';
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { openCodePinDialog } from '@/components/device/CodePinView';
+import { openCodePinDialog } from '@/components/kiosk/CodePinView';
 import {
   bgColor$,
   itemAnim$,
@@ -12,7 +12,7 @@ import {
 } from '@/controllers/deviceMessages';
 import { bridge } from '@/bridge';
 import { logger } from 'fluxio';
-import { KioskVideo } from '@/components/device/KioskVideo';
+import { KioskVideo } from '@/components/kiosk/KioskVideo';
 import { usePromise } from '@/hooks/usePromise';
 import { useFlux } from '@/hooks/useFlux';
 import { Button } from '@/components/common/Button';

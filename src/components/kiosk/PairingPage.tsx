@@ -1,7 +1,7 @@
 import { Css } from 'fluxio';
 import { page$ } from '@/controllers/page$';
 import { offlineMode$ } from '@/controllers/deviceMessages';
-import { Branding } from '@/components/device/Branding';
+import { Branding } from '@/components/kiosk/Branding';
 import { useFlux } from '@/hooks/useFlux';
 import { LoadingSpinner } from '@/components/common/Loading';
 import { Button } from '@/components/common/Button';
