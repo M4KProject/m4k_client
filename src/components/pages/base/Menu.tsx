@@ -8,10 +8,8 @@ import {
   MonitorIcon,
   FolderIcon,
   UsersIcon,
-  ZapIcon,
-  UserIcon,
 } from 'lucide-react';
-import { useRouteController } from '@/hooks/useRouteController';
+import { useRouteController } from '@/hooks/useRoute';
 import { useRoute } from '@/hooks/useRoute';
 import { Page } from '@/controllers/RouteController';
 

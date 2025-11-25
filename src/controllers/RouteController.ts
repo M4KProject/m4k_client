@@ -4,68 +4,72 @@ import {
   fluxStored,
   glb,
   isBoolean,
+  isDeepEqual,
+  isDefined,
+  isEmpty,
   isString,
-  isStringValid,
   logger,
   onEvent,
+  toBoolean,
 } from 'fluxio';
 import { getUrlParams } from 'fluxio';
 
-export type Page =
-  | 'dashboard'
-  | 'members'
-  | 'devices'
-  | 'medias'
-  | 'media'
-  | 'edit';
+export type Page = '' | 'dashboard' | 'members' | 'devices' | 'medias' | 'edit' | 'view';
 
 export interface Route {
-  groupKey?: string;
+  group?: string;
   page?: Page;
-  key?: string;
-  isDevice?: boolean;
+  media?: string;
+  device?: string;
 }
 
 export class RouteController {
   log = logger('Route');
+
   url$ = flux('');
-  route$ = this.url$.map((url) => this.parse(url));
-  groupKey$ = fluxStored<string>('groupKey', 'demo', isString);
+  route$ = flux<Route>({});
+
+  group$ = fluxStored<string>('groupKey', 'demo', isString);
+  page$ = this.route$.map(r => r.page);
+  media$ = this.route$.map(r => r.media);
+  device$ = flux<string>('');
+
   isDevice$ = fluxStored<boolean>('isDevice', false, isBoolean);
+  isAdvanced$ = fluxStored<boolean>('isAdvanced', false, isBoolean);
 
   constructor() {
+    this.route$.isEqual = isDeepEqual;
+
+    this.url$.on(url => {
+      const p = getUrlParams(url);
+      const s = (p.path || '').split('/').filter((s) => s);
+
+      const group = p.group || s[0] || this.group$.get();
+      const page = p.page as Page || s[1] as Page || this.page$.get();
+      const media = p.media || s[2] || this.media$.get();
+
+      if (isDefined(p.d)) this.isDevice$.set(isEmpty(p.d) || toBoolean(p.d));
+      if (isDefined(p.device)) this.isDevice$.set(isEmpty(p.device) || toBoolean(p.device));
+      if (isDefined(p.advanced)) this.isAdvanced$.set(isEmpty(p.advanced) || toBoolean(p.advanced));
+
+      const route: Route = {
+        group,
+        page,
+        media,
+      };
+
+      this.log.d('parse', route);
+
+      this.route$.set(route);
+    });
+
     if (glb.window) {
-      onEvent(glb.window, 'hashchange', this.sync);
-      onEvent(glb.window, 'popstate', this.sync);
-      this.sync();
+      const sync = () => this.url$.set(glb.location?.href);
+      onEvent(glb.window, 'hashchange', sync);
+      onEvent(glb.window, 'popstate', sync);
+      sync();
     }
   }
-
-  private parse = (url: string): Route => {
-    const params = getUrlParams(url);
-    const path = params.path;
-    const segments = (path || '').split('/').filter((s) => s);
-    const [groupKey, page, id] = segments;
-    const isDevice = !!(params.d || params.device);
-
-    if (isStringValid(groupKey)) this.groupKey$.set(groupKey);
-    if (isBoolean(isDevice)) this.isDevice$.set(isDevice);
-
-    const route = {
-      groupKey: groupKey || this.groupKey$.get(),
-      page: (page as Page) || 'dashboard',
-      id,
-      isDevice: isDevice || this.isDevice$.get(),
-    };
-
-    this.log.d('parse', route);
-
-    return route;
-  };
-
-  private sync = () => {
-    this.url$.set(glb.location?.href);
-  };
 
   goUrl(url: string) {
     this.log.i('goUrl', url);
@@ -80,23 +84,18 @@ export class RouteController {
     const current = this.route$.get();
     const route = { ...current, ...changes };
 
-    // Reset id if page changes
-    if (changes.page && changes.page !== current.page) {
-      route.key = undefined;
-    }
+    const { group, page, media } = route;
+    const isDevice = this.isDevice$.get();
+    const isAdvanced = this.isAdvanced$.get();
 
-    const { groupKey, page, key, isDevice } = route;
-    const segments =
-      key ? [groupKey, page, key]
-      : page ? [groupKey, page]
-      : groupKey ? [groupKey]
-      : [];
+    const segments = media ? [group, page, media] : page ? [group, page] : group ? [group] : [];
     const path = `/${segments.join('/')}`;
 
     console.debug('go path', path);
 
     const url = createUrl(null, path, {
       device: isDevice || undefined,
+      advanced: isAdvanced || undefined,
     });
 
     this.log.d('go url', url);

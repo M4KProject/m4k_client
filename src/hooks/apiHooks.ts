@@ -5,7 +5,7 @@ import { GroupModel, MediaModel } from '@/api/models';
 import { Sync } from '@/api/sync';
 import { Api } from '@/api/Api';
 import { useSingleton } from './useSingleton';
-import { useRoute } from './useRoute';
+import { useDeviceKey, useGroupKey, useIsAdvanced, useMediaKey } from './useRoute';
 
 export const useApi = () => useSingleton(Api);
 
@@ -35,17 +35,8 @@ const useGroupItems = <T extends PbModel & { group?: string }>(
 const useById = <T extends PbModel>(sync: Sync<T>, _where?: PbWhere<T>) => useFlux(sync.up$);
 
 export const useDevice = () => useItemKey(useApi().device, useDeviceKey());
-
-export const useMedia = (key?: string) => {
-  const { page, key } = useRoute();
-  const mediaId = page === "media" ? key : '';
-  useItemKey(useApi().media, key || mediaId);
-}
-
-export const useGroup = () => {
-  const { groupKey } = useRoute();
-  return useItemKey(useApi().group, groupKey);
-}
+export const useMedia = (key?: string) => useItemKey(useApi().media, useMediaKey());
+export const useGroup = () => useItemKey(useApi().group, useGroupKey());
 
 export const useGroups = (): GroupModel[] => useItems(useApi().group) as GroupModel[];
 
@@ -61,7 +52,7 @@ export const useGroupMedias = (type?: MediaModel['type']) => {
     if (!isAdvanced) medias = medias.filter((m) => !m.title?.startsWith('.'));
     if (type) medias = medias.filter((m) => m.type === type || m.type === 'folder');
     return medias;
-  }, [allMedias, isAdvanced, type]);
+  }, [allMedias, type]);
 };
 
 export const useGroupJobs = () => useGroupItems(useApi().job);

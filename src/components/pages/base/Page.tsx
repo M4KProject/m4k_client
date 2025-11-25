@@ -39,7 +39,6 @@ const c = Css('Page', {
 // };
 
 export interface PageProps extends DivProps {
-  title: string;
   menu?: Comp;
 }
 
@@ -48,7 +47,7 @@ export const Page = ({ title, menu, children, ...props }: PageProps) => {
 
   return (
     <div {...props} {...c('')}>
-      <Toolbar title={title} openMenu$={openMenu$} />
+      <Toolbar openMenu$={openMenu$} />
       <div {...c('Body')}>
         <Menu openMenu$={openMenu$} menu={menu} />
         <div {...c('Content', props)}>{children}</div>

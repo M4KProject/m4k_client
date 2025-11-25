@@ -1,9 +1,15 @@
 import { useFlux } from './useFlux';
-import { useRouteController } from './useRouteController';
+import { RouteController } from '@/controllers/RouteController';
+import { useSingleton } from './useSingleton';
 
-export type { Route, Page } from '@/controllers/RouteController';
+export const useRouteController = () => useSingleton(RouteController);
 
-export const useRoute = () => {
-  const ctrl = useRouteController();
-  return useFlux(ctrl.route$);
-};
+export const useRoute = () => useFlux(useRouteController().route$);
+
+export const useGroupKey = () => useFlux(useRouteController().group$);
+export const usePageKey = () => useFlux(useRouteController().page$);
+export const useMediaKey = () => useFlux(useRouteController().media$);
+export const useDeviceKey = () => useFlux(useRouteController().device$);
+
+export const useIsDevice = () => useFlux(useRouteController().isDevice$);
+export const useIsAdvanced = () => useFlux(useRouteController().isAdvanced$);

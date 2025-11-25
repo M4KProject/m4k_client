@@ -1,11 +1,10 @@
-import { PlusIcon, TrashIcon, UsersIcon } from 'lucide-react';
+import { PlusIcon, UsersIcon } from 'lucide-react';
 import { useApi, useGroups } from '@/hooks/apiHooks';
 import { Field } from '@/components/fields/Field';
 import { Button } from '@/components/common/Button';
 import { Panel } from './base/Panel';
 import { Css } from 'fluxio';
-import { useRoute } from '@/hooks/useRoute';
-import { useRouteController } from '@/hooks/useRouteController';
+import { useRouteController, useGroupKey } from '@/hooks/useRoute';
 import { Role } from '@/api/models';
 
 const c = Css('GroupPanel', {
@@ -142,7 +141,7 @@ const c = Css('GroupPanel', {
 export const GroupPanel = () => {
   const api = useApi();
   const groups = useGroups();
-  const { groupKey } = useRoute();
+  const groupKey = useGroupKey();
   const routeController = useRouteController();
 
   const handleAdd = async () => {
@@ -155,6 +154,8 @@ export const GroupPanel = () => {
     }
   };
 
+  console.debug('GroupPanel', { groups, groupKey });
+
   return (
     <Panel icon={UsersIcon} title="Mes Groups" {...c('')}>
       <div {...c('Groups')}>
@@ -162,7 +163,7 @@ export const GroupPanel = () => {
           <Button
             {...c('GroupButton')}
             selected={group.key === groupKey}
-            onClick={() => routeController.go({ groupKey: group.key })}
+            onClick={() => routeController.go({ group: group.key })}
           >
             <div {...c('GroupButtonContent')}>
               <Field

@@ -61,31 +61,15 @@ const c = Css('Button', {
     rounded: 5,
   },
 
-  // '-primary': { bg: 'p', fg: 'handle' },
-  // '-secondary': { bg: 's', fg: 'handle' },
-  // '-success': { bg: 'success', fg: 'handle' },
-  // '-warn': { bg: 'warn', fg: 'handle' },
-
   ':active': { bg: 'p', fg: 'handle' },
   '-selected': { bg: 'p', fg: 'handle' },
   ':hover': { elevation: 0, fg: 'handle' },
   ':hover > &Sfx': { scaleX: 1 },
 
-  '-icon': { bg: 'transparent', fg: 't', elevation: 0, border: 0 },
-
-  // '-icon&-primary': { fg: 'p' },
-  // '-icon&-secondary': { fg: 's' },
-  // '-icon&-success': { fg: 'success' },
-  // '-icon&-warn': { fg: 'warn' },
-
-  '-selected&-icon,:hover&-icon': { bg: 'p', fg: 'handle', border: 0 },
-
-  // '-selected&-icon&-primary,:hover&-icon&-primary': { bg: 'p' },
-  // '-selected&-icon&-secondary,:hover&-icon&-secondary': { bg: 's' },
-  // '-selected&-icon&-success,:hover&-icon&-success': { bg: 'success' },
-  // '-selected&-icon&-warn,:hover&-icon&-warn': { bg: 'warn' },
-
   ...addColors(),
+
+  '-icon': { bg: 'transparent', fg: 't', elevation: 0, border: 0 },
+  '-selected&-icon,:hover&-icon': { bg: 'p', fg: 'handle', border: 0 },
 });
 
 type BaseButtonProps = Omit<Props['button'] & Props['a'], 'onClick'> & {
