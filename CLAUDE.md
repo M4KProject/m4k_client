@@ -241,10 +241,10 @@ const Component = (props) => {
 **Key CSS Pattern Rules:**
 
 1. **Call `Css()` OUTSIDE component** - Returns the class spreader function `c()` directly
-2. **Apply classes with `{...c()}`** - Use spread syntax to apply className attribute
+2. **Apply classes with `{...c('')}`** - Use spread syntax to apply className attribute
 3. **Pass `props` as last argument** - `c('', variant, props)` extracts and merges `props.class`
 4. **Use `cssFunMap` utilities** - Prefer `w: 20`, `p: 2`, `bg: 'primary'` over raw CSS
-5. **Spread order matters** - `{...props} {...c()}` allows prop overrides
+5. **Spread order matters** - `{...props} {...c('')}` allows prop overrides
 
 #### Available CSS Utility Functions
 
@@ -460,9 +460,9 @@ export const MyComponent = ({ children, variant, ...props }: MyComponentProps) =
 **Important Notes:**
 
 - **Call `Css()` OUTSIDE component** - Returns the spreader function `c()` directly
-- **Use `{...c()}` spread syntax** - Applies the className attribute
+- **Use `{...c('')}` spread syntax** - Applies the className attribute
 - **Pass `props` as last argument** - `c('', variant, props)` extracts `props.class` and merges it
-- **Spread order: `{...props} {...c()}`** - props first allows overrides
+- **Spread order: `{...props} {...c('')}`** - props first allows overrides
 - **Prefer `cssFunMap` utilities** (`w`, `p`, `bg`, `col`, `row`) over raw CSS
 - **Extend `DivProps`** for HTML attributes support
 
@@ -601,7 +601,7 @@ ctrl.register('mytype', {
 
 - **Always use `cssFunMap` utilities** in CSS definitions (e.g., `w`, `h`, `p`, `m`, `bg`, `col`, `row`) instead of raw CSS properties
 - **Call `Css()` OUTSIDE component** - It returns the class spreader function `c()` directly
-- **Apply styles using `{...c()}` spread syntax** on JSX elements
+- **Apply styles using `{...c('')}` spread syntax** on JSX elements
 - **Pass `props` as last argument to `c()`** - Automatically extracts and merges `props.class` (e.g., `c('', variant, props)`)
 - Follow the established message-based reactive state management pattern
 - Prefer `preact/hooks` imports over React equivalents due to compatibility layer

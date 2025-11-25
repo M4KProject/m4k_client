@@ -108,7 +108,7 @@ export const WindowTestPage = () => {
   };
 
   return (
-    <div {...c()}>
+    <div {...c('')}>
       <div {...c('Title')}>Test Window Component</div>
 
       <div {...c('Section')}>

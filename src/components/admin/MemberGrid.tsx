@@ -61,5 +61,5 @@ export const MemberGrid = () => {
   const members = useGroupMembers();
   const deviceById = useDeviceById();
 
-  return <Grid {...c()} cols={cols} items={members} ctx={{ deviceById, api }} />;
+  return <Grid {...c('')} cols={cols} items={members} ctx={{ deviceById, api }} />;
 };

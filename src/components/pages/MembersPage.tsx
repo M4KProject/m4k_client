@@ -8,7 +8,8 @@ const c = Css('MembersPage', {
 
 export const MembersPage = () => {
   return (
-    <Page title="" {...c('')}>
+    <Page {...c('')}>
+      MembersPage
     </Page>
   );
 };

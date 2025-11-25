@@ -58,7 +58,7 @@ export const PairingPage = () => {
   const pairingCode = device?.key || device?.id || 'Chargement...';
 
   return (
-    <div {...c()}>
+    <div {...c('')}>
       <div {...c('Container')}>
         <LoadingSpinner />
         <div {...c('Title')}>En attente de pairage</div>

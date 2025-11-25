@@ -134,7 +134,7 @@ export const ActionsPage = () => {
   const [info] = usePromise(() => bridge.deviceInfo(), []);
 
   return (
-    <div {...c()}>
+    <div {...c('')}>
       <div {...c('Info')}>
         {Object.entries(info || {}).map(([k, v], i) => (
           <div key={i}>

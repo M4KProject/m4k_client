@@ -196,7 +196,7 @@ export const BProps = () => {
   if (!isUInt(i) || !item) return null;
 
   return (
-    <div {...c()} key={i}>
+    <div {...c('')} key={i}>
       {config.r && (
         <Panel>
           <Field label="Ajouter">
@@ -301,7 +301,7 @@ export const BProps = () => {
 
 // export const BButtons = () => {
 //   return (
-//     <div {...c()}>
+//     <div {...c('')}>
 //       TREE
 //     </div>
 //   );

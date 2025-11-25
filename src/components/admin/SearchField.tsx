@@ -19,7 +19,7 @@ export const SearchField = () => {
   const isSearchOpen = useFlux(isSearchOpen$);
 
   return (
-    <div {...c()}>
+    <div {...c('')}>
       {isSearchOpen && <Field name="search" value={search} onValue={search$.setter()} />}
       <Button icon={Search} color="primary" onClick={() => isSearchOpen$.set((prev) => !prev)} />
     </div>

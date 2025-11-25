@@ -55,7 +55,7 @@ export const AuthForm = () => {
   );
 
   return (
-    <div {...c()}>
+    <div {...c('')}>
       <Form>
         {isAuthLoading ?
           <Loading />

@@ -11,5 +11,5 @@ export const usePageKey = () => useFlux(useRouteController().page$);
 export const useMediaKey = () => useFlux(useRouteController().media$);
 export const useDeviceKey = () => useFlux(useRouteController().device$);
 
-export const useIsDevice = () => useFlux(useRouteController().isDevice$);
+export const useIsKiosk = () => useFlux(useRouteController().isKiosk$);
 export const useIsAdvanced = () => useFlux(useRouteController().isAdvanced$);

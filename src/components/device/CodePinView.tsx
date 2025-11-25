@@ -57,7 +57,7 @@ export const CodePinView = ({ open$ }: { open$: Flux<boolean> }) => {
   }, [codePin]);
 
   return (
-    <Form {...c()}>
+    <Form {...c('')}>
       <Field type="password" label="Code PIN" value={codePin} onValue={setCodePin} />
       <div {...c('Buttons')}>
         <Button title="Valider" color="primary" icon={Lock} onClick={handleClose} />

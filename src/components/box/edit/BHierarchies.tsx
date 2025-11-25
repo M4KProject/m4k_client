@@ -63,7 +63,7 @@ export const BHierarchies = () => {
   log.d('BHierarchies');
 
   return (
-    <div {...c()}>
+    <div {...c('')}>
       <BHierarchyItem i={0} />
     </div>
   );

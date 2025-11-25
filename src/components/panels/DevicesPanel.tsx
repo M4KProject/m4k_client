@@ -173,7 +173,7 @@ export const DevicesPanel = () => {
   // };
 
   return (
-    <Panel icon={<MonitorIcon />} title="Les Appareils" {...c()}>
+    <Panel icon={<MonitorIcon />} title="Les Appareils" {...c('')}>
       {/* <Toolbar title="Les écrans">
         <SearchField />
       </Toolbar> */}

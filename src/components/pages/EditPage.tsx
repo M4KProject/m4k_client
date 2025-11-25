@@ -21,7 +21,7 @@ export const EditPage = () => {
   const ctrl = useMemo(() => new BController(api, playlistKey), [api, playlistKey]);
 
   return (
-    <Page title="Edition" {...c()}>
+    <Page {...c('')}>
       <BContext value={ctrl}>
         <BViewport />
         <BSide />

@@ -66,7 +66,7 @@ const ColorPickerContent = ({ value, onChange }: ColorPickerProps) => {
   };
 
   return (
-    <div {...c()}>
+    <div {...c('')}>
       <Field input={ColorInput} label="Couleur" value={color} onValue={updateColor} />
 
       {variations.map((v, i) => (

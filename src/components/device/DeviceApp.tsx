@@ -76,7 +76,7 @@ const DeviceAppContent = () => {
   const go = (page: PageName) => () => page$.set(page);
 
   return (
-    <div {...c()}>
+    <div {...c('')}>
       {page !== 'kiosk' && page !== 'codePin' && page !== 'pairing' && (
         <Side>
           <SideSep />

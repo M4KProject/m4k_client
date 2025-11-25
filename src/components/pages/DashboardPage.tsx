@@ -13,7 +13,7 @@ const c = Css('DashboardPage', {
 
 export const DashboardPage = () => {
   return (
-    <Page title="Tableau de bord" {...c('')}>
+    <Page {...c('')}>
       <AccountPanel />
       <GroupPanel />
       {/* <JobGrid filter={(job) => job.status !== 'finished'} panel={true} /> */}

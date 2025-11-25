@@ -72,7 +72,7 @@ export const Apps = () => {
   sortItems(applications, (a) => (a.name || '') + a.version);
 
   return (
-    <div {...c()}>
+    <div {...c('')}>
       {applications.map((app) => (
         <div key={app.id} {...c('App')}>
           <div {...c('AppInfo')}>

@@ -59,7 +59,7 @@ export const FieldsTestPage = () => {
   };
 
   return (
-    <div {...c()}>
+    <div {...c('')}>
       <div {...c('Title')}>Test Fields</div>
 
       <Form>

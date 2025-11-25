@@ -40,5 +40,5 @@ const BrandingContent = (_props: BrandingProps) => {
 export const Branding = () => {
   log.d('Branding');
   useEffect(() => portal(<BrandingContent />), []);
-  return <div {...c()} />;
+  return <div {...c('')} />;
 };

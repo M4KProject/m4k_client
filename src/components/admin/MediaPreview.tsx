@@ -39,7 +39,7 @@ export const MediaPreview = ({ media }: { media?: MediaModel }) => {
 
   return (
     <Button
-      {...c()}
+      {...c('')}
       icon
       tooltip={() =>
         videos.length ?
@@ -73,7 +73,7 @@ export const MediaPreview = ({ media }: { media?: MediaModel }) => {
     />
   );
 
-  //   <Popover id={overId} {...c()} title={media.title}>
+  //   <Popover id={overId} {...c('')} title={media.title}>
   //     {isOver && videos.length ?
   //       <div {...c('Video')}>
   //         <video

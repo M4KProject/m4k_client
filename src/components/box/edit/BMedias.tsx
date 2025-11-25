@@ -71,7 +71,7 @@ const BMediasContent = () => {
 
 export const BMedias = () => {
   return (
-    <div {...c()}>
+    <div {...c('')}>
       <BMediasContent />
     </div>
   );

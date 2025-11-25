@@ -104,7 +104,7 @@ export const KioskVideo = ({
 
   return (
     <video
-      {...c()}
+      {...c('')}
       ref={ref}
       src={url}
       playsinline

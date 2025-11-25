@@ -27,7 +27,7 @@ export const EventsPage = () => {
   }, [bridge]);
 
   return (
-    <Page {...c()}>
+    <Page {...c('')}>
       <Toolbar title="Liste des événements" />
       <PageBody>
         {events.map((e, i) => (

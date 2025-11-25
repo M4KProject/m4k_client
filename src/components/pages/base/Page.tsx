@@ -42,7 +42,7 @@ export interface PageProps extends DivProps {
   menu?: Comp;
 }
 
-export const Page = ({ title, menu, children, ...props }: PageProps) => {
+export const Page = ({ menu, children, ...props }: PageProps) => {
   const openMenu$ = useConstant(() => flux(true));
 
   return (

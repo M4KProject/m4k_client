@@ -48,7 +48,7 @@ export const BViewport = () => {
   }, [ctrl]);
 
   return (
-    <div {...c()}>
+    <div {...c('')}>
       <PanZoom ctrl={ctrl.panZoom}>
         <div {...c('Body')}>
           <BFactory i={0} />

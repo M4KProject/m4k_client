@@ -53,7 +53,7 @@ export const MediaIcon = ({ type, isOpen, hasChildren }: MediaIconProps) => {
   }
 
   return (
-    <div {...c()}>
+    <div {...c('')}>
       <Button icon={Icon} tooltip={title} />
       {hasChildren && (
         <span>

@@ -143,7 +143,7 @@ export const BButtons = () => {
   );
 
   return (
-    <div {...c()}>
+    <div {...c('')}>
       {!hasSelect && (
         <>
           <BButton

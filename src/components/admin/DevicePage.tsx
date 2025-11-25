@@ -46,7 +46,7 @@ export const DevicePage = () => {
 
   if (!device) {
     return (
-      <Page {...c()} side={AdminSideBar}>
+      <Page {...c('')} side={AdminSideBar}>
         <Toolbar title="Mode Remote"></Toolbar>
         <PageBody>
           <div>Device non trouvé</div>
@@ -75,7 +75,7 @@ export const DevicePage = () => {
     device.capture ? api.device.coll.getFileUrl(device.id, toString(device.capture)) : '';
 
   return (
-    <Page {...c()} side={AdminSideBar}>
+    <Page {...c('')} side={AdminSideBar}>
       <Toolbar title={device.name || device.key}>
         <Button icon={RefreshCw} tooltip="Rafraîchir" onClick={() => executeAction('refresh')} />
         <Button icon={Power} tooltip="Redémarrer" onClick={() => executeAction('reboot')} />
