@@ -3,11 +3,6 @@ import { useApi, useGroupMedias } from '@/hooks/useApi';
 import { MediaModel } from '@/api/models';
 import { useFlux } from '@/hooks/useFlux';
 import { useMediaController } from '@/hooks/useMediaController';
-import { Button } from "../common/Button";
-import { MediaIcon } from '../medias/MediaIcon';
-import { MediaPreview } from '../medias/MediaPreview';
-import { useState } from 'preact/hooks';
-import { Variant } from '@/api/Api';
 import { useOver } from '@/hooks/useOver';
 
 const W = 200;
@@ -103,42 +98,6 @@ export const MediaItem = ({ media }: { media: MediaModel }) => {
       </video>
     );
   }
-
-  // return (
-  //   <Button
-  //     {...c('')}
-  //     icon
-  //     tooltip={() =>
-  //       videos.length ?
-  //         <video
-  //           {...c('Video')}
-  //           controls={false}
-  //           muted
-  //           autoPlay
-  //           loop
-  //           onLoadStart={(e) => {
-  //             e.currentTarget.currentTime = 0;
-  //           }}
-  //           onError={(e) => {
-  //             console.warn('Video preview error:', e);
-  //           }}
-  //         >
-  //           {videos.map((v, i) => (
-  //             <source key={i} type={v.mime} src={api.getMediaUrl(v)} />
-  //           ))}
-  //         </video>
-  //       : <div
-  //           {...c('Image')}
-  //           style={{
-  //             backgroundImage: `url('${api.getMediaUrl(images[0], 360)}')`,
-  //           }}
-  //         />
-  //     }
-  //     style={{
-  //       backgroundImage: `url('${api.getMediaUrl(images[0], 360)}')`,
-  //     }}
-  //   />
-  // );
 
   return (
     <div {...c('Item', over && 'Item-over')} {...overProps}>
