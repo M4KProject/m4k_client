@@ -1,29 +1,65 @@
-import { Css } from 'fluxio';
-import { useGroupMedias } from '@/hooks/useApi';
+import { Css, isEmpty, truncate } from 'fluxio';
+import { useApi, useGroupMedias } from '@/hooks/useApi';
 import { MediaModel } from '@/api/models';
 import { useFlux } from '@/hooks/useFlux';
 import { useMediaController } from '@/hooks/useMediaController';
 import { Button } from "../common/Button";
 import { MediaIcon } from '../medias/MediaIcon';
 import { MediaPreview } from '../medias/MediaPreview';
+import { useState } from 'preact/hooks';
+import { Variant } from '@/api/Api';
+import { useOver } from '@/hooks/useOver';
 
-const c = Css('MediaPanel', {
+const W = 200;
+const H = 140;
+
+const c = Css('MediasPanel', {
   '': {
     rowWrap: 1,
     p: 8,
   },
   Item: {
     col: ['center', 'center'],
-    w: 640/3,
-    h: 480/3,
-    elevation: 1,
-    m: 8,
-    rounded: 7,
-    bg: 'bg',
+    w: W,
+    m: 4,
   },
   ItemTitle: {
     textAlign: 'center',
-  }
+    w: W,
+  },
+  Video: {
+    w: 200,
+  },
+  'Video video': {
+    wh: '100%',
+    flex: 1,
+    objectFit: 'contain',
+    cursor: 'pointer',
+  },
+  Preview: {
+    position: 'relative',
+    w: W,
+    h: H,
+    bgMode: 'contain',
+    m: 4,
+    center: 1,
+  },
+  'Preview img, Preview video': {
+    position: 'absolute',
+    wMax: '100%',
+    hMax: '100%',
+    bg: 'bg',
+    elevation: 1,
+    rounded: 7,
+    anim: {
+      count: 1,
+      duration: 0.5,
+      keyframes: {
+        0: { opacity: 0 },
+        100: { opacity: 1 },
+      }
+    }
+  },
 });
 
 // addTr({
@@ -35,12 +71,87 @@ const c = Css('MediaPanel', {
 // });
 
 export const MediaItem = ({ media }: { media: MediaModel }) => {
+  const [over, overProps] = useOver();
   const controller = useMediaController();
+  const api = useApi();
+
+  if (!media) return null;
+
+  const variants = api.getVariants(media);
+  const images = variants.filter((v) => v.type === 'image');
+  const videos = variants.filter((v) => v.type === 'video');
+
+  const previewUrl = api.getMediaUrl(images[0], 360);
+
+  let previewEl = (
+    <img src={previewUrl} />
+  );
+
+  if (over && !isEmpty(videos)) {
+    previewEl = (
+      <>
+        <img src={previewUrl} />
+        <video
+          controls={false}
+          muted
+          autoPlay
+          loop
+          onLoadStart={(e) => {
+            console.debug('Video LoadStart:', e);
+            e.currentTarget.currentTime = 0;
+          }}
+          onError={(e) => {
+            console.warn('Video Error:', e);
+          }}
+        >
+          {videos.map((v, i) => (
+            <source key={i} type={v.mime} src={api.getMediaUrl(v)} />
+          ))}
+        </video>
+      </>
+    );
+  }
+
+  // return (
+  //   <Button
+  //     {...c('')}
+  //     icon
+  //     tooltip={() =>
+  //       videos.length ?
+  //         <video
+  //           {...c('Video')}
+  //           controls={false}
+  //           muted
+  //           autoPlay
+  //           loop
+  //           onLoadStart={(e) => {
+  //             e.currentTarget.currentTime = 0;
+  //           }}
+  //           onError={(e) => {
+  //             console.warn('Video preview error:', e);
+  //           }}
+  //         >
+  //           {videos.map((v, i) => (
+  //             <source key={i} type={v.mime} src={api.getMediaUrl(v)} />
+  //           ))}
+  //         </video>
+  //       : <div
+  //           {...c('Image')}
+  //           style={{
+  //             backgroundImage: `url('${api.getMediaUrl(images[0], 360)}')`,
+  //           }}
+  //         />
+  //     }
+  //     style={{
+  //       backgroundImage: `url('${api.getMediaUrl(images[0], 360)}')`,
+  //     }}
+  //   />
+  // );
+
   return (
-    <div {...c('Item')}>
-      <MediaPreview media={media} />
-      <MediaIcon type={media.type} />
-      <div {...c('ItemTitle')}>{media.title}</div>
+    <div {...c('Item', over && 'Item-over')} {...overProps}>
+      <div {...c('Preview')}>{previewEl}</div>
+      <div {...c('ItemTitle')}>{truncate(media.title, 20)}</div>
     </div>
   );
 }
