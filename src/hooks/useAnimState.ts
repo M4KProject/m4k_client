@@ -1,25 +1,30 @@
+import { onTimeout } from 'fluxio';
 import { useEffect, useState } from 'preact/hooks';
 
-export const useAnimState = (isShow: boolean, duration: number = 300): string => {
-  const [state, setState] = useState<string>(isShow ? 'show' : '');
+export type AnimState = 'show'|'showing'|'hide'|'hiding';
+
+export const useAnimState = (show: boolean, duration: number = 300): AnimState => {
+  const [state, setState] = useState<AnimState>('hide');
 
   useEffect(() => {
-    setState((prev) =>
-      isShow ? 'showing'
-      : prev ? 'hiding'
-      : ''
-    );
-
-    const timer = setTimeout(() => {
-      setState((prev) =>
-        prev === 'showing' ? 'show'
-        : prev === 'hiding' ? 'hide'
-        : prev
-      );
-    }, duration);
-
-    return () => clearTimeout(timer);
-  }, [isShow, duration]);
+    if (show) {
+      switch (state) {
+        case 'hide':
+        case 'hiding':
+          return onTimeout(() => setState('showing'), 10);
+        case 'showing':
+          return onTimeout(() => setState('show'), duration);
+      }
+    } else {
+      switch (state) {
+        case 'show':
+        case 'showing':
+          return onTimeout(() => setState('hiding'), 10);
+        case 'hiding':
+          return onTimeout(() => setState('hide'), duration);
+      }
+    }
+  }, [state, show, duration]);
 
   return state;
 };
