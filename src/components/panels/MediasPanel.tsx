@@ -5,17 +5,21 @@ import { useFlux } from '@/hooks/useFlux';
 import { useMediaController } from '@/hooks/useMediaController';
 import { Button } from "../common/Button";
 import { MediaIcon } from '../medias/MediaIcon';
+import { MediaPreview } from '../medias/MediaPreview';
 
 const c = Css('MediaPanel', {
   '': {
     rowWrap: 1,
-    p: 4,
+    p: 8,
   },
   Item: {
     col: ['center', 'center'],
-    wh: 180,
+    w: 640/3,
+    h: 480/3,
     elevation: 1,
     m: 8,
+    rounded: 7,
+    bg: 'bg',
   },
   ItemTitle: {
     textAlign: 'center',
@@ -33,10 +37,11 @@ const c = Css('MediaPanel', {
 export const MediaItem = ({ media }: { media: MediaModel }) => {
   const controller = useMediaController();
   return (
-    <Button {...c('Item')}>
+    <div {...c('Item')}>
+      <MediaPreview media={media} />
       <MediaIcon type={media.type} />
       <div {...c('ItemTitle')}>{media.title}</div>
-    </Button>
+    </div>
   );
 }
 

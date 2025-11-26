@@ -17,10 +17,18 @@ const c = Css('Page', {
     row: ['stretch', 'start'],
     flex: 1,
   },
+  Scroll: {
+    position: 'relative',
+    flex: 1,
+  },
   Content: {
+    position: 'absolute',
+    overflowX: 'hidden',
+    overflowY: 'auto',
+    wh: '100%',
     col: 1,
     flex: 1,
-    p: 8,
+    bg: 'bg0',
   },
   Section: {
     flex: 1,
@@ -50,7 +58,9 @@ export const Page = ({ menu, children, ...props }: PageProps) => {
       <Toolbar openMenu$={openMenu$} />
       <div {...c('Body')}>
         <Menu openMenu$={openMenu$} menu={menu} />
-        <div {...c('Content', props)}>{children}</div>
+        <div {...c('Scroll')}>
+          <div {...c('Content', props)}>{children}</div>
+        </div>
       </div>
     </div>
   );

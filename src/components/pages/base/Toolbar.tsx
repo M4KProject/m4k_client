@@ -7,7 +7,7 @@ import { useGroup } from '@/hooks/useApi';
 
 const c = Css('Toolbar', {
   '': {
-    h: 34,
+    hMin: 34,
     w: '100%',
   },
   Fixed: {
