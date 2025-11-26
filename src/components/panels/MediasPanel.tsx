@@ -22,19 +22,11 @@ const c = Css('MediasPanel', {
     col: ['center', 'center'],
     w: W,
     m: 4,
+    cursor: 'pointer',
   },
   ItemTitle: {
     textAlign: 'center',
     w: W,
-  },
-  Video: {
-    w: 200,
-  },
-  'Video video': {
-    wh: '100%',
-    flex: 1,
-    objectFit: 'contain',
-    cursor: 'pointer',
   },
   Preview: {
     position: 'relative',
@@ -51,15 +43,19 @@ const c = Css('MediasPanel', {
     bg: 'bg',
     elevation: 1,
     rounded: 7,
+    objectFit: 'contain',
+  },
+  'Preview video': {
     anim: {
       count: 1,
-      duration: 0.5,
+      duration: 1,
       keyframes: {
         0: { opacity: 0 },
+        10: { opacity: 0 },
         100: { opacity: 1 },
       }
     }
-  },
+  }
 });
 
 // addTr({
@@ -83,32 +79,28 @@ export const MediaItem = ({ media }: { media: MediaModel }) => {
 
   const previewUrl = api.getMediaUrl(images[0], 360);
 
-  let previewEl = (
-    <img src={previewUrl} />
-  );
+  const preview = [<img key="i" src={previewUrl} />];
 
   if (over && !isEmpty(videos)) {
-    previewEl = (
-      <>
-        <img src={previewUrl} />
-        <video
-          controls={false}
-          muted
-          autoPlay
-          loop
-          onLoadStart={(e) => {
-            console.debug('Video LoadStart:', e);
-            e.currentTarget.currentTime = 0;
-          }}
-          onError={(e) => {
-            console.warn('Video Error:', e);
-          }}
-        >
-          {videos.map((v, i) => (
-            <source key={i} type={v.mime} src={api.getMediaUrl(v)} />
-          ))}
-        </video>
-      </>
+    preview.push(
+      <video
+        key="v"
+        controls={false}
+        muted
+        autoPlay
+        loop
+        onLoadStart={(e) => {
+          console.debug('Video LoadStart:', e);
+          e.currentTarget.currentTime = 0;
+        }}
+        onError={(e) => {
+          console.warn('Video Error:', e);
+        }}
+      >
+        {videos.map((v, i) => (
+          <source key={i} type={v.mime} src={api.getMediaUrl(v)} />
+        ))}
+      </video>
     );
   }
 
@@ -150,7 +142,7 @@ export const MediaItem = ({ media }: { media: MediaModel }) => {
 
   return (
     <div {...c('Item', over && 'Item-over')} {...overProps}>
-      <div {...c('Preview')}>{previewEl}</div>
+      <div {...c('Preview')}>{preview}</div>
       <div {...c('ItemTitle')}>{truncate(media.title, 20)}</div>
     </div>
   );
