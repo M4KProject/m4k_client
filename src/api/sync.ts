@@ -17,6 +17,7 @@ import { deepClone, getChanges } from 'fluxio';
 import { Dictionary } from 'fluxio';
 import { FluxDictionary } from 'fluxio';
 import { firstUpper } from 'fluxio';
+import { ItemId } from './models';
 
 export type IdOrWhere<T extends PbModel> = string | PbWhere<T>;
 
@@ -68,6 +69,8 @@ const filter = <T extends PbModel>(items: T[], where?: PbWhere<T>, one?: boolean
 
   return results as T[];
 };
+
+export const getId = (itemId: ItemId) => isItem(itemId) ? itemId.id : itemId; 
 
 export class Sync<T extends PbModel> {
   readonly log: Logger;
@@ -179,7 +182,8 @@ export class Sync<T extends PbModel> {
     return result;
   }
 
-  async update(id: string, changes: PbUpdate<T>, o?: PbOptions<T>): Promise<T | null> {
+  async update(itemId: ItemId, changes: PbUpdate<T>, o?: PbOptions<T>): Promise<T | null> {
+    const id = getId(itemId);
     this.log.d('update', id, changes, o);
     const prev = this.get(id);
     if (!prev) return null;
@@ -195,7 +199,8 @@ export class Sync<T extends PbModel> {
     }
   }
 
-  async apply(id: string, cb: (next: T) => void, o?: PbOptions<T>): Promise<T | null> {
+  async apply(itemId: ItemId, cb: (next: T) => void, o?: PbOptions<T>): Promise<T | null> {
+    const id = getId(itemId);
     this.log.d('apply', id, o);
     const prev = this.get(id);
     if (!prev) return null;
@@ -215,7 +220,8 @@ export class Sync<T extends PbModel> {
     }
   }
 
-  async delete(id: string, o?: PbOptions<T>): Promise<void> {
+  async delete(itemId: ItemId, o?: PbOptions<T>): Promise<void> {
+    const id = getId(itemId);
     this.log.d('delete', id, o);
     const prev = this.get(id);
     this.set(id, null);

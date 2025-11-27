@@ -12,7 +12,7 @@ const c = Css('Table', {
     borderCollapse: 'collapse',
     w: '100%',
     bg: 'bg',
-    fg: 't',
+    fg: 'txt',
     h: 3,
   },
 
@@ -63,7 +63,7 @@ const c = Css('Table', {
     bg: 'bg',
   },
   CellHead: {
-    fg: 't',
+    fg: 'txt',
   },
   'CellHead &CellContent': {
     h: 2.5,

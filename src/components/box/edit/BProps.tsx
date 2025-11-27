@@ -43,7 +43,8 @@ import {
 } from 'lucide-react';
 import { BMedias } from './BMedias';
 import { FieldProps } from '@/components/fields/types';
-import { Content, DivProps } from '@/components/common/types';
+import { DivProps } from '@/components/common/types';
+import { Comp } from '@/utils/comp';
 
 const c = Css('BProps', {
   '': {
@@ -142,7 +143,7 @@ const FlexAlignButton = ({
   return <Button icon={icon} selected={selected} onClick={handleClick} />;
 };
 
-const TextAlignButton = ({ icon, v }: { icon: Content; v: Style['textAlign'] }) => {
+const TextAlignButton = ({ icon, v }: { icon: Comp; v: Style['textAlign'] }) => {
   const [style, setStyle] = useProp('s');
   const s = style || ({} as Style);
 
@@ -187,7 +188,7 @@ export const BProps = () => {
   const i = select.i;
   const item = select.item;
   const types = Object.entries(ctrl.registry).map(
-    ([type, config]) => [type, <Tr>{config.label}</Tr>] as [string, Content]
+    ([type, config]) => [type, <Tr>{config.label}</Tr>] as [string, Comp]
   );
   const [nType] = useProp('t');
   const type = nType || 'box';

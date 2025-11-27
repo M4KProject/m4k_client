@@ -27,7 +27,7 @@ const c = Css('Button', {
     rounded: 5,
     border: 0,
     bg: 'btn',
-    fg: 't',
+    fg: 'txt',
     whMin: 20,
     elevation: 1,
     transition: 0.5,
@@ -68,7 +68,7 @@ const c = Css('Button', {
 
   ...addColors(),
 
-  '-icon': { bg: 'transparent', fg: 't', elevation: 0, border: 0 },
+  '-icon': { bg: 'transparent', fg: 'txt', elevation: 0, border: 0 },
   '-selected&-icon,:hover&-icon': { bg: 'p', fg: 'handle', border: 0 },
 });
 

@@ -20,14 +20,14 @@ const c = Css('PairingPage', {
     w: 240,
   },
   Title: {
-    fg: 't',
+    fg: 'txt',
     m: 4,
     mb: 2,
     bold: 1,
     fontSize: 2,
   },
   Subtitle: {
-    color: 't',
+    color: 'txt',
     m: 4,
     mt: 0,
   },

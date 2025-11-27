@@ -4,9 +4,16 @@ import { MediaModel } from '@/api/models';
 import { useFlux } from '@/hooks/useFlux';
 import { useMediaController } from '@/hooks/useMediaController';
 import { useOver } from '@/hooks/useOver';
+import { Anim } from '../common/Anim';
+import { MediaIcon } from '../medias/MediaIcon';
+import { Button } from '../common/Button';
+import { AlignLeftIcon, ArrowLeftIcon, FolderIcon, LayoutIcon, UploadIcon } from 'lucide-react';
+import { useEffect } from 'preact/hooks';
+import { Actions, ActionsSep } from './base/Actions';
+import { Field } from '../fields/Field';
 
-const W = 200;
-const H = 140;
+const W = 180;
+const H = 130;
 
 const c = Css('MediasPanel', {
   '': {
@@ -14,25 +21,30 @@ const c = Css('MediasPanel', {
     p: 8,
   },
   Item: {
-    col: ['center', 'center'],
+    col: ['stretch', 'center'],
     w: W,
+    h: H,
     m: 4,
     cursor: 'pointer',
   },
   ItemTitle: {
     textAlign: 'center',
     w: W,
+    fg: 'txt',
   },
   Preview: {
     position: 'relative',
-    w: W,
-    h: H,
+    flex: 1,
     bgMode: 'contain',
     m: 4,
     center: 1,
+    transition: 0.3,
   },
-  'Preview img, Preview video': {
+  'Preview img,Preview video': {
     position: 'absolute',
+    xy: '50%',
+    translateX: '-50%',
+    translateY: '-50%',
     wMax: '100%',
     hMax: '100%',
     bg: 'bg',
@@ -50,7 +62,23 @@ const c = Css('MediasPanel', {
         100: { opacity: 1 },
       }
     }
-  }
+  },
+  'Preview .lucide': {
+    wh: 50,
+  },
+  'Item-over &Preview': {
+    zIndex: 10,
+  },
+  Back: {
+    wh: 100,
+    col: ['center', 'around'],
+  },
+  'Back .lucide': {
+    wh: 50,
+  },
+  'Back .ButtonContent': {
+    flex: 0,
+  },
 });
 
 // addTr({
@@ -74,36 +102,70 @@ export const MediaItem = ({ media }: { media: MediaModel }) => {
 
   const previewUrl = api.getMediaUrl(images[0], 360);
 
-  const preview = [<img key="i" src={previewUrl} />];
-
-  if (over && !isEmpty(videos)) {
-    preview.push(
-      <video
-        key="v"
-        controls={false}
-        muted
-        autoPlay
-        loop
-        onLoadStart={(e) => {
-          console.debug('Video LoadStart:', e);
-          e.currentTarget.currentTime = 0;
-        }}
-        onError={(e) => {
-          console.warn('Video Error:', e);
-        }}
-      >
-        {videos.map((v, i) => (
-          <source key={i} type={v.mime} src={api.getMediaUrl(v)} />
-        ))}
-      </video>
-    );
-  }
-
   return (
-    <div {...c('Item', over && 'Item-over')} {...overProps}>
-      <div {...c('Preview')}>{preview}</div>
+    <div {...c('Item', over && 'Item-over')} {...overProps} onClick={controller.click(media)}>
+      {previewUrl ? (
+        <div {...c('Preview')}>
+          <img key="i" src={previewUrl} />
+          {!isEmpty(videos) && (
+            <Anim show={over} factory={() => (
+              <video
+                key="v"
+                controls={false}
+                muted
+                autoPlay
+                loop
+                onLoadStart={(e) => {
+                  console.debug('Video LoadStart:', e);
+                  e.currentTarget.currentTime = 0;
+                }}
+                onError={(e) => {
+                  console.warn('Video Error:', e);
+                }}
+              >
+                {videos.map((v, i) => (
+                  <source key={i} type={v.mime} src={api.getMediaUrl(v)} />
+                ))}
+              </video>
+            )} />
+          )}
+        </div>
+      ) : (
+        <MediaIcon {...c('Preview')} type={media.type} />
+      )}
       <div {...c('ItemTitle')}>{truncate(media.title, 20)}</div>
     </div>
+  );
+}
+
+export const MediasActions = () => {
+  const controller = useMediaController();
+  const parent = useFlux(controller.parent$);
+  return (
+    <Actions>
+      <Button
+        color="primary"
+        icon={UploadIcon}
+        title="Upload"
+        onClick={controller.upload}
+      />
+      <Button
+        color="primary"
+        icon={FolderIcon}
+        title="Ajouter Dossier"
+        onClick={controller.addFolder}
+      />
+      <Button
+        color="primary"
+        icon={LayoutIcon}
+        title="Ajouter Contenu"
+        onClick={controller.addContent}
+      />
+      <ActionsSep />
+      {parent && (
+        <Field label="Nom du dossier" value={parent.title} onValue={title => controller.update(parent, { title })} />
+      )}
+    </Actions>
   );
 }
 
@@ -112,6 +174,10 @@ export const MediasPanel = ({ type }: { type?: MediaModel['type'] }) => {
   const medias = useGroupMedias(type);
   const parent = useFlux(controller.parent$);
   const parentId = parent?.id || '';
+
+  useEffect(() => {
+    controller.setMedias(medias);
+  }, [medias]);
 
   // const isAdvanced = useIsAdvanced();
   // const allSelectedById = useFlux(selectedById$);
@@ -136,6 +202,16 @@ export const MediasPanel = ({ type }: { type?: MediaModel['type'] }) => {
 
   return (
     <div {...c('')}>
+      <MediasActions />
+      {parent && (
+        <Button
+          {...c('Back')}
+          color="secondary"
+          icon={ArrowLeftIcon}
+          title="Retour"
+          onClick={controller.back}
+        />
+      )}
       {medias.filter(m => (m.parent||'') === parentId).map(media => (
         <MediaItem media={media} />
       ))}

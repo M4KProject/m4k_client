@@ -13,6 +13,7 @@ import {
   ChevronDown,
   ChevronRight,
 } from 'lucide-react';
+import { DivProps } from '../common/types';
 
 const c = Css('MediaIcon', {
   '': {
@@ -35,13 +36,13 @@ const infoByType: Record<MediaType, [string, typeof FolderOpen]> = {
   '': ['Inconnu', HelpCircle],
 };
 
-export interface MediaIconProps {
+export interface MediaIconProps extends DivProps {
   type?: MediaType;
   isOpen?: boolean;
   hasChildren?: boolean;
 }
 
-export const MediaIcon = ({ type, isOpen, hasChildren }: MediaIconProps) => {
+export const MediaIcon = ({ type, isOpen, hasChildren, ...props }: MediaIconProps) => {
   if (!type) return null;
 
   const info = infoByType[type] || infoByType.unknown;
@@ -53,7 +54,7 @@ export const MediaIcon = ({ type, isOpen, hasChildren }: MediaIconProps) => {
   }
 
   return (
-    <div {...c('')}>
+    <div {...props} {...c('', props)}>
       <Button icon={Icon} tooltip={title} />
       {hasChildren && (
         <span>

@@ -253,3 +253,5 @@ export interface DeviceModel extends _DeviceModel {
 export interface LockModel extends _LockModel {}
 
 export interface SuperUserModel extends _SuperuserModel {}
+
+export type ItemId = string | { id: string };

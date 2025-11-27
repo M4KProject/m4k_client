@@ -63,7 +63,7 @@ const c = Css('Menu', {
     transition: 0.2,
   },
 
-  '-open, -open &Mask': {
+  '-open,-open &Mask': {
     w: MENU_OPEN,
   },
 

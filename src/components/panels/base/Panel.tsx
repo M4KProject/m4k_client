@@ -21,7 +21,10 @@ const c = Css('Panel', {
   'Header svg': {
     mx: 8,
   },
-  Content: {},
+  Content: {
+    flex: 1,
+    bg: 'bg',
+  },
 });
 
 export interface PanelProps extends DivProps {

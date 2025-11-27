@@ -54,7 +54,7 @@ const c = Css('Select', {
     w: '100%',
     mt: 2,
     bg: 'bg',
-    fg: 't',
+    fg: 'txt',
     border: 'border',
     borderTop: 'none',
     rounded: [0, 0, 4, 4],

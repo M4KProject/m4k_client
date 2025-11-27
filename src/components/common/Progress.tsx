@@ -30,7 +30,7 @@ const c = Css('Progress', {
     position: 'absolute',
     xy: 0,
     wh: '100%',
-    fg: 't',
+    fg: 'txt',
     zIndex: 1,
   },
   'Text-in': {

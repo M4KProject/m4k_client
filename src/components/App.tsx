@@ -22,7 +22,7 @@ const c = Css('App', {
     overflow: 'auto',
     inset: 0,
     bg: 'bg',
-    fg: 't',
+    fg: 'txt',
     fontFamily: 'Roboto',
     fontSize: '18px',
   },

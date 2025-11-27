@@ -57,7 +57,7 @@ export const refreshTheme = () => {
   const b = '#000000';
   const bg = isD ? b : w;
   const bg0 = isD ? setHsl(p, { s: 100, l: 5 }) : setHsl(p, { s: 100, l: 95 });
-  const t = isD ? w : b;
+  const txt = isD ? setHsl(p, { s: 100, l: 85 }) : setHsl(p, { s: 100, l: 15 });
   const handle = w;
   const border = isD ? setHsl(w, { l: 30 }) : setHsl(w, { l: 70 });
   const info = setHsl(p, { h: 240 });
@@ -76,7 +76,7 @@ export const refreshTheme = () => {
     handle,
     bg,
     bg0,
-    t,
+    txt,
     border,
     p,
     s,

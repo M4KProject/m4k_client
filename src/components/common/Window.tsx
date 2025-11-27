@@ -181,7 +181,7 @@ const c = Css('Window', {
     elevation: 4,
     rounded: 4,
     bg: 'bg',
-    fg: 't',
+    fg: 'txt',
     overflow: 'hidden',
     resize: 'both',
     scale: 0.9,

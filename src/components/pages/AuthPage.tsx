@@ -4,7 +4,6 @@ import logoUrl from '@/assets/logo.svg';
 import loginUrl from '@/assets/login.svg';
 import { Download, Monitor } from 'lucide-react';
 import { Apps } from '@/components/admin/Apps';
-import { isDevice$ } from '@/router';
 import { AuthForm } from '@/components/panels/AuthForm';
 import { Button } from '@/components/common/Button';
 import { useRouter } from '@/hooks/useRoute';
@@ -14,7 +13,7 @@ const c = Css('AuthPage', {
     row: 'stretch',
     position: 'fixed',
     overflow: 'auto',
-    fg: 't',
+    fg: 'txt',
     bg: 'bg0',
     inset: 0,
   },
