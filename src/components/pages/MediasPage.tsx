@@ -1,43 +1,20 @@
 import { Css } from 'fluxio';
 import { Page } from './base/Page';
-import { MediasPanel } from '../panels/MediasPanel';
+import { Medias } from '../panels/Medias';
 
 const c = Css('MediasPage', {
   '': {
   },
 });
 
-// const addMedia = async (api: Api, type: MediaModel['type'], title: string) => {
-//   const media = await api.media.create({
-//     title: getNextTitle(api, title),
-//     type,
-//     user: api.needAuthId(),
-//     group: api.needGroupId(),
-//   });
-//   setMediaType(type);
-//   setMediaKey(media.key);
-// };
-// const addPlaylist = (api: Api) => addMedia(api, 'playlist', 'Playlist');
-// const addPage = (api: Api) => addMedia(api, 'page', 'Page');
-
 export const MediasPage = () => {
-
-
   return (
     <Page {...c('')}>
-      <MediasPanel />
+      <Medias />
     </Page>
   );
 };
 
-
-
-
-
-
-// const c = Css('MediasPage', {});
-
-// const handleAddToPlaylist = async () => {};
 
 // export const MediasPage = () => {
 //   const api = useApi();
@@ -100,45 +77,3 @@ export const MediasPage = () => {
 //         {type === 'page' && (
 //           <Button icon={FilePlus} tooltip="Créer une page" onClick={() => addPage(api)} />
 //         )}
-
-//         {type === '' && (
-//           <Button
-//             icon={FolderPlus}
-//             tooltip="Créer un nouveau dossier"
-//             onClick={() => {
-//               api.media.create({
-//                 title: getNextTitle(api, 'Dossier'),
-//                 mime: 'application/folder',
-//                 type: 'folder',
-//                 user: api.needAuthId(),
-//                 group: api.needGroupId(),
-//               });
-//             }}
-//           >
-//             Nouveau dossier
-//           </Button>
-//         )}
-
-//         <UploadButton
-//           tooltip="Téléverser des medias"
-//           icon={Upload}
-//           color="primary"
-//           onFiles={(files) => {
-//             if (media?.type === 'playlist') {
-//               uploadMedia(api, files, media.parent ? mediaById[media.parent] : undefined, media);
-//               return;
-//             }
-//             if (media?.type === 'folder') {
-//               uploadMedia(api, files, media);
-//               return;
-//             }
-//             uploadMedia(api, files);
-//           }}
-//         />
-
-//         {/* <SearchField /> */}
-//       </Toolbar>
-//       {content}
-//     </Page>
-//   );
-// };
