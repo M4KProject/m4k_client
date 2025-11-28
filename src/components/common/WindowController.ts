@@ -1,4 +1,4 @@
-import { Flux, onHtmlEvent, Unsubscribe, stopEvent, Vector2, Vector4, VECTOR2_ZERO, getEventXY, clamp, VECTOR4_ZERO, mustExist, SizeWH, Transform, PosXY, clampVector, VECTOR4_MAX, toVoid, glb } from 'fluxio';
+import { Flux, onHtmlEvent, Unsubscribe, stopEvent, Vector2, Vector4, VECTOR2_ZERO, getEventXY, clamp, VECTOR4_ZERO, mustExist, SizeWH, Transform, PosXY, clampVector, VECTOR4_MAX, toVoid } from 'fluxio';
 import { useContext } from 'preact/hooks';
 import { ComponentChildren, createContext } from 'preact';
 import { Comp } from '@/utils/comp';
@@ -64,18 +64,25 @@ export class WindowController {
 
     let transform = VECTOR4_ZERO;
 
-    const posEl = target instanceof HTMLElement ? target : glb.document?.body;
-    const rect = posEl.getBoundingClientRect();
-
     // Get window size (use provided size or default to auto)
     const w = size?.[0] || 0;
     const h = size?.[1] || 0;
 
-    // Center window on target position
-    const targetCenterX = rect.left + rect.width / 2;
-    const targetCenterY = rect.top + rect.height / 2;
-    const x = targetCenterX - w / 2;
-    const y = targetCenterY - h / 2;
+    let x: number;
+    let y: number;
+
+    if (target instanceof HTMLElement) {
+      // Center window on target position
+      const rect = target.getBoundingClientRect();
+      const targetCenterX = rect.left + rect.width / 2;
+      const targetCenterY = rect.top + rect.height / 2;
+      x = targetCenterX - w / 2;
+      y = targetCenterY - h / 2;
+    } else {
+      // Center window on screen (for modals without target)
+      x = (window.innerWidth - w) / 2;
+      y = (window.innerHeight - h) / 2;
+    }
 
     transform = [x, y, w, h];
 
@@ -94,7 +101,7 @@ export class WindowController {
     transform = clampVector(transform, this.min, this.max);
     this.transform$.set(transform);
 
-    this.draggable = draggable || false;
+    this.draggable = draggable !== undefined ? draggable : true;
     this.resizable = resizable || false;
 
     setTimeout(this.open, 10);
