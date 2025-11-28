@@ -1,4 +1,4 @@
-import { Flux, onHtmlEvent, Unsubscribe, stopEvent, Vector2, Vector4, VECTOR2_ZERO, getEventXY, clamp, VECTOR4_ZERO, mustExist, SizeWH, Transform, PosXY, mergeVector, clampVector } from 'fluxio';
+import { Flux, onHtmlEvent, Unsubscribe, stopEvent, Vector2, Vector4, VECTOR2_ZERO, getEventXY, clamp, VECTOR4_ZERO, mustExist, SizeWH, Transform, PosXY, clampVector } from 'fluxio';
 import { useContext } from 'preact/hooks';
 import { ComponentChildren, createContext } from 'preact';
 import { Comp } from '@/utils/comp';
@@ -132,7 +132,7 @@ export class WindowController {
       const y = startY + dy * yDir;
       const w = clamp(startW + dx * wDir, this.min[0], this.max[0]||Number.MAX_VALUE);
       const h = clamp(startH + dy * hDir, this.min[1], this.max[1]||Number.MAX_VALUE);
-      
+
       this.transform$.set([x, y, w, h]);
     }
   };
