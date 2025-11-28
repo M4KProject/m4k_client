@@ -10,9 +10,13 @@ import { useWindowController, WindowContext, WindowController, WindowFooterProps
 const c = Css('Window', {
   '': {
     position: 'fixed',
-    inset: 0,
+    xy: 0,
+    opacity: 0,
+    transition: 0.3,
+  },
+  '-modal': {
+    wh: 0,
     bg: 'mask',
-    center: 1,
     opacity: 0,
     transition: 0.3,
   },
@@ -20,22 +24,24 @@ const c = Css('Window', {
     col: 1,
     position: 'relative',
     elevation: 4,
-    rounded: 4,
+    rounded: 7,
     bg: 'bg',
     fg: 'txt',
-    overflow: 'hidden',
     resize: 'both',
     scale: 0.9,
     opacity: 0,
     transition: 0.1,
+    overflow: 'hidden',
   },
   Header: {
     row: ['center', 'between'],
-    p: 2,
-    bg: 'bg2',
-  },
-  '-draggable': {
+    pl: 8,
+    bg: 'barBg',
+    fg: 'barFg',
     cursor: 'move',
+  },
+  Close: {
+    fg: 'barFg',
   },
   Title: {
     bold: 1,
@@ -45,7 +51,7 @@ const c = Css('Window', {
     col: 1,
     flex: 1,
     overflow: 'auto',
-    p: 2,
+    p: 8,
   },
   Footer: {
     row: ['center', 'end'],
@@ -151,13 +157,13 @@ const WindowRender = (props: WindowProps) => {
 
   return (
     <WindowContext value={controller}>
-      <div {...c('', open && '-open', mounted && '-mounted')} onClick={modal ? toVoid : controller.close}>
+      <div {...c('', modal && '-modal', open && '-open', mounted && '-mounted')} onClick={controller.close}>
         <div {...c('Box')} style={boxStyle as any} onClick={stopEvent}>
           <div {...c('Header', draggable && '-draggable')} onMouseDown={controller.drag}>
             {title && (
               <div {...c('Title')}>{title}</div>
             )}
-            <Button icon={X} onClick={controller.close} />
+            <Button {...c('Close')} icon={X} onClick={controller.close} />
           </div>
           <div {...c('Content')}>
             {open ? comp(content) : null}
@@ -175,13 +181,8 @@ const WindowRender = (props: WindowProps) => {
 };
 
 export const createWindow = (props: WindowProps) => {
-  const controller = props.controller?.init(props) || new WindowController(props);
-  let dispose = toVoid;
-  controller.mounted$.on((mounted) => {
-    dispose();
-    if (mounted) {
-      dispose = portal(<WindowRender {...props} controller={controller} />);
-    }
-  });
+  console.debug('createWindow', props);
+  const controller = (props.controller || new WindowController(props)).init(props);
+  controller.unmount = portal(<WindowRender {...props} controller={controller} />);
   return controller;
 };

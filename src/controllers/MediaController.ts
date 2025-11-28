@@ -99,6 +99,8 @@ export class MediaController {
 
   delete = () => {
     const media = this.select$.get();
+    this.log.d('delete', media);
+
     if (!media) return;
 
     createWindow({
@@ -107,6 +109,8 @@ export class MediaController {
       content: `Êtes-vous sûr de vouloir supprimer le fichier multimédia : « ${media.title} » ?`,
       yes: () => this.api.media.delete(media),
       cancel: toVoid,
+      size: [350,150],
+      min: [200,200],
     });
   }
 }

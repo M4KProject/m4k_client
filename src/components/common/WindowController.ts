@@ -1,4 +1,4 @@
-import { Flux, onHtmlEvent, Unsubscribe, stopEvent, Vector2, Vector4, VECTOR2_ZERO, getEventXY, clamp, VECTOR4_ZERO, mustExist, SizeWH, Transform, PosXY, clampVector } from 'fluxio';
+import { Flux, onHtmlEvent, Unsubscribe, stopEvent, Vector2, Vector4, VECTOR2_ZERO, getEventXY, clamp, VECTOR4_ZERO, mustExist, SizeWH, Transform, PosXY, clampVector, VECTOR4_MAX, toVoid, glb } from 'fluxio';
 import { useContext } from 'preact/hooks';
 import { ComponentChildren, createContext } from 'preact';
 import { Comp } from '@/utils/comp';
@@ -15,7 +15,8 @@ export interface WindowProps extends WindowFooterProps {
   content?: Comp;
   children?: ComponentChildren;
   controller?: WindowController;
-  pos?: PosXY|HTMLElement;
+  target?: HTMLElement;
+  pos?: PosXY;
   size?: SizeWH;
   min?: SizeWH|Transform;
   max?: SizeWH|Transform;
@@ -37,6 +38,9 @@ export class WindowController {
   resizable = false;
   response$ = new Flux('');
 
+  readonly offs: Unsubscribe[] = [];
+  unmount: Unsubscribe = toVoid;
+
   private dragging = false;
   private resizeDir: Vector4 | null = null;
   private start = {
@@ -46,43 +50,47 @@ export class WindowController {
   };
 
   constructor(props: WindowProps) {
+    console.debug('WindowController constructor', props);
     this.init(props);
   }
 
   init(props: WindowProps) {
     console.debug('WindowController init', props);
 
-    if (this.props === props) return;
+    if (this.props === props) return this;
     this.props = props;
 
-    const { pos, size, min, max, draggable, resizable } = props;
+    const { target, pos, size, min, max, draggable, resizable } = props;
 
     let transform = VECTOR4_ZERO;
 
-    if (pos instanceof HTMLElement) {
-      const rect = pos.getBoundingClientRect();
-      const centerX = window.innerWidth / 2;
-      const centerY = window.innerHeight / 2;
-      const x = rect.left + rect.width / 2 - centerX;
-      const y = rect.bottom - centerY + 10;
-      transform = [x, y, 0, 0];
-    }
+    const posEl = target instanceof HTMLElement ? target : glb.document?.body;
+
+    const rect = posEl.getBoundingClientRect();
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2;
+    const x = rect.left + rect.width / 2 - centerX;
+    const y = rect.bottom - centerY + 10;
+    transform = [x, y, 0, 0];
 
     if (size) {
       transform = [transform[0], transform[1], size[0], size[1]];
     }
 
     this.min = min ? min.length === 2 ? [0, 0, min[0], min[1]] : min : VECTOR4_ZERO;
-    this.max = max ? max.length === 2 ? [0, 0, max[0], max[1]] : max : VECTOR4_ZERO;
+    this.max = max ? max.length === 2 ? [0, 0, max[0], max[1]] : max : VECTOR4_MAX;
 
     console.debug('WindowController transform', transform, this.min, this.max);
 
     transform = clampVector(transform, this.min, this.max);
+    this.transform$.set(transform);
 
     setTimeout(this.open, 10);
 
     this.draggable = draggable || false;
     this.resizable = resizable || false;
+
+    return this;
   }
 
   private startDrag(event: Event) {
@@ -106,14 +114,14 @@ export class WindowController {
     this.bindEvents();
   }
 
-  private disposes: Unsubscribe[] = [];
-
   private bindEvents() {
-    this.disposes.push(onHtmlEvent(0, 'mousemove', this.onMouseMove));
-    this.disposes.push(onHtmlEvent(0, 'mouseup', this.onMouseUp));
+    this.offs.push(
+      onHtmlEvent(0, 'mousemove', this.onMove),
+      onHtmlEvent(0, 'mouseup', this.onUp),
+    );
   }
 
-  private onMouseMove = (event: Event) => {
+  private onMove = (event: Event) => {
     const {
         eventXY: [startEventX, startEventY],
         transform: [startX, startY, startW, startH],
@@ -137,36 +145,42 @@ export class WindowController {
     }
   };
 
-  private onMouseUp = () => {
+  private onUp = () => {
     this.dragging = false;
     this.resizeDir = null;
-    for (const d of this.disposes) d();
-    this.disposes = [];
+    for (const off of this.offs) off();
+    this.offs.length = 0;
   };
 
   open = () => {
     this.mounted$.set(true);
     setTimeout(() => {
-        if (this.mounted$.get() === false) {
-            this.open$.set(true);
-        }
+      if (this.mounted$.get() === true) {
+        this.open$.set(true);
+      }
     }, 10);
   }
 
   close = () => {
+    console.debug('WindowController close');
     if (!this.response$.get()) {
       this.cancel();
       return;
     }
     this.open$.set(false);
     setTimeout(() => {
+      console.debug('WindowController close end');
       if (this.open$.get() === false) {
-        this.mounted$.set(false);
+        console.debug('WindowController close unmount');
+        this.onUp();
+        this.unmount();
       }
     }, 500);
   }
   
   setResponse(response: string) {
+    console.debug('WindowController setResponse', response);
+    if (this.response$.get()) return;
     this.response$.set(response);
     this.close();
     if (response === 'yes') this.props.yes?.(this);

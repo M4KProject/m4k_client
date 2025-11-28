@@ -6,9 +6,11 @@ import { useConstant } from '@/hooks/useConstant';
 import { comp, Comp } from '@/utils/comp';
 
 export const portal = (content: Comp, options?: ElOptions) => {
-  const el = setEl('div', { parent: 'body', ...options });
+  console.debug('portal', content, options);
+  const el = setEl('div', { parent: 'body', cls: 'portal', ...options });
   render(comp(content), el);
   return () => {
+    console.debug('portal remove', content, options);
     render(null, el);
     el.remove();
   };
