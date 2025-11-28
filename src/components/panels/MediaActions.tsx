@@ -1,7 +1,7 @@
 import { useFlux } from '@/hooks/useFlux';
 import { useMediaController } from '@/hooks/useMediaController';
 import { Button, UploadButton } from '../common/Button';
-import { EditIcon, FolderPlusIcon, LayoutIcon, UploadIcon } from 'lucide-react';
+import { EditIcon, FolderPlusIcon, LayoutIcon, TrashIcon, UploadIcon } from 'lucide-react';
 import { Actions, ActionsSep } from './base/Actions';
 import { Field } from '../fields/Field';
 
@@ -38,10 +38,18 @@ export const MediasActions = () => {
       <ActionsSep />
       {select && (
         <Button
-            color="primary"
-            icon={EditIcon}
-            title="Modifier"
-            onClick={controller.edit}
+          color="primary"
+          icon={EditIcon}
+          title="Modifier"
+          onClick={controller.edit}
+        />
+      )}
+      {select && (
+        <Button
+          color="error"
+          icon={TrashIcon}
+          title="Supprimer"
+          onClick={controller.delete}
         />
       )}
     </Actions>

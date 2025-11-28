@@ -1,7 +1,8 @@
 import { Api } from "@/api/Api";
 import { MediaModel } from "@/api/models";
+import { createWindow } from "@/components/common/Window";
 import { getSingleton } from "@/utils/ioc";
-import { byId, flux, fluxCombine, fluxDictionary, isNumber, logger, toNumber } from "fluxio";
+import { byId, flux, fluxCombine, fluxDictionary, isNumber, logger, toNumber, toVoid } from "fluxio";
 import { PbCreate } from "pblite";
 
 export class MediaController {
@@ -94,5 +95,18 @@ export class MediaController {
 
   edit = () => {
 
+  }
+
+  delete = () => {
+    const media = this.select$.get();
+    if (!media) return;
+
+    createWindow({
+      modal: true,
+      title: "Êtes-vous sûr ?",
+      content: `Êtes-vous sûr de vouloir supprimer le fichier multimédia : « ${media.title} » ?`,
+      yes: () => this.api.media.delete(media),
+      cancel: toVoid,
+    });
   }
 }

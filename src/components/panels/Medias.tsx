@@ -42,7 +42,7 @@ export const Medias = ({ type }: { type?: MediaModel['type'] }) => {
 
   useEffect(() => controller.medias$.set(medias), [medias]);
 
-  console.debug('MediasPanel', medias);
+  console.debug('Medias', medias, parentId);
 
   return (
     <div {...c('')}>
@@ -56,7 +56,7 @@ export const Medias = ({ type }: { type?: MediaModel['type'] }) => {
           onClick={controller.back}
         />
       )}
-      {medias.filter(m => m && ((m.parent||'') === parentId)).map(media => (
+      {medias.filter(m => m && (m.parent||'') === (parentId||'')).map(media => (
         <MediaItem key={media.id} media={media} />
       ))}
     </div>

@@ -220,7 +220,8 @@ export class Sync<T extends PbModel> {
     }
   }
 
-  async delete(itemId: ItemId, o?: PbOptions<T>): Promise<void> {
+  async delete(itemId?: ItemId, o?: PbOptions<T>): Promise<void> {
+    if (!itemId) return;
     const id = getId(itemId);
     this.log.d('delete', id, o);
     const prev = this.get(id);

@@ -4,7 +4,7 @@ import { addHsl, Css, isFloat, round, setHsl, setRgb, toHsl, toRgb, isLight } fr
 import { useState, useRef } from 'preact/hooks';
 import { Field } from '@/components/fields/Field';
 import { theme$ } from '@/utils/theme';
-import { showWindow } from '@/components/common/Window';
+import { createWindow } from '@/components/common/Window';
 import { Button } from '@/components/common/Button';
 
 const c = Css('ColorPicker', {
@@ -147,10 +147,11 @@ const ColorButton = () => {
 
   const openPicker = () => {
     if (!ref.current) return;
-    showWindow('Couleur', <ColorPickerContent value={value} onChange={onChange} />, {
-      target: ref.current,
-      w: 300,
-      h: 400,
+    createWindow({
+      title: "Couleur",
+      content: () => <ColorPickerContent value={value} onChange={onChange} />,
+      pos: ref.current,
+      size: [300, 400],
       min: [250, 300],
     });
   };
