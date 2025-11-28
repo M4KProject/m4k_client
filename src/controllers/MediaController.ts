@@ -4,11 +4,13 @@ import { createWindow } from "@/components/common/Window";
 import { getSingleton } from "@/utils/ioc";
 import { byId, flux, fluxCombine, fluxDictionary, isNumber, logger, toNumber, toVoid } from "fluxio";
 import { PbCreate } from "pblite";
+import { Router } from "./Router";
 
 export class MediaController {
   log = logger('MediaController');
 
   api = getSingleton(Api);
+  router = getSingleton(Router);
 
   select$ = flux<MediaModel|undefined>(undefined);
   medias$ = flux<MediaModel[]>([]);
@@ -63,7 +65,7 @@ export class MediaController {
         'Nouveau'
       )),
       user: media.user || this.api.needAuthId(),
-      group: media.group || this.api.needGroupId(),
+      group: media.group || this.router.needGroupId(),
       parent: media.parent || this.parent$.get()?.id,
     };
   }
@@ -107,7 +109,10 @@ export class MediaController {
       modal: true,
       title: "Êtes-vous sûr ?",
       content: `Êtes-vous sûr de vouloir supprimer le fichier multimédia : « ${media.title} » ?`,
-      yes: () => this.api.media.delete(media),
+      yes: () => {
+        if (media.type === 'folder') this.back();
+        this.api.media.delete(media);
+      },
       cancel: toVoid,
       size: [350,150],
       min: [200,200],

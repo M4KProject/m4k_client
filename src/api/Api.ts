@@ -10,7 +10,7 @@ import {
   MemberModel,
   UserModel,
 } from './models';
-import { byId, Dictionary, fluxStored, getExt, groupBy, isString, logger, removeAccents, toError } from 'fluxio';
+import { byId, Dictionary, getExt, groupBy, isString, logger, removeAccents, toError } from 'fluxio';
 import { setUrlParams } from 'fluxio';
 import { isStringValid } from 'fluxio';
 import { app } from '@/app';
@@ -25,7 +25,6 @@ export interface Variant extends FileInfo {
 
 export class Api {
   pb = getPbClient();
-  groupId$ = fluxStored<string>('groupId$', '', isString);
 
   device = new Sync<DeviceModel>('devices');
   group = new Sync<GroupModel>('groups');
@@ -55,16 +54,6 @@ export class Api {
         pbClient.setApiUrl(nextApiUrl);
       }
     }
-  }
-
-  getGroupId() {
-    return this.groupId$.get();
-  }
-
-  needGroupId() {
-    const id = this.getGroupId();
-    if (!isStringValid(id)) throw toError('no group id');
-    return id;
   }
 
   needAuthId() {

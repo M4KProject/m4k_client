@@ -5,7 +5,7 @@ import { GroupModel, MediaModel } from '@/api/models';
 import { Sync } from '@/api/sync';
 import { Api } from '@/api/Api';
 import { useSingleton } from './useSingleton';
-import { useDeviceKey, useGroupKey, useIsAdvanced, useMediaKey } from './useRoute';
+import { useDeviceKey, useGroupId, useIsAdvanced, useMediaKey } from './useRoute';
 
 export const useApi = () => useSingleton(Api);
 
@@ -23,8 +23,7 @@ const useGroupItems = <T extends PbModel & { group?: string }>(
   sync: Sync<T>,
   where?: PbWhere<T>
 ): T[] => {
-  const api = useApi();
-  const group = useFlux(api.groupId$);
+  const group = useGroupId();
   const items = useFluxMemo(
     () => sync.filter$(group ? ({ ...where, group } as PbWhere<T>) : where),
     [sync, where, group]
@@ -36,7 +35,6 @@ const useById = <T extends PbModel>(sync: Sync<T>, _where?: PbWhere<T>) => useFl
 
 export const useDevice = () => useItemKey(useApi().device, useDeviceKey());
 export const useMedia = (key?: string) => useItemKey(useApi().media, useMediaKey());
-export const useGroup = () => useItemKey(useApi().group, useGroupKey());
 
 export const useGroups = (): GroupModel[] => useItems(useApi().group) as GroupModel[];
 

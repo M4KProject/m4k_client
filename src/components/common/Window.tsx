@@ -3,7 +3,7 @@ import { useFlux } from '@/hooks/useFlux';
 import { portal } from './Portal';
 import { comp } from '@/utils/comp';
 import { useMemo } from 'preact/hooks';
-import { X } from 'lucide-react';
+import { X, Check, XCircle, Ban } from 'lucide-react';
 import { Button } from './Button';
 import { useWindowController, WindowContext, WindowController, WindowFooterProps, WindowProps } from './WindowController';
 
@@ -55,9 +55,17 @@ const c = Css('Window', {
   },
   Footer: {
     row: ['center', 'end'],
-    p: 2,
     bg: 'bg2',
-    gap: '8px',
+  },
+  'Footer .Button': {
+    flex: 1,
+    m: 0,
+    rounded: 0,
+    row: ['center', 'center'],
+    h: 36,
+  },
+  'Footer .ButtonContent': {
+    flex: 0,
   },
   '-open': {
     opacity: 1,
@@ -137,9 +145,9 @@ export const WindowFooter = ({ yes, no, cancel }: WindowFooterProps) => {
 
   return (
     <div {...c('Footer')}>
-      {yes && <Button color="primary" title="Oui" onClick={controller.yes} />}
-      {no && <Button color="secondary" title="Non" onClick={controller.no} />}
-      {cancel && <Button color="error" title="Annuler" onClick={controller.cancel} />}
+      {yes && <Button color="success" icon={Check} title="Oui" onClick={controller.yes} />}
+      {no && <Button color="warn" icon={XCircle} title="Non" onClick={controller.no} />}
+      {cancel && <Button color="error" icon={Ban} title="Annuler" onClick={controller.cancel} />}
     </div>
   );
 }
