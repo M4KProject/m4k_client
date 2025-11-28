@@ -1,4 +1,4 @@
-import { computeStyle, Css, PosXY, stopEvent, toVoid, Vector2, Vector4 } from 'fluxio';
+import { computeStyle, Css, stopEvent, Vector2, Vector4 } from 'fluxio';
 import { useFlux } from '@/hooks/useFlux';
 import { portal } from './Portal';
 import { comp } from '@/utils/comp';
@@ -22,7 +22,7 @@ const c = Css('Window', {
   },
   Box: {
     col: 1,
-    position: 'relative',
+    position: 'absolute',
     elevation: 4,
     rounded: 7,
     bg: 'bg',

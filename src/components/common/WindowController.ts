@@ -65,30 +65,39 @@ export class WindowController {
     let transform = VECTOR4_ZERO;
 
     const posEl = target instanceof HTMLElement ? target : glb.document?.body;
-
     const rect = posEl.getBoundingClientRect();
-    const centerX = window.innerWidth / 2;
-    const centerY = window.innerHeight / 2;
-    const x = rect.left + rect.width / 2 - centerX;
-    const y = rect.bottom - centerY + 10;
-    transform = [x, y, 0, 0];
 
-    if (size) {
-      transform = [transform[0], transform[1], size[0], size[1]];
-    }
+    // Get window size (use provided size or default to auto)
+    const w = size?.[0] || 0;
+    const h = size?.[1] || 0;
 
-    this.min = min ? min.length === 2 ? [0, 0, min[0], min[1]] : min : VECTOR4_ZERO;
-    this.max = max ? max.length === 2 ? [0, 0, max[0], max[1]] : max : VECTOR4_MAX;
+    // Center window on target position
+    const targetCenterX = rect.left + rect.width / 2;
+    const targetCenterY = rect.top + rect.height / 2;
+    const x = targetCenterX - w / 2;
+    const y = targetCenterY - h / 2;
+
+    transform = [x, y, w, h];
+
+    // Set min/max constraints
+    const minX = 0;
+    const minY = 0;
+    const maxX = w > 0 ? window.innerWidth - w : window.innerWidth;
+    const maxY = h > 0 ? window.innerHeight - h : window.innerHeight;
+
+    this.min = min ? min.length === 2 ? [minX, minY, min[0], min[1]] : min : [minX, minY, 0, 0];
+    this.max = max ? max.length === 2 ? [maxX, maxY, max[0], max[1]] : max : [maxX, maxY, VECTOR4_MAX[2], VECTOR4_MAX[3]];
 
     console.debug('WindowController transform', transform, this.min, this.max);
 
+    // Clamp position to keep window on screen
     transform = clampVector(transform, this.min, this.max);
     this.transform$.set(transform);
 
-    setTimeout(this.open, 10);
-
     this.draggable = draggable || false;
     this.resizable = resizable || false;
+
+    setTimeout(this.open, 10);
 
     return this;
   }
