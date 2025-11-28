@@ -15,7 +15,7 @@ const c = Css('Window', {
     transition: 0.3,
   },
   '-modal': {
-    wh: 0,
+    wh: '100%',
     bg: 'mask',
     opacity: 0,
     transition: 0.3,
