@@ -23,6 +23,16 @@ export class MediaController {
     }
     return undefined;
   });
+
+  breadcrumb$ = fluxCombine(this.select$, this.mediaById$).map(([select, mediaById]) => {
+    let node = select;
+    const results: MediaModel[] = [];
+    while (node) {
+      results.push(node);
+      node = node.parent ? mediaById[node.parent] : undefined;
+    }
+    return results.reverse();
+  });
   
   click(media: MediaModel) {
     return () => this.select$.set(media);

@@ -7,7 +7,7 @@ import { Button } from '../common/Button';
 import { ArrowLeftIcon } from 'lucide-react';
 import { useEffect } from 'preact/hooks';
 import { MediaItem } from '@/components/panels/MediaItem';
-import { MediasActions } from '@/components/panels/MediaActions';
+import { MediaBreadcrumb } from '@/components/panels/MediaBreadcrumb';
 
 const c = Css('Medias', {
   '': {
@@ -46,7 +46,7 @@ export const Medias = ({ type }: { type?: MediaModel['type'] }) => {
 
   return (
     <div {...c('')}>
-      <MediasActions />
+      <MediaBreadcrumb />
       {parent && (
         <Button
           {...c('Back')}
