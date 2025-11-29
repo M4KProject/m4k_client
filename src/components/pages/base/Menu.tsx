@@ -14,44 +14,42 @@ import { useRoute } from '@/hooks/useRoute';
 import { RoutePage } from '@/controllers/Router';
 
 export const MENU_MIN = 32;
-export const MENU_OPEN = 180;
+export const MENU_OPEN = 150;
 
 const c = Css('Menu', {
   '': {
     position: 'relative',
-    transition: 0.2,
-    elevation: 2,
+    xy: 0,
     w: MENU_MIN,
+    h: '100%',
     bg: 'bg',
+    elevation: 2,
+    transition: 0.2,
     zIndex: 50,
+    col: 1,
   },
 
-  Mask: {
-    position: 'absolute',
-    x: 0,
-    y: '50%',
-    w: MENU_MIN,
-    h: '100%',
-    zIndex: 100,
-    overflow: 'hidden',
-    translateY: '-50%',
-    transition: 0.2,
-  },
-  Content: {
-    col: 1,
-    position: 'absolute',
-    xy: 0,
-    wMin: MENU_OPEN,
-    h: '100%',
-  },
-  Button: {
-    elevation: 1,
+  ' .Button': {
     m: 0,
-    my: 4,
+    p: 0,
+    wh: MENU_MIN,
+    elevation: 1,
     rounded: 0,
+  },
+  ' .ButtonIcon': {
+    position: 'absolute',
+    xy: 4,
+    m: 0,
+    p: 0,
+    center: 1,
   },
 
   ' .ButtonContent': {
+    position: 'absolute',
+    w: MENU_OPEN,
+    b: 0,
+    center: 1,
+    textAlign: 'center',
     transition: 0.2,
     opacity: 1,
   },
@@ -63,8 +61,20 @@ const c = Css('Menu', {
     transition: 0.2,
   },
 
-  '-open,-open &Mask': {
+  '-open': {
     w: MENU_OPEN,
+  },
+  '-open .Button': {
+    m: 0,
+    p: 0,
+    w: MENU_OPEN,
+    h: 70,
+    elevation: 1,
+    rounded: 0,
+  },
+  '-open .ButtonIcon': {
+    w: MENU_OPEN,
+    col: 1,
   },
 
   Sep: {
@@ -81,6 +91,8 @@ export const MenuSep = () => (
   <div {...c('Sep')} />
 );
 
+      // {...c('Button', tab && 'Button-tab', props)}
+
 export const MenuButton = ({ tab, page, ...props }: MenuButtonProps) => {
   const routeController = useRouter();
   const route = useRoute();
@@ -90,7 +102,6 @@ export const MenuButton = ({ tab, page, ...props }: MenuButtonProps) => {
     <Button
       {...props}
       selected={selected}
-      {...c('Button', tab && 'Button-tab', props)}
       onClick={props.onClick || (() => {
         routeController.go({ page });
       })}
@@ -107,25 +118,21 @@ export const Menu = ({ openMenu$, menu, ...props }: MenuProps) => {
   const open = useFlux(openMenu$);
   return (
     <div {...props} {...c('', open ? '-open' : '-close', props)}>
-      <div {...c('Mask')}>
-        <div {...c('Content')}>
-          {isDefined(menu) ?
-            comp(menu)
-          : <>
-              <MenuSep />
-              <MenuButton title="Tableau de bord" icon={LayoutDashboardIcon} page="dashboard" />
-              <MenuSep />
-              <MenuButton title="Appareils" icon={MonitorIcon} page="devices" />
-              <MenuButton title="Bibliothèque" icon={FolderIcon} page="medias" />
-              <MenuButton title="Membres" icon={UsersIcon} page="members" />
-              {/* <MenuButton title="Jobs" icon={ZapIcon} page="jobs" /> */}
-              <MenuSep />
-              {/* <MenuButton title="Mon compte" icon={UserIcon} page="account" />
-              <MenuSep /> */}
-            </>
-          }
-        </div>
-      </div>
+      {isDefined(menu) ?
+        comp(menu)
+      : <>
+          <MenuSep />
+          <MenuButton title="Tableau de bord" icon={LayoutDashboardIcon} page="dashboard" />
+          <MenuSep />
+          <MenuButton title="Appareils" icon={MonitorIcon} page="devices" />
+          <MenuButton title="Bibliothèque" icon={FolderIcon} page="medias" />
+          <MenuButton title="Membres" icon={UsersIcon} page="members" />
+          {/* <MenuButton title="Jobs" icon={ZapIcon} page="jobs" /> */}
+          <MenuSep />
+          {/* <MenuButton title="Mon compte" icon={UserIcon} page="account" />
+          <MenuSep /> */}
+        </>
+      }
     </div>
   );
 };
