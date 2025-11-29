@@ -1,8 +1,9 @@
-import { BController, useBController } from './BController';
+import { BController } from './BController';
 import { useFluxMemo } from '@/hooks/useFlux';
 import { BCompProps, BFactoryProps, BItem } from './bTypes';
 import { computeStyle, Css, logger } from 'fluxio';
 import { useMemo } from 'preact/hooks';
+import { useBController } from './useBController';
 
 const log = logger('B');
 
@@ -43,11 +44,11 @@ const computeProps = (ctrl: BController, item: BItem): BCompProps['props'] => {
 export const BFactory = ({ i }: BFactoryProps) => {
   log.d('BFactory', i);
 
-  const ctrl = useBController();
-  const item = useFluxMemo(() => ctrl.item$(i), [ctrl, i]);
-  const type = ctrl.getType(item?.t);
+  const controller = useBController();
+  const item = useFluxMemo(() => controller.item$(i), [controller, i]);
+  const type = controller.getType(item?.t);
   const Comp = type.comp;
-  const props = useMemo(() => item && computeProps(ctrl, item), [ctrl, item]);
+  const props = useMemo(() => item && computeProps(controller, item), [controller, item]);
 
-  return item && props ? <Comp i={i} item={item} ctrl={ctrl} props={props} /> : null;
+  return item && props ? <Comp i={i} item={item} props={props} /> : null;
 };

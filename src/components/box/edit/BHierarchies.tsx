@@ -1,7 +1,7 @@
 import { Css, logger, truncate } from 'fluxio';
-import { useBController } from '@/components/box/BController';
 import { useFluxMemo } from '@/hooks/useFlux';
 import { Square } from 'lucide-react';
+import { useBEditController } from './useBEditController';
 
 const log = logger('BHierarchy');
 
@@ -31,10 +31,10 @@ const c = Css('BHierarchy', {
 });
 
 const BHierarchyItem = ({ i }: { i: number }) => {
-  const ctrl = useBController();
-  const item = useFluxMemo(() => ctrl.item$(i), [ctrl, i]);
-  const selected = useFluxMemo(() => ctrl.select$.map((e) => e.i === i), [ctrl, i]);
-  const type = ctrl.getType(item?.t);
+  const controller = useBEditController();
+  const item = useFluxMemo(() => controller.item$(i), [controller, i]);
+  const selected = useFluxMemo(() => controller.select$.map((e) => e.i === i), [controller, i]);
+  const type = controller.getType(item?.t);
   const Icon = type.icon || Square;
 
   const label = truncate(item?.n || item?.b?.replace(/\*\*/g, '') || type.label || '', 20);
@@ -42,7 +42,7 @@ const BHierarchyItem = ({ i }: { i: number }) => {
 
   return (
     <>
-      <div {...c('Item', selected && 'Item-selected')} onClick={() => ctrl.click(i)}>
+      <div {...c('Item', selected && 'Item-selected')} onClick={() => controller.click(i)}>
         <div {...c('Icon')}>
           <Icon />
         </div>

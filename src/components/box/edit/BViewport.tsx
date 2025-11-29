@@ -2,9 +2,9 @@ import { PanZoom } from '@/components/common/PanZoom';
 import { Css, onHtmlEvent } from 'fluxio';
 import { BButtons, SCREEN_SIZES } from './BButtons';
 import { BHandles } from './BHandles';
-import { useBController } from '@/components/box/BController';
 import { BFactory } from '@/components/box/BFactory';
 import { useEffect } from 'preact/hooks';
+import { useBEditController } from './useBEditController';
 
 const c = Css('BViewport', {
   '': {
@@ -22,18 +22,18 @@ const c = Css('BViewport', {
 });
 
 export const BViewport = () => {
-  const ctrl = useBController();
+  const controller = useBEditController();
+
+  useEffect(() => controller.bindKeyDown(), [controller]);
 
   useEffect(() => {
-    console.debug('BViewport useEffect');
-
     const ready = () => {
       console.debug('BViewport ready');
-      const pz = ctrl.panZoom;
+      const pz = controller.panZoom;
 
       const el = pz.viewport();
       onHtmlEvent(el, 'click', (event) => {
-        ctrl.select$.set({ el, event });
+        controller.select$.set({ el, event });
       });
 
       const [w, h] = SCREEN_SIZES[0]!;
@@ -44,12 +44,12 @@ export const BViewport = () => {
     };
     ready();
 
-    return ctrl.panZoom.ready$.on(ready);
-  }, [ctrl]);
+    return controller.panZoom.ready$.on(ready);
+  }, [controller]);
 
   return (
     <div {...c('')}>
-      <PanZoom ctrl={ctrl.panZoom}>
+      <PanZoom ctrl={controller.panZoom}>
         <div {...c('Body')}>
           <BFactory i={0} />
         </div>

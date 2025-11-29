@@ -13,7 +13,6 @@ import {
   uniq,
   isInt,
   isUInt,
-  isUFloat,
 } from 'fluxio';
 import {
   BFun,
@@ -30,8 +29,6 @@ import {
 } from './bTypes';
 import { BCarousel } from './BCarousel';
 import { PanZoomCtrl } from '@/components/common/PanZoom';
-import { createContext } from 'preact';
-import { useContext } from 'preact/hooks';
 import { fluxUndefined } from 'fluxio/flux/fluxUndefined';
 import { ALargeSmall, FileIcon, GalleryHorizontal, Home, Square } from 'lucide-react';
 import { app } from '@/app';
@@ -40,93 +37,7 @@ import { BRect } from './BRect';
 import { BRoot } from './BRoot';
 import { BMedia } from './BMedia';
 import { Api } from '@/api/Api';
-
-const log = logger('BController');
-
-const applyChanges = (items: Writable<NBItems>, index: number, prev: NBItem, next: NBItem) => {
-  console.debug('applyChanges', index, 'prev:', prev, 'next:', next);
-
-  if (next) items[index] = next;
-  else delete items[index];
-
-  const prevP = prev?.p;
-  const nextP = next?.p;
-
-  const prevParent = isUInt(prevP) ? items[prevP] : undefined;
-  const nextParent = isUInt(nextP) ? items[nextP] : undefined;
-
-  if (prevParent !== nextParent) {
-    if (prevParent) {
-      items[prevParent.i] = {
-        ...prevParent,
-        r: removeItem([...(prevParent.r || [])], index),
-      };
-    }
-
-    if (nextParent && !nextParent.r?.includes(index)) {
-      items[nextParent.i] = {
-        ...nextParent,
-        r: uniq([...(nextParent.r || []), index]),
-      };
-    }
-  }
-
-  return items;
-};
-
-const getDefaultType = (d: BData) =>
-  d.b ? 'text'
-  : d.m ? 'media'
-  : 'rect';
-
-const toItems = (data: NBData[], items: Writable<NBItem>[] = []) => {
-  for (let i = 0, l = data.length; i < l; i++) {
-    const d = data[i];
-    if (!d) continue;
-
-    items[i] = {
-      ...d,
-      t: d.t || getDefaultType(d),
-      r: d.r ? uniq(d.r) : [],
-      i,
-    };
-  }
-
-  const root = items[0] || (items[0] = { i: 0, t: '' });
-  root.t = 'root';
-
-  for (let i = 0, l = items.length; i < l; i++) {
-    const item = items[i];
-    if (!item) continue;
-
-    const relation = item.r;
-    if (!relation) continue;
-
-    const removed: number[] = [];
-    for (const childIndex of relation) {
-      const child = items[childIndex];
-      if (!child) {
-        removed.push(childIndex);
-        continue;
-      }
-      child.p = i;
-    }
-
-    for (const childId of removed) {
-      removeItem(relation, childId);
-    }
-  }
-
-  return items as NBItem[];
-};
-
-const toData = (item: NBItem): NBData => {
-  if (!item) return null;
-  const { i, p, e, ...d } = item;
-  if (d.r?.length === 0) delete d.r;
-  if (getDefaultType(d) === d.t) delete (d as Writable<BData>).t;
-  return d;
-};
+import { Router } from '@/controllers/Router';
 
 const rect: BType = { comp: BRect, label: 'Rectangle', r: 1, a: 1, layout: 1, icon: Square };
 const root: BType = { comp: BRoot, label: 'Racine', r: 1, layout: 1, icon: Home };
@@ -135,6 +46,7 @@ const carousel: BType = { comp: BCarousel, label: 'Carousel', r: 1, a: 1, icon: 
 const media: BType = { comp: BMedia, label: 'Media', m: 1, a: 1, icon: FileIcon };
 
 export class BController {
+  readonly log = logger('BController');
   readonly registry: Dictionary<BType> = { root, rect, text, carousel, media };
 
   readonly funs: Dictionary<(boxEvent: BEvent) => void> = {};
@@ -151,29 +63,108 @@ export class BController {
   readonly panZoom = new PanZoomCtrl();
 
   readonly api: Api;
+  readonly router: Router;
   readonly playlistKey: string;
 
-  constructor(api: Api, playlistKey: string) {
+  constructor(api: Api, router: Router, playlistKey: string) {
     this.api = api;
+    this.router = router;
     this.playlistKey = playlistKey;
     app.boxCtrl = this;
     this.load();
   }
 
-  async load() {
-    const page = await this.api.media.get(this.playlistKey);
-    console.debug('BController load', this.playlistKey, media);
-    if (page?.type === 'page') {
-      this.setAllData(page.data?.boxes || []);
-    }
+  getDefaultType(d: BData) {
+    return d.b ? 'text' : d.m ? 'media' : 'rect';
   }
 
-  async save() {
-    const boxes = this.getAllData();
-    console.debug('BController save', this.playlistKey, boxes);
-    await this.api.media.update(this.playlistKey, {
-      data: { boxes },
-    });
+  toItems(data: NBData[], items: Writable<NBItem>[] = []) {
+    for (let i = 0, l = data.length; i < l; i++) {
+      const d = data[i];
+      if (!d) continue;
+
+      items[i] = {
+        ...d,
+        t: d.t || this.getDefaultType(d),
+        r: d.r ? uniq(d.r) : [],
+        i,
+      };
+    }
+
+    const root = items[0] || (items[0] = { i: 0, t: '' });
+    root.t = 'root';
+
+    for (let i = 0, l = items.length; i < l; i++) {
+      const item = items[i];
+      if (!item) continue;
+
+      const relation = item.r;
+      if (!relation) continue;
+
+      const removed: number[] = [];
+      for (const childIndex of relation) {
+        const child = items[childIndex];
+        if (!child) {
+          removed.push(childIndex);
+          continue;
+        }
+        child.p = i;
+      }
+
+      for (const childId of removed) {
+        removeItem(relation, childId);
+      }
+    }
+
+    return items as NBItem[];
+  };
+
+  toData(item: NBItem): NBData {
+    if (!item) return null;
+    const { i, p, e, ...d } = item;
+    if (d.r?.length === 0) delete d.r;
+    if (this.getDefaultType(d) === d.t) delete (d as Writable<BData>).t;
+    return d;
+  };
+
+
+  applyChanges(items: Writable<NBItems>, index: number, prev: NBItem, next: NBItem) {
+    this.log.d('applyChanges', index, 'prev:', prev, 'next:', next);
+
+    if (next) items[index] = next;
+    else delete items[index];
+
+    const prevP = prev?.p;
+    const nextP = next?.p;
+
+    const prevParent = isUInt(prevP) ? items[prevP] : undefined;
+    const nextParent = isUInt(nextP) ? items[nextP] : undefined;
+
+    if (prevParent !== nextParent) {
+      if (prevParent) {
+        items[prevParent.i] = {
+          ...prevParent,
+          r: removeItem([...(prevParent.r || [])], index),
+        };
+      }
+
+      if (nextParent && !nextParent.r?.includes(index)) {
+        items[nextParent.i] = {
+          ...nextParent,
+          r: uniq([...(nextParent.r || []), index]),
+        };
+      }
+    }
+
+    return items;
+  }
+
+  async load() {
+    const page = await this.api.media.get(this.playlistKey);
+    this.log.d('load', this.playlistKey, media);
+    if (page?.type === 'content') {
+      this.setAllData(page.data?.boxes || []);
+    }
   }
 
   register(type: string, boxConfig: BType) {
@@ -187,7 +178,7 @@ export class BController {
 
   funCall(fun: BFun | undefined, boxEvent: BEvent) {
     if (!fun) return;
-    log.d('funCall', fun, boxEvent);
+    this.log.d('funCall', fun, boxEvent);
     if (fun.name) {
       this.funs[fun.name]?.(boxEvent);
     }
@@ -201,13 +192,13 @@ export class BController {
 
   init(i: number, el: HTMLElement) {
     const prev = this.get(i);
-    log.d('init', i, el, prev, 'prev.el:', prev?.e);
+    this.log.d('init', i, el, prev, 'prev.el:', prev?.e);
     if (!prev) return;
 
     const next = this.update(i, { e: el });
     const boxEvent = this.newEvent(i, 'init');
 
-    log.d('init event', boxEvent, 'next.e:', next?.e);
+    this.log.d('init event', boxEvent, 'next.e:', next?.e);
     this.funCall(next?.init, boxEvent);
     this.init$.set(boxEvent);
   }
@@ -222,7 +213,7 @@ export class BController {
 
   click(i: number, event?: Event): void {
     const box = this.get(i);
-    log.d('click', i, event, box);
+    this.log.d('click', i, event, box);
 
     stopEvent(event);
 
@@ -230,7 +221,7 @@ export class BController {
     const boxEvent = this.newEvent(i, 'click', event);
     boxEvent.count = (lastEvent.i === i ? lastEvent.count || 1 : 0) + 1;
 
-    log.d('click event', boxEvent, 'el:', boxEvent.el);
+    this.log.d('click event', boxEvent, 'el:', boxEvent.el);
     this.funCall(box?.click, boxEvent);
     this.select$.set(boxEvent);
   }
@@ -254,16 +245,16 @@ export class BController {
   }
 
   getData(index?: number) {
-    return toData(this.get(index));
+    return this.toData(this.get(index));
   }
 
   getAllData() {
-    return this.getItems().map(toData);
+    return this.getItems().map(i => this.toData(i));
   }
 
   setAllData(data: NBData[]) {
-    log.d('setAllData', data);
-    const items = toItems(data);
+    this.log.d('setAllData', data);
+    const items = this.toItems(data);
     if (!items.length) {
       items;
     }
@@ -271,7 +262,7 @@ export class BController {
   }
 
   set(index?: number, replace?: BNext) {
-    log.d('set', index, replace);
+    this.log.d('set', index, replace);
     if (!isUInt(index)) return;
 
     const items = this.getItems();
@@ -283,7 +274,7 @@ export class BController {
 
     const next: BItem = {
       ...d,
-      t: d?.t || getDefaultType(d),
+      t: d?.t || this.getDefaultType(d),
       p: d?.p || (index === 0 ? undefined : 0),
       r: uniq(d?.r || []),
       i: index,
@@ -292,24 +283,14 @@ export class BController {
     const changes = prev && next && getChanges(prev, next);
     if (changes && isEmpty(changes)) return prev;
 
-    log.d('set changes', index, changes);
-    this.items$.set(applyChanges([...items], index, prev, next));
+    this.log.d('set changes', index, changes);
+    this.items$.set(this.applyChanges([...items], index, prev, next));
 
     return next;
   }
 
-  update(i?: number, changes?: BNext) {
-    log.d('update', i, changes);
-    return this.set(i, (prev) => {
-      if (!prev) return prev;
-      const results = isFunction(changes) ? changes(prev) : changes;
-      if (isEmpty(results)) return prev;
-      return { ...prev, ...results };
-    });
-  }
-
   setProp<K extends BKeys>(i: number | undefined, prop: K, value: BPropNext<K>) {
-    log.d('setProp', i, prop, value);
+    this.log.d('setProp', i, prop, value);
     return this.set(i, (prev) => {
       if (!prev) return prev;
       const prevValue = prev[prop];
@@ -320,21 +301,16 @@ export class BController {
     });
   }
 
-  add(replace: BNext) {
-    const i = this.getItems().length;
-    this.set(i, replace);
+  update(i?: number, changes?: BNext) {
+    this.log.d('update', i, changes);
+    return this.set(i, (prev) => {
+      if (!prev) return prev;
+      const results = isFunction(changes) ? changes(prev) : changes;
+      if (isEmpty(results)) return prev;
+      return { ...prev, ...results };
+    });
   }
-
-  delete(index?: number) {
-    log.d('delete', index);
-    if (!isUInt(index)) return false;
-    const prev = this.get(index);
-    if (!prev) return false;
-    const items = this.getItems();
-    this.items$.set(applyChanges([...items], index, prev, undefined));
-    return true;
-  }
-
+  
   getProp<K extends keyof BData>(i: number, prop: K) {
     return this.get(i)?.[prop];
   }
@@ -351,7 +327,3 @@ export class BController {
       : (fluxUndefined as Pipe<BItem[K] | undefined, any>);
   }
 }
-
-export const BContext = createContext<BController | undefined>(undefined);
-
-export const useBController = () => useContext(BContext)!;

@@ -26,12 +26,11 @@ const c = Css('MediaIcon', {
 });
 
 const infoByType: Record<MediaType, [string, typeof FolderOpen]> = {
-  playlist: ['Playlist', List],
+  content: ['Contenu', Layout],
   folder: ['Dossier', Folder],
   image: ['Image', FileImage],
   pdf: ['PDF', FileText],
   video: ['Video', Video],
-  page: ['Page', Layout],
   unknown: ['Inconnu', HelpCircle],
   '': ['Inconnu', HelpCircle],
 };

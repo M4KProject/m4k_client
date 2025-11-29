@@ -1,4 +1,4 @@
-import { Css, isItem, isUInt, normalizeIndex, randColor, onEvent, onHtmlEvent } from 'fluxio';
+import { Css, isUInt, normalizeIndex } from 'fluxio';
 import {
   RotateCw,
   Monitor,
@@ -9,18 +9,15 @@ import {
   Smartphone,
   Tv,
   MonitorSmartphone,
-  SquarePlus,
   ClipboardCopy,
   ClipboardPaste,
   ClipboardX,
   Save,
 } from 'lucide-react';
-import { useEffect, useState } from 'preact/hooks';
-import { BController, useBController } from '@/components/box/BController';
+import { useState } from 'preact/hooks';
 import { Button, ButtonProps } from '@/components/common/Button';
 import { useFlux } from '@/hooks/useFlux';
-import { clipboardCopy, clipboardPaste } from '@/utils/clipboard';
-import { BData } from '@/components/box/bTypes';
+import { useBEditController } from './useBEditController';
 
 const c = Css('BButtons', {
   '': {
@@ -55,47 +52,11 @@ export const SCREEN_SIZES: ScreenSize[] = [
 
 const BButton = (props: ButtonProps) => <Button {...c('Button')} color="primary" {...props} />;
 
-const addRect = (ctrl: BController) => {
-  ctrl.add({
-    a: [25, 25, 50, 50],
-    s: { bg: randColor() },
-    p: ctrl.select$.get()?.i,
-  });
-};
-
-const bRemove = async (ctrl: BController) => {
-  const index = ctrl.getSelectIndex();
-  ctrl.delete(index);
-};
-
-const bCut = async (ctrl: BController) => {
-  const index = ctrl.getSelectIndex();
-  const data = ctrl.getData(index);
-  await clipboardCopy(data);
-  ctrl.delete(index);
-};
-
-const bCopy = async (ctrl: BController) => {
-  const index = ctrl.getSelectIndex();
-  const data = ctrl.getData(index);
-  await clipboardCopy(data);
-};
-
-const bPaste = async (ctrl: BController) => {
-  const index = ctrl.getSelectIndex();
-  const item = ctrl.get(index);
-  if (!item) return;
-  const d: BData = await clipboardPaste();
-  if (isItem(d)) {
-    ctrl.add({ ...d, p: item.t === d.t ? item.p : item.i });
-  }
-};
-
 export const BButtons = () => {
-  const ctrl = useBController();
-  const select = useFlux(ctrl.select$);
+  const controller = useBEditController();
+  const select = useFlux(controller.select$);
   const selectIndex = select.i;
-  const pz = ctrl.panZoom;
+  const pz = controller.panZoom;
   const [sizeIndex, setSizeIndex] = useState(0);
   const [sizeWidth, sizeHeight, sizeTitle, SizeIcon] = SCREEN_SIZES[sizeIndex]!;
 
@@ -103,44 +64,10 @@ export const BButtons = () => {
     const nextIndex = normalizeIndex(sizeIndex + 1, SCREEN_SIZES.length);
     setSizeIndex(nextIndex);
     const [w, h] = SCREEN_SIZES[nextIndex]!;
-    ctrl.panZoom.setSize(w, h);
+    controller.panZoom.setSize(w, h);
   };
 
   const hasSelect = isUInt(selectIndex);
-
-  useEffect(
-    () =>
-      onHtmlEvent(0, 'keydown', (e) => {
-        const key = (
-          (e.ctrlKey ? 'ctrl+' : '') +
-          (e.metaKey ? 'meta+' : '') +
-          (e.shiftKey ? 'shift+' : '') +
-          (e.altKey ? 'alt+' : '') +
-          e.key
-        ).toLowerCase();
-
-        console.debug('keydown', e.metaKey, key, e);
-
-        switch (key) {
-          case 'ctrl+x':
-          case 'meta+x':
-            bCut(ctrl);
-            break;
-          case 'ctrl+c':
-          case 'meta+c':
-            bCopy(ctrl);
-            break;
-          case 'ctrl+v':
-          case 'meta+v':
-            bPaste(ctrl);
-            break;
-          case 'backspace':
-            bRemove(ctrl);
-            break;
-        }
-      }),
-    []
-  );
 
   return (
     <div {...c('')}>
@@ -164,15 +91,13 @@ export const BButtons = () => {
       )}
       {hasSelect && (
         <>
-          <BButton icon={ClipboardX} onClick={() => bCut(ctrl)} tooltip="Couper" />
-          <BButton icon={ClipboardCopy} onClick={() => bCopy(ctrl)} tooltip="Copier" />
-          <BButton icon={ClipboardPaste} onClick={() => bPaste(ctrl)} tooltip="Coller" />
+          <BButton icon={ClipboardX} onClick={() => controller.cut()} tooltip="Couper" />
+          <BButton icon={ClipboardCopy} onClick={() => controller.copy()} tooltip="Copier" />
+          <BButton icon={ClipboardPaste} onClick={() => controller.paste()} tooltip="Coller" />
         </>
       )}
       <div {...c('Sep')} />
-      <BButton icon={SquarePlus} onClick={() => addRect(ctrl)} tooltip="Ajouter un rectangle" />
-      <div {...c('Sep')} />
-      <BButton icon={Save} onClick={() => ctrl.save()} tooltip="Enregistrer" />
+      <BButton icon={Save} onClick={() => controller.save()} tooltip="Enregistrer" />
     </div>
   );
 };

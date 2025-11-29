@@ -17,8 +17,8 @@ const c = Css('BMedia', {
   '': { wh: '100%' },
 });
 
-export const BMedia: BComp = ({ i, item, props, ctrl }) => {
-  console.debug('BMedia', i, item, props, ctrl);
+export const BMedia: BComp = ({ i, item, props }) => {
+  console.debug('BMedia', i, item, props);
   const mediaId = item.m;
   const api = useApi();
   const media = useFlux(mediaId ? api.media.find$(mediaId) : undefined);

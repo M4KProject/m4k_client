@@ -106,7 +106,15 @@ export class MediaController {
   }
 
   edit = () => {
+    const media = this.select$.get();
+    this.log.d('edit', media);
 
+    if (!media) return;
+
+    this.router.go({
+      page: 'edit',
+      media: media.id,
+    });
   }
 
   delete = () => {

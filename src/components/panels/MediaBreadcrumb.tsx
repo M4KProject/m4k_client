@@ -1,10 +1,11 @@
 import { useFlux } from '@/hooks/useFlux';
 import { useMediaController } from '@/hooks/useMediaController';
 import { Button, UploadButton } from '../common/Button';
-import { FolderPlusIcon, LayoutIcon, UploadIcon } from 'lucide-react';
-import { Field } from '../fields/Field';
+import { EditIcon, FolderPlusIcon, HomeIcon, LayoutIcon, TrashIcon, UploadIcon } from 'lucide-react';
 import { DivProps } from '@/components/common/types';
 import { Css } from 'fluxio';
+import { Field } from '../fields/Field';
+import { Fragment } from 'preact/jsx-runtime';
 
 const c = Css('MediaBreadcrumb', {
   '': {
@@ -14,9 +15,19 @@ const c = Css('MediaBreadcrumb', {
     elevation: 1,
     rounded: 5,
   },
-  ' .Button, .Field': {
+  ' .Button': {
     m: 4,
     wMax: 350,
+  },
+  NavButton: {
+    m: 4,
+  },
+  Sep: {
+    mx: 2,
+    opacity: 0.5,
+  },
+  Flex: {
+    flex: 1,
   },
   ' .Field': {
     w: 'fit-content',
@@ -30,12 +41,6 @@ const c = Css('MediaBreadcrumb', {
     wMin: 60,
     border: 0,
   },
-  Sep: {
-    flex: 1,
-  },
-  ' .FieldLabel': {
-    wMax: 150,
-  },
 });
 
 export interface ActionsProps extends DivProps {
@@ -43,7 +48,13 @@ export interface ActionsProps extends DivProps {
 }
 
 const Sep = (props: DivProps) => (
-  <div {...props} {...c('Sep', props)} />
+  <div {...props} {...c('Sep', props)}>
+    /
+  </div>
+);
+
+const Flex = (props: DivProps) => (
+  <div {...props} {...c('Flex', props)} />
 );
 
 export const MediaBreadcrumb = ({ children, ...props }: ActionsProps) => {
@@ -53,17 +64,41 @@ export const MediaBreadcrumb = ({ children, ...props }: ActionsProps) => {
 
   return (
     <div {...props} {...c('', props)}>
-      {breadcrumb.map((node, i) => (
+      <Button
+        {...c('NavButton')}
+        icon={HomeIcon}
+        onClick={() => controller.select$.set(undefined)}
+        tooltip="Retour à la racine"
+      />
+      {breadcrumb.filter(m => m !== select).map((node) => (
+        <Fragment key={node.id}>
+          <Sep />
+          <Button
+            {...c('NavButton')}
+            title={node.title}
+            onClick={controller.click(node)}
+          />
+        </Fragment>
+      ))}
+      {select && (
         <>
-          {i ? <div>/</div> : null}
+          <Sep />
           <Field
-            value={node.title}
-            onValue={title => controller.update(node, { title })}
-            props={{ size: Math.max(1, node.title?.length || 0) }}
+            key={select.id}
+            value={select.title}
+            onValue={(title) => controller.update(select, { title })}
+            props={{ size: Math.max(1, (select.title?.length || 0) + 2) }}
+          />
+          <Button
+            color="error"
+            icon={TrashIcon}
+            title="Supprimer"
+            onClick={controller.delete}
           />
         </>
-      ))}
-      <Sep />
+      )}
+
+      <Flex />
       {!select || select?.type === 'folder' && (
         <>
           <UploadButton
@@ -88,24 +123,16 @@ export const MediaBreadcrumb = ({ children, ...props }: ActionsProps) => {
           />
         </>
       )}
-      {/* <ActionsSep />
-      <ActionsSep />
-      {select && (
-        <Button
-          color="primary"
-          icon={EditIcon}
-          title="Modifier"
-          onClick={controller.edit}
-        />
+      {select?.type === 'content' && (
+        <>
+          <Button
+            color="primary"
+            icon={EditIcon}
+            title="Modifier la Page"
+            onClick={controller.edit}
+          />
+        </>
       )}
-      {select && (
-        <Button
-          color="error"
-          icon={TrashIcon}
-          title="Supprimer"
-          onClick={controller.delete}
-        />
-      )} */}
     </div>
   );
 }

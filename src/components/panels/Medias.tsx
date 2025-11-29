@@ -47,15 +47,7 @@ export const Medias = ({ type }: { type?: MediaModel['type'] }) => {
   return (
     <div {...c('')}>
       <MediaBreadcrumb />
-      {parent && (
-        <Button
-          {...c('Back')}
-          color="secondary"
-          icon={ArrowLeftIcon}
-          title="Retour"
-          onClick={controller.back}
-        />
-      )}
+      
       {medias.filter(m => m && (m.parent||'') === (parentId||'')).map(media => (
         <MediaItem key={media.id} media={media} />
       ))}

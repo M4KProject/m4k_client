@@ -8,7 +8,6 @@ import {
   StyleFlexJustify,
   Writable,
 } from 'fluxio';
-import { useBController } from '@/components/box/BController';
 import { Field } from '@/components/fields/Field';
 import { Tr } from '@/components/common/Tr';
 import { useFlux, useFluxMemo } from '@/hooks/useFlux';
@@ -45,6 +44,7 @@ import { BMedias } from './BMedias';
 import { FieldProps } from '@/components/fields/types';
 import { DivProps } from '@/components/common/types';
 import { Comp } from '@/utils/comp';
+import { useBEditController } from './useBEditController';
 
 const c = Css('BProps', {
   '': {
@@ -74,10 +74,10 @@ const c = Css('BProps', {
 const useProp = <K extends keyof BItem>(
   prop: K
 ): [BItem[K] | undefined, (next: BPropNext<K>) => void] => {
-  const ctrl = useBController();
-  const i = useFlux(ctrl.select$).i;
-  const value = useFluxMemo(() => ctrl.prop$(i, prop), [i, prop]);
-  return [value, (next: BPropNext<K>) => ctrl.setProp(i, prop, next)];
+  const controller = useBEditController();
+  const i = useFlux(controller.select$).i;
+  const value = useFluxMemo(() => controller.prop$(i, prop), [i, prop]);
+  return [value, (next: BPropNext<K>) => controller.setProp(i, prop, next)];
 };
 
 export const BField = ({
@@ -168,11 +168,11 @@ const BStyleField = ({ prop, ...props }: FieldProps<any, any> & { prop: string }
 };
 
 export const BDataField = () => {
-  const ctrl = useBController();
-  const i = useFlux(ctrl.select$).i;
-  const item = useFluxMemo(() => ctrl.item$(i), [i]);
+  const controller = useBEditController();
+  const i = useFlux(controller.select$).i;
+  const item = useFluxMemo(() => controller.item$(i), [i]);
   const onValue = (next: any) => {
-    ctrl.set(i, next);
+    controller.set(i, next);
   };
   return <Field label="B" name="box" type="json" value={item} onValue={onValue} col />;
 };
@@ -182,17 +182,17 @@ const Sep = () => <div {...c('Sep')} />;
 const Panel = (props: DivProps) => <div {...props} {...c('Panel', props)} />;
 
 export const BProps = () => {
-  const ctrl = useBController();
-  const select = useFlux(ctrl.select$);
+  const controller = useBEditController();
+  const select = useFlux(controller.select$);
   const isAdvanced = useFlux(isAdvanced$);
   const i = select.i;
   const item = select.item;
-  const types = Object.entries(ctrl.registry).map(
+  const types = Object.entries(controller.registry).map(
     ([type, config]) => [type, <Tr>{config.label}</Tr>] as [string, Comp]
   );
   const [nType] = useProp('t');
   const type = nType || 'box';
-  const config = ctrl.registry[type] || ({} as Partial<BType>);
+  const config = controller.registry[type] || ({} as Partial<BType>);
 
   if (!isUInt(i) || !item) return null;
 
@@ -201,7 +201,7 @@ export const BProps = () => {
       {config.r && (
         <Panel>
           <Field label="Ajouter">
-            {Object.entries(ctrl.registry).map(([t, config], key) => {
+            {Object.entries(controller.registry).map(([t, config], key) => {
               const Icon = config?.icon || Square;
               if (t === 'root' || t === 'rect') return null;
               return (
@@ -212,7 +212,7 @@ export const BProps = () => {
                   onClick={() => {
                     const next: Writable<Partial<BItem>> = { p: i, t };
                     if (type === 'text') next.b = 'Mon texte !';
-                    ctrl.add(next);
+                    controller.add(next);
                   }}
                 />
               );

@@ -5,8 +5,8 @@ const c = Css('BCarousel', {
   '': { wh: '100%' },
 });
 
-export const BCarousel: BComp = ({ i, item, props, ctrl }) => {
-  console.debug('BCarousel', i, item, props, ctrl);
+export const BCarousel: BComp = ({ i, item, props }) => {
+  console.debug('BCarousel', i, item, props);
 
   return <div {...props} {...c(props, '')} />;
 };

@@ -1,9 +1,9 @@
 import { useApi, useGroupMedias } from '@/hooks/useApi';
 import { Css, fluxCombine } from 'fluxio';
 import { MediaModel } from '@/api/models';
-import { useBController } from '@/components/box/BController';
 import { useFluxMemo } from '@/hooks/useFlux';
 import { Button } from '@/components/common/Button';
+import { useBEditController } from './useBEditController';
 
 const c = Css('BMedias', {
   '': {
@@ -33,11 +33,11 @@ const c = Css('BMedias', {
 
 const BMediasItem = ({ media }: { media: MediaModel }) => {
   const api = useApi();
-  const ctrl = useBController();
+  const controller = useBEditController();
   const mediaId = media.id;
   const selected = useFluxMemo(
-    () => fluxCombine(ctrl.select$, ctrl.items$).map(([click]) => ctrl.get(click.i)?.m === mediaId),
-    [ctrl, mediaId]
+    () => fluxCombine(controller.select$, controller.items$).map(([click]) => controller.get(click.i)?.m === mediaId),
+    [controller, mediaId]
   );
   const variants = api.getVariants(media);
   const image = variants.find((v) => v.type === 'image');
@@ -49,9 +49,9 @@ const BMediasItem = ({ media }: { media: MediaModel }) => {
       tooltip={media.title}
       style={{ backgroundImage: url ? `url('${url}')` : undefined }}
       onClick={() => {
-        const select = ctrl.select$.get();
+        const select = controller.select$.get();
         if (select.i !== undefined) {
-          ctrl.update(select.i, { m: media.id });
+          controller.update(select.i, { m: media.id });
         }
       }}
     />

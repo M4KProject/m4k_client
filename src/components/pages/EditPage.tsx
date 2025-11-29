@@ -1,12 +1,15 @@
 import { Css } from 'fluxio';
 import { JobGrid } from '@/components/admin/JobGrid';
 import { useMemo } from 'preact/hooks';
-import { BContext, BController } from '@/components/box/BController';
 import { BViewport } from '@/components/box/edit/BViewport';
 import { BSide } from '@/components/box/edit/BSide';
 import { useApi } from '@/hooks/useApi';
 import { Page } from './base/Page';
 import { useMediaKey } from '@/router';
+import { BMenu } from '../box/edit/BMenu';
+import { BEditController } from '../box/edit/BEditController';
+import { BContext } from '../box/useBController';
+import { useRouter } from '@/hooks/useRoute';
 
 const c = Css('EditPage', {
   '': {
@@ -17,12 +20,13 @@ const c = Css('EditPage', {
 
 export const EditPage = () => {
   const api = useApi();
+  const router = useRouter();
   const playlistKey = useMediaKey();
-  const ctrl = useMemo(() => new BController(api, playlistKey), [api, playlistKey]);
+  const controller = useMemo(() => new BEditController(api, router, playlistKey), [api, router, playlistKey]);
 
   return (
-    <Page {...c('')}>
-      <BContext value={ctrl}>
+    <Page {...c('')} menu={BMenu}>
+      <BContext value={controller}>
         <BViewport />
         <BSide />
       </BContext>

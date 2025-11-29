@@ -10,8 +10,9 @@ import {
   round,
   stopEvent,
 } from 'fluxio';
-import { BController, useBController } from '@/components/box/BController';
 import { useFluxMemo } from '@/hooks/useFlux';
+import { useBEditController } from './useBEditController';
+import { BEditController } from './BEditController';
 
 const log = logger('BHandles');
 
@@ -77,22 +78,22 @@ const handles: [string, HandleDir, CssStyle][] = HANDLES.map(
   ]
 );
 
-const startResize = (ctrl: BController, dir: HandleDir, name: string, event: Event) => {
+const startResize = (controller: BEditController, dir: HandleDir, name: string, event: Event) => {
   try {
     log.d('startResize', dir, name, event);
     stopEvent(event);
 
-    const i = mustExist(ctrl.select$.get()?.i, 'i');
-    const box = mustExist(ctrl.get(i), 'box');
+    const i = mustExist(controller.select$.get()?.i, 'i');
+    const box = mustExist(controller.get(i), 'box');
     const a = box.a || [0, 0, 100, 100];
 
     if (!box.a) {
-      ctrl.update(i, { a });
+      controller.update(i, { a });
     }
 
     const [xDir, yDir, wDir, hDir] = dir;
 
-    const canvasRect = ctrl.panZoom.canvasRect();
+    const canvasRect = controller.panZoom.canvasRect();
     const canvasW = canvasRect.width;
     const canvasH = canvasRect.height;
 
@@ -133,7 +134,7 @@ const startResize = (ctrl: BController, dir: HandleDir, name: string, event: Eve
       const w = pxToPrctX(wPx);
       const h = pxToPrctY(hPx);
 
-      ctrl.update(i, { a: [x, y, w, h] });
+      controller.update(i, { a: [x, y, w, h] });
     };
 
     const onEnd = (event: Event) => {
@@ -153,14 +154,14 @@ const startResize = (ctrl: BController, dir: HandleDir, name: string, event: Eve
 };
 
 const BHandlesContent = () => {
-  const ctrl = useBController();
+  const controller = useBEditController();
   return (
     <>
       {handles.map(([name, config, style]) => (
         <div
           key={name}
           style={style as any}
-          onMouseDown={(event) => startResize(ctrl, config, name, event)}
+          onMouseDown={(event) => startResize(controller, config, name, event)}
         />
       ))}
     </>
@@ -168,16 +169,16 @@ const BHandlesContent = () => {
 };
 
 export const BHandles = () => {
-  const ctrl = useBController();
+  const controller = useBEditController();
   const { x, y, w, h, a, show } =
     useFluxMemo(() => {
-      if (!ctrl) return;
+      if (!controller) return;
 
       const combined$ = fluxCombine(
-        ctrl.select$,
-        ctrl.items$,
-        ctrl.panZoom.after$,
-        ctrl.panZoom.after$.delay(100)
+        controller.select$,
+        controller.items$,
+        controller.panZoom.after$,
+        controller.panZoom.after$.delay(100)
       ).throttle(1000 / 60);
 
       const mapped$ = combined$.map(([click]) => {
@@ -186,11 +187,11 @@ export const BHandles = () => {
 
         let { left: x, top: y, width: w, height: h } = el.getBoundingClientRect();
 
-        const viewportRect = ctrl.panZoom.viewportRect();
+        const viewportRect = controller.panZoom.viewportRect();
         x -= viewportRect.left;
         y -= viewportRect.top;
 
-        const a = ctrl.getType(item?.t).a;
+        const a = controller.getType(item?.t).a;
 
         // log.d('event', x, y, w, h, pos);
 
@@ -200,7 +201,7 @@ export const BHandles = () => {
       mapped$.isEqual = isDeepEqual;
 
       return mapped$;
-    }, [ctrl]) || {};
+    }, [controller]) || {};
 
   log.d('render', { x, y, w, h, a, show });
 
