@@ -16,7 +16,7 @@ const c = Css('B', {
   },
 });
 
-const computeProps = (ctrl: BController, item: BItem): BCompProps['props'] => {
+const computeProps = (controller: BController, item: BItem): BCompProps['props'] => {
   const { i, t, c: cls, s } = item;
   const style = computeStyle(s);
   const a = item?.a;
@@ -33,8 +33,8 @@ const computeProps = (ctrl: BController, item: BItem): BCompProps['props'] => {
   const props: BCompProps['props'] = {
     ...c('', String(i), cls),
     style,
-    onClick: ctrl.getClick(i),
-    ref: ctrl.getRef(i),
+    onClick: controller.getClick(i),
+    ref: controller.getRef(i),
   };
 
   log.d('computeProps', item, props);
@@ -45,10 +45,13 @@ export const BFactory = ({ i }: BFactoryProps) => {
   log.d('BFactory', i);
 
   const controller = useBController();
-  const item = useFluxMemo(() => controller.item$(i), [controller, i]);
+  const item = useFluxMemo(() => controller?.item$(i), [controller, i]);
+  const props = useMemo(() => controller && item && computeProps(controller, item), [controller, item]);
+
+  if (!controller) return null;
+
   const type = controller.getType(item?.t);
   const Comp = type.comp;
-  const props = useMemo(() => item && computeProps(controller, item), [controller, item]);
 
   return item && props ? <Comp i={i} item={item} props={props} /> : null;
 };

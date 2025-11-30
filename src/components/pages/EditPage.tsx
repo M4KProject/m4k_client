@@ -25,12 +25,12 @@ export const EditPage = () => {
   const controller = useMemo(() => new BEditController(api, router, playlistKey), [api, router, playlistKey]);
 
   return (
-    <Page {...c('')} menu={BMenu}>
-      <BContext value={controller}>
-        <BViewport />
+    <BContext value={controller}>
+      <Page {...c('')} menu={BMenu}>
         <BSide />
-      </BContext>
-      <JobGrid filter={(job) => job.status !== 'finished'} panel={true} />
-    </Page>
+        <BViewport />
+        <JobGrid filter={(job) => job.status !== 'finished'} panel={true} />
+      </Page>
+    </BContext>
   );
 };

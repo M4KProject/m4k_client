@@ -1,12 +1,17 @@
 import { clipboardCopy, clipboardPaste } from '@/utils/clipboard';
 import { BController } from '../BController';
-import { isItem, isUInt, logger, onHtmlEvent, randColor } from 'fluxio';
+import { flux, fluxCombine, isItem, isUInt, logger, onHtmlEvent, randColor } from 'fluxio';
 import { BData, BNext } from '../bTypes';
-import { getSingleton } from '@/utils/ioc';
-import { Router } from '@/controllers/Router';
+
+export type BEditPage = "settings"|"layout"|"media"|"text"|"carrousel"|"planification";
 
 export class BEditController extends BController {
   log = logger('BEditController');
+
+  readonly page$ = flux<BEditPage>('settings');
+  readonly select$ = fluxCombine(this.page$, this.click$).map(([page, click]) => {
+    return click;
+  });
 
   async save() {
     const boxes = this.getAllData();

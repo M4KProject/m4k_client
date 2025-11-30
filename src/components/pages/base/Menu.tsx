@@ -4,17 +4,17 @@ import { Button, ButtonProps } from '@/components/common/Button';
 import { DivProps } from '@/components/common/types';
 import { comp, Comp } from '@/utils/comp';
 import {
-  LayoutDashboardIcon,
   MonitorIcon,
   FolderIcon,
   UsersIcon,
+  HomeIcon,
 } from 'lucide-react';
 import { useRouter } from '@/hooks/useRoute';
 import { useRoute } from '@/hooks/useRoute';
 import { RoutePage } from '@/controllers/Router';
 
 export const MENU_MIN = 32;
-export const MENU_OPEN = 150;
+export const MENU_OPEN = 120;
 
 const c = Css('Menu', {
   '': {
@@ -24,9 +24,11 @@ const c = Css('Menu', {
     h: '100%',
     bg: 'bg',
     elevation: 2,
-    transition: 0.2,
+    transition: 0.3,
     zIndex: 50,
-    col: 1,
+    col: ['start', 'around'],
+    overflowX: 'hidden',
+    overflowY: 'auto',
   },
 
   ' .Button': {
@@ -35,69 +37,68 @@ const c = Css('Menu', {
     wh: MENU_MIN,
     elevation: 1,
     rounded: 0,
+    transition: 0.3,
+    col: ['stretch', 'around'],
   },
   ' .ButtonIcon': {
-    position: 'absolute',
-    xy: 4,
-    m: 0,
-    p: 0,
-    center: 1,
+    col: ['center', 'start'],
   },
-
+  ' .ButtonIcon svg': {
+    transition: 0.2,
+    wh: 40,
+  },
   ' .ButtonContent': {
-    position: 'absolute',
-    w: MENU_OPEN,
+    m: 0,
     b: 0,
     center: 1,
     textAlign: 'center',
     transition: 0.2,
+    overflow: 'hidden',
+    w: MENU_OPEN,
+    h: 40,
+    hMax: 40,
     opacity: 1,
+    bold: 0,
+  },
+
+  '-close,-close .Button': {
+    w: MENU_MIN,
+  },
+  '-close .ButtonIcon svg': {
+    wh: 24,
   },
   '-close .ButtonContent': {
+    h: 0,
+    hMax: 0,
     opacity: 0,
-  },
-  ' &Button-tab': {
-    ml: 24,
-    transition: 0.2,
   },
 
   '-open': {
     w: MENU_OPEN,
   },
   '-open .Button': {
-    m: 0,
-    p: 0,
     w: MENU_OPEN,
     h: 70,
-    elevation: 1,
-    rounded: 0,
-  },
-  '-open .ButtonIcon': {
-    w: MENU_OPEN,
-    col: 1,
   },
 
-  Sep: {
+  Flex: {
     flex: 1,
   },
 });
 
 export interface MenuButtonProps extends ButtonProps {
-  tab?: boolean;
   page?: RoutePage;
 }
 
-export const MenuSep = () => (
-  <div {...c('Sep')} />
+export const MenuFlex = () => (
+  <div {...c('Flex')} />
 );
 
-      // {...c('Button', tab && 'Button-tab', props)}
-
-export const MenuButton = ({ tab, page, ...props }: MenuButtonProps) => {
+export const MenuButton = ({ page, ...props }: MenuButtonProps) => {
   const routeController = useRouter();
   const route = useRoute();
   const selected = props.selected || page === route.page;
-  console.debug('MenuButton', { tab, page, routePage: route.page, selected });
+  console.debug('MenuButton', { page, routePage: route.page, selected });
   return (
     <Button
       {...props}
@@ -121,16 +122,10 @@ export const Menu = ({ openMenu$, menu, ...props }: MenuProps) => {
       {isDefined(menu) ?
         comp(menu)
       : <>
-          <MenuSep />
-          <MenuButton title="Tableau de bord" icon={LayoutDashboardIcon} page="dashboard" />
-          <MenuSep />
+          <MenuButton title="Accueil" icon={HomeIcon} page="dashboard" />
           <MenuButton title="Appareils" icon={MonitorIcon} page="devices" />
           <MenuButton title="Bibliothèque" icon={FolderIcon} page="medias" />
           <MenuButton title="Membres" icon={UsersIcon} page="members" />
-          {/* <MenuButton title="Jobs" icon={ZapIcon} page="jobs" /> */}
-          <MenuSep />
-          {/* <MenuButton title="Mon compte" icon={UserIcon} page="account" />
-          <MenuSep /> */}
         </>
       }
     </div>

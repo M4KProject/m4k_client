@@ -57,8 +57,8 @@ export class BController {
   readonly parentId?: string;
 
   readonly init$ = flux<BEvent>({});
-  readonly select$ = flux<BEvent>({});
-  readonly event$ = fluxUnion(this.init$, this.select$);
+  readonly click$ = flux<BEvent>({});
+  readonly event$ = fluxUnion(this.init$, this.click$);
 
   readonly panZoom = new PanZoomCtrl();
 
@@ -217,13 +217,13 @@ export class BController {
 
     stopEvent(event);
 
-    const lastEvent = this.select$.get();
+    const lastEvent = this.click$.get();
     const boxEvent = this.newEvent(i, 'click', event);
     boxEvent.count = (lastEvent.i === i ? lastEvent.count || 1 : 0) + 1;
 
     this.log.d('click event', boxEvent, 'el:', boxEvent.el);
     this.funCall(box?.click, boxEvent);
-    this.select$.set(boxEvent);
+    this.click$.set(boxEvent);
   }
 
   getClick(i: number) {
@@ -241,7 +241,7 @@ export class BController {
   }
 
   getSelectIndex() {
-    return this.select$.get()?.i;
+    return this.click$.get()?.i;
   }
 
   getData(index?: number) {

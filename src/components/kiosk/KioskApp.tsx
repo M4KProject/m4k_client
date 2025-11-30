@@ -15,7 +15,7 @@ import { DialogContainer } from './DialogContainer';
 import { useFlux } from '@/hooks/useFlux';
 import { useKiosk } from '@/hooks/useKiosk';
 import { Page } from '../pages/base/Page';
-import { MenuButton, MenuSep } from '../pages/base/Menu';
+import { MenuButton } from '../pages/base/Menu';
 import { KioskView } from './KioskView';
 import { KioskPage } from '@/controllers/Kiosk';
 
@@ -65,7 +65,6 @@ const KioskMenu = () => {
 
   return (
     <>
-      <MenuSep />
       <MenuButton
         selected={page === ''}
         icon={MonitorSpeaker}
@@ -92,7 +91,6 @@ const KioskMenu = () => {
         onClick={go('configPlaylist')}
       />
       {/* <SideButton icon={<MdWifi />} page="wifi" title="Wifi" /> */}
-      <MenuSep />
       <MenuButton selected={page === 'test'} icon={Bug} title="Test" onClick={go('test')} />
       {/* <SideButton icon={<MdListAlt />} page="logs" title="Logs" /> */}
       <MenuButton
@@ -101,7 +99,6 @@ const KioskMenu = () => {
         title="Events"
         onClick={go('events')}
       />
-      <MenuSep />
       {/* <SideButton icon={<User />} page="account" title="Mon Compte" /> */}
       {/* <SideSep style={{ fontSize: 0.7, opacity: 0.5 }}>2.0.0</SideSep> */}
     </>
