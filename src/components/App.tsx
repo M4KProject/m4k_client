@@ -48,14 +48,14 @@ const AppContent = () => {
   const auth = useAuth();
   const isKiosk = useIsKiosk();
 
-  console.debug("AppContent", { c, auth, isKiosk });
+  console.debug('AppContent', { c, auth, isKiosk });
 
   if (isKiosk) {
     return (
       <div {...c('')}>
         <KioskPage />
       </div>
-    )
+    );
   }
 
   if (!auth) {
@@ -63,7 +63,7 @@ const AppContent = () => {
       <div {...c('')}>
         <AuthPage />
       </div>
-    )
+    );
   }
 
   return (

@@ -148,7 +148,7 @@ const ColorButton = () => {
   const openPicker = () => {
     if (!ref.current) return;
     createWindow({
-      title: "Couleur",
+      title: 'Couleur',
       content: () => <ColorPickerContent value={value} onChange={onChange} />,
       pos: ref.current,
       size: [300, 400],

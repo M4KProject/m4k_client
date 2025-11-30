@@ -3,8 +3,7 @@ import { Page } from './base/Page';
 import { Medias } from '../panels/Medias';
 
 const c = Css('MediasPage', {
-  '': {
-  },
+  '': {},
 });
 
 export const MediasPage = () => {
@@ -14,7 +13,6 @@ export const MediasPage = () => {
     </Page>
   );
 };
-
 
 // export const MediasPage = () => {
 //   const api = useApi();

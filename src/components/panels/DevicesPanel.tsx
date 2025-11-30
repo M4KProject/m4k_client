@@ -177,14 +177,14 @@ export const DevicesPanel = () => {
       {/* <Toolbar title="Les écrans">
         <SearchField />
       </Toolbar> */}
-        <Button icon={Plus} color="primary" onClick={handleAdd}>
-          Ajouter
-        </Button>
-        <Grid
-            cols={deviceCols}
-            ctx={{ api, medias, onlineMin, handleRemote, isAdvanced }}
-            items={devices}
-        />
+      <Button icon={Plus} color="primary" onClick={handleAdd}>
+        Ajouter
+      </Button>
+      <Grid
+        cols={deviceCols}
+        ctx={{ api, medias, onlineMin, handleRemote, isAdvanced }}
+        items={devices}
+      />
     </Panel>
   );
 };

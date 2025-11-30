@@ -52,8 +52,8 @@ const c = Css('MediaItem', {
         0: { opacity: 0 },
         10: { opacity: 0 },
         100: { opacity: 1 },
-      }
-    }
+      },
+    },
   },
   ' .lucide': {
     wh: 50,
@@ -67,7 +67,7 @@ export const MediaItem = ({ media }: { media: MediaModel }) => {
   const [over, overProps] = useOver();
   const id = media.id;
   const controller = useMediaController();
-  const selected = useMemo(() => controller.select$.map(s => s?.id === id), [id]);
+  const selected = useMemo(() => controller.select$.map((s) => s?.id === id), [id]);
   const api = useApi();
 
   console.debug('MediaItem', id, media, selected);
@@ -81,39 +81,43 @@ export const MediaItem = ({ media }: { media: MediaModel }) => {
   const previewUrl = api.getMediaUrl(images[0], 360);
 
   return (
-    <div {...c('', selected && '-selected', over && '-over')} {...overProps} onClick={controller.click(media)}>
-      
+    <div
+      {...c('', selected && '-selected', over && '-over')}
+      {...overProps}
+      onClick={controller.click(media)}
+    >
       <div {...c('Preview')}>
-        {previewUrl ? (
+        {previewUrl ?
           <img {...c('Media')} key="i" src={previewUrl} />
-        ) : (
-          <MediaIcon {...c('Media')} type={media.type} />
-        )}
+        : <MediaIcon {...c('Media')} type={media.type} />}
         {!isEmpty(videos) && (
-          <Anim show={over} factory={() => (
-            <video
-              key="v"
-              {...c('Media', 'Video')}
-              controls={false}
-              muted
-              autoPlay
-              loop
-              onLoadStart={(e) => {
-                console.debug('Video LoadStart:', e);
-                e.currentTarget.currentTime = 0;
-              }}
-              onError={(e) => {
-                console.warn('Video Error:', e);
-              }}
-            >
-              {videos.map((v, i) => (
-                <source key={i} type={v.mime} src={api.getMediaUrl(v)} />
-              ))}
-            </video>
-          )} />
+          <Anim
+            show={over}
+            factory={() => (
+              <video
+                key="v"
+                {...c('Media', 'Video')}
+                controls={false}
+                muted
+                autoPlay
+                loop
+                onLoadStart={(e) => {
+                  console.debug('Video LoadStart:', e);
+                  e.currentTarget.currentTime = 0;
+                }}
+                onError={(e) => {
+                  console.warn('Video Error:', e);
+                }}
+              >
+                {videos.map((v, i) => (
+                  <source key={i} type={v.mime} src={api.getMediaUrl(v)} />
+                ))}
+              </video>
+            )}
+          />
         )}
       </div>
       <div {...c('Title')}>{truncate(media.title, 20)}</div>
     </div>
   );
-}
+};

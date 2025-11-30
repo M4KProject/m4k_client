@@ -36,7 +36,10 @@ const BMediasItem = ({ media }: { media: MediaModel }) => {
   const controller = useBEditController();
   const mediaId = media.id;
   const selected = useFluxMemo(
-    () => fluxCombine(controller.select$, controller.items$).map(([click]) => controller.get(click.i)?.m === mediaId),
+    () =>
+      fluxCombine(controller.select$, controller.items$).map(
+        ([click]) => controller.get(click.i)?.m === mediaId
+      ),
     [controller, mediaId]
   );
   const variants = api.getVariants(media);

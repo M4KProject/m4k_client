@@ -3,8 +3,7 @@ import { Page } from './base/Page';
 import { DevicesPanel } from '../panels/DevicesPanel';
 
 const c = Css('DevicesPage', {
-  '': {
-  },
+  '': {},
 });
 
 export const DevicesPage = () => {
@@ -14,6 +13,3 @@ export const DevicesPage = () => {
     </Page>
   );
 };
-
-
-

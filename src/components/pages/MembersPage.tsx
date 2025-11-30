@@ -11,8 +11,7 @@ import { Form } from '../common/Form';
 import { Field } from '../fields/Field';
 
 const c = Css('MembersPage', {
-  '': {
-  },
+  '': {},
 });
 
 const CreateMemberForm = ({ onClose }: { onClose: () => void }) => {

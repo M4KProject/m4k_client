@@ -70,7 +70,7 @@ const filter = <T extends PbModel>(items: T[], where?: PbWhere<T>, one?: boolean
   return results as T[];
 };
 
-export const getId = (itemId: ItemId) => isItem(itemId) ? itemId.id : itemId; 
+export const getId = (itemId: ItemId) => (isItem(itemId) ? itemId.id : itemId);
 
 export class Sync<T extends PbModel> {
   readonly log: Logger;

@@ -75,7 +75,11 @@ export class BController {
   }
 
   getDefaultType(d: BData) {
-    return d.b ? 'text' : d.m ? 'media' : 'rect';
+    return (
+      d.b ? 'text'
+      : d.m ? 'media'
+      : 'rect'
+    );
   }
 
   toItems(data: NBData[], items: Writable<NBItem>[] = []) {
@@ -117,7 +121,7 @@ export class BController {
     }
 
     return items as NBItem[];
-  };
+  }
 
   toData(item: NBItem): NBData {
     if (!item) return null;
@@ -125,8 +129,7 @@ export class BController {
     if (d.r?.length === 0) delete d.r;
     if (this.getDefaultType(d) === d.t) delete (d as Writable<BData>).t;
     return d;
-  };
-
+  }
 
   applyChanges(items: Writable<NBItems>, index: number, prev: NBItem, next: NBItem) {
     this.log.d('applyChanges', index, 'prev:', prev, 'next:', next);
@@ -249,7 +252,7 @@ export class BController {
   }
 
   getAllData() {
-    return this.getItems().map(i => this.toData(i));
+    return this.getItems().map((i) => this.toData(i));
   }
 
   setAllData(data: NBData[]) {
@@ -310,7 +313,7 @@ export class BController {
       return { ...prev, ...results };
     });
   }
-  
+
   getProp<K extends keyof BData>(i: number, prop: K) {
     return this.get(i)?.[prop];
   }

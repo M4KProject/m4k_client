@@ -72,14 +72,7 @@ export const ConfigPlaylistPage = () => {
           required
         />
         <Field label="Copier le dossier" value={copyDir} onValue={setCopyDir} />
-        <Field
-          type="text"
-          name="url"
-          label="URL"
-          helper="https://"
-          value={url}
-          onValue={setUrl}
-        />
+        <Field type="text" name="url" label="URL" helper="https://" value={url} onValue={setUrl} />
       </Form>
 
       <Form title="Configuration Playlist">

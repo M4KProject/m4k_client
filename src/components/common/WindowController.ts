@@ -1,4 +1,22 @@
-import { Flux, onHtmlEvent, Unsubscribe, stopEvent, Vector2, Vector4, VECTOR2_ZERO, getEventXY, clamp, VECTOR4_ZERO, mustExist, SizeWH, Transform, PosXY, clampVector, VECTOR4_MAX, toVoid } from 'fluxio';
+import {
+  Flux,
+  onHtmlEvent,
+  Unsubscribe,
+  stopEvent,
+  Vector2,
+  Vector4,
+  VECTOR2_ZERO,
+  getEventXY,
+  clamp,
+  VECTOR4_ZERO,
+  mustExist,
+  SizeWH,
+  Transform,
+  PosXY,
+  clampVector,
+  VECTOR4_MAX,
+  toVoid,
+} from 'fluxio';
 import { useContext } from 'preact/hooks';
 import { ComponentChildren, createContext } from 'preact';
 import { Comp } from '@/utils/comp';
@@ -18,8 +36,8 @@ export interface WindowProps extends WindowFooterProps {
   target?: HTMLElement;
   pos?: PosXY;
   size?: SizeWH;
-  min?: SizeWH|Transform;
-  max?: SizeWH|Transform;
+  min?: SizeWH | Transform;
+  max?: SizeWH | Transform;
   draggable?: boolean;
   resizable?: boolean;
 }
@@ -92,8 +110,18 @@ export class WindowController {
     const maxX = w > 0 ? window.innerWidth - w : window.innerWidth;
     const maxY = h > 0 ? window.innerHeight - h : window.innerHeight;
 
-    this.min = min ? min.length === 2 ? [minX, minY, min[0], min[1]] : min : [minX, minY, 0, 0];
-    this.max = max ? max.length === 2 ? [maxX, maxY, max[0], max[1]] : max : [maxX, maxY, VECTOR4_MAX[2], VECTOR4_MAX[3]];
+    this.min =
+      min ?
+        min.length === 2 ?
+          [minX, minY, min[0], min[1]]
+        : min
+      : [minX, minY, 0, 0];
+    this.max =
+      max ?
+        max.length === 2 ?
+          [maxX, maxY, max[0], max[1]]
+        : max
+      : [maxX, maxY, VECTOR4_MAX[2], VECTOR4_MAX[3]];
 
     console.debug('WindowController transform', transform, this.min, this.max);
 
@@ -131,16 +159,13 @@ export class WindowController {
   }
 
   private bindEvents() {
-    this.offs.push(
-      onHtmlEvent(0, 'mousemove', this.onMove),
-      onHtmlEvent(0, 'mouseup', this.onUp),
-    );
+    this.offs.push(onHtmlEvent(0, 'mousemove', this.onMove), onHtmlEvent(0, 'mouseup', this.onUp));
   }
 
   private onMove = (event: Event) => {
     const {
-        eventXY: [startEventX, startEventY],
-        transform: [startX, startY, startW, startH],
+      eventXY: [startEventX, startEventY],
+      transform: [startX, startY, startW, startH],
     } = this.start;
     const eventXY = mustExist(getEventXY(event), 'onMouseMove eventXY');
     const [eventX, eventY] = eventXY;
@@ -154,8 +179,8 @@ export class WindowController {
 
       const x = startX + dx * xDir;
       const y = startY + dy * yDir;
-      const w = clamp(startW + dx * wDir, this.min[0], this.max[0]||Number.MAX_VALUE);
-      const h = clamp(startH + dy * hDir, this.min[1], this.max[1]||Number.MAX_VALUE);
+      const w = clamp(startW + dx * wDir, this.min[0], this.max[0] || Number.MAX_VALUE);
+      const h = clamp(startH + dy * hDir, this.min[1], this.max[1] || Number.MAX_VALUE);
 
       this.transform$.set([x, y, w, h]);
     }
@@ -175,7 +200,7 @@ export class WindowController {
         this.open$.set(true);
       }
     }, 10);
-  }
+  };
 
   close = () => {
     console.debug('WindowController close');
@@ -192,8 +217,8 @@ export class WindowController {
         this.unmount();
       }
     }, 500);
-  }
-  
+  };
+
   setResponse(response: string) {
     console.debug('WindowController setResponse', response);
     if (this.response$.get()) return;
@@ -215,5 +240,5 @@ export class WindowController {
   }
 }
 
-export const WindowContext = createContext<WindowController|null>(null);
+export const WindowContext = createContext<WindowController | null>(null);
 export const useWindowController = () => useContext(WindowContext)!;

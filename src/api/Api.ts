@@ -10,7 +10,16 @@ import {
   MemberModel,
   UserModel,
 } from './models';
-import { byId, Dictionary, getExt, groupBy, isString, logger, removeAccents, toError } from 'fluxio';
+import {
+  byId,
+  Dictionary,
+  getExt,
+  groupBy,
+  isString,
+  logger,
+  removeAccents,
+  toError,
+} from 'fluxio';
 import { setUrlParams } from 'fluxio';
 import { isStringValid } from 'fluxio';
 import { app } from '@/app';

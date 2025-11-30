@@ -47,17 +47,15 @@ export const Medias = ({ type }: { type?: MediaModel['type'] }) => {
   return (
     <div {...c('')}>
       <MediaBreadcrumb />
-      
-      {medias.filter(m => m && (m.parent||'') === (parentId||'')).map(media => (
-        <MediaItem key={media.id} media={media} />
-      ))}
+
+      {medias
+        .filter((m) => m && (m.parent || '') === (parentId || ''))
+        .map((media) => (
+          <MediaItem key={media.id} media={media} />
+        ))}
     </div>
   );
 };
-
-
-
-
 
 // const c = Css('MediasPage', {});
 

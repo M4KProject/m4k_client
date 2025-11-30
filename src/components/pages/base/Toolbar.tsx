@@ -37,7 +37,7 @@ const c = Css('Toolbar', {
 });
 
 export interface ToolbarProps extends DivProps {
-  openMenu$: Flux<boolean>
+  openMenu$: Flux<boolean>;
 }
 
 export const Toolbar = ({ openMenu$ }: ToolbarProps) => {

@@ -3,12 +3,7 @@ import { useFlux } from '@/hooks/useFlux';
 import { Button, ButtonProps } from '@/components/common/Button';
 import { DivProps } from '@/components/common/types';
 import { comp, Comp } from '@/utils/comp';
-import {
-  MonitorIcon,
-  FolderIcon,
-  UsersIcon,
-  HomeIcon,
-} from 'lucide-react';
+import { MonitorIcon, FolderIcon, UsersIcon, HomeIcon } from 'lucide-react';
 import { useRouter } from '@/hooks/useRoute';
 import { useRoute } from '@/hooks/useRoute';
 import { RoutePage } from '@/controllers/Router';
@@ -90,9 +85,7 @@ export interface MenuButtonProps extends ButtonProps {
   page?: RoutePage;
 }
 
-export const MenuFlex = () => (
-  <div {...c('Flex')} />
-);
+export const MenuFlex = () => <div {...c('Flex')} />;
 
 export const MenuButton = ({ page, ...props }: MenuButtonProps) => {
   const routeController = useRouter();
@@ -103,9 +96,12 @@ export const MenuButton = ({ page, ...props }: MenuButtonProps) => {
     <Button
       {...props}
       selected={selected}
-      onClick={props.onClick || (() => {
-        routeController.go({ page });
-      })}
+      onClick={
+        props.onClick ||
+        (() => {
+          routeController.go({ page });
+        })
+      }
     />
   );
 };

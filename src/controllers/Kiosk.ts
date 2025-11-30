@@ -32,7 +32,8 @@ export type ItemFit = 'contain' | 'cover' | 'fill';
 export type ItemAnim = 'rightToLeft' | 'topToBottom' | 'fade' | 'zoom';
 
 export const isItemFit = (v: string) => v === 'contain' || v === 'cover' || v === 'fill';
-export const isItemAnim = (v: string) => v === 'rightToLeft' || v === 'topToBottom' || v === 'fade' || v === 'zoom';
+export const isItemAnim = (v: string) =>
+  v === 'rightToLeft' || v === 'topToBottom' || v === 'fade' || v === 'zoom';
 
 export type KioskPage =
   | 'codePin'
@@ -51,7 +52,8 @@ export interface KioskPlaylist {
   items: any[];
 }
 
-export const isKioskPlaylist = (playlist: KioskPlaylist) => isItem(playlist) && isItems(playlist.items);
+export const isKioskPlaylist = (playlist: KioskPlaylist) =>
+  isItem(playlist) && isItems(playlist.items);
 
 export class Kiosk {
   log = logger('Kiosk');

@@ -46,7 +46,10 @@ export const BFactory = ({ i }: BFactoryProps) => {
 
   const controller = useBController();
   const item = useFluxMemo(() => controller?.item$(i), [controller, i]);
-  const props = useMemo(() => controller && item && computeProps(controller, item), [controller, item]);
+  const props = useMemo(
+    () => controller && item && computeProps(controller, item),
+    [controller, item]
+  );
 
   if (!controller) return null;
 

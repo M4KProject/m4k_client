@@ -5,7 +5,13 @@ import { comp } from '@/utils/comp';
 import { useMemo } from 'preact/hooks';
 import { X, Check, XCircle, Ban } from 'lucide-react';
 import { Button } from './Button';
-import { useWindowController, WindowContext, WindowController, WindowFooterProps, WindowProps } from './WindowController';
+import {
+  useWindowController,
+  WindowContext,
+  WindowController,
+  WindowFooterProps,
+  WindowProps,
+} from './WindowController';
 
 const c = Css('Window', {
   '': {
@@ -90,7 +96,7 @@ const S = 8; // edge hit size
 const H = 0.5;
 
 // [name, [xDir, yDir, wDir, hDir], [top, left, cursor]]
-type EdgeDir = Vector4<0|1|-1>;
+type EdgeDir = Vector4<0 | 1 | -1>;
 type EdgeXY = Vector2<number | string>;
 const EDGES: [string, EdgeDir, EdgeXY, string][] = [
   ['n', [0, 1, 0, -1], [0, H], 'ns-resize'],
@@ -150,10 +156,13 @@ export const WindowFooter = ({ yes, no, cancel }: WindowFooterProps) => {
       {cancel && <Button color="error" icon={Ban} title="Annuler" onClick={controller.cancel} />}
     </div>
   );
-}
+};
 
 const WindowRender = (props: WindowProps) => {
-  const controller = useMemo(() => props.controller?.init(props) || new WindowController(props), [props.controller]);
+  const controller = useMemo(
+    () => props.controller?.init(props) || new WindowController(props),
+    [props.controller]
+  );
 
   const { modal, draggable, resizable, title, content, children, yes, no, cancel } = props;
 
@@ -165,12 +174,13 @@ const WindowRender = (props: WindowProps) => {
 
   return (
     <WindowContext value={controller}>
-      <div {...c('', modal && '-modal', open && '-open', mounted && '-mounted')} onClick={controller.close}>
+      <div
+        {...c('', modal && '-modal', open && '-open', mounted && '-mounted')}
+        onClick={controller.close}
+      >
         <div {...c('Box')} style={boxStyle as any} onClick={stopEvent}>
           <div {...c('Header', draggable && '-draggable')} onMouseDown={controller.drag}>
-            {title && (
-              <div {...c('Title')}>{title}</div>
-            )}
+            {title && <div {...c('Title')}>{title}</div>}
             <Button {...c('Close')} icon={X} onClick={controller.close} />
           </div>
           <div {...c('Content')}>

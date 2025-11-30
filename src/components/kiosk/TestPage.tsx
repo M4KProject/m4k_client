@@ -248,11 +248,7 @@ export const TestPage = () => {
             ['sh', 'SH'],
           ]}
         />
-        <Field
-          label="Résultat"
-          type="multiline"
-          value={jsonStringify(result) || String(result)}
-        />
+        <Field label="Résultat" type="multiline" value={jsonStringify(result) || String(result)} />
         <Field
           label="Valeur"
           type="multiline"

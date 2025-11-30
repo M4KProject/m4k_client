@@ -1,7 +1,14 @@
 import { useFlux } from '@/hooks/useFlux';
 import { useMediaController } from '@/hooks/useMediaController';
 import { Button, UploadButton } from '../common/Button';
-import { EditIcon, FolderPlusIcon, HomeIcon, LayoutIcon, TrashIcon, UploadIcon } from 'lucide-react';
+import {
+  EditIcon,
+  FolderPlusIcon,
+  HomeIcon,
+  LayoutIcon,
+  TrashIcon,
+  UploadIcon,
+} from 'lucide-react';
 import { DivProps } from '@/components/common/types';
 import { Css } from 'fluxio';
 import { Field } from '../fields/Field';
@@ -43,9 +50,7 @@ const c = Css('MediaBreadcrumb', {
   },
 });
 
-export interface ActionsProps extends DivProps {
-
-}
+export interface ActionsProps extends DivProps {}
 
 const Sep = (props: DivProps) => (
   <div {...props} {...c('Sep', props)}>
@@ -53,9 +58,7 @@ const Sep = (props: DivProps) => (
   </div>
 );
 
-const Flex = (props: DivProps) => (
-  <div {...props} {...c('Flex', props)} />
-);
+const Flex = (props: DivProps) => <div {...props} {...c('Flex', props)} />;
 
 export const MediaBreadcrumb = ({ children, ...props }: ActionsProps) => {
   const controller = useMediaController();
@@ -70,16 +73,14 @@ export const MediaBreadcrumb = ({ children, ...props }: ActionsProps) => {
         onClick={() => controller.select$.set(undefined)}
         tooltip="Retour à la racine"
       />
-      {breadcrumb.filter(m => m !== select).map((node) => (
-        <Fragment key={node.id}>
-          <Sep />
-          <Button
-            {...c('NavButton')}
-            title={node.title}
-            onClick={controller.click(node)}
-          />
-        </Fragment>
-      ))}
+      {breadcrumb
+        .filter((m) => m !== select)
+        .map((node) => (
+          <Fragment key={node.id}>
+            <Sep />
+            <Button {...c('NavButton')} title={node.title} onClick={controller.click(node)} />
+          </Fragment>
+        ))}
       {select && (
         <>
           <Sep />
@@ -89,40 +90,36 @@ export const MediaBreadcrumb = ({ children, ...props }: ActionsProps) => {
             onValue={(title) => controller.update(select, { title })}
             props={{ size: Math.max(1, (select.title?.length || 0) + 2) }}
           />
-          <Button
-            color="error"
-            icon={TrashIcon}
-            title="Supprimer"
-            onClick={controller.delete}
-          />
+          <Button color="error" icon={TrashIcon} title="Supprimer" onClick={controller.delete} />
         </>
       )}
 
       <Flex />
-      {!select || select?.type === 'folder' && (
-        <>
-          <UploadButton
-            color="primary"
-            icon={UploadIcon}
-            title="Upload"
-            tooltip="Téléverser des medias"
-            onFiles={controller.upload}
-          />
-          <Button
-            color="primary"
-            icon={FolderPlusIcon}
-            title="Ajouter Dossier"
-            tooltip="Créer un nouveau dossier"
-            onClick={controller.addFolder}
-          />
-          <Button
-            color="primary"
-            icon={LayoutIcon}
-            title="Ajouter Contenu"
-            onClick={controller.addContent}
-          />
-        </>
-      )}
+      {!select ||
+        (select?.type === 'folder' && (
+          <>
+            <UploadButton
+              color="primary"
+              icon={UploadIcon}
+              title="Upload"
+              tooltip="Téléverser des medias"
+              onFiles={controller.upload}
+            />
+            <Button
+              color="primary"
+              icon={FolderPlusIcon}
+              title="Ajouter Dossier"
+              tooltip="Créer un nouveau dossier"
+              onClick={controller.addFolder}
+            />
+            <Button
+              color="primary"
+              icon={LayoutIcon}
+              title="Ajouter Contenu"
+              onClick={controller.addContent}
+            />
+          </>
+        ))}
       {select?.type === 'content' && (
         <>
           <Button
@@ -135,4 +132,4 @@ export const MediaBreadcrumb = ({ children, ...props }: ActionsProps) => {
       )}
     </div>
   );
-}
+};

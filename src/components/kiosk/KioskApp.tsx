@@ -102,8 +102,8 @@ const KioskMenu = () => {
       {/* <SideButton icon={<User />} page="account" title="Mon Compte" /> */}
       {/* <SideSep style={{ fontSize: 0.7, opacity: 0.5 }}>2.0.0</SideSep> */}
     </>
-  )
-}
+  );
+};
 
 const KioskContent = () => {
   const kiosk = useKiosk();
@@ -128,7 +128,7 @@ const KioskContent = () => {
         <KioskRouter />
         <DialogContainer />
       </div>
-    )
+    );
   }
 
   return (

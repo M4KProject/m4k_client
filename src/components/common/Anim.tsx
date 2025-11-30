@@ -20,21 +20,21 @@ const c = Css('Anim', {
 });
 
 export interface AnimProps extends DivProps {
-    show: boolean;
-    variant?: 'fade' | 'scale' | 'slide';
-    keepMounted?: boolean;
-    factory?: (state: AnimState) => ComponentChildren;
+  show: boolean;
+  variant?: 'fade' | 'scale' | 'slide';
+  keepMounted?: boolean;
+  factory?: (state: AnimState) => ComponentChildren;
 }
 
 export const Anim = ({ show, variant, keepMounted, factory, children, ...props }: AnimProps) => {
-    const state = useAnimState(show, 400);
+  const state = useAnimState(show, 400);
 
-    if (!keepMounted && state === 'unmounted') return null;
+  if (!keepMounted && state === 'unmounted') return null;
 
-    return (
-        <div {...props} {...c('', `-${variant||'fade'}`, `-${state}`, props)}>
-            {factory && factory(state)}
-            {children}
-        </div>
-    );
+  return (
+    <div {...props} {...c('', `-${variant || 'fade'}`, `-${state}`, props)}>
+      {factory && factory(state)}
+      {children}
+    </div>
+  );
 };

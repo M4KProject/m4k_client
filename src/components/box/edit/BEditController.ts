@@ -3,7 +3,7 @@ import { BController } from '../BController';
 import { flux, fluxCombine, isItem, isUInt, logger, onHtmlEvent, randColor } from 'fluxio';
 import { BData, BNext } from '../bTypes';
 
-export type BEditPage = "settings"|"layout"|"media"|"text"|"carrousel"|"planification";
+export type BEditPage = 'settings' | 'layout' | 'media' | 'text' | 'carrousel' | 'planification';
 
 export class BEditController extends BController {
   log = logger('BEditController');
@@ -50,7 +50,7 @@ export class BEditController extends BController {
           this.remove();
           break;
       }
-    })
+    });
   }
 
   add(replace: BNext) {
@@ -74,26 +74,26 @@ export class BEditController extends BController {
       s: { bg: randColor() },
       p: this.select$.get()?.i,
     });
-  };
-  
+  }
+
   async remove() {
     const index = this.getSelectIndex();
     this.delete(index);
   }
-  
+
   async cut() {
     const index = this.getSelectIndex();
     const data = this.getData(index);
     await clipboardCopy(data);
     this.delete(index);
   }
-  
+
   async copy() {
     const index = this.getSelectIndex();
     const data = this.getData(index);
     await clipboardCopy(data);
   }
-  
+
   async paste() {
     const index = this.getSelectIndex();
     const item = this.get(index);

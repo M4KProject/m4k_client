@@ -22,7 +22,10 @@ export const EditPage = () => {
   const api = useApi();
   const router = useRouter();
   const playlistKey = useMediaKey();
-  const controller = useMemo(() => new BEditController(api, router, playlistKey), [api, router, playlistKey]);
+  const controller = useMemo(
+    () => new BEditController(api, router, playlistKey),
+    [api, router, playlistKey]
+  );
 
   return (
     <BContext value={controller}>
