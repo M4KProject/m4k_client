@@ -20,7 +20,7 @@ export interface BMenuButtonProps extends ButtonProps {
 export const BMenuButton = ({ page, ...props }: BMenuButtonProps) => {
   const controller = useBEditController();
   const selected = useFlux(controller?.page$.map((p) => p === page));
-  console.debug('BMenuButton', { controller, page, selected });
+  // console.debug('BMenuButton', { controller, page, selected });
 
   const handle = (e: Event) => {
     if (props.onClick) props.onClick(e);

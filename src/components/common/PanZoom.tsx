@@ -5,11 +5,11 @@ import {
   stopEvent,
   getEventXY,
   onHtmlEvent,
-  XY,
   clear,
   setStyle,
   mustExist,
   logger,
+  PosXY,
 } from 'fluxio';
 import { useRef, useEffect } from 'preact/hooks';
 import { DivProps } from './types';
@@ -48,7 +48,7 @@ export interface PanZoomData {
 }
 
 export interface PanZoomInnerProps extends DivProps {
-  translate$: Flux<XY>;
+  translate$: Flux<PosXY>;
   scale$: Flux<number>;
   isDragging$: Flux<boolean>;
   container$: Flux<HTMLDivElement | undefined>;
@@ -70,7 +70,7 @@ export class PanZoomCtrl {
   scale = 1;
   w = 0;
   h = 0;
-  eventXY: [number, number] | undefined = undefined;
+  eventXY: PosXY | undefined = undefined;
   touches: TouchList | null = null;
   isDragging = false;
   isAnimating = false;
@@ -257,7 +257,7 @@ export class PanZoomCtrl {
   }
 
   applyTransform(x: number, y: number, scale: number) {
-    console.debug('applyTransform', x, y, scale);
+    // console.debug('applyTransform', x, y, scale);
 
     const canvas = this.canvas();
 

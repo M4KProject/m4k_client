@@ -14,7 +14,7 @@ const addColors = () => {
     styles[`-selected&-icon&-${color}`] = { bg: color };
     styles[`:hover&-icon&-${color}`] = { bg: color };
   }
-  console.debug('addColors', styles);
+  // console.debug('addColors', styles);
   return styles;
 };
 

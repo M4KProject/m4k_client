@@ -101,8 +101,8 @@ export class Sync<T extends PbModel> {
 
     this.up$ = this.cache.throttle(100);
 
-    this.cache.on((next) => this.log.d('cache next', { next }));
-    this.up$.on((next) => this.log.d('up$ next', { next }));
+    // this.cache.on((next) => this.log.d('cache next', { next }));
+    // this.up$.on((next) => this.log.d('up$ next', { next }));
   }
 
   byId() {
@@ -111,13 +111,13 @@ export class Sync<T extends PbModel> {
 
   filter(where?: PbWhere<T>, one?: boolean): T[] {
     const results = filter(this.cache.getItems(), where, one);
-    this.log.d('filter results', { where, one, results });
+    // this.log.d('filter results', { where, one, results });
     return results;
   }
 
   get(where?: IdOrWhere<T>) {
     const result = isString(where) ? this.cache.getItem(where) : this.filter(where, true)[0];
-    this.log.d('get', { where, result });
+    // this.log.d('get', { where, result });
     return result;
   }
 
@@ -147,20 +147,20 @@ export class Sync<T extends PbModel> {
 
   filter$(where?: PbWhere<T>): Flux<T[]> {
     const key = isString(where) ? where : jsonStringify(where);
-    this.log.d('filter$', { where, key });
+    // this.log.d('filter$', { where, key });
     this.init();
 
     const cache = this.filterMap;
     const prev = cache[key];
     if (prev) return prev;
 
-    this.log.d('find$ new', { where, key });
+    // this.log.d('find$ new', { where, key });
     return (cache[key] = this.up$.map(() => this.filter(where)));
   }
 
   find$(where?: IdOrWhere<T>): Flux<T> {
     const key = isString(where) ? where : jsonStringify(where);
-    this.log.d('find$', { where, key });
+    // this.log.d('find$', { where, key });
     this.init();
 
     const cache = this.findMap;
