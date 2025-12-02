@@ -1,6 +1,7 @@
 import { Css } from 'fluxio';
 import { Page } from './base/Page';
 import { Medias } from '../panels/Medias';
+import { JobsWindow } from '../panels/Jobs';
 
 const c = Css('MediasPage', {
   '': {},
@@ -10,6 +11,7 @@ export const MediasPage = () => {
   return (
     <Page {...c('')}>
       <Medias />
+      <JobsWindow />
     </Page>
   );
 };

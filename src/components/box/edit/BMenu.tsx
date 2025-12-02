@@ -3,8 +3,8 @@ import {
   CalendarClockIcon,
   ExpandIcon,
   GalleryHorizontalIcon,
+  GroupIcon,
   ImageIcon,
-  SettingsIcon,
   TextIcon,
 } from 'lucide-react';
 import { useBEditController } from './useBEditController';
@@ -23,10 +23,9 @@ export const BMenuButton = ({ page, ...props }: BMenuButtonProps) => {
   // console.debug('BMenuButton', { controller, page, selected });
 
   const handle = (e: Event) => {
+    const page$ = controller?.page$;
     if (props.onClick) props.onClick(e);
-    if (page) {
-      controller?.page$.set(page);
-    }
+    if (page && page$) page$.set(prev => prev === page ? '' : page);
   };
 
   return <Button {...props} selected={selected} onClick={handle} />;
@@ -34,7 +33,6 @@ export const BMenuButton = ({ page, ...props }: BMenuButtonProps) => {
 
 export const BMenu = () => {
   const router = useRouter();
-  const controller = useBEditController();
 
   return (
     <>
@@ -43,7 +41,7 @@ export const BMenu = () => {
         icon={ArrowLeftIcon}
         onClick={() => router.go({ page: 'medias' })}
       />
-      <BMenuButton title="Paramètres" icon={SettingsIcon} page="settings" />
+      <BMenuButton title="Hiérarchie" icon={GroupIcon} page="hierarchy" />
       <BMenuButton title="Position" icon={ExpandIcon} page="layout" />
       <BMenuButton title="Media" icon={ImageIcon} page="media" />
       <BMenuButton title="Texte" icon={TextIcon} page="text" />

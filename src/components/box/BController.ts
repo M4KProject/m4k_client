@@ -64,14 +64,11 @@ export class BController {
 
   readonly api: Api;
   readonly router: Router;
-  readonly playlistKey: string;
 
-  constructor(api: Api, router: Router, playlistKey: string) {
+  constructor(api: Api, router: Router) {
     this.api = api;
     this.router = router;
-    this.playlistKey = playlistKey;
-    app.boxCtrl = this;
-    this.load();
+    app.bController = this;
   }
 
   getDefaultType(d: BData) {
@@ -162,14 +159,6 @@ export class BController {
     return items;
   }
 
-  async load() {
-    const page = await this.api.media.get(this.playlistKey);
-    this.log.d('load', this.playlistKey, media);
-    if (page?.type === 'content') {
-      this.setAllData(page.data?.boxes || []);
-    }
-  }
-
   register(type: string, boxConfig: BType) {
     this.registry[type] = boxConfig;
   }
@@ -223,6 +212,7 @@ export class BController {
     const lastEvent = this.click$.get();
     const boxEvent = this.newEvent(i, 'click', event);
     boxEvent.count = (lastEvent.i === i ? lastEvent.count || 1 : 0) + 1;
+    boxEvent.item = box;
 
     this.log.d('click event', boxEvent, 'el:', boxEvent.el);
     this.funCall(box?.click, boxEvent);

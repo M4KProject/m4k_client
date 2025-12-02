@@ -32,17 +32,17 @@ const c = Css('BHierarchy', {
 
 const BHierarchyItem = ({ i }: { i: number }) => {
   const controller = useBEditController();
-  const item = useFluxMemo(() => controller.item$(i), [controller, i]);
-  const selected = useFluxMemo(() => controller.select$.map((e) => e.i === i), [controller, i]);
-  const type = controller.getType(item?.t);
-  const Icon = type.icon || Square;
+  const item = useFluxMemo(() => controller?.item$(i), [controller, i]);
+  const selected = useFluxMemo(() => controller?.select$.map((e) => e.i === i), [controller, i]);
+  const type = controller?.getType(item?.t);
+  const Icon = type?.icon || Square;
 
-  const label = truncate(item?.n || item?.b?.replace(/\*\*/g, '') || type.label || '', 20);
+  const label = truncate(item?.n || item?.b?.replace(/\*\*/g, '') || type?.label || '', 20);
   const children = item?.r;
 
   return (
     <>
-      <div {...c('Item', selected && 'Item-selected')} onClick={() => controller.click(i)}>
+      <div {...c('Item', selected && 'Item-selected')} onClick={() => controller?.click(i)}>
         <div {...c('Icon')}>
           <Icon />
         </div>

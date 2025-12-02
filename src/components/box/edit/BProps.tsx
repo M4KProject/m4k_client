@@ -75,9 +75,9 @@ const useProp = <K extends keyof BItem>(
   prop: K
 ): [BItem[K] | undefined, (next: BPropNext<K>) => void] => {
   const controller = useBEditController();
-  const i = useFlux(controller.select$).i;
-  const value = useFluxMemo(() => controller.prop$(i, prop), [i, prop]);
-  return [value, (next: BPropNext<K>) => controller.setProp(i, prop, next)];
+  const i = useFlux(controller?.select$)?.i;
+  const value = useFluxMemo(() => controller?.prop$(i, prop), [controller, i, prop]);
+  return [value, (next: BPropNext<K>) => controller?.setProp(i, prop, next)];
 };
 
 export const BField = ({
@@ -169,10 +169,10 @@ const BStyleField = ({ prop, ...props }: FieldProps<any, any> & { prop: string }
 
 export const BDataField = () => {
   const controller = useBEditController();
-  const i = useFlux(controller.select$).i;
-  const item = useFluxMemo(() => controller.item$(i), [i]);
+  const i = useFlux(controller?.select$)?.i;
+  const item = useFluxMemo(() => controller?.item$(i), [controller, i]);
   const onValue = (next: any) => {
-    controller.set(i, next);
+    controller?.set(i, next);
   };
   return <Field label="B" name="box" type="json" value={item} onValue={onValue} col />;
 };
@@ -183,16 +183,20 @@ const Panel = (props: DivProps) => <div {...props} {...c('Panel', props)} />;
 
 export const BProps = () => {
   const controller = useBEditController();
-  const select = useFlux(controller.select$);
+  const click = useFlux(controller?.click$);
+  const select = useFlux(controller?.select$);
   const isAdvanced = useFlux(isAdvanced$);
-  const i = select.i;
-  const item = select.item;
-  const types = Object.entries(controller.registry).map(
+  const i = select?.i;
+  const item = select?.item;
+  const registryEntries = Object.entries(controller?.registry||{});
+  const types = registryEntries.map(
     ([type, config]) => [type, <Tr>{config.label}</Tr>] as [string, Comp]
   );
   const [nType] = useProp('t');
   const type = nType || 'box';
-  const config = controller.registry[type] || ({} as Partial<BType>);
+  const config = controller?.registry[type] || ({} as Partial<BType>);
+
+  console.debug('BProps', i, item, click)
 
   if (!isUInt(i) || !item) return null;
 
@@ -201,7 +205,7 @@ export const BProps = () => {
       {config.r && (
         <Panel>
           <Field label="Ajouter">
-            {Object.entries(controller.registry).map(([t, config], key) => {
+            {registryEntries.map(([t, config], key) => {
               const Icon = config?.icon || Square;
               if (t === 'root' || t === 'rect') return null;
               return (
@@ -212,7 +216,7 @@ export const BProps = () => {
                   onClick={() => {
                     const next: Writable<Partial<BItem>> = { p: i, t };
                     if (type === 'text') next.b = 'Mon texte !';
-                    controller.add(next);
+                    controller?.add(next);
                   }}
                 />
               );

@@ -3,22 +3,22 @@ import { BController } from '../BController';
 import { flux, fluxCombine, isItem, isUInt, logger, onHtmlEvent, randColor } from 'fluxio';
 import { BData, BNext } from '../bTypes';
 
-export type BEditPage = 'settings' | 'layout' | 'media' | 'text' | 'carrousel' | 'planification';
+export type BEditPage = '' | 'hierarchy' | 'layout' | 'media' | 'text' | 'carrousel' | 'planification';
 
 export class BEditController extends BController {
   log = logger('BEditController');
 
-  readonly page$ = flux<BEditPage>('settings');
+  readonly page$ = flux<BEditPage>('');
   readonly select$ = fluxCombine(this.page$, this.click$).map(([page, click]) => {
     return click;
   });
 
   async save() {
     const boxes = this.getAllData();
-    this.log.d('save', this.playlistKey, boxes);
-    await this.api.media.update(this.playlistKey, {
-      data: { boxes },
-    });
+    this.log.d('save', boxes);
+    // await this.api.media.update(this.playlistKey, {
+    //   data: { boxes },
+    // });
   }
 
   bindKeyDown() {
