@@ -2,16 +2,24 @@ import { clipboardCopy, clipboardPaste } from '@/utils/clipboard';
 import { BController } from '../BController';
 import { flux, fluxCombine, isItem, isUInt, logger, onHtmlEvent, randColor } from 'fluxio';
 import { BData, BNext } from '../bTypes';
+import { Api } from '@/api/Api';
+import { Router } from '@/controllers/Router';
 
-export type BEditPage = '' | 'hierarchy' | 'layout' | 'media' | 'text' | 'carrousel' | 'planification';
+export type BEditPage = '' | 'hierarchy' | 'layout' | 'playlist' | 'media' | 'text' | 'planification' | 'advanced';
 
 export class BEditController extends BController {
   log = logger('BEditController');
 
   readonly page$ = flux<BEditPage>('');
-  readonly select$ = fluxCombine(this.page$, this.click$).map(([page, click]) => {
-    return click;
-  });
+  readonly selectIndex$ = flux<number|undefined>(undefined);
+  readonly select$ = fluxCombine(this.selectIndex$, this.items$).map(
+    ([index, items]) => index ? items[index] : undefined);
+
+  constructor(api: Api, router: Router) {
+    super(api, router);
+    
+    this.click$.on(e => this.selectIndex$.set(e.i));
+  }
 
   async save() {
     const boxes = this.getAllData();

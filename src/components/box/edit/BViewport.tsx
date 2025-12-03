@@ -24,16 +24,17 @@ const c = Css('BViewport', {
 export const BViewport = () => {
   const controller = useBEditController();
 
-  useEffect(() => controller.bindKeyDown(), [controller]);
+  useEffect(() => controller?.bindKeyDown(), [controller]);
 
   useEffect(() => {
     const ready = () => {
       console.debug('BViewport ready');
-      const pz = controller.panZoom;
+      const pz = controller?.panZoom;
+      if (!pz) return;
 
       const el = pz.viewport();
       onHtmlEvent(el, 'click', (event) => {
-        controller.select$.set({ el, event });
+        controller?.click$.set({ el, event });
       });
 
       const [w, h] = SCREEN_SIZES[0]!;
@@ -44,12 +45,12 @@ export const BViewport = () => {
     };
     ready();
 
-    return controller.panZoom.ready$.on(ready);
+    return controller?.panZoom.ready$.on(ready);
   }, [controller]);
 
   return (
     <div {...c('')}>
-      <PanZoom ctrl={controller.panZoom}>
+      <PanZoom ctrl={controller?.panZoom}>
         <div {...c('Body')}>
           <BFactory i={0} />
         </div>

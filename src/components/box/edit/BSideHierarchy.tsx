@@ -2,16 +2,14 @@ import { Css, logger, truncate } from 'fluxio';
 import { useFluxMemo } from '@/hooks/useFlux';
 import { Square } from 'lucide-react';
 import { useBEditController } from './useBEditController';
+import { BField, BFieldSep } from './BField';
+import { tooltipProps } from '@/components/common/Tooltip';
 
-const log = logger('BHierarchy');
+const log = logger('BSideHierarchy');
 
-const c = Css('BHierarchy', {
+const c = Css('BSideHierarchy', {
   '': {
-    flex: 1,
-    overflowX: 'hidden',
-    overflowY: 'auto',
     col: ['stretch', 'start'],
-    p: 8,
   },
   Item: {
     row: ['center', 'start'],
@@ -30,7 +28,7 @@ const c = Css('BHierarchy', {
   },
 });
 
-const BHierarchyItem = ({ i }: { i: number }) => {
+const BSideHierarchyItem = ({ i }: { i: number }) => {
   const controller = useBEditController();
   const item = useFluxMemo(() => controller?.item$(i), [controller, i]);
   const selected = useFluxMemo(() => controller?.select$.map((e) => e.i === i), [controller, i]);
@@ -43,15 +41,19 @@ const BHierarchyItem = ({ i }: { i: number }) => {
   return (
     <>
       <div {...c('Item', selected && 'Item-selected')} onClick={() => controller?.click(i)}>
-        <div {...c('Icon')}>
+        <div {...c('Icon')} {...tooltipProps(type)}>
           <Icon />
         </div>
-        {label}
+        {selected ? (
+          <BField prop="n" />
+        ) : (
+          label
+        )}
       </div>
       {children && (
         <div {...c('Children')}>
           {children.map((child) => (
-            <BHierarchyItem i={child} />
+            <BSideHierarchyItem i={child} />
           ))}
         </div>
       )}
@@ -59,12 +61,12 @@ const BHierarchyItem = ({ i }: { i: number }) => {
   );
 };
 
-export const BHierarchies = () => {
-  log.d('BHierarchies');
+export const BSideHierarchy = () => {
+  log.d('BSideHierarchy');
 
   return (
     <div {...c('')}>
-      <BHierarchyItem i={0} />
+      <BSideHierarchyItem i={0} />
     </div>
   );
 };

@@ -54,9 +54,9 @@ const BButton = (props: ButtonProps) => <Button {...c('Button')} color="primary"
 
 export const BButtons = () => {
   const controller = useBEditController();
-  const select = useFlux(controller.select$);
-  const selectIndex = select.i;
-  const pz = controller.panZoom;
+  const select = useFlux(controller?.select$);
+  const selectIndex = select?.i;
+  const pz = controller?.panZoom;
   const [sizeIndex, setSizeIndex] = useState(0);
   const [sizeWidth, sizeHeight, sizeTitle, SizeIcon] = SCREEN_SIZES[sizeIndex]!;
 
@@ -64,10 +64,12 @@ export const BButtons = () => {
     const nextIndex = normalizeIndex(sizeIndex + 1, SCREEN_SIZES.length);
     setSizeIndex(nextIndex);
     const [w, h] = SCREEN_SIZES[nextIndex]!;
-    controller.panZoom.setSize(w, h);
+    controller?.panZoom.setSize(w, h);
   };
 
   const hasSelect = isUInt(selectIndex);
+
+  if (!pz) return null;
 
   return (
     <div {...c('')}>

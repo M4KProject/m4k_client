@@ -43,6 +43,10 @@ export class MediaController {
     return results.reverse();
   });
 
+  constructor() {
+    
+  }
+
   click(media: MediaModel) {
     return () => this.select$.set(media);
   }

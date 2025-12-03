@@ -37,7 +37,7 @@ const BMediasItem = ({ media }: { media: MediaModel }) => {
   const mediaId = media.id;
   const selected = useFluxMemo(
     () =>
-      fluxCombine(controller.select$, controller.items$).map(
+      controller && fluxCombine(controller.select$, controller.items$).map(
         ([click]) => controller.get(click.i)?.m === mediaId
       ),
     [controller, mediaId]
@@ -52,9 +52,9 @@ const BMediasItem = ({ media }: { media: MediaModel }) => {
       tooltip={media.title}
       style={{ backgroundImage: url ? `url('${url}')` : undefined }}
       onClick={() => {
-        const select = controller.select$.get();
-        if (select.i !== undefined) {
-          controller.update(select.i, { m: media.id });
+        const select = controller?.select$.get();
+        if (select && select.i !== undefined) {
+          controller?.update(select.i, { m: media.id });
         }
       }}
     />
