@@ -41,11 +41,11 @@ const BSideHierarchyItem = ({ i }: { i: number }) => {
   return (
     <>
       <div {...c('Item', selected && 'Item-selected')} onClick={() => controller?.click(i)}>
-        <div {...c('Icon')} {...tooltipProps(type)}>
+        <div {...c('Icon')} {...tooltipProps(type?.label || '')}>
           <Icon />
         </div>
         {selected ? (
-          <BField prop="n" />
+          <BField prop="n" defaultValue={label} />
         ) : (
           label
         )}
