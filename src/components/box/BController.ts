@@ -28,7 +28,7 @@ import {
   NBItem,
 } from './bTypes';
 import { BCarousel } from './BCarousel';
-import { PanZoomCtrl } from '@/components/common/PanZoom';
+import { PanZoomController } from '@/components/common/PanZoom';
 import { fluxUndefined } from 'fluxio/flux/fluxUndefined';
 import { ALargeSmall, FileIcon, GalleryHorizontal, Home, Square } from 'lucide-react';
 import { app } from '@/app';
@@ -39,15 +39,16 @@ import { BMedia } from './BMedia';
 import { Api } from '@/api/Api';
 import { Router } from '@/controllers/Router';
 
-const rect: BType = { comp: BRect, label: 'Rectangle', r: 1, a: 1, layout: 1, icon: Square };
-const root: BType = { comp: BRoot, label: 'Racine', r: 1, layout: 1, icon: Home };
-const text: BType = { comp: BText, label: 'Texte', b: 1, a: 1, icon: ALargeSmall };
-const carousel: BType = { comp: BCarousel, label: 'Carousel', r: 1, a: 1, icon: GalleryHorizontal };
+const root: BType = { comp: BRoot, label: 'Écran', r: 1, layout: 1, icon: Home };
+const page: BType = { comp: BRect, label: 'Page', r: 1, layout: 1, icon: Home };
+const rect: BType = { comp: BRect, label: 'Zone', r: 1, a: 1, layout: 1, icon: Square };
+const carousel: BType = { comp: BCarousel, label: 'Player', r: 1, a: 1, icon: GalleryHorizontal };
 const media: BType = { comp: BMedia, label: 'Media', m: 1, a: 1, icon: FileIcon };
+const text: BType = { comp: BText, label: 'Texte', b: 1, a: 1, icon: ALargeSmall };
 
 export class BController {
   readonly log = logger('BController');
-  readonly registry: Dictionary<BType> = { root, rect, text, carousel, media };
+  readonly registry: Dictionary<BType> = { root, page, rect, text, carousel, media };
 
   readonly funs: Dictionary<(boxEvent: BEvent) => void> = {};
 
@@ -60,7 +61,7 @@ export class BController {
   readonly click$ = flux<BEvent>({});
   readonly event$ = fluxUnion(this.init$, this.click$);
 
-  readonly panZoom = new PanZoomCtrl();
+  readonly panZoom = new PanZoomController();
 
   readonly api: Api;
   readonly router: Router;

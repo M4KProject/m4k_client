@@ -11,13 +11,13 @@ import { useApi } from '@/hooks/useApi';
 import { Panel } from './base/Panel';
 import { Button } from '../common/Button';
 
-const c = Css('AccountPanel', {
+const c = Css('Account', {
   '': {
     flex: 1,
   },
 });
 
-export const AccountPanel = () => {
+export const Account = () => {
   const api = useApi();
   const theme = useFlux(theme$);
   const auth = useFlux(api.pb.auth$);

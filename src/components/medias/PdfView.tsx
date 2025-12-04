@@ -3,7 +3,7 @@ import { groupBy, sortItems } from 'fluxio';
 import { useState, useEffect, useMemo } from 'preact/hooks';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { MediaViewProps } from './MediaView';
-import { PanZoom, PanZoomCtrl } from '@/components/common/PanZoom';
+import { PanZoom, PanZoomController } from '@/components/common/PanZoom';
 import { PdfModel } from '@/api/models';
 import { Button } from '@/components/common/Button';
 import { useApi } from '@/hooks/useApi';
@@ -56,7 +56,7 @@ export type PdfViewProps = MediaViewProps<PdfModel>;
 export const PdfView = ({ media, divProps }: PdfViewProps) => {
   const api = useApi();
   const [currentPage, setCurrentPage] = useState(0);
-  const panZoomCtrl = useMemo(() => new PanZoomCtrl(), []);
+  const panZoom = useMemo(() => new PanZoomController(), []);
 
   const variants = api.getVariants(media);
   const images = variants.filter((v) => v.type === 'image');
@@ -70,14 +70,14 @@ export const PdfView = ({ media, divProps }: PdfViewProps) => {
   const currentImage = imagesByPage[currentPageKey]?.[0];
 
   useEffect(() => {
-    app.pdfPanZoomCtrl = panZoomCtrl;
-    const unsubscribe = panZoomCtrl.ready$.on(() => {
+    app.pdfPanZoom = panZoom;
+    const unsubscribe = panZoom.ready$.on(() => {
       if (currentImage?.width && currentImage?.height) {
-        panZoomCtrl.setSize(currentImage.width, currentImage.height);
+        panZoom.setSize(currentImage.width, currentImage.height);
       }
     });
     return unsubscribe;
-  }, [currentImage, panZoomCtrl]);
+  }, [currentImage, panZoom]);
 
   const handlePreviousPage = () => {
     if (currentPage > 0) {
@@ -93,7 +93,7 @@ export const PdfView = ({ media, divProps }: PdfViewProps) => {
 
   return (
     <div {...divProps} {...c(divProps)}>
-      <PanZoom ctrl={panZoomCtrl} {...c('Container')}>
+      <PanZoom controller={panZoom} {...c('Container')}>
         {currentImage && (
           <div
             {...c('Page')}

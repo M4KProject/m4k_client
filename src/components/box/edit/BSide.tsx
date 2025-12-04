@@ -1,82 +1,35 @@
-import {
-  Css,
-  isArray,
-  isDefined,
-  isUInt,
-  Style,
-  StyleFlexAlign,
-  StyleFlexJustify,
-  Writable,
-} from 'fluxio';
-import { Field } from '@/components/fields/Field';
-import { Tr } from '@/components/common/Tr';
-import { useFlux, useFluxMemo } from '@/hooks/useFlux';
-import { BType, BData, BItem, BPropNext } from '@/components/box/bTypes';
-import { isAdvanced$, setIsAdvanced } from '@/router';
-import { Button, ButtonProps } from '@/components/common/Button';
-import {
-  // Texte
-  AlignLeft,
-  AlignCenter,
-  AlignJustify,
-  AlignRight,
-
-  // Flex Row
-  AlignStartHorizontal,
-  AlignCenterHorizontal,
-  AlignEndHorizontal,
-  AlignHorizontalJustifyStart,
-  AlignHorizontalJustifyCenter,
-  AlignHorizontalJustifyEnd,
-
-  // Flex Col
-  AlignStartVertical,
-  AlignCenterVertical,
-  AlignEndVertical,
-  AlignVerticalJustifyStart,
-  AlignVerticalJustifyCenter,
-  AlignVerticalJustifyEnd,
-
-  // Add
-  Square,
-} from 'lucide-react';
-import { BMedias } from './BMedias';
-import { FieldProps } from '@/components/fields/types';
-import { DivProps } from '@/components/common/types';
-import { Comp } from '@/utils/comp';
+import { Css } from 'fluxio';
+import { useFlux } from '@/hooks/useFlux';
 import { useBEditController } from './useBEditController';
 import { isAnimStateOpen, useAnimState } from '@/hooks/useAnimState';
-import { BField } from './BField';
-import { BSideHierarchy } from './BSideHierarchy';
-import { BSideAdvanced } from './BSideAdvanced';
-import { BSideLayout } from './BSideLayout';
-import { BSideText } from './BSideText';
-import { BSideMedia } from './BSideMedia';
+import { BSideAdvanced, BSideWebView } from './BSideContent';
+import { BSideScreen } from './BSideScreen';
+import { BSidePage } from './BSidePage';
 import { BSidePlaylist } from './BSidePlaylist';
-import { BSidePlanification } from './BSidePlanification';
+import { useMemo } from 'preact/hooks';
 
 const c = Css('BSide', {
   '': {
-    position: 'relative',
     transition: 0.4,
-    w: 300,
+    w: 250,
     h: '100%',
   },
-  Content: {
+  '-open': {
+  },
+  Body: {
     position: 'absolute',
     elevation: 2,
-    w: 300,
+    w: 250,
     h: '100%',
     bg: 'bg',
     overflowX: 'hidden',
     overflowY: 'auto',
     col: ['stretch', 'start'],
+    zIndex: 20,
+  },
+  ' &Content': {
     transition: 0.4,
     translateX: '-100%',
-    zIndex: 10,
-    p: 8,
-  },
-  '-open': {
   },
   '-open &Content': {
     translateX: '0%',
@@ -87,29 +40,44 @@ const c = Css('BSide', {
   ' .FieldLabel': {
     w: 80,
   },
+  ' .Field-col .FieldLabel': {
+    w: '100%',
+  },
 });
 
 export const BSide = () => {
   const controller = useBEditController()!;
-  const page = useFlux(controller.page$);
-  const animState = useAnimState(!!page, 400);
+  const show$ = useMemo(() => controller.page$.map(p => !!p), [controller]);
+  const page$ = useMemo(() => controller.page$.filter(p => !!p), [controller]);
+  const show = useFlux(show$);
+  const page = useFlux(page$);
+  const animState = useAnimState(show, 400);
   const unmounted = animState === 'unmounted';
-  
+
   if (unmounted) return null;
 
   return (
     <div {...c('', isAnimStateOpen(animState) && `-open`)}>
-      <div {...c('Content')}>
-        {page === 'advanced' && <BSideAdvanced />}
-        {page === 'hierarchy' && <BSideHierarchy />}
-        {page === 'layout' && <BSideLayout />}
-        {page === 'media' && <BSideMedia />}
-        {page === 'text' && <BSideText />}
+      <div {...c('Body')}>
+        {page === 'screen' && <BSideScreen />}
+        {page === 'page' && <BSidePage />}
         {page === 'playlist' && <BSidePlaylist />}
-        {page === 'planification' && <BSidePlanification />}
+        {page === 'webview' && <BSideWebView />}
+        {page === 'advanced' && <BSideAdvanced />}
       </div>
     </div>
   );
+};
+
+        // {page === 'advanced' && <BSideAdvanced />}
+        // {page === 'hierarchy' && <BSideHierarchy />}
+        // {page === 'layout' && <BSideLayout />}
+        // {/* {page === 'media' && <BSideMedia />} */}
+        // {page === 'text' && <BSideText />}
+        // {page === 'playlist' && <BSidePlaylist />}
+        // {/* {page === 'planification' && <BSidePlanification />} */}
+
+
 
   // const i = select?.i;
   // const item = select?.item;
@@ -159,7 +127,6 @@ export const BSide = () => {
   //         </Panel>
   //       )}
   // );
-};
 
 // import { Css } from 'fluxio';
 

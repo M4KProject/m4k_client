@@ -1,17 +1,8 @@
-import {
-  Css,
-  isArray,
-  isDefined,
-  Style,
-  StyleFlexAlign,
-  StyleFlexJustify,
-} from 'fluxio';
+import { Css, isDefined } from 'fluxio';
 import { Field } from '@/components/fields/Field';
 import { useFlux, useFluxMemo } from '@/hooks/useFlux';
 import { BData, BItem, BPropNext } from '@/components/box/bTypes';
-import { Button, ButtonProps } from '@/components/common/Button';
 import { FieldProps } from '@/components/fields/types';
-import { Comp } from '@/utils/comp';
 import { useBEditController } from './useBEditController';
 
 const c = Css('BField', {

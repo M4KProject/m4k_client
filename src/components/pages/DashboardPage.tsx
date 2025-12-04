@@ -1,7 +1,7 @@
 import { Css } from 'fluxio';
 import { Page } from './base/Page';
-import { AccountPanel } from '../panels/AccountPanel';
-import { GroupPanel } from '@/components/panels/GroupPanel';
+import { Account } from '../panels/Account';
+import { Groups } from '@/components/panels/Groups';
 
 const c = Css('DashboardPage', {
   '': {
@@ -14,8 +14,8 @@ const c = Css('DashboardPage', {
 export const DashboardPage = () => {
   return (
     <Page {...c('')}>
-      <AccountPanel />
-      <GroupPanel />
+      <Account />
+      <Groups />
       {/* <JobGrid filter={(job) => job.status !== 'finished'} panel={true} /> */}
     </Page>
   );

@@ -4,8 +4,7 @@ import { flux, fluxCombine, isItem, isUInt, logger, onHtmlEvent, randColor } fro
 import { BData, BNext } from '../bTypes';
 import { Api } from '@/api/Api';
 import { Router } from '@/controllers/Router';
-
-export type BEditPage = '' | 'hierarchy' | 'layout' | 'playlist' | 'media' | 'text' | 'planification' | 'advanced';
+export type BEditPage = '' | 'screen' | 'page' | 'playlist' | 'webview' | 'advanced';
 
 export class BEditController extends BController {
   log = logger('BEditController');
@@ -20,6 +19,27 @@ export class BEditController extends BController {
     
     this.click$.on(e => this.selectIndex$.set(e.i));
   }
+
+  _ready() {
+    console.debug('BViewport ready');
+
+    const pz = this.panZoom;
+    const viewporteEl = pz.viewport();
+    onHtmlEvent(viewporteEl, 'click', (event) => {
+      this.click$.set({ el: viewporteEl, event });
+    });
+    
+    this.panZoomFit();
+  }
+
+  panZoomFit() {
+    const pz = this.panZoom;
+    if (!pz) return;
+    setTimeout(() => pz.fitToContainer(), 100);
+    setTimeout(() => pz.fitToContainer(), 1000);
+  }
+
+  ready = () => this._ready();
 
   async save() {
     const boxes = this.getAllData();

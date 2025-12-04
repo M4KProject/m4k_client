@@ -55,7 +55,7 @@ export interface PanZoomInnerProps extends DivProps {
   event$: Flux<Event | undefined>;
 }
 
-export class PanZoomCtrl {
+export class PanZoomController {
   private unsubscribes: (() => void)[] = [];
 
   readonly ready$ = flux<number>(0);
@@ -353,10 +353,10 @@ export class PanZoomCtrl {
 }
 
 export interface PanZoomProps extends DivProps {
-  ctrl?: PanZoomCtrl;
+  controller?: PanZoomController;
 }
 
-export const PanZoom = ({ children, ctrl, ...props }: PanZoomProps) => {
+export const PanZoom = ({ children, controller, ...props }: PanZoomProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -372,11 +372,11 @@ export const PanZoom = ({ children, ctrl, ...props }: PanZoomProps) => {
     if (!container) return;
     if (!content) return;
 
-    const c = ctrl || new PanZoomCtrl();
+    const c = controller || new PanZoomController();
     c.init(container, content);
 
     return () => c.dispose();
-  }, [ctrl, containerRef, contentRef, container, content]);
+  }, [controller, containerRef, contentRef, container, content]);
 
   return (
     <div {...props} {...c('', props)} ref={containerRef}>

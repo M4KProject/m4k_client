@@ -153,15 +153,15 @@ export interface PdfModel extends BaseMediaModel {
   data?: PdfData;
 }
 
-export interface PlaylistModel extends BaseMediaModel {
-  type: 'playlist';
-  data?: PlaylistData;
-}
+// export interface PlaylistModel extends BaseMediaModel {
+//   type: 'playlist';
+//   data?: PlaylistData;
+// }
 
-export interface PageModel extends BaseMediaModel {
-  type: 'page';
-  data?: PageData;
-}
+// export interface PageModel extends BaseMediaModel {
+//   type: 'page';
+//   data?: PageData;
+// }
 
 export interface MediaModel extends BaseMediaModel {
   data?: VideoData & ImageData & PdfData & PlaylistData & PageData;

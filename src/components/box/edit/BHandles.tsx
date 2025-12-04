@@ -161,7 +161,7 @@ const BHandlesContent = () => {
         <div
           key={name}
           style={style as any}
-          onMouseDown={(event) => startResize(controller, config, name, event)}
+          onMouseDown={(event) => controller && startResize(controller, config, name, event)}
         />
       ))}
     </>
@@ -175,7 +175,7 @@ export const BHandles = () => {
       if (!controller) return;
 
       const combined$ = fluxCombine(
-        controller.select$,
+        controller.click$,
         controller.items$,
         controller.panZoom.after$,
         controller.panZoom.after$.delay(100)

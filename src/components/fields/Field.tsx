@@ -8,6 +8,7 @@ import { Button } from '@/components/common/Button';
 import { XIcon } from 'lucide-react';
 import { useFieldController, useFieldState } from './hooks';
 import { useConstant } from '@/hooks/useConstant';
+import { tooltipProps } from '../common/Tooltip';
 
 export const c = Css('Field', {
   '': {
@@ -112,7 +113,7 @@ export const Field = <V = any, R = any>(props: FieldProps<V, R>) => {
 
   const { config, error } = useFieldState(ctrl, 'config', 'error');
 
-  const { input: Input, children, label, helper, col, type, containerProps } = config;
+  const { input: Input, children, label, helper, col, type, tooltip, containerProps } = config;
 
   const isComposed = isNotEmpty(children);
 
@@ -122,7 +123,7 @@ export const Field = <V = any, R = any>(props: FieldProps<V, R>) => {
         {...containerProps}
         {...c('', col && '-col', type && `-${type}`, error && '-error', containerProps)}
       >
-        {label && <div {...c('Label')}>{label} :</div>}
+        {label && <div {...c('Label')} {...tooltipProps(tooltip)}>{label} :</div>}
         <div {...c('Content')}>
           {isComposed ?
             children

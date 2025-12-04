@@ -7,7 +7,7 @@ import { Css } from 'fluxio';
 import { useRouter, useGroupKey } from '@/hooks/useRoute';
 import { Role } from '@/api/models';
 
-const c = Css('GroupPanel', {
+const c = Css('Groups', {
   '': {
     flex: 2,
   },
@@ -138,7 +138,7 @@ const c = Css('GroupPanel', {
 //   return <Grid ctx={{ groupKey, isAdvanced, api }} cols={cols} items={groups} />;
 // }
 
-export const GroupPanel = () => {
+export const Groups = () => {
   const api = useApi();
   const groups = useGroups();
   const groupKey = useGroupKey();
@@ -154,7 +154,7 @@ export const GroupPanel = () => {
     }
   };
 
-  console.debug('GroupPanel', { groups, groupKey });
+  console.debug('Groups', { groups, groupKey });
 
   return (
     <Panel icon={UsersIcon} title="Mes Groups" {...c('')}>

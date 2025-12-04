@@ -15,8 +15,9 @@ import { Form } from '@/components/common/Form';
 import { showDialog } from '@/components/common/Dialog';
 import { Api } from '@/api/Api';
 import { Panel } from './base/Panel';
+import { useGroup } from '@/hooks/useRoute';
 
-const c = Css('DevicesPanel', {
+const c = Css('Devices', {
   Buttons: {
     row: ['center', 'around'],
   },
@@ -70,7 +71,7 @@ const deviceCols: GridCols<
       <Field
         type="select"
         items={medias
-          .filter((media) => media.type === 'playlist')
+          .filter((media) => media.type === 'content')
           .map((media) => [media.id, media.title || media.key || media.id])}
         value={d.media}
         onValue={(media) => api.device.update(d.id, { media })}
@@ -112,7 +113,7 @@ const deviceCols: GridCols<
 export const PairingForm = ({ onClose }: { onClose: () => void }) => {
   const api = useApi();
   const [key, setKey] = useState('');
-  const group = useFlux(api.groupId$);
+  const group = useGroup();
 
   const handlePairing = async () => {
     if (!key) return;
@@ -141,7 +142,7 @@ export const PairingForm = ({ onClose }: { onClose: () => void }) => {
   );
 };
 
-export const DevicesPanel = () => {
+export const Devices = () => {
   const api = useApi();
   const isAdvanced = useIsAdvanced();
   const medias = useGroupMedias();

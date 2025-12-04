@@ -79,11 +79,19 @@ const c = Css('Menu', {
   Flex: {
     flex: 1,
   },
+  Sep: {
+    my: 4,
+    h: 1,
+    w: '100%',
+    bg: 'border',
+  }
 });
 
 export interface MenuButtonProps extends ButtonProps {
   page?: RoutePage;
 }
+
+export const MenuSep = () => <div {...c('Sep')} />;
 
 export const MenuFlex = () => <div {...c('Flex')} />;
 

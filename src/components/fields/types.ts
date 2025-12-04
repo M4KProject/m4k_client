@@ -29,6 +29,7 @@ export interface FieldProps<V, R> {
   clearable?: boolean;
   containerProps?: DivProps;
   children?: DivProps['children'];
+  tooltip?: string;
 }
 
 export interface FieldState<V, R> {

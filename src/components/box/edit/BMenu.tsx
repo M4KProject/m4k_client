@@ -1,12 +1,10 @@
 import {
   ArrowLeftIcon,
-  CalendarClockIcon,
-  ExpandIcon,
-  GalleryHorizontalIcon,
-  GroupIcon,
-  ImageIcon,
-  LayoutIcon,
-  TextIcon,
+  EarthIcon,
+  FileIcon,
+  FileSlidersIcon,
+  ImagePlayIcon,
+  MonitorSmartphoneIcon,
 } from 'lucide-react';
 import { useBEditController } from './useBEditController';
 import { useRouter } from '@/hooks/useRoute';
@@ -42,13 +40,15 @@ export const BMenu = () => {
         icon={ArrowLeftIcon}
         onClick={() => router.go({ page: 'medias' })}
       />
-      <BMenuButton title="Hiérarchie" icon={GroupIcon} page="hierarchy" />
-      <BMenuButton title="Media" icon={ImageIcon} page="media" />
-      <BMenuButton title="Texte" icon={TextIcon} page="text" />
-      <BMenuButton title="Positionneur" icon={LayoutIcon} page="layout" />
-      <BMenuButton title="Lecteur" icon={GalleryHorizontalIcon} page="playlist" />
-      <BMenuButton title="Planification" icon={CalendarClockIcon} page="planification" />
-      <BMenuButton title="Avancé" icon={ExpandIcon} page="advanced" />
+      <BMenuButton title="Écran" icon={MonitorSmartphoneIcon} page="screen" />
+      <BMenuButton title="Page" icon={FileIcon} page="page" />
+      <BMenuButton title="Médias" icon={ImagePlayIcon} page="playlist" />
+      <BMenuButton title="Page Web" icon={EarthIcon} page="webview" />
+      <BMenuButton title="Avancé" icon={FileSlidersIcon} page="advanced" />
+      {/* <BMenuButton title="Filtrer" icon={CalendarClockIcon} page="planification" /> */}
+      {/* <MenuSep /> */}
+      {/* <BMenuButton title="Zone" icon={LayoutIcon} page="layout" /> */}
+      {/* <BMenuButton title="Media" icon={ImageIcon} page="media" /> */}
     </>
   );
 };

@@ -1,20 +1,44 @@
-import { Css, logger, truncate } from 'fluxio';
-import { useFluxMemo } from '@/hooks/useFlux';
-import { Square } from 'lucide-react';
+import { Css } from 'fluxio';
 import { useBEditController } from './useBEditController';
-import { BDataField, BField, BFieldSep, BStyleField } from './BField';
-import { Field } from '@/components/fields/Field';
 import { Comp } from '@/utils/comp';
+import { BDataField, BField, BStyleField } from './BField';
+import { Field } from '@/components/fields/Field';
+import { DivProps } from '@/components/common/types';
 
-const c = Css('BSideAdvanced', {
+const c = Css('BSideContent', {
   '': {
     col: ['stretch', 'start'],
+    p: 8,
+  },
+  Sep: {
+    my: 4,
+    w: '100%',
+    h: 1,
+    bg: 'border',
   }
 });
 
+export const BSideContent = (props: DivProps) => (
+  <div {...props} {...c('', props)} />
+);
+
+export const BSideSep = (props: DivProps) => (
+  <div {...props} {...c('Sep', props)} />
+);
+
+export const BSideWebView = () => {
+  const controller = useBEditController()!;
+
+  return (
+    <div {...c('')}>
+      BSideWebView
+    </div>
+  );
+}
+
 export const BSideAdvanced = () => {
-  const controller = useBEditController();
-  const registryEntries = Object.entries(controller?.registry||{});
+  const controller = useBEditController()!;
+  const registryEntries = Object.entries(controller.registry||{});
   const types = registryEntries.map(
     ([type, config]) => [type, config.label] as [string, Comp]
   );
@@ -36,4 +60,4 @@ export const BSideAdvanced = () => {
       <BDataField />
     </div>
   );
-};
+}

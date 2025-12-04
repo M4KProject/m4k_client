@@ -1,16 +1,28 @@
 import { PanZoom } from '@/components/common/PanZoom';
-import { Css, onHtmlEvent } from 'fluxio';
-import { BButtons, SCREEN_SIZES } from './BButtons';
+import { Css } from 'fluxio';
 import { BHandles } from './BHandles';
 import { BFactory } from '@/components/box/BFactory';
 import { useEffect } from 'preact/hooks';
 import { useBEditController } from './useBEditController';
+import { BTimeline } from './BTimeline';
+import { BSide } from './BSide';
 
 const c = Css('BViewport', {
   '': {
     position: 'relative',
     flex: 1,
+    row: 1,
+  },
+  Left: {
+    position: 'relative',
+    flex: 1,
     bg: 'bg0',
+    col: 1,
+    h: '100%',
+  },
+  PanZoom: {
+    position: 'relative',
+    flex: 1,
   },
   Body: {
     position: 'absolute',
@@ -27,36 +39,24 @@ export const BViewport = () => {
   useEffect(() => controller?.bindKeyDown(), [controller]);
 
   useEffect(() => {
-    const ready = () => {
-      console.debug('BViewport ready');
-      const pz = controller?.panZoom;
-      if (!pz) return;
-
-      const el = pz.viewport();
-      onHtmlEvent(el, 'click', (event) => {
-        controller?.click$.set({ el, event });
-      });
-
-      const [w, h] = SCREEN_SIZES[0]!;
-      pz.setSize(w, h);
-
-      setTimeout(() => pz.fitToContainer(), 100);
-      setTimeout(() => pz.fitToContainer(), 1000);
-    };
-    ready();
-
-    return controller?.panZoom.ready$.on(ready);
+    controller?.ready();
+    return controller?.panZoom.ready$.on(controller.ready);
   }, [controller]);
+
+  if (!controller) return null;
 
   return (
     <div {...c('')}>
-      <PanZoom ctrl={controller?.panZoom}>
-        <div {...c('Body')}>
-          <BFactory i={0} />
-        </div>
-      </PanZoom>
-      <BButtons />
-      <BHandles />
+      <BSide />
+      <div {...c('Left')}>
+        <PanZoom {...c('PanZoom')} controller={controller?.panZoom}>
+          <div {...c('Body')}>
+            <BFactory i={0} />
+          </div>
+        </PanZoom>
+        <BHandles />
+        <BTimeline />
+      </div>
     </div>
   );
 };
