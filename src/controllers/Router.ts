@@ -37,13 +37,12 @@ const routerItem = (key$: Pipe<string, Route>, id$: Flux<string>, up$: Flux, syn
   fluxCombine(key$, id$, up$).map(([key, id]) => {
     console.debug('routerItem', sync.name, key, id);
     const keyItem = sync.get([{ key }, { id: key }]);
-    console.debug('routerItem keyItem', sync.name, keyItem);
+    console.debug('routerItem keyItem', sync.name, keyItem?.id, keyItem?.key);
     const idItem = sync.get(id);
-    console.debug('routerItem idItem', sync.name, idItem);
+    console.debug('routerItem idItem', sync.name, idItem?.id, idItem?.key);
     const item = keyItem || idItem;
-    console.debug('routerItem item', sync.name, item);
+    console.debug('routerItem item', sync.name, item?.id, item?.key);
     const itemId = item?.id || '';
-    console.debug('routerItem itemId', sync.name, itemId);
     id$.set(itemId);
     return item;
   })
