@@ -13,8 +13,8 @@ const c = Css('AuthPage', {
     row: 'stretch',
     position: 'fixed',
     overflow: 'auto',
-    fg: 'txt',
-    bg: 'bg0',
+    fg: 'fg',
+    bg: 'body',
     inset: 0,
   },
   Content: {

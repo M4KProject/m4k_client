@@ -14,8 +14,8 @@ const c = Css('Toolbar', {
     xy: 0,
     w: '100%',
     h: 34,
-    bg: 'barBg',
-    fg: 'barFg',
+    bg: 'header',
+    fg: 'headerFg',
     elevation: 3,
     row: ['center', 'center'],
     zIndex: 20,
@@ -23,7 +23,7 @@ const c = Css('Toolbar', {
   ' .Button': {
     m: 0,
     border: 0,
-    fg: 'barFg',
+    fg: 'headerFg',
   },
   Title: {
     bold: 1,

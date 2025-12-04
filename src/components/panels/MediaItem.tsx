@@ -21,7 +21,7 @@ const c = Css('MediaItem', {
   Title: {
     textAlign: 'center',
     w: W,
-    fg: 'txt',
+    fg: 'fg',
   },
   Preview: {
     position: 'relative',

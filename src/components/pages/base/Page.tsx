@@ -1,5 +1,5 @@
-import { Css, flux, isBoolean } from 'fluxio';
-import { comp, Comp } from '@/utils/comp';
+import { Css, flux } from 'fluxio';
+import { Comp } from '@/utils/comp';
 import { DivProps } from '@/components/common/types';
 import { Toolbar } from './Toolbar';
 import { useConstant } from '@/hooks/useConstant';
@@ -28,7 +28,7 @@ const c = Css('Page', {
     wh: '100%',
     col: 1,
     flex: 1,
-    bg: 'bg0',
+    bg: 'body',
   },
   Section: {
     flex: 1,

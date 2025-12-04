@@ -17,7 +17,7 @@ const c = Css('SwitchInput', {
     rounded: 99,
     transition: 0.3,
   },
-  '-selected': { borderColor: 'p', bg: 'p' },
+  '-selected': { borderColor: 'primary', bg: 'primary' },
 
   Handle: {
     wh: HANDLE_SIZE,

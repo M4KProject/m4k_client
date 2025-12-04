@@ -28,11 +28,11 @@ const c = Css('Select', {
     cursor: 'pointer',
   },
   'Container:hover': {
-    borderColor: 'p',
+    borderColor: 'primary',
     elevation: 1,
   },
   'Container:focus-within': {
-    borderColor: 'p',
+    borderColor: 'primary',
     elevation: 1,
   },
   Input: {
@@ -54,7 +54,7 @@ const c = Css('Select', {
     w: '100%',
     mt: 2,
     bg: 'bg',
-    fg: 'txt',
+    fg: 'fg',
     border: 'border',
     borderTop: 'none',
     rounded: [0, 0, 4, 4],
@@ -73,8 +73,8 @@ const c = Css('Select', {
     bg: 'bg',
   },
   'Option-selected': {
-    bg: 'p',
-    fg: 'p',
+    bg: 'primary',
+    fg: 'primary',
   },
   'Option-highlighted': {
     bg: 'bg',

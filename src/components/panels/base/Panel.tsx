@@ -12,8 +12,8 @@ const c = Css('Panel', {
     overflow: 'hidden',
   },
   Header: {
-    bg: 'p',
-    fg: 'barFg',
+    bg: 'primary',
+    fg: 'headerFg',
     bold: 1,
     row: ['center', 'start'],
     h: 32,

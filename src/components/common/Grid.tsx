@@ -18,7 +18,7 @@ const c = Css('Grid', {
     row: ['center', 'between'],
     w: '100%',
     bg: 'bg',
-    fg: 'txt',
+    fg: 'fg',
   },
   'Row:nth-child(even)': { bg: 'bg', rounded: 2 },
   'Row:hover': { bg: 'trHover' },

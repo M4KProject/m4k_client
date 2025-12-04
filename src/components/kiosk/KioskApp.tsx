@@ -26,7 +26,7 @@ const c = Css('DeviceApp', {
     overflow: 'hidden',
     inset: 0,
     bg: 'bg',
-    fg: 'txt',
+    fg: 'fg',
     fontFamily: 'Roboto',
   },
   '-loading': {

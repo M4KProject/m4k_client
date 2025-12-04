@@ -1,4 +1,4 @@
-import { by, fluxStored, isBoolean } from 'fluxio';
+import { by, fluxStored, isBoolean, setAlpha, setHue, setLight, setSaturation } from 'fluxio';
 import { isItem, setCssColors } from 'fluxio';
 import { setHsl, addHsl, toHsl, toColor, setRgb } from 'fluxio';
 import { Dictionary } from 'fluxio';
@@ -46,41 +46,71 @@ export const updateTheme = (changes?: Partial<ThemeInfo>) => {
 //   };
 // };
 
+// export const C_PRIMARY = 'primary';
+// export const C_SECONDARY = 'secondary';
+// export const C_GREY = 'grey';
+// export const C_WHITE = 'white';
+// export const C_BLACK = 'black';
+// export const C_INFO = 'info';
+// export const C_SUCCESS = 'success';
+// export const C_ERROR = 'error';
+// export const C_WARN = 'warn';
+// export const C_BODY = 'body';
+// export const C_BG = 'bg';
+// export const C_FG = 'fg';
+// export const C_HEADER = 'header';
+// export const C_HEADER_FG = 'headerFg';
+// export const C_HANDLE = 'handle';
+
 export const refreshTheme = () => {
   const { isDark, isUserDark, ...theme } = theme$.get();
-  const isD = isBoolean(isUserDark) ? isUserDark : isDark;
+  const d = isBoolean(isUserDark) ? isUserDark : isDark;
 
-  const p = theme.primary || '#28A8D9';
-  const s = theme.secondary || addHsl(p, { h: 360 / 3 });
-  const g = theme.grey || setHsl(p, { s: 0 });
-  const w = '#ffffff';
-  const b = '#000000';
-  const bg = isD ? b : w;
-  const bg0 = isD ? setHsl(p, { s: 100, l: 5 }) : setHsl(p, { s: 100, l: 95 });
-  const txt = isD ? setHsl(p, { s: 100, l: 85 }) : setHsl(p, { s: 100, l: 15 });
-  const handle = w;
-  const border = isD ? setHsl(w, { l: 30 }) : setHsl(w, { l: 70 });
-  const info = setHsl(p, { h: 240 });
-  const success = setHsl(p, { h: 120, l: 40 });
-  const error = setHsl(p, { h: 0 });
-  const warn = setHsl(p, { h: 30 });
-  const mask = isD ? setRgb(bg, { a: 0.8 }) : setRgb(bg, { a: 0.8 });
-  const shadow = isD ? setHsl(p, { l: 10 }) : setHsl(p, { s: 100, l: 20, a: 0.2 });
-  const btn = isD ? setHsl(p, { s: 10, l: 5 }) : setHsl(p, { s: 10, l: 95 });
-  const media = isD ? setHsl(p, { s: 100, l: 5 }) : setHsl(p, { s: 100, l: 5 });
-
-  const barBg = p;
-  const barFg = w;
+  const primary = theme.primary || '#28A8D9';
+  const secondary = theme.secondary || addHsl(primary, { h: 360 / 3 });
+  const grey = theme.grey || setSaturation(primary, 0);
+  const base = setHsl(primary, { s: 100, l: 50 });
+  const white = '#ffffff';
+  const black = '#000000';
+  const light = setLight(base, 95);
+  const dark = setLight(base, 5);
+  const lightFg = setLight(base, 85);
+  const darkFg = setLight(base, 15);
+  const body = d ? dark : light;
+  const bg = d ? black : white;
+  const fg = d ? lightFg : darkFg;
+  const header = d ? dark : darkFg;
+  const headerFg = d ? lightFg : light;
+  const handle = white;
+  const border = d ? setLight(grey, 30) : setLight(grey, 70);
+  const info = setHue(base, 240);
+  const success = setHue(base, 120);
+  const error = setHue(base, 0);
+  const warn = setHue(base, 30);
+  const mask = d ? setRgb(bg, { a: 0.8 }) : setRgb(bg, { a: 0.8 });
+  const shadow = setAlpha(darkFg, 0.2);
+  const btn = d ? setHsl(primary, { s: 10, l: 5 }) : setHsl(primary, { s: 10, l: 95 });
+  const media = d ? setHsl(primary, { s: 100, l: 5 }) : setHsl(primary, { s: 100, l: 5 });
+  const selected = d ? setHsl(primary, { s: 100, l: 5 }) : setHsl(primary, { s: 100, l: 95 });
 
   Object.assign(theme, {
-    handle,
+    primary,
+    secondary,
+    grey,
+    base,
+    white,
+    black,
+    light,
+    dark,
+    lightFg,
+    darkFg,
+    body,
     bg,
-    bg0,
-    txt,
+    fg,
+    header,
+    headerFg,
+    handle,
     border,
-    p,
-    s,
-    g,
     info,
     success,
     error,
@@ -89,11 +119,7 @@ export const refreshTheme = () => {
     shadow,
     btn,
     media,
-    barBg,
-    barFg,
-
-    primary: p,
-    secondary: s,
+    selected,
   });
 
   setCssColors(theme as Dictionary<string>);

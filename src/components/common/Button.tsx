@@ -27,7 +27,7 @@ const c = Css('Button', {
     rounded: 5,
     border: 0,
     bg: 'btn',
-    fg: 'txt',
+    fg: 'fg',
     whMin: 20,
     elevation: 1,
     transition: 0.5,
@@ -37,7 +37,7 @@ const c = Css('Button', {
   Sfx: {
     position: 'absolute',
     inset: 0,
-    bg: 's',
+    bg: 'secondary',
     transition: 0.5,
     scaleX: 0,
     transformOrigin: 'left',
@@ -61,15 +61,15 @@ const c = Css('Button', {
     rounded: 5,
   },
 
-  ':active': { bg: 'p', fg: 'handle' },
-  '-selected': { bg: 'p', fg: 'handle' },
+  ':active': { bg: 'primary', fg: 'handle' },
+  '-selected': { bg: 'primary', fg: 'handle' },
   ':hover': { elevation: 0, fg: 'handle' },
   ':hover > &Sfx': { scaleX: 1 },
 
   ...addColors(),
 
-  '-icon': { bg: 'transparent', fg: 'txt', elevation: 0, border: 0 },
-  '-selected&-icon,:hover&-icon': { bg: 'p', fg: 'handle', border: 0 },
+  '-icon': { bg: 'transparent', fg: 'fg', elevation: 0, border: 0 },
+  '-selected&-icon,:hover&-icon': { bg: 'primary', fg: 'handle', border: 0 },
 });
 
 type BaseButtonProps = Omit<Props['button'] & Props['a'], 'onClick'> & {

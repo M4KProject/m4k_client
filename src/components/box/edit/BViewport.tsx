@@ -16,7 +16,7 @@ const c = Css('BViewport', {
   Left: {
     position: 'relative',
     flex: 1,
-    bg: 'bg0',
+    bg: 'body',
     col: 1,
     h: '100%',
   },

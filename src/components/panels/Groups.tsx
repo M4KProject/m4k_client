@@ -1,40 +1,60 @@
 import { PlusIcon, UsersIcon } from 'lucide-react';
 import { useApi, useGroups } from '@/hooks/useApi';
-import { Field } from '@/components/fields/Field';
 import { Button } from '@/components/common/Button';
 import { Panel } from './base/Panel';
 import { Css } from 'fluxio';
-import { useRouter, useGroupKey } from '@/hooks/useRoute';
+import { useGroupKey } from '@/hooks/useRoute';
 import { Role } from '@/api/models';
+import { Group } from './Group';
 
-const c = Css('Groups', {
-  '': {
+const c = Css('Group', {
+  Panel: {
     flex: 2,
   },
-  Groups: {
-    row: ['center', 'around'],
-    flexWrap: 'wrap',
+  PanelContent: {
+    rowWrap: 1,
     p: 8,
   },
-  GroupButton: {
-    m: 8,
-  },
-  'GroupButton .FieldLabel': {
-    w: 55,
-  },
-  GroupButtonContent: {
-    m: 16,
-    col: ['center', 'center'],
-  },
-  'Group-selected': {},
   AddButton: {
     m: 8,
   },
-  AddButtonContent: {
-    m: 16,
-    col: ['center', 'center'],
-  },
 });
+
+export const Groups = () => {
+  const api = useApi();
+  const groups = useGroups();
+  const groupKey = useGroupKey();
+
+  const handleAdd = async () => {
+    const auth = api.pb.getAuth();
+    if (!auth) return;
+    const group = await api.group.create({ name: 'Nouveau Groupe', user: auth.id });
+    if (group) {
+      const role = Role.viewer;
+      await api.member.create({ user: auth.id, group: group.id, role });
+    }
+  };
+
+  console.debug('Groups', { groups, groupKey });
+
+  return (
+    <Panel icon={UsersIcon} title="Mes Groups" {...c('')}>
+      <div {...c('Content')}>
+        {groups.map((group) => (
+          <Group group={group} />
+        ))}
+        <Button
+          {...c('AddButton')}
+          icon={PlusIcon}
+          onClick={handleAdd}
+          color="secondary"
+          title="Ajouter un Group"
+        />
+      </div>
+      {/* <GroupGrid /> */}
+    </Panel>
+  );
+};
 
 // const cols: GridCols<
 //   GroupModel,
@@ -137,78 +157,3 @@ const c = Css('Groups', {
 //   console.debug('GroupGrid', { groups, groupKey, isAdvanced });
 //   return <Grid ctx={{ groupKey, isAdvanced, api }} cols={cols} items={groups} />;
 // }
-
-export const Groups = () => {
-  const api = useApi();
-  const groups = useGroups();
-  const groupKey = useGroupKey();
-  const routeController = useRouter();
-
-  const handleAdd = async () => {
-    const auth = api.pb.getAuth();
-    if (!auth) return;
-    const group = await api.group.create({ name: 'Nouveau Groupe', user: auth.id });
-    if (group) {
-      const role = Role.viewer;
-      await api.member.create({ user: auth.id, group: group.id, role });
-    }
-  };
-
-  console.debug('Groups', { groups, groupKey });
-
-  return (
-    <Panel icon={UsersIcon} title="Mes Groups" {...c('')}>
-      <div {...c('Groups')}>
-        {groups.map((group) => (
-          <Button
-            {...c('GroupButton')}
-            selected={group.key === groupKey}
-            onClick={() => routeController.go({ group: group.key })}
-          >
-            <div {...c('GroupButtonContent')}>
-              <Field
-                label="Clé"
-                value={group.key}
-                onValue={(key) => {
-                  api.group.update(group.id, { key });
-                }}
-              />
-              <Field
-                label="Nom"
-                value={group.name}
-                onValue={(name) => {
-                  api.group.update(group.id, { name });
-                }}
-              />
-              <Field
-                type="color"
-                value={group.data?.primary}
-                onValue={(primary) => {
-                  api.group.apply(group.id, (prev) => {
-                    prev.data = { ...prev.data, primary };
-                  });
-                }}
-              />
-              <Field
-                type="color"
-                value={group.data?.secondary}
-                onValue={(secondary) => {
-                  api.group.apply(group.id, (prev) => {
-                    prev.data = { ...prev.data, secondary };
-                  });
-                }}
-              />
-            </div>
-          </Button>
-        ))}
-        <Button {...c('AddButton')} onClick={handleAdd} color="secondary">
-          <div {...c('AddButtonContent')}>
-            <PlusIcon />
-            <div>Ajouter</div>
-          </div>
-        </Button>
-      </div>
-      {/* <GroupGrid /> */}
-    </Panel>
-  );
-};

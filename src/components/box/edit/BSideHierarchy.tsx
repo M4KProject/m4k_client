@@ -12,7 +12,7 @@ const c = Css('BSideHierarchy', {
   },
   '-selected': {
     bold: 1,
-    fg: 'p',
+    fg: 'primary',
   },
   Icon: {
     mr: 4,

@@ -11,10 +11,10 @@
 
 // const c = Css('SideBar', {
 //   Version: {
-//     color: 'p',
+//     color: 'primary',
 //     bold: 1,
 //     borderBottom: 1,
-//     borderColor: 'p',
+//     borderColor: 'primary',
 //     opacity: 0.3,
 //     fontSize: '12px',
 //     center: 1,

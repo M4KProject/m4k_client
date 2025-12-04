@@ -26,7 +26,7 @@ const c = Css('BMedias', {
     opacity: 0.2,
   },
   'Item-selected': {
-    border: 's',
+    border: 'secondary',
     borderWidth: '3px',
   },
 });

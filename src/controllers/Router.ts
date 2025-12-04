@@ -40,7 +40,7 @@ export class Router {
 
   groupKey$ = fluxStored<string>('groupKey', 'demo', isString);
   mediaKey$ = this.route$.map((r) => r.media);
-  deviceKey$ = flux<string>('');
+  deviceId$ = flux<string>('');
 
   search$ = flux<string>('');
 
@@ -50,15 +50,14 @@ export class Router {
   media$ = fluxCombine(this.mediaKey$, this.api.media.up$).map(([key]) =>
     this.api.media.get([{ key }, { id: key }])
   );
-  device$ = fluxCombine(this.deviceKey$, this.api.device.up$).map(([key]) =>
-    this.api.device.get([{ key }, { id: key }])
+  device$ = fluxCombine(this.deviceId$, this.api.device.up$).map(([id]) =>
+    this.api.device.get(id)
   );
 
   isKiosk$ = fluxStored<boolean>('isKiosk', false, isBoolean);
   isAdvanced$ = fluxStored<boolean>('isAdvanced', false, isBoolean);
   groupId$ = this.group$.map((g) => g?.id || '');
   mediaId$ = this.media$.map((m) => m?.id || '');
-  deviceId$ = this.device$.map((d) => d?.id || '');
 
   constructor() {
     app.router = this;

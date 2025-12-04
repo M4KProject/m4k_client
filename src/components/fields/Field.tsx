@@ -35,7 +35,7 @@ export const c = Css('Field', {
     // flex: 1,
     textAlign: 'left',
     opacity: 0.6,
-    fg: 'txt',
+    fg: 'fg',
     w: LABEL_WIDTH,
   },
   Content: {
@@ -60,7 +60,7 @@ export const c = Css('Field', {
     rounded: 5,
     outline: 'none',
     bg: 'bg',
-    fg: 'txt',
+    fg: 'fg',
     fontSize: '100%',
     fontFamily: 'mono',
     // elevation: 1,

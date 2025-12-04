@@ -23,7 +23,7 @@ const c = Css('BHandles', {
     inset: 0,
     pointerEvents: 'none',
     m: '-2px',
-    border: 'p',
+    border: 'primary',
     borderWidth: '2px',
   },
   '-show': {
@@ -34,7 +34,7 @@ const c = Css('BHandles', {
     position: 'absolute',
     wh: '10px',
     m: '-5px',
-    border: 's',
+    border: 'secondary',
     bg: 'bg',
     pointerEvents: 'all',
   },

@@ -11,7 +11,7 @@ const c = Css('WindowTestPage', {
     maxWidth: 600,
     margin: '0 auto',
     bg: 'bg',
-    fg: 'txt',
+    fg: 'fg',
   },
   Title: {
     fontSize: 2,

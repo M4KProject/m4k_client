@@ -40,7 +40,7 @@ const c = Css('Dialog', {
     rounded: 7,
     wMin: 40,
     bg: 'bg',
-    fg: 'txt',
+    fg: 'fg',
     scale: 0,
     transition: 0.5,
     p: 4,
@@ -50,7 +50,7 @@ const c = Css('Dialog', {
     m: 4,
   },
   HeaderText: {
-    fg: 'txt',
+    fg: 'fg',
     bold: 1,
     fontSize: 2,
   },

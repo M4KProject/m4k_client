@@ -20,8 +20,8 @@ const c = Css('CheckInput', {
     boxSizing: 'border-box',
   },
   '-selected': {
-    borderColor: 'p',
-    bg: 'p',
+    borderColor: 'primary',
+    bg: 'primary',
   },
   ' svg': {
     fg: 'handle',

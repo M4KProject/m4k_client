@@ -32,7 +32,7 @@ const c = Css('Window', {
     elevation: 4,
     rounded: 7,
     bg: 'bg',
-    fg: 'txt',
+    fg: 'fg',
     resize: 'both',
     scale: 0.9,
     opacity: 0,
@@ -42,12 +42,12 @@ const c = Css('Window', {
   Header: {
     row: ['center', 'between'],
     pl: 8,
-    bg: 'barBg',
-    fg: 'barFg',
+    bg: 'header',
+    fg: 'headerFg',
     cursor: 'move',
   },
   Close: {
-    fg: 'barFg',
+    fg: 'headerFg',
   },
   Title: {
     bold: 1,
