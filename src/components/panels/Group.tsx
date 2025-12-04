@@ -4,15 +4,17 @@ import { Css } from 'fluxio';
 import { useRouter } from '@/hooks/useRoute';
 import { GroupModel } from '@/api/models';
 import { useFlux } from '@/hooks/useFlux';
+import { Panel } from './base/Panel';
+import { UsersIcon } from 'lucide-react';
 
 const c = Css('Group', {
   '': {
-    my: 8,
-    mx: 4,
+    m: 8,
     elevation: 1,
     rounded: 3,
     overflow: 'hidden',
-    w: 250,
+    wMin: 200,
+    flex: 1,
   },
   Header: {
     row: 1,
@@ -23,7 +25,7 @@ const c = Css('Group', {
     m: 16,
     col: ['center', 'center'],
   },
-  
+
   ' .Field-check': {
     w: 30,
   },
@@ -50,53 +52,57 @@ const c = Css('Group', {
 export const Group = ({ group }: { group: GroupModel }) => {
   const api = useApi();
   const router = useRouter();
-  const selected = useFlux(router.groupKey$.map(groupKey => group.key === groupKey));
+  const selected = useFlux(router.groupId$.map(id => group.id === id));
 
   return (
-    <div
-      {...c('', selected && '-selected')}
-      onClick={() => router.go({ group: group.key })}
+    <Panel
+        {...c('', selected && '-selected')}
+        header={(
+            <>
+                <Field
+                    type="check"
+                    value={selected}
+                    onValue={(v) => router.go({ group: group.key || group.id})}
+                />
+                <Field
+                    value={group.name}
+                    onValue={(name) => {
+                        api.group.update(group.id, { name });
+                    }}
+                />
+            </>
+        )}
     >
-      <div {...c('Header')}>
         <Field
-          type="check"
-          value={selected}
-          onValue={v => v && router.groupKey$.set(group.key || group.id)}
+            label="ID"
+            value={group.id}
+            readonly
         />
         <Field
-          value={group.name}
-          onValue={(name) => {
-            api.group.update(group.id, { name });
-          }}
-        />
-      </div>
-      <div {...c('Content')}>
-        <Field
-          label="Clé"
-          value={group.key}
-          onValue={(key) => {
+            label="Clé"
+            value={group.key}
+            onValue={(key) => {
             api.group.update(group.id, { key });
-          }}
+            }}
         />
         <Field
-          type="color"
-          value={group.data?.primary}
-          onValue={(primary) => {
+            type="color"
+            value={group.data?.primary}
+            onValue={(primary) => {
             api.group.apply(group.id, (prev) => {
-              prev.data = { ...prev.data, primary };
+                prev.data = { ...prev.data, primary };
             });
-          }}
+            }}
         />
         <Field
-          type="color"
-          value={group.data?.secondary}
-          onValue={(secondary) => {
+            type="color"
+            value={group.data?.secondary}
+            onValue={(secondary) => {
             api.group.apply(group.id, (prev) => {
-              prev.data = { ...prev.data, secondary };
+                prev.data = { ...prev.data, secondary };
             });
-          }}
+            }}
         />
-      </div>
-    </div>
+    </Panel>
   )
 }

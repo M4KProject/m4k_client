@@ -1,21 +1,14 @@
-import { Css, humanize } from 'fluxio';
-import { toDate, toError, toTime } from 'fluxio';
-import { RefreshCw, Trash2, Settings, Plus, Power, MonitorIcon } from 'lucide-react';
+import { Css, formatDateTime, toDate, toTime } from 'fluxio';
+import { toError } from 'fluxio';
 import { useState } from 'preact/hooks';
-import { setDeviceKey, setPage } from '@/router/setters';
-import { useIsAdvanced } from '@/router/hooks';
-import { useApi, useGroupDevices, useGroupMedias } from '@/hooks/useApi';
-import { formatDate, formatDateTime } from 'fluxio';
-import { Grid, GridCols } from '@/components/common/Grid';
-import { DeviceModel, MediaModel } from '@/api/models';
+import { useApi } from '@/hooks/useApi';
+import { DeviceModel } from '@/api/models';
 import { Field } from '@/components/fields/Field';
 import { Button } from '@/components/common/Button';
 import { Form } from '@/components/common/Form';
-import { showDialog } from '@/components/common/Dialog';
-import { Api } from '@/api/Api';
-import { Panel } from './base/Panel';
 import { useGroup, useRouter } from '@/hooks/useRoute';
 import { useFlux } from '@/hooks/useFlux';
+import { tooltipProps } from '../common/Tooltip';
 
 const c = Css('Device', {
   '': {
@@ -30,6 +23,12 @@ const c = Css('Device', {
     row: 1,
     bg: 'header',
     fg: 'headerFg',
+  },
+  Online: {
+    bg: 'error',
+    whMin: 18,
+    rounded: 999,
+    mx: 6,
   },
   Content: {
     m: 16,
@@ -49,7 +48,10 @@ const c = Css('Device', {
     w: 55,
   },
 
-  '-online': {},
+  '-online &Online': {
+    bg: 'success',
+  },
+
   '-offline': {},
 
   '-selected': {
@@ -95,11 +97,6 @@ const c = Css('Device', {
 //     (d, { api }) => <Field value={d.name} onValue={(name) => api.device.update(d.id, { name })} />,
 //   ],
 //   resolution: ['Résolution', (d) => `${d.info?.width || 0}x${d.info?.height || 0}`],
-//   online: [
-//     'Online',
-//     (d, ctx) => (
-//     ),
-//   ],
 //   created: ['Création', (d) => formatDate(d.created)],
 //   media: [
 //     'Playlist',
@@ -195,13 +192,14 @@ export const PairingForm = ({ onClose }: { onClose: () => void }) => {
 
 export const Device = ({ device }: { device: DeviceModel }) => {
   const api = useApi();
-  const onlineMin = api.pb.getTime() - 10 * 1000;
   const router = useRouter();
   const selected = useFlux(router.deviceId$.map(id => device.id === id));
+  const onlineMin = api.pb.getTime() - 10 * 1000;
+  const online = true || device.online && toTime(device.online) > onlineMin;
 
   return (
     <div
-      {...c('', selected && '-selected')}
+      {...c('', selected && '-selected', online && '-online')}
       onClick={() => router.deviceId$.set(device.id)}
     >
       <div {...c('Header')}>
@@ -216,14 +214,7 @@ export const Device = ({ device }: { device: DeviceModel }) => {
             api.group.update(device.id, { name });
           }}
         />
-
-{/* 
-
-//       <Button tooltip={formatDateTime(toDate(d.online))}>
-//         <Field type="switch" value={d.online && toTime(d.online) > ctx.onlineMin} readonly />
-//       </Button>
-
-         */}
+        <div {...c('Online')} {...tooltipProps(formatDateTime(toDate(device.online)))} />
       </div>
       <div {...c('Content')}>
         {/* <Field

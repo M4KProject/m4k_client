@@ -7,11 +7,12 @@ import { useGroupKey } from '@/hooks/useRoute';
 import { Role } from '@/api/models';
 import { Group } from './Group';
 
-const c = Css('Group', {
-  Panel: {
+const c = Css('Groups', {
+  '': {
+    wMin: 350,
     flex: 2,
   },
-  PanelContent: {
+  Content: {
     rowWrap: 1,
     p: 8,
   },
@@ -38,10 +39,10 @@ export const Groups = () => {
   console.debug('Groups', { groups, groupKey });
 
   return (
-    <Panel icon={UsersIcon} title="Mes Groups" {...c('')}>
+    <Panel icon={UsersIcon} header="Mes Groups" {...c('')}>
       <div {...c('Content')}>
         {groups.map((group) => (
-          <Group group={group} />
+          <Group key={group.id} group={group} />
         ))}
         <Button
           {...c('AddButton')}

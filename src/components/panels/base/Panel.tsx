@@ -12,7 +12,7 @@ const c = Css('Panel', {
     overflow: 'hidden',
   },
   Header: {
-    bg: 'primary',
+    bg: 'header',
     fg: 'headerFg',
     bold: 1,
     row: ['center', 'start'],
@@ -28,16 +28,16 @@ const c = Css('Panel', {
 });
 
 export interface PanelProps extends DivProps {
-  icon: Comp;
-  title: string;
+  icon?: Comp;
+  header?: Comp;
 }
 
-export const Panel = ({ icon, title, children, ...props }: PanelProps) => {
+export const Panel = ({ icon, header, children, ...props }: PanelProps) => {
   return (
     <div {...props} {...c('', props)}>
       <div {...c('Header')}>
         {comp(icon)}
-        {title}
+        {comp(header)}
       </div>
       <div {...c('Content')}>{children}</div>
     </div>

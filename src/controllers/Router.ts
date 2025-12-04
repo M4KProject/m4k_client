@@ -1,8 +1,10 @@
 import { Api } from '@/api/Api';
+import { Sync } from '@/api/sync';
 import { app } from '@/app';
 import { getSingleton } from '@/utils/ioc';
 import {
   createUrl,
+  Flux,
   flux,
   fluxCombine,
   fluxStored,
@@ -15,18 +17,37 @@ import {
   isStringValid,
   logger,
   onEvent,
+  Pipe,
   toBoolean,
   toError,
 } from 'fluxio';
 import { getUrlParams } from 'fluxio';
+import { PbModel } from 'pblite';
 
 export type RoutePage = '' | 'dashboard' | 'members' | 'devices' | 'medias' | 'edit' | 'view';
 
 export interface Route {
-  group?: string;
   page?: RoutePage;
+  group?: string;
   media?: string;
+  device?: string;
 }
+
+const routerItem = (key$: Pipe<string, Route>, id$: Flux<string>, up$: Flux, sync: Sync<PbModel & { key?: string }>) => (
+  fluxCombine(key$, id$, up$).map(([key, id]) => {
+    console.debug('routerItem', sync.name, key, id);
+    const keyItem = sync.get([{ key }, { id: key }]);
+    console.debug('routerItem keyItem', sync.name, keyItem);
+    const idItem = sync.get(id);
+    console.debug('routerItem idItem', sync.name, idItem);
+    const item = keyItem || idItem;
+    console.debug('routerItem item', sync.name, item);
+    const itemId = item?.id || '';
+    console.debug('routerItem itemId', sync.name, itemId);
+    id$.set(itemId);
+    return item;
+  })
+)
 
 export class Router {
   log = logger('Router');
@@ -35,29 +56,18 @@ export class Router {
 
   url$ = flux('');
   route$ = flux<Route>({});
-
-  page$ = this.route$.map((r) => r.page);
-
-  groupKey$ = fluxStored<string>('groupKey', 'demo', isString);
-  mediaKey$ = this.route$.map((r) => r.media);
-  deviceId$ = flux<string>('');
-
   search$ = flux<string>('');
 
-  group$ = fluxCombine(this.groupKey$, this.api.group.up$).map(([key]) =>
-    this.api.group.get([{ key }, { id: key }])
-  );
-  media$ = fluxCombine(this.mediaKey$, this.api.media.up$).map(([key]) =>
-    this.api.media.get([{ key }, { id: key }])
-  );
-  device$ = fluxCombine(this.deviceId$, this.api.device.up$).map(([id]) =>
-    this.api.device.get(id)
-  );
+  groupId$ = fluxStored<string>('groupId', '', isString);
+  mediaId$ = fluxStored<string>('mediaId', '', isString);
+  deviceId$ = fluxStored<string>('deviceId', '', isString);
 
+  group$ = routerItem(this.route$.map(r => r.group||''), this.groupId$, this.api.group.up$, this.api.group);
+  media$ = routerItem(this.route$.map(r => r.media||''), this.mediaId$, this.api.media.up$, this.api.media);
+  device$ = routerItem(this.route$.map(r => r.device||''), this.deviceId$, this.api.device.up$, this.api.device);
+  
   isKiosk$ = fluxStored<boolean>('isKiosk', false, isBoolean);
   isAdvanced$ = fluxStored<boolean>('isAdvanced', false, isBoolean);
-  groupId$ = this.group$.map((g) => g?.id || '');
-  mediaId$ = this.media$.map((m) => m?.id || '');
 
   constructor() {
     app.router = this;
@@ -66,19 +76,17 @@ export class Router {
     this.url$.on((url) => {
       const p = getUrlParams(url);
       const s = (p.path || '').split('/').filter((s) => s);
+      const last = this.route$.get();
 
-      const group = p.group || s[0] || this.groupKey$.get();
-      const page = (p.page as RoutePage) || (s[1] as RoutePage) || this.page$.get();
-      const media = p.media || s[2] || this.mediaKey$.get();
+      const page = (p.page as RoutePage) || (s[1] as RoutePage) || last.page;
+      const group = p.group || s[0] || last.group;
+      const media = p.media || s[2] || last.media;
+      const device = p.device || last.device;
 
       if (isDefined(p.kiosk)) this.isKiosk$.set(isEmpty(p.kiosk) || toBoolean(p.kiosk));
       if (isDefined(p.advanced)) this.isAdvanced$.set(isEmpty(p.advanced) || toBoolean(p.advanced));
 
-      const route: Route = {
-        group,
-        page,
-        media,
-      };
+      const route: Route = { group, page, media, device };
 
       this.log.d('parse', route);
 

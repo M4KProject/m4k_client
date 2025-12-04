@@ -13,6 +13,7 @@ import { Button } from '../common/Button';
 
 const c = Css('Account', {
   '': {
+    wMin: 350,
     flex: 1,
   },
 });
@@ -39,7 +40,7 @@ export const Account = () => {
   };
 
   return (
-    <Panel icon={UserIcon} title="Mon Compte" {...c('')}>
+    <Panel icon={UserIcon} header="Mon Compte" {...c('')}>
       <Form title="Mon compte">
         <Field label="ID de l'utilisateur" name="user_id" value={auth.id} readonly />
         <Field
