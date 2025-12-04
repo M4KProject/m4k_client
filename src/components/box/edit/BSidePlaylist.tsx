@@ -7,7 +7,7 @@ import { BSideContent } from './BSideContent';
 const c = Css('BSidePlaylist', {
   '': {
     col: ['stretch', 'start'],
-  }
+  },
 });
 
 export const BSidePlaylist = () => {

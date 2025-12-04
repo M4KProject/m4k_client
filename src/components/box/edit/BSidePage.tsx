@@ -20,7 +20,7 @@ const c = Css('BSideHierarchy', {
   'DayButton .ButtonContent': {
     rotate: '-45deg',
     fontSize: '80%',
-  }
+  },
 });
 
 const DayButton = ({ day, ...props }: ButtonProps & { day: number }) => (

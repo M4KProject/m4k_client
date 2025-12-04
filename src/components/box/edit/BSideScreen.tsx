@@ -26,38 +26,38 @@ export const SCREEN_SIZES: ScreenSize[] = [
 export const BSideScreen = () => {
   const controller = useBEditController()!;
 
-//   const [sizeIndex, setSizeIndex] = useState(0);
-//   const [sizeWidth, sizeHeight, sizeTitle, SizeIcon] = SCREEN_SIZES[sizeIndex]!;
+  //   const [sizeIndex, setSizeIndex] = useState(0);
+  //   const [sizeWidth, sizeHeight, sizeTitle, SizeIcon] = SCREEN_SIZES[sizeIndex]!;
 
-//   const toggleScreenSize = () => {
-//     const nextIndex = normalizeIndex(sizeIndex + 1, SCREEN_SIZES.length);
-//     setSizeIndex(nextIndex);
-//     const [w, h] = SCREEN_SIZES[nextIndex]!;
-//     controller?.panZoom.setSize(w, h);
-//   };
+  //   const toggleScreenSize = () => {
+  //     const nextIndex = normalizeIndex(sizeIndex + 1, SCREEN_SIZES.length);
+  //     setSizeIndex(nextIndex);
+  //     const [w, h] = SCREEN_SIZES[nextIndex]!;
+  //     controller?.panZoom.setSize(w, h);
+  //   };
 
   return (
     <BSideContent>
-        <Field>
-            {SCREEN_SIZES.map(([w, h, title, icon]) => (
-                <Button
-                    icon={icon}
-                    tooltip={`${title} (${w}x${h})`}
-                    onClick={() => {
-                        controller.panZoom.setSize(w, h);
-                    }}
-                    />
-            ))}
-        </Field>
-        <Button
-            icon={RotateCw}
-            title="Tourner l'écran"
-            onClick={() => controller.panZoom.switchSize()}
-            />
-        <BField label="Largeur" prop="a" />
-        <BField label="Hauteur" prop="a" />
-        <BSideSep />
-        <Button icon={PlusIcon} title="Ajouter une page" />
+      <Field>
+        {SCREEN_SIZES.map(([w, h, title, icon]) => (
+          <Button
+            icon={icon}
+            tooltip={`${title} (${w}x${h})`}
+            onClick={() => {
+              controller.panZoom.setSize(w, h);
+            }}
+          />
+        ))}
+      </Field>
+      <Button
+        icon={RotateCw}
+        title="Tourner l'écran"
+        onClick={() => controller.panZoom.switchSize()}
+      />
+      <BField label="Largeur" prop="a" />
+      <BField label="Hauteur" prop="a" />
+      <BSideSep />
+      <Button icon={PlusIcon} title="Ajouter une page" />
     </BSideContent>
   );
-}
+};

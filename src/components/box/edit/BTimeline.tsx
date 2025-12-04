@@ -29,7 +29,9 @@ const c = Css('BTimeline', {
   },
 });
 
-const BTimelineButton = (props: ButtonProps) => <Button color="primary" {...props} {...c('Button', props)} />;
+const BTimelineButton = (props: ButtonProps) => (
+  <Button color="primary" {...props} {...c('Button', props)} />
+);
 
 export const BTimeline = () => {
   const controller = useBEditController();
@@ -56,8 +58,16 @@ export const BTimeline = () => {
       {hasSelect && (
         <>
           <BTimelineButton icon={ClipboardX} onClick={() => controller.cut()} tooltip="Couper" />
-          <BTimelineButton icon={ClipboardCopy} onClick={() => controller.copy()} tooltip="Copier" />
-          <BTimelineButton icon={ClipboardPaste} onClick={() => controller.paste()} tooltip="Coller" />
+          <BTimelineButton
+            icon={ClipboardCopy}
+            onClick={() => controller.copy()}
+            tooltip="Copier"
+          />
+          <BTimelineButton
+            icon={ClipboardPaste}
+            onClick={() => controller.paste()}
+            tooltip="Coller"
+          />
         </>
       )}
       <div {...c('Sep')} />

@@ -123,7 +123,11 @@ export const Field = <V = any, R = any>(props: FieldProps<V, R>) => {
         {...containerProps}
         {...c('', col && '-col', type && `-${type}`, error && '-error', containerProps)}
       >
-        {label && <div {...c('Label')} {...tooltipProps(tooltip)}>{label} :</div>}
+        {label && (
+          <div {...c('Label')} {...tooltipProps(tooltip)}>
+            {label} :
+          </div>
+        )}
         <div {...c('Content')}>
           {isComposed ?
             children

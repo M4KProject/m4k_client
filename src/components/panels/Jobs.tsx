@@ -1,4 +1,11 @@
-import { AlertCircleIcon, CheckCircleIcon, ClockIcon, PlayIcon, SquareIcon, Trash2 } from 'lucide-react';
+import {
+  AlertCircleIcon,
+  CheckCircleIcon,
+  ClockIcon,
+  PlayIcon,
+  SquareIcon,
+  Trash2,
+} from 'lucide-react';
 import { Css } from 'fluxio';
 import { byId } from 'fluxio';
 import { useApi, useGroupJobs, useGroupMedias } from '@/hooks/useApi';
@@ -66,40 +73,43 @@ addTr({
 
 const cols: GridCols<JobModel, { mediaById: Dictionary<MediaModel>; api: Api }> = {
   action: ['Action', (job) => <Tr>{job.action}</Tr>],
-  statut: ['Statut', (job) => {
-    const status = job.status || 'pending';
-    const statusIcons: Dictionary<typeof ClockIcon> = {
+  statut: [
+    'Statut',
+    (job) => {
+      const status = job.status || 'pending';
+      const statusIcons: Dictionary<typeof ClockIcon> = {
         pending: ClockIcon,
         processing: PlayIcon,
         finished: CheckCircleIcon,
         failed: AlertCircleIcon,
         deleted: SquareIcon,
-    };
-    const Icon = statusIcons[status] || statusIcons.pending;
+      };
+      const Icon = statusIcons[status] || statusIcons.pending;
 
-    if (status === 'processing') {
+      if (status === 'processing') {
         return (
-            <div {...cStatus('', '-processing')}>
-                <Progress progress={job.progress || 0} />
-            </div>
+          <div {...cStatus('', '-processing')}>
+            <Progress progress={job.progress || 0} />
+          </div>
         );
-    }
+      }
 
-    if (status === 'failed') {
+      if (status === 'failed') {
         return (
-            <div {...cStatus('', '-failed')}>
-                <Tr>{job.error || ''}</Tr>
-            </div>
+          <div {...cStatus('', '-failed')}>
+            <Tr>{job.error || ''}</Tr>
+          </div>
         );
-    }
+      }
 
-    return (
+      return (
         <div {...cStatus('', `-${status}`)}>
-            <Icon size={16} />
-            <Tr>{status}</Tr>
+          <Icon size={16} />
+          <Tr>{status}</Tr>
         </div>
-    );
-  }],
+      );
+    },
+  ],
   media: [
     'Media',
     ({ media }, { mediaById }) => <MediaPreview media={media ? mediaById[media] : undefined} />,
@@ -137,15 +147,12 @@ export const Jobs = ({ filter, ...props }: JobsProps) => {
 
   return (
     <div {...c('', props)}>
-        <Grid cols={cols} ctx={{ mediaById, api }} items={jobs} />
+      <Grid cols={cols} ctx={{ mediaById, api }} items={jobs} />
     </div>
   );
 };
 
-
 export const JobsWindow = () => {
-    // filter={(job) => job.status !== 'finished'} panel={true}
-  return (
-    <div />
-  )
+  // filter={(job) => job.status !== 'finished'} panel={true}
+  return <div />;
 };

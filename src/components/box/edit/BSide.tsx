@@ -14,8 +14,7 @@ const c = Css('BSide', {
     w: 250,
     h: '100%',
   },
-  '-open': {
-  },
+  '-open': {},
   Body: {
     position: 'absolute',
     elevation: 2,
@@ -47,8 +46,8 @@ const c = Css('BSide', {
 
 export const BSide = () => {
   const controller = useBEditController()!;
-  const show$ = useMemo(() => controller.page$.map(p => !!p), [controller]);
-  const page$ = useMemo(() => controller.page$.filter(p => !!p), [controller]);
+  const show$ = useMemo(() => controller.page$.map((p) => !!p), [controller]);
+  const page$ = useMemo(() => controller.page$.filter((p) => !!p), [controller]);
   const show = useFlux(show$);
   const page = useFlux(page$);
   const animState = useAnimState(show, 400);
@@ -69,64 +68,62 @@ export const BSide = () => {
   );
 };
 
-        // {page === 'advanced' && <BSideAdvanced />}
-        // {page === 'hierarchy' && <BSideHierarchy />}
-        // {page === 'layout' && <BSideLayout />}
-        // {/* {page === 'media' && <BSideMedia />} */}
-        // {page === 'text' && <BSideText />}
-        // {page === 'playlist' && <BSidePlaylist />}
-        // {/* {page === 'planification' && <BSidePlanification />} */}
+// {page === 'advanced' && <BSideAdvanced />}
+// {page === 'hierarchy' && <BSideHierarchy />}
+// {page === 'layout' && <BSideLayout />}
+// {/* {page === 'media' && <BSideMedia />} */}
+// {page === 'text' && <BSideText />}
+// {page === 'playlist' && <BSidePlaylist />}
+// {/* {page === 'planification' && <BSidePlanification />} */}
 
+// const i = select?.i;
+// const item = select?.item;
+// const [nType] = useProp('t');
+// const type = nType || 'box';
+// const config = controller?.registry[type] || ({} as Partial<BType>);
 
+// console.debug('BProps', i, item, click)
 
-  // const i = select?.i;
-  // const item = select?.item;
-  // const [nType] = useProp('t');
-  // const type = nType || 'box';
-  // const config = controller?.registry[type] || ({} as Partial<BType>);
+// if (!isUInt(i) || !item) return null;
 
-  // console.debug('BProps', i, item, click)
+// const isHierarchy = page === 'hierarchy';
+// const isLayout = isHierarchy && config.layout;
 
-  // if (!isUInt(i) || !item) return null;
+//     // <BMenuButton title="Hiérarchie" icon={GroupIcon} page="hierarchy" />
+//     // <BMenuButton title="Media" icon={ImageIcon} page="media" />
+//     // <BMenuButton title="Texte" icon={TextIcon} page="text" />
+//     // <BMenuButton title="Carrousel" icon={GalleryHorizontalIcon} page="carrousel" />
+//     // <BMenuButton title="Planification" icon={CalendarClockIcon} page="planification" />
+//     // <BMenuButton title="Avancé" icon={ExpandIcon} page="advanced" />
 
-  // const isHierarchy = page === 'hierarchy';
-  // const isLayout = isHierarchy && config.layout;
-
-  //     // <BMenuButton title="Hiérarchie" icon={GroupIcon} page="hierarchy" />
-  //     // <BMenuButton title="Media" icon={ImageIcon} page="media" />
-  //     // <BMenuButton title="Texte" icon={TextIcon} page="text" />
-  //     // <BMenuButton title="Carrousel" icon={GalleryHorizontalIcon} page="carrousel" />
-  //     // <BMenuButton title="Planification" icon={CalendarClockIcon} page="planification" />
-  //     // <BMenuButton title="Avancé" icon={ExpandIcon} page="advanced" />
-
-  //       {config.r && (
-  //         <Panel>
-  //           <Field label="Ajouter">
-  //             {registryEntries.map(([t, config], key) => {
-  //               const Icon = config?.icon || Square;
-  //               if (t === 'root' || t === 'rect') return null;
-  //               return (
-  //                 <Button
-  //                   key={key}
-  //                   icon={Icon}
-  //                   tooltip={config?.label || ''}
-  //                   onClick={() => {
-  //                     const next: Writable<Partial<BItem>> = { p: i, t };
-  //                     if (type === 'text') next.b = 'Mon texte !';
-  //                     controller?.add(next);
-  //                   }}
-  //                 />
-  //               );
-  //             })}
-  //           </Field>
-  //         </Panel>
-  //       )}
-  //       {config.m && (
-  //         <Panel>
-  //           <BMedias />
-  //         </Panel>
-  //       )}
-  // );
+//       {config.r && (
+//         <Panel>
+//           <Field label="Ajouter">
+//             {registryEntries.map(([t, config], key) => {
+//               const Icon = config?.icon || Square;
+//               if (t === 'root' || t === 'rect') return null;
+//               return (
+//                 <Button
+//                   key={key}
+//                   icon={Icon}
+//                   tooltip={config?.label || ''}
+//                   onClick={() => {
+//                     const next: Writable<Partial<BItem>> = { p: i, t };
+//                     if (type === 'text') next.b = 'Mon texte !';
+//                     controller?.add(next);
+//                   }}
+//                 />
+//               );
+//             })}
+//           </Field>
+//         </Panel>
+//       )}
+//       {config.m && (
+//         <Panel>
+//           <BMedias />
+//         </Panel>
+//       )}
+// );
 
 // import { Css } from 'fluxio';
 

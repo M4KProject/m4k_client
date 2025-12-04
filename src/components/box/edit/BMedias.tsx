@@ -37,7 +37,8 @@ const BMediasItem = ({ media }: { media: MediaModel }) => {
   const mediaId = media.id;
   const selected = useFluxMemo(
     () =>
-      controller && fluxCombine(controller.select$, controller.items$).map(
+      controller &&
+      fluxCombine(controller.select$, controller.items$).map(
         ([click]) => controller.get(click.i)?.m === mediaId
       ),
     [controller, mediaId]

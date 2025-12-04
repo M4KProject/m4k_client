@@ -24,7 +24,7 @@ export const BMenuButton = ({ page, ...props }: BMenuButtonProps) => {
   const handle = (e: Event) => {
     const page$ = controller?.page$;
     if (props.onClick) props.onClick(e);
-    if (page && page$) page$.set(prev => prev === page ? '' : page);
+    if (page && page$) page$.set((prev) => (prev === page ? '' : page));
   };
 
   return <Button {...props} selected={selected} onClick={handle} />;

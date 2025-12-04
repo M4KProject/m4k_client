@@ -4,12 +4,21 @@ import { Button, ButtonProps } from '@/components/common/Button';
 import { Comp } from '@/utils/comp';
 import { useBEditController } from './useBEditController';
 import { BField, BStyleField, useProp } from './BField';
-import { AlignCenterHorizontal, AlignCenterIcon, AlignEndHorizontal, AlignJustifyIcon, AlignLeftIcon, AlignRightIcon, AlignStartHorizontal, PlusIcon } from 'lucide-react';
+import {
+  AlignCenterHorizontal,
+  AlignCenterIcon,
+  AlignEndHorizontal,
+  AlignJustifyIcon,
+  AlignLeftIcon,
+  AlignRightIcon,
+  AlignStartHorizontal,
+  PlusIcon,
+} from 'lucide-react';
 
 const c = Css('BSideText', {
   '': {
     col: ['stretch', 'start'],
-  }
+  },
 });
 
 const FlexAlignButton = ({
@@ -76,10 +85,8 @@ export const TextAlignButton = ({ icon, v }: { icon: Comp; v: Style['textAlign']
 
 export const BSideText = () => {
   const controller = useBEditController();
-  const registryEntries = Object.entries(controller?.registry||{});
-  const types = registryEntries.map(
-    ([type, config]) => [type, config.label] as [string, Comp]
-  );
+  const registryEntries = Object.entries(controller?.registry || {});
+  const types = registryEntries.map(([type, config]) => [type, config.label] as [string, Comp]);
 
   return (
     <div {...c('')}>

@@ -26,7 +26,7 @@ const c = Css('BSideHierarchy', {
 export const BSideHierarchy = ({ i }: { i: number }) => {
   const controller = useBEditController();
   const item = useFluxMemo(() => controller?.item$(i), [controller, i]);
-  const selected = useFluxMemo(() => controller?.selectIndex$.map(s => s === i), [controller, i]);
+  const selected = useFluxMemo(() => controller?.selectIndex$.map((s) => s === i), [controller, i]);
   const type = controller?.getType(item?.t);
   const Icon = type?.icon || Square;
 
@@ -39,11 +39,9 @@ export const BSideHierarchy = ({ i }: { i: number }) => {
         <div {...c('Icon')} {...tooltipProps(type?.label || '')}>
           <Icon />
         </div>
-        {selected ? (
+        {selected ?
           <BField prop="n" defaultValue={label} />
-        ) : (
-          label
-        )}
+        : label}
       </div>
       {children && (
         <div {...c('Children')}>

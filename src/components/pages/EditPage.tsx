@@ -32,18 +32,15 @@ export const EditPage = () => {
   //   }
   // }
 
-  const controller = useMemo(
-    () => new BEditController(api, router),
-    [api, router]
-  );
+  const controller = useMemo(() => new BEditController(api, router), [api, router]);
 
   useEffect(() => {
     if (!content) return;
-    if (content.type !== "content") {
+    if (content.type !== 'content') {
       router.go({ page: 'medias' });
       return;
     }
-    controller.setAllData(content.data?.boxes || [])
+    controller.setAllData(content.data?.boxes || []);
   }, [content]);
 
   return (

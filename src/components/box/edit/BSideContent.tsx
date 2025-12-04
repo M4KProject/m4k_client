@@ -15,33 +15,23 @@ const c = Css('BSideContent', {
     w: '100%',
     h: 1,
     bg: 'border',
-  }
+  },
 });
 
-export const BSideContent = (props: DivProps) => (
-  <div {...props} {...c('', props)} />
-);
+export const BSideContent = (props: DivProps) => <div {...props} {...c('', props)} />;
 
-export const BSideSep = (props: DivProps) => (
-  <div {...props} {...c('Sep', props)} />
-);
+export const BSideSep = (props: DivProps) => <div {...props} {...c('Sep', props)} />;
 
 export const BSideWebView = () => {
   const controller = useBEditController()!;
 
-  return (
-    <div {...c('')}>
-      BSideWebView
-    </div>
-  );
-}
+  return <div {...c('')}>BSideWebView</div>;
+};
 
 export const BSideAdvanced = () => {
   const controller = useBEditController()!;
-  const registryEntries = Object.entries(controller.registry||{});
-  const types = registryEntries.map(
-    ([type, config]) => [type, config.label] as [string, Comp]
-  );
+  const registryEntries = Object.entries(controller.registry || {});
+  const types = registryEntries.map(([type, config]) => [type, config.label] as [string, Comp]);
 
   return (
     <div {...c('')}>
@@ -60,4 +50,4 @@ export const BSideAdvanced = () => {
       <BDataField />
     </div>
   );
-}
+};

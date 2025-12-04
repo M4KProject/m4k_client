@@ -84,7 +84,7 @@ const c = Css('Menu', {
     h: 1,
     w: '100%',
     bg: 'border',
-  }
+  },
 });
 
 export interface MenuButtonProps extends ButtonProps {

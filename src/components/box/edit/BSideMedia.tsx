@@ -6,7 +6,7 @@ import { BMedias } from './BMedias';
 const c = Css('BSideMedia', {
   '': {
     col: ['stretch', 'start'],
-  }
+  },
 });
 
 export const BSideMedia = () => {

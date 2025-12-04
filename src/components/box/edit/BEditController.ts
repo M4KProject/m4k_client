@@ -10,14 +10,15 @@ export class BEditController extends BController {
   log = logger('BEditController');
 
   readonly page$ = flux<BEditPage>('');
-  readonly selectIndex$ = flux<number|undefined>(undefined);
-  readonly select$ = fluxCombine(this.selectIndex$, this.items$).map(
-    ([index, items]) => index ? items[index] : undefined);
+  readonly selectIndex$ = flux<number | undefined>(undefined);
+  readonly select$ = fluxCombine(this.selectIndex$, this.items$).map(([index, items]) =>
+    index ? items[index] : undefined
+  );
 
   constructor(api: Api, router: Router) {
     super(api, router);
-    
-    this.click$.on(e => this.selectIndex$.set(e.i));
+
+    this.click$.on((e) => this.selectIndex$.set(e.i));
   }
 
   _ready() {
@@ -28,7 +29,7 @@ export class BEditController extends BController {
     onHtmlEvent(viewporteEl, 'click', (event) => {
       this.click$.set({ el: viewporteEl, event });
     });
-    
+
     this.panZoomFit();
   }
 
