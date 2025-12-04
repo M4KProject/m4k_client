@@ -14,7 +14,7 @@ import { Css } from 'fluxio';
 import { Field } from '../fields/Field';
 import { Fragment } from 'preact/jsx-runtime';
 
-const c = Css('MediaBreadcrumb', {
+const c = Css('Breadcrumb', {
   '': {
     rowWrap: 1,
     w: '100%',
@@ -60,7 +60,7 @@ const Sep = (props: DivProps) => (
 
 const Flex = (props: DivProps) => <div {...props} {...c('Flex', props)} />;
 
-export const MediaBreadcrumb = ({ children, ...props }: ActionsProps) => {
+export const Breadcrumb = ({ children, ...props }: ActionsProps) => {
   const controller = useMediaController();
   const select = useFlux(controller.select$);
   const breadcrumb = useFlux(controller.breadcrumb$);

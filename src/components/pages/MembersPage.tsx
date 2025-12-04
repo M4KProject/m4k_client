@@ -1,6 +1,6 @@
 import { Css, randString, ReqError } from 'fluxio';
 import { Page } from './base/Page';
-import { MembersPanel } from '../panels/MembersPanel';
+import { Members } from '../panels/Members';
 import { Button } from '../common/Button';
 import { PlusIcon } from 'lucide-react';
 import { showDialog } from '../common/Dialog';
@@ -9,6 +9,7 @@ import { useState } from 'preact/hooks';
 import { Role } from '@/api/models';
 import { Form } from '../common/Form';
 import { Field } from '../fields/Field';
+import { useGroup } from '@/hooks/useRoute';
 
 const c = Css('MembersPage', {
   '': {},
@@ -16,12 +17,14 @@ const c = Css('MembersPage', {
 
 const CreateMemberForm = ({ onClose }: { onClose: () => void }) => {
   const api = useApi();
+  const group = useGroup();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isNew, setIsNewField] = useState(false);
   const [error, setError] = useState('');
 
   const handle = async () => {
+    if (!group) return;
     if (!email) {
       setError('Email requis');
       return;
@@ -34,9 +37,9 @@ const CreateMemberForm = ({ onClose }: { onClose: () => void }) => {
     try {
       if (isNew) {
         await api.userColl.create({ email, password, passwordConfirm: password });
-        await api.member.create({ email, group: api.needGroupId(), role: Role.editor });
+        await api.member.create({ email, group: group.id, role: Role.editor });
       } else {
-        await api.member.create({ email, group: api.needGroupId(), role: Role.editor });
+        await api.member.create({ email, group: group.id, role: Role.editor });
       }
       onClose();
     } catch (e) {
@@ -73,7 +76,7 @@ export const MembersPage = () => {
   return (
     <Page {...c('')}>
       <Button title="Ajouter un membre" icon={PlusIcon} color="primary" onClick={handleCreate} />
-      <MembersPanel />
+      <Members />
     </Page>
   );
 };

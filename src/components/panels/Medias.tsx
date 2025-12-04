@@ -3,11 +3,9 @@ import { useGroupMedias } from '@/hooks/useApi';
 import { MediaModel } from '@/api/models';
 import { useFlux } from '@/hooks/useFlux';
 import { useMediaController } from '@/hooks/useMediaController';
-import { Button } from '../common/Button';
-import { ArrowLeftIcon } from 'lucide-react';
 import { useEffect } from 'preact/hooks';
 import { MediaItem } from '@/components/panels/MediaItem';
-import { MediaBreadcrumb } from '@/components/panels/MediaBreadcrumb';
+import { Breadcrumb } from '@/components/panels/Breadcrumb';
 
 const c = Css('Medias', {
   '': {
@@ -46,7 +44,7 @@ export const Medias = ({ type }: { type?: MediaModel['type'] }) => {
 
   return (
     <div {...c('')}>
-      <MediaBreadcrumb />
+      <Breadcrumb />
 
       {medias
         .filter((m) => m && (m.parent || '') === (parentId || ''))

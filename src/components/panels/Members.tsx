@@ -8,7 +8,7 @@ import { Field } from '@/components/fields/Field';
 import { Button } from '@/components/common/Button';
 import { Api } from '@/api/Api';
 
-const c = Css('MembersPanel', {
+const c = Css('Members', {
   Actions: {
     row: ['center', 'center'],
   },
@@ -56,7 +56,7 @@ const cols: GridCols<MemberModel, { deviceById: Dictionary<DeviceModel>; api: Ap
   ],
 };
 
-export const MembersPanel = () => {
+export const Members = () => {
   const api = useApi();
   const members = useGroupMembers();
   const deviceById = useDeviceById();
