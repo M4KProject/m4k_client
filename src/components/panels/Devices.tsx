@@ -1,44 +1,35 @@
 import { Css } from 'fluxio';
-import { Plus, MonitorIcon } from 'lucide-react';
+import { PlusIcon } from 'lucide-react';
 import { useGroupDevices } from '@/hooks/useApi';
 import { Button } from '@/components/common/Button';
-import { Panel } from './base/Panel';
 import { Device } from './Device';
 import { DevicePairing } from './DevicePairing';
 import { createWindow } from '../common/Window';
 
-const c = Css('Device', {
+const c = Css('Devices', {
   '': {
-  },
-  Content: {
-    rowWrap: 1,
-    p: 8,
-  },
-  AddButton: {
-    m: 8,
-  },
+    flex: 1,
+  }
 });
 
 export const Devices = () => {
   const devices = useGroupDevices();
-  
+
   const handleAdd = async () => {
     createWindow({
       title: 'Pairer un nouvel écran',
       content: DevicePairing,
-    })
+    });
   };
 
   return (
-    <Panel icon={<MonitorIcon />} title="Les Appareils" {...c('Panel')}>
-      <div {...c('PanelContent')}>
-        {devices.map(device => (
-          <Device key={device.id} device={device} />
-        ))}
-        <Button icon={Plus} color="primary" onClick={handleAdd}>
-          Ajouter un Appareil
-        </Button>
-      </div>
-    </Panel>
+    <>
+      {devices.map((device) => (
+        <Device key={device.id} device={device} />
+      ))}
+      <Button big {...c('Add')} icon={PlusIcon} color="primary" onClick={handleAdd}>
+        Ajouter un Appareil
+      </Button>
+    </>
   );
 };

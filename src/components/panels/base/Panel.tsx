@@ -4,9 +4,8 @@ import { DivProps } from '@/components/common/types';
 
 const c = Css('Panel', {
   '': {
-    col: ['stretch', 'start'],
-    flex: 1,
     m: 8,
+    col: ['stretch', 'start'],
     elevation: 1,
     rounded: 5,
     overflow: 'hidden',
@@ -24,6 +23,7 @@ const c = Css('Panel', {
   Content: {
     flex: 1,
     bg: 'bg',
+    rowWrap: 1,
   },
 });
 

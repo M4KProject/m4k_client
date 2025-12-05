@@ -5,14 +5,14 @@ import { GroupModel, MediaModel } from '@/api/models';
 import { Sync } from '@/api/sync';
 import { Api } from '@/api/Api';
 import { useSingleton } from './useSingleton';
-import { useDeviceKey, useGroupId, useIsAdvanced, useMediaKey } from './useRoute';
+import { useGroupId, useIsAdvanced } from './useRoute';
 
 export const useApi = () => useSingleton(Api);
 
-const useItemKey = <T extends PbModel & { key?: string }>(
-  sync: Sync<T>,
-  key?: string
-): T | undefined => useFlux(key ? sync.find$({ key }) : undefined) as T | undefined;
+// const useItemKey = <T extends PbModel & { key?: string }>(
+//   sync: Sync<T>,
+//   key?: string
+// ): T | undefined => useFlux(key ? sync.find$({ key }) : undefined) as T | undefined;
 
 const useItems = <T extends PbModel>(sync: Sync<T>, whereOrId?: PbWhere<T>): T[] => {
   const items = useFlux(sync.filter$(whereOrId));
@@ -32,9 +32,6 @@ const useGroupItems = <T extends PbModel & { group?: string }>(
 };
 
 const useById = <T extends PbModel>(sync: Sync<T>, _where?: PbWhere<T>) => useFlux(sync.up$);
-
-export const useDevice = () => useItemKey(useApi().device, useDeviceKey());
-export const useMedia = (key?: string) => useItemKey(useApi().media, useMediaKey());
 
 export const useGroups = (): GroupModel[] => useItems(useApi().group) as GroupModel[];
 

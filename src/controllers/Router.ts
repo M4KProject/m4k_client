@@ -15,11 +15,13 @@ import {
   isEmpty,
   isString,
   isStringValid,
+  isVector2,
   logger,
   onEvent,
   Pipe,
   toBoolean,
   toError,
+  Vector2,
 } from 'fluxio';
 import { getUrlParams } from 'fluxio';
 import { PbModel } from 'pblite';
@@ -33,7 +35,12 @@ export interface Route {
   device?: string;
 }
 
-const routerItem = (key$: Pipe<string, Route>, id$: Flux<string>, up$: Flux, sync: Sync<PbModel & { key?: string }>) => (
+const routerItem = <T extends PbModel & { key?: string }>(
+  key$: Pipe<string, Route>,
+  id$: Flux<string>,
+  up$: Flux,
+  sync: Sync<T>
+) =>
   fluxCombine(key$, id$, up$).map(([key, id]) => {
     console.debug('routerItem', sync.name, key, id);
     const keyItem = sync.get([{ key }, { id: key }]);
@@ -45,8 +52,7 @@ const routerItem = (key$: Pipe<string, Route>, id$: Flux<string>, up$: Flux, syn
     const itemId = item?.id || '';
     setTimeout(() => id$.set(itemId), 0);
     return item;
-  })
-)
+  });
 
 export class Router {
   log = logger('Router');
@@ -61,12 +67,34 @@ export class Router {
   mediaId$ = fluxStored<string>('mediaId', '', isString);
   deviceId$ = fluxStored<string>('deviceId', '', isString);
 
-  group$ = routerItem(this.route$.map(r => r.group||''), this.groupId$, this.api.group.up$, this.api.group);
-  media$ = routerItem(this.route$.map(r => r.media||''), this.mediaId$, this.api.media.up$, this.api.media);
-  device$ = routerItem(this.route$.map(r => r.device||''), this.deviceId$, this.api.device.up$, this.api.device);
-  
+  group$ = routerItem(
+    this.route$.map((r) => r.group || ''),
+    this.groupId$,
+    this.api.group.up$,
+    this.api.group
+  );
+  media$ = routerItem(
+    this.route$.map((r) => r.media || ''),
+    this.mediaId$,
+    this.api.media.up$,
+    this.api.media
+  );
+  device$ = routerItem(
+    this.route$.map((r) => r.device || ''),
+    this.deviceId$,
+    this.api.device.up$,
+    this.api.device
+  );
+
   isKiosk$ = fluxStored<boolean>('isKiosk', false, isBoolean);
   isAdvanced$ = fluxStored<boolean>('isAdvanced', false, isBoolean);
+
+  screenSize$ = fluxStored<Vector2>('screenSize', [1920, 1080], isVector2);
+
+  routeDevice$ = this.route$.map(r => r.device);
+  routeGroup$ = this.route$.map(r => r.group);
+  routeMedia$ = this.route$.map(r => r.media);
+  routePage$ = this.route$.map(r => r.page);
 
   constructor() {
     app.router = this;

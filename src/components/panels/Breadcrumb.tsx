@@ -95,8 +95,7 @@ export const Breadcrumb = ({ children, ...props }: ActionsProps) => {
       )}
 
       <Flex />
-      {!select ||
-        (select?.type === 'folder' && (
+      {(!select || select?.type === 'folder') && (
           <>
             <UploadButton
               color="primary"
@@ -119,7 +118,7 @@ export const Breadcrumb = ({ children, ...props }: ActionsProps) => {
               onClick={controller.addContent}
             />
           </>
-        ))}
+        )}
       {select?.type === 'content' && (
         <>
           <Button

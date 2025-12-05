@@ -1,7 +1,21 @@
-import { Css, formatDateTime, toDate, toTime } from 'fluxio';
+import {
+  Css,
+  DAY,
+  flux,
+  formatDateTime,
+  humanize,
+  isDefined,
+  MINUTE,
+  round,
+  SECOND,
+  secondsToDate,
+  toDate,
+  toItem,
+  toTime,
+} from 'fluxio';
 import { toError } from 'fluxio';
-import { useState } from 'preact/hooks';
-import { useApi } from '@/hooks/useApi';
+import { useEffect, useMemo, useState } from 'preact/hooks';
+import { useApi, useGroupMedias, useMediaById } from '@/hooks/useApi';
 import { DeviceModel } from '@/api/models';
 import { Field } from '@/components/fields/Field';
 import { Button } from '@/components/common/Button';
@@ -9,35 +23,24 @@ import { Form } from '@/components/common/Form';
 import { useGroup, useRouter } from '@/hooks/useRoute';
 import { useFlux } from '@/hooks/useFlux';
 import { tooltipProps } from '../common/Tooltip';
+import { Panel } from './base/Panel';
+import { useConstant } from '@/hooks/useConstant';
+import { PbUpdate } from 'pblite';
+import { EditIcon, InfoIcon } from 'lucide-react';
 
 const c = Css('Device', {
-  '': {
-    my: 8,
-    mx: 4,
-    elevation: 1,
-    rounded: 3,
-    overflow: 'hidden',
-    w: 250,
-  },
-  Header: {
-    row: 1,
-    bg: 'header',
-    fg: 'headerFg',
-  },
+  '': { w: 300, h: 200 },
   Online: {
-    bg: 'error',
     whMin: 18,
     rounded: 999,
     mx: 6,
   },
-  Content: {
-    m: 16,
-    col: ['center', 'center'],
-  },
-
-  ' .Field-check': {
-    w: 30,
-  },
+  ' .PanelContent': { col: 1 },
+  '-online &Online': { bg: 'success' },
+  '-latency &Online': { bg: 'black' },
+  '-offline &Online': { bg: 'error' },
+  '-offline .PanelHeader': { bg: 'error' },
+  ' .Field-check': { w: 30 },
   ' input': {
     textAlign: 'center',
     border: 0,
@@ -47,48 +50,27 @@ const c = Css('Device', {
   ' .FieldLabel': {
     w: 55,
   },
-
-  '-online &Online': {
-    bg: 'success',
-  },
-
-  '-offline': {},
-
-  '-selected': {
-    elevation: 0,
-    bg: 'body',
-  },
-  '-selected &Header': {
+  '-selected .PanelHeader': {
     row: 1,
-    bg: 'primary'
+    bg: 'primary',
+  },
+  Footer: {
+    row: 1,
+    w: '100%',
+  },
+  Media: {
+    flex: 1,
+    w: 'auto',
+  },
+  Capture: {
+    flex: 1,
+    bg: 'black',
   },
 });
 
-// const deviceCols: GridCols<
-//   DeviceModel,
-//   {
-//     api: Api;
-//     medias: MediaModel[];
-//     onlineMin: number;
-//     handleRemote: (device: DeviceModel) => void;
-//     isAdvanced: boolean | undefined;
-//   }
-// > = {
-//   key: [
-//     'Clé',
-//     (d, { api }) => (
-//       <Button tooltip={d.id}>
-//         <Field value={d.key} onValue={(key) => api.device.update(d.id, { key })} />
-//       </Button>
-//     ),
-//     { if: (_col, ctx) => !!ctx.isAdvanced },
-//   ],
 //   type: [
 //     'Type',
 //     (d) => (
-//       <Button tooltip={() => humanize(d.info)}>
-//         <Field value={`${d.info?.type || ''} ${d.info?.version || ''}`} readonly />
-//       </Button>
 //     ),
 //     { if: (_col, ctx) => !!ctx.isAdvanced },
 //   ],
@@ -143,106 +125,86 @@ const c = Css('Device', {
 //   ],
 // };
 
-  // const handleRemote = (device: DeviceModel) => {
-  //   setDeviceKey(device.key || device.id);
-  //   setPage('devices');
-  // };
-
-  // // const handleAddAsMember = async (device: DeviceModel) => {
-  // //   if (!device.user || !groupId) return;
-  // //   await collMembers.create({
-  // //     device: device.id,
-  // //     user: device.user,
-  // //     group: groupId,
-  // //     role: Role.viewer,
-  // //   });
-  // // };
-
-export const PairingForm = ({ onClose }: { onClose: () => void }) => {
+const useOnlineDelay = (online: string | Date | undefined) => {
   const api = useApi();
-  const [key, setKey] = useState('');
-  const group = useGroup();
+  const delay$ = useConstant(() => flux<number>(0));
 
-  const handlePairing = async () => {
-    if (!key) return;
+  useEffect(() => {
+    const refresh = () => {
+      const now = api.pb.getTime();
+      const delay = online ? now - toTime(online) : 0;
+      delay$.set(delay);
+    };
+    refresh();
+    const interval = setInterval(refresh, 5 * SECOND);
+    return () => clearInterval(interval);
+  }, [online]);
 
-    const cleanKey = key.toLowerCase().replace(/ /g, '');
-
-    try {
-      console.log('Tentative de pairage avec le code:', cleanKey);
-      await api.pb.req('GET', `pair/${cleanKey}/${group}`);
-      onClose();
-    } catch (e) {
-      const error = toError(e);
-      console.error('Erreur lors du pairage:', error);
-      alert('Erreur lors du pairage. Vérifiez le code et réessayez.');
-      onClose();
-    }
-  };
-
-  return (
-    <Form>
-      <Field label="Code de pairage" value={key} onValue={setKey} />
-      <div {...c('Buttons')}>
-        <Button title="Pairer l'écran" color="primary" onClick={handlePairing} />
-      </div>
-    </Form>
-  );
+  return useFlux(delay$);
 };
 
 export const Device = ({ device }: { device: DeviceModel }) => {
   const api = useApi();
   const router = useRouter();
-  const selected = useFlux(router.deviceId$.map(id => device.id === id));
-  const onlineMin = api.pb.getTime() - 10 * 1000;
-  const online = true || device.online && toTime(device.online) > onlineMin;
+  const selected = useFlux(router.deviceId$.map((id) => device.id === id));
+
+  const delay = useOnlineDelay(device.online);
+  const seconds = round(delay / SECOND);
+  const onlineCls =
+    delay < 10 * SECOND ? '-online'
+    : delay < MINUTE ? '-latency'
+    : '-offline';
+
+  const contents = useGroupMedias().filter((m) => m.type === 'content');
+
+  const update = (changes: PbUpdate<DeviceModel>) => {
+    api.device.update(device.id, changes);
+  };
+
+  const info = toItem(device.info);
 
   return (
-    <div
-      {...c('', selected && '-selected', online && '-online')}
-      onClick={() => router.deviceId$.set(device.id)}
+    <Panel
+      {...c('', selected && '-selected', onlineCls)}
+      header={
+        <>
+          <Field
+            type="check"
+            value={selected}
+            onValue={(v) => v && router.deviceId$.set(device.id)}
+          />
+          <Field value={device.name} onValue={(name) => update({ name })} />
+          <div
+            {...c('Online')}
+            {...tooltipProps(`${seconds} ${formatDateTime(toDate(device.online))}`)}
+            onClick={() => update({ online: api.pb.getDate() })}
+          />
+        </>
+      }
     >
-      <div {...c('Header')}>
-        <Field
-          type="check"
-          value={selected}
-          onValue={v => v && router.deviceId$.set(device.id)}
+      <div {...c('Capture')}></div>
+      <div {...c('Footer')}>
+        <Button
+          icon={InfoIcon}
+          tooltip={() => (
+            <pre>{humanize({ id: device.id, key: device.key, ...info })}</pre>
+          )}
         />
         <Field
-          value={device.name}
-          onValue={(name) => {
-            api.group.update(device.id, { name });
-          }}
+          containerProps={c('Media')}
+          type="select"
+          value={device.media}
+          onValue={(media) => update({ media })}
+          items={contents.map((m) => [m.id, m.title])}
         />
-        <div {...c('Online')} {...tooltipProps(formatDateTime(toDate(device.online)))} />
+        <Button color="primary" icon={EditIcon} onClick={() => {
+          if (device.media) {
+            router.screenSize$.set([info.width || 1920, info.height || 1080]);
+            router.go({ page: 'edit', media: device.media });
+          }
+          // TODO else crée le media
+        }} />
       </div>
-      <div {...c('Content')}>
-        {/* <Field
-          label="Clé"
-          value={group.key}
-          onValue={(key) => {
-            api.group.update(group.id, { key });
-          }}
-        />
-        <Field
-          type="color"
-          value={group.data?.primary}
-          onValue={(primary) => {
-            api.group.apply(group.id, (prev) => {
-              prev.data = { ...prev.data, primary };
-            });
-          }}
-        />
-        <Field
-          type="color"
-          value={group.data?.secondary}
-          onValue={(secondary) => {
-            api.group.apply(group.id, (prev) => {
-              prev.data = { ...prev.data, secondary };
-            });
-          }}
-        /> */}
-      </div>
-    </div>
-  )
-}
+    </Panel>
+  );
+};

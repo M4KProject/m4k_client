@@ -3,18 +3,13 @@ import { useApi, useGroups } from '@/hooks/useApi';
 import { Button } from '@/components/common/Button';
 import { Panel } from './base/Panel';
 import { Css } from 'fluxio';
-import { useGroupKey } from '@/hooks/useRoute';
 import { Role } from '@/api/models';
 import { Group } from './Group';
 
 const c = Css('Groups', {
   '': {
     wMin: 350,
-    flex: 2,
-  },
-  Content: {
-    rowWrap: 1,
-    p: 8,
+    flex: 3,
   },
   AddButton: {
     m: 8,
@@ -24,7 +19,6 @@ const c = Css('Groups', {
 export const Groups = () => {
   const api = useApi();
   const groups = useGroups();
-  const groupKey = useGroupKey();
 
   const handleAdd = async () => {
     const auth = api.pb.getAuth();
@@ -36,22 +30,20 @@ export const Groups = () => {
     }
   };
 
-  console.debug('Groups', { groups, groupKey });
+  console.debug('Groups', { groups });
 
   return (
     <Panel icon={UsersIcon} header="Mes Groups" {...c('')}>
-      <div {...c('Content')}>
-        {groups.map((group) => (
-          <Group key={group.id} group={group} />
-        ))}
-        <Button
-          {...c('AddButton')}
-          icon={PlusIcon}
-          onClick={handleAdd}
-          color="secondary"
-          title="Ajouter un Group"
-        />
-      </div>
+      {groups.map((group) => (
+        <Group key={group.id} group={group} />
+      ))}
+      <Button
+        {...c('AddButton')}
+        icon={PlusIcon}
+        onClick={handleAdd}
+        color="secondary"
+        title="Ajouter un Group"
+      />
       {/* <GroupGrid /> */}
     </Panel>
   );

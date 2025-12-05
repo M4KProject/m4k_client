@@ -4,7 +4,7 @@ import { Medias } from '../panels/Medias';
 import { JobsWindow } from '../panels/Jobs';
 
 const c = Css('MediasPage', {
-  '': {},
+  '': { alignContent: 'stretch' }
 });
 
 export const MediasPage = () => {

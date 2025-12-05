@@ -13,7 +13,7 @@ import { Button } from '../common/Button';
 
 const c = Css('Account', {
   '': {
-    wMin: 350,
+    wMin: 300,
     flex: 1,
   },
 });

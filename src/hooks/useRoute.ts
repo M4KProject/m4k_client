@@ -6,10 +6,10 @@ export const useRouter = () => useSingleton(Router);
 
 export const useRoute = () => useFlux(useRouter().route$);
 
-export const usePage = () => useFlux(useRouter().page$);
-export const useGroupKey = () => useFlux(useRouter().groupKey$);
-export const useMediaKey = () => useFlux(useRouter().mediaKey$);
-export const useDeviceKey = () => useFlux(useRouter().deviceKey$);
+export const useRoutePage = () => useFlux(useRouter().routePage$);
+export const useRouteGroup = () => useFlux(useRouter().routeGroup$);
+export const useRouteMedia = () => useFlux(useRouter().routeMedia$);
+export const useRouteDevice = () => useFlux(useRouter().routeDevice$);
 
 export const useIsKiosk = () => useFlux(useRouter().isKiosk$);
 export const useIsAdvanced = () => useFlux(useRouter().isAdvanced$);

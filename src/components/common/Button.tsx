@@ -70,6 +70,10 @@ const c = Css('Button', {
 
   '-icon': { bg: 'transparent', fg: 'fg', elevation: 0, border: 0 },
   '-selected&-icon,:hover&-icon': { bg: 'primary', fg: 'handle', border: 0 },
+
+  '-big': { col: ['stretch', 'center'], p: 8 },
+  '-big &Icon svg': { whMin: 48 },
+  '-big &Content': { flex: 0 },
 });
 
 type BaseButtonProps = Omit<Props['button'] & Props['a'], 'onClick'> & {
@@ -80,6 +84,7 @@ export interface ButtonProps extends BaseButtonProps {
   class?: string;
   color?: 'default' | 'primary' | 'secondary' | 'success' | 'warn' | 'error';
   variant?: 'upload';
+  big?: boolean;
   selected?: boolean;
   icon?: Comp | true;
   before?: Comp;
@@ -98,6 +103,7 @@ export const Button = ({
   before,
   link,
   tooltip,
+  big,
   ...props
 }: ButtonProps) => {
   const isIcon = icon === true || (icon && !(children || title));
@@ -108,6 +114,7 @@ export const Button = ({
     selected && `-selected`,
     isIcon ? `-icon` : null,
     variant && `-${variant}`,
+    big && `-big`,
     props
   );
 

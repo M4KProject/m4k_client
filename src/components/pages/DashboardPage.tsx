@@ -4,11 +4,7 @@ import { Account } from '../panels/Account';
 import { Groups } from '@/components/panels/Groups';
 
 const c = Css('DashboardPage', {
-  '': {
-    wh: '100%',
-    row: ['stretch', 'center'],
-    flexWrap: 'wrap',
-  },
+  '': { alignContent: 'stretch' }
 });
 
 export const DashboardPage = () => {
