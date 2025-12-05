@@ -43,7 +43,7 @@ const routerItem = (key$: Pipe<string, Route>, id$: Flux<string>, up$: Flux, syn
     const item = keyItem || idItem;
     console.debug('routerItem item', sync.name, item?.id, item?.key);
     const itemId = item?.id || '';
-    id$.set(itemId);
+    setTimeout(() => id$.set(itemId), 0);
     return item;
   })
 )

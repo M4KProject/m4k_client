@@ -5,7 +5,8 @@ import { useRouter } from '@/hooks/useRoute';
 import { GroupModel } from '@/api/models';
 import { useFlux } from '@/hooks/useFlux';
 import { Panel } from './base/Panel';
-import { UsersIcon } from 'lucide-react';
+import { CheckCheckIcon, CheckIcon, SquareCheckIcon, SquareIcon, UsersIcon } from 'lucide-react';
+import { Button } from '../common/Button';
 
 const c = Css('Group', {
   '': {
@@ -62,7 +63,7 @@ export const Group = ({ group }: { group: GroupModel }) => {
                 <Field
                     type="check"
                     value={selected}
-                    onValue={(v) => router.go({ group: group.key || group.id})}
+                    onValue={(v) => v && router.go({ group: group.key || group.id})}
                 />
                 <Field
                     value={group.name}
