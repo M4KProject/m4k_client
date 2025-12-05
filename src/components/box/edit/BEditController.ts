@@ -30,7 +30,7 @@ export class BEditController extends BController {
       this.click$.set({ el: viewporteEl, event });
     });
 
-    this.panZoomFit();
+    // this.panZoomFit();
   }
 
   panZoomFit() {

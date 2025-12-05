@@ -11,9 +11,9 @@ const c = Css('BSideContent', {
     p: 8,
   },
   Sep: {
-    my: 4,
+    my: 8,
     w: '100%',
-    h: 1,
+    h: 2,
     bg: 'border',
   },
 });

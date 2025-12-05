@@ -14,6 +14,7 @@ const c = Css('EditPage', {
   '': {
     row: 'stretch',
     flex: 1,
+    alignContent: 'stretch',
   },
 });
 
@@ -42,6 +43,17 @@ export const EditPage = () => {
     }
     controller.setAllData(content.data?.boxes || []);
   }, [content]);
+
+  useEffect(() => {
+    const refresh = () => {
+      const [width, height] = router.screenSize$.get();
+      console.debug('EditPage screenSize', width, height);
+      controller.panZoom.setSize(width, height);
+      controller.panZoomFit();
+    };
+    refresh();
+    return router.screenSize$.on(refresh);
+  }, [router]);
 
   return (
     <BContext value={controller}>

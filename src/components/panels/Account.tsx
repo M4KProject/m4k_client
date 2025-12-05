@@ -1,8 +1,6 @@
 import { Css } from 'fluxio';
 import { LogOut, KeyRound, UserIcon } from 'lucide-react';
 import { useState } from 'preact/hooks';
-import { useIsAdvanced } from '@/router/hooks';
-import { setIsAdvanced } from '@/router/setters';
 import { useFlux } from '@/hooks/useFlux';
 import { theme$, updateTheme } from '@/utils/theme';
 import { Form } from '@/components/common/Form';
@@ -10,6 +8,7 @@ import { Field } from '@/components/fields/Field';
 import { useApi } from '@/hooks/useApi';
 import { Panel } from './base/Panel';
 import { Button } from '../common/Button';
+import { useIsAdvanced, useRouter } from '@/hooks/useRoute';
 
 const c = Css('Account', {
   '': {
@@ -20,6 +19,7 @@ const c = Css('Account', {
 
 export const Account = () => {
   const api = useApi();
+  const router = useRouter();
   const theme = useFlux(theme$);
   const auth = useFlux(api.pb.auth$);
   const [passwordError, setPasswordError] = useState('');
@@ -58,7 +58,7 @@ export const Account = () => {
           label="Mode avancé"
           name="advanced"
           value={isAdvanced}
-          onValue={setIsAdvanced}
+          onValue={() => router.isAdvanced$.set(true)}
         />
         <Field
           type="switch"
