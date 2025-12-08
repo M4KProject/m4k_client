@@ -1,4 +1,4 @@
-import { Css, isUInt, normalizeIndex } from 'fluxio';
+import { Css, isUInt } from 'fluxio';
 import {
   Maximize2,
   ZoomIn,

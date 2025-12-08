@@ -4,21 +4,22 @@ import { flux, fluxCombine, isItem, isUInt, logger, onHtmlEvent, randColor } fro
 import { BData, BNext } from '../bTypes';
 import { Api } from '@/api/Api';
 import { Router } from '@/controllers/Router';
-export type BEditPage = '' | 'tree' | 'player' | 'webview' | 'text' | 'filter' | 'advanced';
+
+export type BEditSideName = '' | 'tree' | 'media' | 'web' | 'text' | 'filter' | 'advanced';
 
 export class BEditController extends BController {
   log = logger('BEditController');
 
-  readonly page$ = flux<BEditPage>('');
-  readonly selectIndex$ = flux<number | undefined>(undefined);
-  readonly select$ = fluxCombine(this.selectIndex$, this.items$).map(([index, items]) =>
+  readonly side$ = flux<BEditSideName>('');
+  readonly selectId$ = flux<number | undefined>(undefined);
+  readonly select$ = fluxCombine(this.selectId$, this.items$).map(([index, items]) =>
     index ? items[index] : undefined
   );
 
   constructor(api: Api, router: Router) {
     super(api, router);
 
-    this.click$.on((e) => this.selectIndex$.set(e.i));
+    this.click$.on((e) => this.selectId$.set(e.i));
   }
 
   ready() {
@@ -75,7 +76,7 @@ export class BEditController extends BController {
   add(replace: BNext) {
     const i = this.getItems().length;
     this.set(i, replace);
-    this.selectIndex$.set(i);
+    this.selectId$.set(i);
     return i;
   }
 
@@ -90,7 +91,7 @@ export class BEditController extends BController {
   }
 
   getSelectIndex() {
-    return this.selectIndex$.get();
+    return this.selectId$.get();
   }
 
   getSelect() {

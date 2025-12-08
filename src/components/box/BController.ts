@@ -31,7 +31,7 @@ import {
 import { BPlayer } from './BPlayer';
 import { PanZoomController } from '@/components/common/PanZoom';
 import { fluxUndefined } from 'fluxio/flux/fluxUndefined';
-import { ALargeSmallIcon, EarthIcon, FileIcon, GalleryHorizontalIcon, HomeIcon, ImagePlayIcon, SquareDashedMousePointerIcon } from 'lucide-react';
+import { ALargeSmallIcon, EarthIcon, FileIcon, HomeIcon, ImagePlayIcon, SquareDashedMousePointerIcon } from 'lucide-react';
 import { app } from '@/app';
 import { BText } from './BText';
 import { BPage } from './BPage';
@@ -73,6 +73,9 @@ export class BController {
   readonly click$ = flux<BEvent>({});
   readonly event$ = fluxUnion(this.init$, this.click$);
 
+  readonly pages$ = this.items$.map(items => items.filter(i => i && i.t === 'page'));
+  readonly page$ = this.pages$.map(pages => pages.find(p => this.isVisible(p)));
+
   readonly panZoom = new PanZoomController();
 
   readonly api: Api;
@@ -81,7 +84,12 @@ export class BController {
   constructor(api: Api, router: Router) {
     this.api = api;
     this.router = router;
-    app.bController = this;
+    app.b = this;
+  }
+
+  isVisible(item: NBItem) {
+    if (!item) return false;
+    if (!item.f) return true;
   }
 
   getDefaultType(d: BData) {
@@ -345,5 +353,25 @@ export class BController {
     return isInt(i) ?
         this.items$.map((items) => items[i]?.[prop])
       : (fluxUndefined as Pipe<BItem[K] | undefined, any>);
+  }
+
+  check(item: BItem['f'], filter?: BItem['f']) {
+    if (!filter) return true;
+
+    if (filter.d) {
+
+    }
+
+    if (filter.h) {
+      
+    }
+
+    if (filter.w) {
+      
+    }
+
+    if (filter.i) {
+      
+    }
   }
 }

@@ -1,7 +1,7 @@
 import { Css } from 'fluxio';
 import { Button } from '@/components/common/Button';
 import { PlusIcon } from 'lucide-react';
-import { BMedias } from './BMedias';
+import { BMedias } from '../BMedias';
 
 const c = Css('BSideMedia', {
   '': {
@@ -12,7 +12,7 @@ const c = Css('BSideMedia', {
 export const BSideMedia = () => {
   return (
     <div {...c('')}>
-      <Button color="primary" icon={PlusIcon} title="Ajouter" />
+      <Button color="primary" icon={PlusIcon} title="Ajouter une playlist" />
       <BMedias />
     </div>
   );

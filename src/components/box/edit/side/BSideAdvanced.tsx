@@ -1,32 +1,11 @@
 import { Css } from 'fluxio';
-import { useBEditController } from './useBEditController';
+import { useBEditController } from '../useBEditController';
 import { Comp } from '@/utils/comp';
-import { BDataField, BField, BStyleField } from './BField';
+import { BDataField, BField, BStyleField } from '../BField';
 import { Field } from '@/components/fields/Field';
-import { DivProps } from '@/components/common/types';
 
-const c = Css('BSideContent', {
-  '': {
-    col: ['stretch', 'start'],
-    p: 4,
-  },
-  Sep: {
-    my: 8,
-    w: '100%',
-    h: 2,
-    bg: 'border',
-  },
+const c = Css('BSideAdvanced', {
 });
-
-export const BSideContent = (props: DivProps) => <div {...props} {...c('', props)} />;
-
-export const BSideSep = (props: DivProps) => <div {...props} {...c('Sep', props)} />;
-
-export const BSideWebView = () => {
-  const controller = useBEditController()!;
-
-  return <div {...c('')}>BSideWebView</div>;
-};
 
 export const BSideAdvanced = () => {
   const controller = useBEditController()!;

@@ -1,10 +1,8 @@
-import { Css, logger } from 'fluxio';
-import { FileIcon, MoveIcon, PlusIcon, SquareDashedMousePointerIcon, SquareDotIcon } from 'lucide-react';
-import { BField } from './BField';
+import { Css } from 'fluxio';
+import { BField } from '../BField';
 import { Button, ButtonProps } from '@/components/common/Button';
 import { Field } from '@/components/fields/Field';
-import { BSideContent } from './BSideContent';
-import { useBEditController } from './useBEditController';
+import { useBEditController } from '../useBEditController';
 
 const c = Css('BSideFilter', {
   '': {
@@ -28,7 +26,7 @@ const DayButton = ({ day, ...props }: ButtonProps & { day: number }) => (
 export const BSideFilter = () => {
   const controller = useBEditController()!;
   return (
-    <BSideContent>
+    <div {...c('')}>
       <BField label="D. Début" tooltip="Date Début" prop="n" />
       <BField label="D. Fin" tooltip="Date Fin" prop="n" />
       <BField label="H. Début" tooltip="Heure Début" prop="n" />
@@ -42,6 +40,6 @@ export const BSideFilter = () => {
         <DayButton day={6} title="Sam." />
         <DayButton day={7} title="Dim." />
       </Field>
-    </BSideContent>
+    </div>
   );
 };

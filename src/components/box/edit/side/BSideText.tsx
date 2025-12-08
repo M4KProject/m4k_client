@@ -2,8 +2,8 @@ import { Css, isArray, Style, StyleFlexAlign, StyleFlexJustify } from 'fluxio';
 import { Field } from '@/components/fields/Field';
 import { Button, ButtonProps } from '@/components/common/Button';
 import { Comp } from '@/utils/comp';
-import { useBEditController } from './useBEditController';
-import { BField, BStyleField, useProp } from './BField';
+import { useBEditController } from '../useBEditController';
+import { BField, BStyleField, useProp } from '../BField';
 import {
   AlignCenterHorizontal,
   AlignCenterIcon,
@@ -14,7 +14,6 @@ import {
   AlignStartHorizontal,
   PlusIcon,
 } from 'lucide-react';
-import { BSideContent } from './BSideContent';
 
 const c = Css('BSideText', {});
 
@@ -86,7 +85,7 @@ export const BSideText = () => {
   const types = registryEntries.map(([type, config]) => [type, config.label] as [string, Comp]);
 
   return (
-    <BSideContent {...c('')}>
+    <div {...c('')}>
       <Button color="primary" icon={PlusIcon} title="Ajouter" />
       <BStyleField label="Fond" prop="bg" type="color" />
       <BStyleField label="Couleur" prop="fg" type="color" />
@@ -104,6 +103,6 @@ export const BSideText = () => {
         <TextAlignButton icon={AlignRightIcon} v="right" />
       </Field>
       <BField prop="b" type="multiline" col />
-    </BSideContent>
+    </div>
   );
 };

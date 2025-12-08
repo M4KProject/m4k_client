@@ -16,8 +16,8 @@ import {
   AlignVerticalJustifyEnd,
 } from 'lucide-react';
 import { Comp } from '@/utils/comp';
-import { useBEditController } from './useBEditController';
-import { BStyleField, useProp } from './BField';
+import { useBEditController } from '../useBEditController';
+import { BStyleField, useProp } from '../BField';
 
 const c = Css('BSideLayout', {
   '': {

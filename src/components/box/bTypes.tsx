@@ -1,4 +1,4 @@
-import type { Style, Dictionary, Item, NextState } from 'fluxio';
+import type { Style, Dictionary, Item, NextState, Vector5, Vector7 } from 'fluxio';
 import type { BoxIcon } from 'lucide-react';
 import type { ComponentChildren } from 'preact';
 
@@ -9,6 +9,7 @@ export interface BFun {
 }
 
 export interface BData {
+
   /** Type */
   readonly t?: string;
 
@@ -44,6 +45,23 @@ export interface BData {
 
   /** On Click event callback */
   readonly click?: BFun;
+
+  /** Filter */
+  readonly f?: {
+
+    /** Dates [start, end] : [['2025-12-01', '2025-12-10']] */
+    readonly d?: [string, string][],
+
+    /** Hours [start, end] : [[9, 12], [13.5, 18]] */
+    readonly h?: [number, number][],
+
+    /** Week Days [sunday, monday, tuesday, wednesday, thursday, friday, saturday] : [0, 1, 1, 0, 0, 0, 0] */
+    readonly w?: Vector7<0|1>,
+
+    /** DeviceId Dictionary : { "deviceId": 1 } */
+    readonly i?: Dictionary<1>,
+  };
+  
 }
 
 export interface BItem extends BData {

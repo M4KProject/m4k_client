@@ -17,7 +17,7 @@ const c = Css('B', {
 });
 
 const computeProps = (controller: BController, item: BItem): BCompProps['props'] => {
-  const { i, t, c: cls, s } = item;
+  const { i, t, c: cls, s, f } = item;
   const style = computeStyle(s);
   const a = item?.a;
 
@@ -30,11 +30,14 @@ const computeProps = (controller: BController, item: BItem): BCompProps['props']
     style.height = `${h}%`;
   }
 
+  if (f && !controller.check(item)) return 
+
   const props: BCompProps['props'] = {
     ...c('', String(i), cls),
     style,
     onClick: controller.getClick(i),
     ref: controller.getRef(i),
+    hide: item.h || controller.check(f),
   };
 
   log.d('computeProps', item, props);

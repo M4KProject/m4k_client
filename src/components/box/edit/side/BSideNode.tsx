@@ -1,12 +1,12 @@
 import { Css, truncate } from 'fluxio';
 import { useFluxMemo } from '@/hooks/useFlux';
 import { ChevronRightIcon, Square } from 'lucide-react';
-import { useBEditController } from './useBEditController';
-import { BField } from './BField';
+import { useBEditController } from '../useBEditController';
+import { BField } from '../BField';
 import { tooltipProps } from '@/components/common/Tooltip';
 import { useState } from 'preact/hooks';
 
-const c = Css('BSideHierarchy', {
+const c = Css('BSideNode', {
   '': {
     position: 'relative',
     row: ['center', 'start'],
@@ -40,11 +40,11 @@ const c = Css('BSideHierarchy', {
   }
 });
 
-export const BSideHierarchy = ({ i }: { i: number }) => {
+export const BSideNode = ({ i }: { i: number }) => {
   const controller = useBEditController()!;
   const item = useFluxMemo(() => controller.item$(i), [controller, i]);
-  const select$ = controller.selectIndex$;
-  const selected = useFluxMemo(() => select$.map((s) => s === i), [select$, i]);
+  const selectId$ = controller.selectId$;
+  const selected = useFluxMemo(() => selectId$.map((s) => s === i), [selectId$, i]);
   const type = controller?.getType(item?.t);
   const Icon = type?.icon || Square;
   const label = truncate(item?.n || item?.b?.replace(/\*\*/g, '') || type?.label || '', 20);
@@ -74,7 +74,7 @@ export const BSideHierarchy = ({ i }: { i: number }) => {
       {hasChildren && (isRoot || open) ? (
         <div {...c('Children')}>
           {children.map((child) => (
-            <BSideHierarchy key={child} i={child} />
+            <BSideNode key={child} i={child} />
           ))}
         </div>
       ) : null}

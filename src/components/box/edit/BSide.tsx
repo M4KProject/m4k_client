@@ -2,16 +2,13 @@ import { Css } from 'fluxio';
 import { useFlux } from '@/hooks/useFlux';
 import { useBEditController } from './useBEditController';
 import { isAnimStateOpen, useAnimState } from '@/hooks/useAnimState';
-import { BSideAdvanced, BSideContent, BSideSep, BSideWebView } from './BSideContent';
-import { BSideTree } from './BSideTree';
-import { BSidePlayer } from './BSidePlayer';
-import { BSideFilter } from './BSideFilter';
+import { BSideTree } from './side/BSideTree';
+import { BSideMedia } from './side/BSideMedia';
+import { BSideFilter } from './side/BSideFilter';
 import { useMemo } from 'preact/hooks';
-import { BSideHierarchy } from './BSideHierarchy';
-import { Field } from '@/components/fields/Field';
-import { Button } from '@/components/common/Button';
-import { ClapperboardIcon, EarthIcon, FileIcon, ImagePlusIcon, SquareDashedMousePointerIcon } from 'lucide-react';
-import { BSideText } from './BSideText';
+import { BSideText } from './side/BSideText';
+import { BSideWeb } from './side/BSideWeb';
+import { BSideAdvanced } from './side/BSideAdvanced';
 
 const BSIDE_WIDTH = 260;
 
@@ -33,13 +30,17 @@ const c = Css('BSide', {
     col: ['stretch', 'start'],
     zIndex: 20,
   },
-  ' &Content': {
-    transition: 0.4,
-    translateX: '-100%',
+  'Body > div': {
+    col: ['stretch', 'start'],
+    p: 4,
   },
-  '-open &Content': {
-    translateX: '0%',
-  },
+  // ' &Content': {
+  //   transition: 0.4,
+  //   translateX: '-100%',
+  // },
+  // '-open &Content': {
+  //   translateX: '0%',
+  // },
   '> *': {
     flexShrink: 0,
   },
@@ -53,10 +54,10 @@ const c = Css('BSide', {
 
 export const BSide = () => {
   const controller = useBEditController()!;
-  const show$ = useMemo(() => controller.page$.map((p) => !!p), [controller]);
-  const page$ = useMemo(() => controller.page$.filter((p) => !!p), [controller]);
+  const show$ = useMemo(() => controller.side$.map((p) => !!p), [controller]);
+  const side$ = useMemo(() => controller.side$.filter((p) => !!p), [controller]);
   const show = useFlux(show$);
-  const page = useFlux(page$);
+  const side = useFlux(side$);
   const animState = useAnimState(show, 400);
   const unmounted = animState === 'unmounted';
 
@@ -65,23 +66,12 @@ export const BSide = () => {
   return (
     <div {...c('', isAnimStateOpen(animState) && `-open`)}>
       <div {...c('Body')}>
-        <BSideContent>
-          <BSideHierarchy i={0} />
-          <Field label="Ajouter">
-            <Button color="primary" icon={FileIcon} tooltip="Ajouter une Page" onClick={controller.onAddPage} />
-            <Button color="primary" icon={SquareDashedMousePointerIcon} tooltip="Ajouter une Zone" onClick={controller.onAddZone} />
-            <Button color="primary" icon={ClapperboardIcon} tooltip="Ajouter un Player" onClick={controller.onAddTimeline} />
-            <Button color="primary" icon={ImagePlusIcon} tooltip="Ajouter un Média" onClick={controller.onAddMedia} />
-            <Button color="primary" icon={EarthIcon} tooltip="Ajouter une Vue Web" onClick={controller.onAddWeb} />
-          </Field>
-        </BSideContent>
-        <BSideSep />
-        {page === 'tree' && <BSideTree />}
-        {page === 'player' && <BSidePlayer />}
-        {page === 'webview' && <BSideWebView />}
-        {page === 'text' && <BSideText />}
-        {page === 'filter' && <BSideFilter />}
-        {page === 'advanced' && <BSideAdvanced />}
+        {side === 'tree' && <BSideTree />}
+        {side === 'media' && <BSideMedia />}
+        {side === 'web' && <BSideWeb />}
+        {side === 'text' && <BSideText />}
+        {side === 'filter' && <BSideFilter />}
+        {side === 'advanced' && <BSideAdvanced />}
       </div>
     </div>
   );
@@ -92,7 +82,7 @@ export const BSide = () => {
 // {page === 'layout' && <BSideLayout />}
 // {/* {page === 'media' && <BSideMedia />} */}
 // {page === 'text' && <BSideText />}
-// {page === 'playlist' && <BSidePlayer />}
+// {page === 'playlist' && <BSideMedia />}
 // {/* {page === 'planification' && <BSidePlanification />} */}
 
 // const i = select?.i;
