@@ -4,6 +4,7 @@ import { BCompProps, BFactoryProps, BItem } from './bTypes';
 import { computeStyle, Css, logger } from 'fluxio';
 import { useMemo } from 'preact/hooks';
 import { useBController } from './useBController';
+import { AnimState, useAnimState } from '@/hooks/useAnimState';
 
 const log = logger('B');
 
@@ -16,8 +17,8 @@ const c = Css('B', {
   },
 });
 
-const computeProps = (controller: BController, item: BItem): BCompProps['props'] => {
-  const { i, t, c: cls, s, f } = item;
+const computeProps = (controller: BController, item: BItem, animState: AnimState): BCompProps['props'] => {
+  const { i, c: cls, s } = item;
   const style = computeStyle(s);
   const a = item?.a;
 
@@ -30,14 +31,11 @@ const computeProps = (controller: BController, item: BItem): BCompProps['props']
     style.height = `${h}%`;
   }
 
-  if (f && !controller.check(item)) return 
-
   const props: BCompProps['props'] = {
-    ...c('', String(i), cls),
+    ...c('', String(i), `-${animState}`, cls),
     style,
     onClick: controller.getClick(i),
     ref: controller.getRef(i),
-    hide: item.h || controller.check(f),
   };
 
   log.d('computeProps', item, props);
@@ -49,15 +47,21 @@ export const BFactory = ({ i }: BFactoryProps) => {
 
   const controller = useBController();
   const item = useFluxMemo(() => controller?.item$(i), [controller, i]);
-  const props = useMemo(
-    () => controller && item && computeProps(controller, item),
-    [controller, item]
-  );
+
+  const show = controller ? controller.check(item) : false;
+  const animState = useAnimState(show, 0.5);
 
   if (!controller) return null;
 
   const type = controller.getType(item?.t);
   const Comp = type.comp;
+
+  if (animState === 'unmounted') return null;
+
+  const props = useMemo(
+    () => controller && item && computeProps(controller, item, animState),
+    [controller, item, animState]
+  );
 
   return item && props ? <Comp i={i} item={item} props={props} /> : null;
 };

@@ -16,6 +16,9 @@ export interface BData {
   /** Parent index */
   readonly p?: number;
 
+  /** Hide */
+  readonly h?: boolean;
+
   /** Relations : children indices */
   readonly r?: number[];
 
@@ -56,12 +59,12 @@ export interface BData {
     readonly h?: [number, number][],
 
     /** Week Days [sunday, monday, tuesday, wednesday, thursday, friday, saturday] : [0, 1, 1, 0, 0, 0, 0] */
-    readonly w?: Vector7<0|1>,
+    readonly w?: Vector7<boolean>,
 
     /** DeviceId Dictionary : { "deviceId": 1 } */
-    readonly i?: Dictionary<1>,
+    readonly i?: Dictionary<boolean>,
   };
-  
+
 }
 
 export interface BItem extends BData {

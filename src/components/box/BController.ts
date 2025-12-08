@@ -355,23 +355,46 @@ export class BController {
       : (fluxUndefined as Pipe<BItem[K] | undefined, any>);
   }
 
-  check(item: BItem['f'], filter?: BItem['f']) {
-    if (!filter) return true;
+  check(item?: NBItem) {
+    if (!item) return false;
 
-    if (filter.d) {
+    if (item.h) return false;
 
+    const f = item.f;
+    if (!f) return true;
+
+    const now = this.api.pb.getDate();
+
+    // Check dates [start, end]
+    if (f.d) {
+      const currentDate = now.toISOString().split('T')[0]!; // Format: 'YYYY-MM-DD'
+      const isInDateRange = f.d.some(([start, end]) => {
+        return currentDate >= start && currentDate <= end;
+      });
+      if (!isInDateRange) return false;
     }
 
-    if (filter.h) {
-      
+    // Check hours [start, end]
+    if (f.h) {
+      const currentHour = now.getHours() + now.getMinutes() / 60; // e.g., 13:30 = 13.5
+      const isInHourRange = f.h.some(([start, end]) => {
+        return currentHour >= start && currentHour < end;
+      });
+      if (!isInHourRange) return false;
     }
 
-    if (filter.w) {
-      
+    // Check week days [sunday=0, monday=1, ..., saturday=6]
+    if (f.w) {
+      const currentDay = now.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+      if (!f.w[currentDay]) return false;
     }
 
-    if (filter.i) {
-      
+    // Check device ID
+    if (f.i) {
+      const deviceId = this.router.deviceId$.get();
+      if (deviceId && !f.i[deviceId]) return false;
     }
+
+    return true;
   }
 }
