@@ -186,9 +186,7 @@ export const Device = ({ device }: { device: DeviceModel }) => {
       <div {...c('Footer')}>
         <Button
           icon={InfoIcon}
-          tooltip={() => (
-            <pre>{humanize({ id: device.id, key: device.key, ...info })}</pre>
-          )}
+          tooltip={() => <pre>{humanize({ id: device.id, key: device.key, ...info })}</pre>}
         />
         <Field
           containerProps={c('Media')}
@@ -197,13 +195,17 @@ export const Device = ({ device }: { device: DeviceModel }) => {
           onValue={(media) => update({ media })}
           items={contents.map((m) => [m.id, m.title])}
         />
-        <Button color="primary" icon={EditIcon} onClick={() => {
-          if (device.media) {
-            router.screenSize$.set([info.width || 1920, info.height || 1080]);
-            router.go({ page: 'edit', media: device.media });
-          }
-          // TODO else crée le media
-        }} />
+        <Button
+          color="primary"
+          icon={EditIcon}
+          onClick={() => {
+            if (device.media) {
+              router.screenSize$.set([info.width || 1920, info.height || 1080]);
+              router.go({ page: 'edit', media: device.media });
+            }
+            // TODO else crée le media
+          }}
+        />
       </div>
     </Panel>
   );

@@ -1,14 +1,12 @@
 import { Css, logger } from 'fluxio';
-import { PlusIcon } from 'lucide-react';
+import { FileIcon, MoveIcon, PlusIcon, SquareDashedMousePointerIcon, SquareDotIcon } from 'lucide-react';
 import { BField } from './BField';
 import { Button, ButtonProps } from '@/components/common/Button';
 import { Field } from '@/components/fields/Field';
 import { BSideContent } from './BSideContent';
-import { BSideHierarchy } from './BSideHierarchy';
+import { useBEditController } from './useBEditController';
 
-const log = logger('BSideHierarchy');
-
-const c = Css('BSideHierarchy', {
+const c = Css('BSideFilter', {
   '': {
     col: ['stretch', 'start'],
   },
@@ -27,14 +25,10 @@ const DayButton = ({ day, ...props }: ButtonProps & { day: number }) => (
   <Button {...props} {...c('DayButton')} />
 );
 
-export const BSidePage = () => {
-  log.d('BSidePage');
-
+export const BSideFilter = () => {
+  const controller = useBEditController()!;
   return (
     <BSideContent>
-      <BSideHierarchy i={0} />
-      <Button color="primary" icon={PlusIcon} title="Ajouter une zone" />
-      <Button color="primary" icon={PlusIcon} title="Ajouter" />
       <BField label="D. Début" tooltip="Date Début" prop="n" />
       <BField label="D. Fin" tooltip="Date Fin" prop="n" />
       <BField label="H. Début" tooltip="Heure Début" prop="n" />

@@ -13,6 +13,7 @@ import {
   uniq,
   isInt,
   isUInt,
+  isNotNil,
 } from 'fluxio';
 import {
   BFun,
@@ -27,28 +28,39 @@ import {
   NBData,
   NBItem,
 } from './bTypes';
-import { BCarousel } from './BCarousel';
+import { BPlayer } from './BPlayer';
 import { PanZoomController } from '@/components/common/PanZoom';
 import { fluxUndefined } from 'fluxio/flux/fluxUndefined';
-import { ALargeSmall, FileIcon, GalleryHorizontal, Home, Square } from 'lucide-react';
+import { ALargeSmallIcon, EarthIcon, FileIcon, GalleryHorizontalIcon, HomeIcon, ImagePlayIcon, SquareDashedMousePointerIcon } from 'lucide-react';
 import { app } from '@/app';
 import { BText } from './BText';
-import { BRect } from './BRect';
+import { BPage } from './BPage';
+import { BZone } from './BZone';
 import { BRoot } from './BRoot';
 import { BMedia } from './BMedia';
 import { Api } from '@/api/Api';
 import { Router } from '@/controllers/Router';
+import { BWeb } from './BWeb';
 
-const root: BType = { comp: BRoot, label: 'Écran', r: 1, layout: 1, icon: Home };
-const page: BType = { comp: BRect, label: 'Page', r: 1, layout: 1, icon: Home };
-const rect: BType = { comp: BRect, label: 'Zone', r: 1, a: 1, layout: 1, icon: Square };
-const carousel: BType = { comp: BCarousel, label: 'Player', r: 1, a: 1, icon: GalleryHorizontal };
-const media: BType = { comp: BMedia, label: 'Media', m: 1, a: 1, icon: FileIcon };
-const text: BType = { comp: BText, label: 'Texte', b: 1, a: 1, icon: ALargeSmall };
+export const RootIcon = HomeIcon;
+export const PageIcon = FileIcon;
+export const ZoneIcon = SquareDashedMousePointerIcon;
+export const PlayerIcon = ImagePlayIcon;
+export const MediaIcon = FileIcon;
+export const TextIcon = ALargeSmallIcon;
+export const WebIcon = EarthIcon;
+
+const root: BType = { comp: BRoot, label: 'Écran', r: 1, layout: 1, icon: RootIcon };
+const page: BType = { comp: BPage, label: 'Page', r: 1, layout: 1, icon: PageIcon };
+const zone: BType = { comp: BZone, label: 'Zone', r: 1, a: 1, layout: 1, icon: ZoneIcon };
+const player: BType = { comp: BPlayer, label: 'Player', r: 1, a: 1, icon: PlayerIcon };
+const media: BType = { comp: BMedia, label: 'Media', m: 1, a: 1, icon: MediaIcon };
+const text: BType = { comp: BText, label: 'Texte', b: 1, a: 1, icon: TextIcon };
+const web: BType = { comp: BWeb, label: 'Vue Web', a: 1, icon: WebIcon };
 
 export class BController {
   readonly log = logger('BController');
-  readonly registry: Dictionary<BType> = { root, page, rect, text, carousel, media };
+  readonly registry: Dictionary<BType> = { root, page, zone, text, web, player, media };
 
   readonly funs: Dictionary<(boxEvent: BEvent) => void> = {};
 
@@ -165,8 +177,7 @@ export class BController {
   }
 
   getType(type: string | undefined) {
-    if (!type) return rect;
-    return this.registry[type] || rect;
+    return type ? this.registry[type] || zone : zone;
   }
 
   funCall(fun: BFun | undefined, boxEvent: BEvent) {
@@ -234,10 +245,25 @@ export class BController {
     return isUInt(index) ? this.getItems()[index] : null;
   }
 
-  getSelectIndex() {
-    return this.click$.get()?.i;
+  getRoot() {
+    return this.getItems()[0]!;
   }
-
+  
+  getParent(index?: number, filter: (item: BItem) => boolean = isNotNil): NBItem {
+    if (!isUInt(index)) return;
+    const items = this.getItems();
+    let item = items[index];
+    while (true) {
+      if (!item) return;
+      if (filter(item)) return item;
+      item = item.p ? items[item.p] : undefined;
+    }
+  }
+  
+  getPage(index?: number): NBItem {
+    return this.getParent(index, p => p.t === 'page');
+  }
+  
   getData(index?: number) {
     return this.toData(this.get(index));
   }

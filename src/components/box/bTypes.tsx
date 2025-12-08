@@ -9,24 +9,52 @@ export interface BFun {
 }
 
 export interface BData {
-  readonly t?: string; // Type
-  readonly p?: number; // Parent index
-  readonly r?: number[]; // Relations : children indices
-  readonly c?: string; // Class HTML
-  readonly n?: string; // Name
-  readonly a?: [number, number, number, number]; // Absolute x%, y%, width%, height%
-  readonly s?: Style; // Style
-  readonly b?: string; // Body : text multiline text content with **bold**
-  readonly m?: string; // media id
-  readonly d?: Dictionary<any>; // Data custom
-  readonly init?: BFun; // on init event
-  readonly click?: BFun; // on click event
+  /** Type */
+  readonly t?: string;
+
+  /** Parent index */
+  readonly p?: number;
+
+  /** Relations : children indices */
+  readonly r?: number[];
+
+  /** Class HTML */
+  readonly c?: string;
+
+  /** Name */
+  readonly n?: string;
+
+  /** Absolute x%, y%, width%, height% */
+  readonly a?: [number, number, number, number];
+
+  /** Style */
+  readonly s?: Style;
+
+  /** Body : text multiline text content with **bold** */
+  readonly b?: string;
+
+  /** Media Id */
+  readonly m?: string;
+
+  /** Data custom */
+  readonly d?: Dictionary<any>;
+
+  /** On Init event callback */
+  readonly init?: BFun;
+
+  /** On Click event callback */
+  readonly click?: BFun;
 }
 
 export interface BItem extends BData {
-  readonly i: number; // Index
-  readonly t: string; // Type
-  readonly e?: HTMLElement; // Element HTML
+  /** Index */
+  readonly i: number; 
+
+  /** Type */
+  readonly t: string;
+  
+  /** Element HTML */
+  readonly e?: HTMLElement;
 }
 
 export type NBData = BData | undefined | null;

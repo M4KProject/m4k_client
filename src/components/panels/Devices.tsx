@@ -9,7 +9,7 @@ import { createWindow } from '../common/Window';
 const c = Css('Devices', {
   '': {
     flex: 1,
-  }
+  },
 });
 
 export const Devices = () => {

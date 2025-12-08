@@ -37,11 +37,22 @@ export const EditPage = () => {
 
   useEffect(() => {
     if (!content) return;
+
     if (content.type !== 'content') {
       router.go({ page: 'medias' });
       return;
     }
+
     controller.setAllData(content.data?.boxes || []);
+
+    controller.onSave = async () => {
+      const boxes = controller.getAllData();
+      console.debug('EditPage save', boxes);
+      await api.media.update(content.id, {
+        data: { boxes },
+      });
+    }
+    
   }, [content]);
 
   useEffect(() => {

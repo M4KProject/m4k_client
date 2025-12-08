@@ -39,8 +39,8 @@ export const BViewport = () => {
   useEffect(() => controller?.bindKeyDown(), [controller]);
 
   useEffect(() => {
-    controller?.ready();
-    return controller?.panZoom.ready$.on(controller.ready);
+    controller?.onReady();
+    return controller?.panZoom.ready$.on(controller.onReady);
   }, [controller]);
 
   if (!controller) return null;

@@ -4,7 +4,7 @@ import { flux, fluxCombine, isItem, isUInt, logger, onHtmlEvent, randColor } fro
 import { BData, BNext } from '../bTypes';
 import { Api } from '@/api/Api';
 import { Router } from '@/controllers/Router';
-export type BEditPage = '' | 'screen' | 'page' | 'playlist' | 'webview' | 'advanced';
+export type BEditPage = '' | 'tree' | 'player' | 'webview' | 'text' | 'filter' | 'advanced';
 
 export class BEditController extends BController {
   log = logger('BEditController');
@@ -21,7 +21,7 @@ export class BEditController extends BController {
     this.click$.on((e) => this.selectIndex$.set(e.i));
   }
 
-  _ready() {
+  ready() {
     console.debug('BViewport ready');
 
     const pz = this.panZoom;
@@ -38,16 +38,6 @@ export class BEditController extends BController {
     if (!pz) return;
     setTimeout(() => pz.fitToContainer(), 100);
     setTimeout(() => pz.fitToContainer(), 1000);
-  }
-
-  ready = () => this._ready();
-
-  async save() {
-    const boxes = this.getAllData();
-    this.log.d('save', boxes);
-    // await this.api.media.update(this.playlistKey, {
-    //   data: { boxes },
-    // });
   }
 
   bindKeyDown() {
@@ -85,6 +75,8 @@ export class BEditController extends BController {
   add(replace: BNext) {
     const i = this.getItems().length;
     this.set(i, replace);
+    this.selectIndex$.set(i);
+    return i;
   }
 
   delete(index?: number) {
@@ -97,12 +89,16 @@ export class BEditController extends BController {
     return true;
   }
 
-  addRect() {
-    this.add({
-      a: [25, 25, 50, 50],
-      s: { bg: randColor() },
-      p: this.select$.get()?.i,
-    });
+  getSelectIndex() {
+    return this.selectIndex$.get();
+  }
+
+  getSelect() {
+    return this.select$.get();
+  }
+
+  getSelectPage() {
+    return this.getParent(this.getSelectIndex(), i => i.t === 'page');
   }
 
   async remove() {
@@ -132,4 +128,28 @@ export class BEditController extends BController {
       this.add({ ...d, p: item.t === d.t ? item.p : item.i });
     }
   }
+
+  onReady = () => this.ready();
+
+  onAddPage = () => this.add({ t: 'page', p: 0 });
+
+  onAddZone = () => {
+    const page = this.getSelectPage()
+    if (page) {
+      this.add({
+        t: 'zone',
+        a: [25, 25, 50, 50],
+        s: { bg: randColor() },
+        p: page.i,
+      });
+    }
+  }
+
+  onAddTimeline = () => {}
+
+  onAddMedia = () => {}
+
+  onAddWeb = () => {}
+
+  onSave = () => {}
 }

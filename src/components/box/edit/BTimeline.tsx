@@ -71,7 +71,7 @@ export const BTimeline = () => {
         </>
       )}
       <div {...c('Sep')} />
-      <BTimelineButton icon={Save} onClick={() => controller.save()} tooltip="Enregistrer" />
+      <BTimelineButton icon={Save} onClick={controller.onSave} tooltip="Enregistrer" />
     </div>
   );
 };

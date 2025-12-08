@@ -96,29 +96,29 @@ export const Breadcrumb = ({ children, ...props }: ActionsProps) => {
 
       <Flex />
       {(!select || select?.type === 'folder') && (
-          <>
-            <UploadButton
-              color="primary"
-              icon={UploadIcon}
-              title="Upload"
-              tooltip="Téléverser des medias"
-              onFiles={controller.upload}
-            />
-            <Button
-              color="primary"
-              icon={FolderPlusIcon}
-              title="Ajouter Dossier"
-              tooltip="Créer un nouveau dossier"
-              onClick={controller.addFolder}
-            />
-            <Button
-              color="primary"
-              icon={LayoutIcon}
-              title="Ajouter Contenu"
-              onClick={controller.addContent}
-            />
-          </>
-        )}
+        <>
+          <UploadButton
+            color="primary"
+            icon={UploadIcon}
+            title="Upload"
+            tooltip="Téléverser des medias"
+            onFiles={controller.upload}
+          />
+          <Button
+            color="primary"
+            icon={FolderPlusIcon}
+            title="Ajouter Dossier"
+            tooltip="Créer un nouveau dossier"
+            onClick={controller.addFolder}
+          />
+          <Button
+            color="primary"
+            icon={LayoutIcon}
+            title="Ajouter Contenu"
+            onClick={controller.addContent}
+          />
+        </>
+      )}
       {select?.type === 'content' && (
         <>
           <Button

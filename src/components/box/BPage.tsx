@@ -2,13 +2,14 @@ import { BComp } from './bTypes';
 import { bChildren } from './bChildren';
 import { Css } from 'fluxio';
 
-const c = Css('BRect', {
+const c = Css('BPage', {
   '': {
     position: 'absolute',
+    inset: 0,
   },
 });
 
-export const BRect: BComp = ({ item, props }) => {
+export const BPage: BComp = ({ item, props }) => {
   return (
     <div {...props} {...c(props, '')}>
       {bChildren(item)}

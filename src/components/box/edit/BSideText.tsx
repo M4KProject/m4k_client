@@ -14,12 +14,9 @@ import {
   AlignStartHorizontal,
   PlusIcon,
 } from 'lucide-react';
+import { BSideContent } from './BSideContent';
 
-const c = Css('BSideText', {
-  '': {
-    col: ['stretch', 'start'],
-  },
-});
+const c = Css('BSideText', {});
 
 const FlexAlignButton = ({
   icon,
@@ -89,7 +86,7 @@ export const BSideText = () => {
   const types = registryEntries.map(([type, config]) => [type, config.label] as [string, Comp]);
 
   return (
-    <div {...c('')}>
+    <BSideContent {...c('')}>
       <Button color="primary" icon={PlusIcon} title="Ajouter" />
       <BStyleField label="Fond" prop="bg" type="color" />
       <BStyleField label="Couleur" prop="fg" type="color" />
@@ -107,6 +104,6 @@ export const BSideText = () => {
         <TextAlignButton icon={AlignRightIcon} v="right" />
       </Field>
       <BField prop="b" type="multiline" col />
-    </div>
+    </BSideContent>
   );
 };

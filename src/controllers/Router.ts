@@ -91,10 +91,10 @@ export class Router {
 
   screenSize$ = fluxStored<Vector2>('screenSize', [1920, 1080], isVector2);
 
-  routeDevice$ = this.route$.map(r => r.device);
-  routeGroup$ = this.route$.map(r => r.group);
-  routeMedia$ = this.route$.map(r => r.media);
-  routePage$ = this.route$.map(r => r.page);
+  routeDevice$ = this.route$.map((r) => r.device);
+  routeGroup$ = this.route$.map((r) => r.group);
+  routeMedia$ = this.route$.map((r) => r.media);
+  routePage$ = this.route$.map((r) => r.page);
 
   constructor() {
     app.router = this;

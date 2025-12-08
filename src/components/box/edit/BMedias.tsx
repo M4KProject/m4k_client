@@ -8,18 +8,16 @@ import { useBEditController } from './useBEditController';
 const c = Css('BMedias', {
   '': {
     flex: 1,
-    m: 4,
-    p: 4,
     row: ['start', 'around'],
     flexWrap: 'wrap',
     gap: 8,
   },
   Item: {
-    wh: 80,
+    m: 2,
+    wh: 76,
     bg: 'media',
     cursor: 'pointer',
     bgMode: 'cover',
-    border: 'border',
     rounded: 7,
   },
   ' .ButtonSfx': {
@@ -39,7 +37,7 @@ const BMediasItem = ({ media }: { media: MediaModel }) => {
     () =>
       controller &&
       fluxCombine(controller.select$, controller.items$).map(
-        ([click]) => controller.get(click.i)?.m === mediaId
+        ([select]) => select?.m === mediaId
       ),
     [controller, mediaId]
   );

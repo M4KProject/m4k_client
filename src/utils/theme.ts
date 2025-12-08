@@ -1,6 +1,6 @@
 import { by, fluxStored, isBoolean, setAlpha, setHue, setLight, setSaturation } from 'fluxio';
 import { isItem, setCssColors } from 'fluxio';
-import { setHsl, addHsl, toHsl, toColor, setRgb } from 'fluxio';
+import { setHsl, addHsl, setRgb } from 'fluxio';
 import { Dictionary } from 'fluxio';
 
 export interface ThemeInfo {

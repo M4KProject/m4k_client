@@ -9,7 +9,7 @@ import { useRoute } from '@/hooks/useRoute';
 import { RoutePage } from '@/controllers/Router';
 
 export const MENU_MIN = 32;
-export const MENU_OPEN = 120;
+export const MENU_OPEN = 100;
 
 const c = Css('Menu', {
   '': {
@@ -128,7 +128,7 @@ export const Menu = ({ openMenu$, menu, ...props }: MenuProps) => {
       : <>
           <MenuButton title="Accueil" icon={HomeIcon} page="dashboard" />
           <MenuButton title="Appareils" icon={MonitorIcon} page="devices" />
-          <MenuButton title="Bibliothèque" icon={FolderIcon} page="medias" />
+          <MenuButton title="Médias" icon={FolderIcon} page="medias" />
           <MenuButton title="Membres" icon={UsersIcon} page="members" />
         </>
       }

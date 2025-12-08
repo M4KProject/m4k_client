@@ -1,14 +1,17 @@
 import { Css, truncate } from 'fluxio';
 import { useFluxMemo } from '@/hooks/useFlux';
-import { Square } from 'lucide-react';
+import { ChevronRightIcon, Square } from 'lucide-react';
 import { useBEditController } from './useBEditController';
 import { BField } from './BField';
 import { tooltipProps } from '@/components/common/Tooltip';
+import { useState } from 'preact/hooks';
 
 const c = Css('BSideHierarchy', {
   '': {
+    position: 'relative',
     row: ['center', 'start'],
     cursor: 'pointer',
+    h: 28,
   },
   '-selected': {
     bold: 1,
@@ -16,26 +19,51 @@ const c = Css('BSideHierarchy', {
   },
   Icon: {
     mr: 4,
+    center: 1,
   },
   Children: {
     col: ['start', 'start'],
     pl: 20,
   },
+  Chevron: {
+    position: 'absolute',
+    h: '100%',
+    center: 1,
+    x: -15,
+  },
+  'Chevron svg': {
+    wh: 15,
+    transition: 0.2,
+  },
+  '-open &Chevron svg': {
+    rotate: '90deg',
+  }
 });
 
 export const BSideHierarchy = ({ i }: { i: number }) => {
-  const controller = useBEditController();
-  const item = useFluxMemo(() => controller?.item$(i), [controller, i]);
-  const selected = useFluxMemo(() => controller?.selectIndex$.map((s) => s === i), [controller, i]);
+  const controller = useBEditController()!;
+  const item = useFluxMemo(() => controller.item$(i), [controller, i]);
+  const select$ = controller.selectIndex$;
+  const selected = useFluxMemo(() => select$.map((s) => s === i), [select$, i]);
   const type = controller?.getType(item?.t);
   const Icon = type?.icon || Square;
-
   const label = truncate(item?.n || item?.b?.replace(/\*\*/g, '') || type?.label || '', 20);
   const children = item?.r;
+  const [open, setOpen] = useState(false);
+  const isRoot = item?.t === 'root';
+  const hasChildren = children && children.length;
 
   return (
     <>
-      <div {...c('', selected && '-selected')} onClick={() => controller?.click(i)}>
+      <div {...c('', selected && '-selected', children && '-children', open && '-open')} onClick={() => {
+        controller?.click(i);
+        setOpen(p => !p);
+      }}>
+        {!isRoot && hasChildren ? (
+          <div {...c('Chevron')}>
+            <ChevronRightIcon />
+          </div>
+        ) : null}
         <div {...c('Icon')} {...tooltipProps(type?.label || '')}>
           <Icon />
         </div>
@@ -43,13 +71,13 @@ export const BSideHierarchy = ({ i }: { i: number }) => {
           <BField prop="n" defaultValue={label} />
         : label}
       </div>
-      {children && (
+      {hasChildren && (isRoot || open) ? (
         <div {...c('Children')}>
           {children.map((child) => (
-            <BSideHierarchy i={child} />
+            <BSideHierarchy key={child} i={child} />
           ))}
         </div>
-      )}
+      ) : null}
     </>
   );
 };

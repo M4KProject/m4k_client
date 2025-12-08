@@ -13,6 +13,7 @@ import { Field } from '@/components/fields/Field';
 import { Button } from '@/components/common/Button';
 import { BField } from './BField';
 import { useFlux } from '@/hooks/useFlux';
+import { BSideHierarchy } from './BSideHierarchy';
 
 type ScreenSize = [number, number, string, typeof MonitorIcon];
 
@@ -24,7 +25,7 @@ export const SCREEN_SIZES: ScreenSize[] = [
   [360, 640, 'Smartphone', SmartphoneIcon],
 ];
 
-export const BSideScreen = () => {
+export const BSideTree = () => {
   const controller = useBEditController()!;
   const screenSize$ = controller.router.screenSize$;
   const [w, h] = useFlux(screenSize$);
@@ -56,8 +57,8 @@ export const BSideScreen = () => {
         onClick={() => screenSize$.set(([w, h]) => [h, w])}
       />
       <Field label="Écran">
-        <Field value={w} onValue={w => screenSize$.set([w, h])} />
-        <Field value={h} onValue={h => screenSize$.set([w, h])} />
+        <Field value={w} onValue={(w) => screenSize$.set([w, h])} />
+        <Field value={h} onValue={(h) => screenSize$.set([w, h])} />
       </Field>
       <BSideSep />
       {/* <Button icon={PlusIcon} title="Ajouter une page" /> */}

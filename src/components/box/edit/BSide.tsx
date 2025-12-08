@@ -2,23 +2,30 @@ import { Css } from 'fluxio';
 import { useFlux } from '@/hooks/useFlux';
 import { useBEditController } from './useBEditController';
 import { isAnimStateOpen, useAnimState } from '@/hooks/useAnimState';
-import { BSideAdvanced, BSideWebView } from './BSideContent';
-import { BSideScreen } from './BSideScreen';
-import { BSidePage } from './BSidePage';
-import { BSidePlaylist } from './BSidePlaylist';
+import { BSideAdvanced, BSideContent, BSideSep, BSideWebView } from './BSideContent';
+import { BSideTree } from './BSideTree';
+import { BSidePlayer } from './BSidePlayer';
+import { BSideFilter } from './BSideFilter';
 import { useMemo } from 'preact/hooks';
+import { BSideHierarchy } from './BSideHierarchy';
+import { Field } from '@/components/fields/Field';
+import { Button } from '@/components/common/Button';
+import { ClapperboardIcon, EarthIcon, FileIcon, ImagePlusIcon, SquareDashedMousePointerIcon } from 'lucide-react';
+import { BSideText } from './BSideText';
+
+const BSIDE_WIDTH = 260;
 
 const c = Css('BSide', {
   '': {
     transition: 0.4,
-    w: 250,
+    w: BSIDE_WIDTH,
     h: '100%',
   },
   '-open': {},
   Body: {
     position: 'absolute',
     elevation: 2,
-    w: 250,
+    w: BSIDE_WIDTH,
     h: '100%',
     bg: 'bg',
     overflowX: 'hidden',
@@ -58,10 +65,22 @@ export const BSide = () => {
   return (
     <div {...c('', isAnimStateOpen(animState) && `-open`)}>
       <div {...c('Body')}>
-        {page === 'screen' && <BSideScreen />}
-        {page === 'page' && <BSidePage />}
-        {page === 'playlist' && <BSidePlaylist />}
+        <BSideContent>
+          <BSideHierarchy i={0} />
+          <Field label="Ajouter">
+            <Button color="primary" icon={FileIcon} tooltip="Ajouter une Page" onClick={controller.onAddPage} />
+            <Button color="primary" icon={SquareDashedMousePointerIcon} tooltip="Ajouter une Zone" onClick={controller.onAddZone} />
+            <Button color="primary" icon={ClapperboardIcon} tooltip="Ajouter un Player" onClick={controller.onAddTimeline} />
+            <Button color="primary" icon={ImagePlusIcon} tooltip="Ajouter un Média" onClick={controller.onAddMedia} />
+            <Button color="primary" icon={EarthIcon} tooltip="Ajouter une Vue Web" onClick={controller.onAddWeb} />
+          </Field>
+        </BSideContent>
+        <BSideSep />
+        {page === 'tree' && <BSideTree />}
+        {page === 'player' && <BSidePlayer />}
         {page === 'webview' && <BSideWebView />}
+        {page === 'text' && <BSideText />}
+        {page === 'filter' && <BSideFilter />}
         {page === 'advanced' && <BSideAdvanced />}
       </div>
     </div>
@@ -73,7 +92,7 @@ export const BSide = () => {
 // {page === 'layout' && <BSideLayout />}
 // {/* {page === 'media' && <BSideMedia />} */}
 // {page === 'text' && <BSideText />}
-// {page === 'playlist' && <BSidePlaylist />}
+// {page === 'playlist' && <BSidePlayer />}
 // {/* {page === 'planification' && <BSidePlanification />} */}
 
 // const i = select?.i;
