@@ -3,9 +3,9 @@ import { useInputProps } from '@/components/fields/hooks';
 import { FieldProps } from '@/components/fields/types';
 import { Button } from '@/components/common/Button';
 import { EyeIcon, EyeOffIcon } from 'lucide-react';
-import { formatSeconds, parseSeconds, toNumber, toString } from 'fluxio';
+import { formatSeconds, toDate, toNumber, toString } from 'fluxio';
 
-const getInput = <V = string,>(type: string): FieldProps<V, string> => ({
+const getInput = <V = string>(type: string): FieldProps<V, string> => ({
   input: () => {
     const props = useInputProps();
     return <input {...props} type={type} />;
@@ -44,7 +44,7 @@ const seconds: FieldProps<number, string> = {
     const props = useInputProps();
     return <input {...props} type="text" placeholder={props.placeholder || '00:00:00'} />;
   },
-  toValue: parseSeconds,
+  toValue: toDate,
   toRaw: formatSeconds,
 };
 
