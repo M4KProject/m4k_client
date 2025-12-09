@@ -28,7 +28,7 @@ const c = Css('BSideFilter', {
     rotate: '-45deg',
     fontSize: '80%',
   },
-}); 
+});
 
 const DayButton = ({ day, active, ...props }: ButtonProps & { day: number; active?: boolean }) => (
   <Button {...props} {...c('DayButton')} class={active ? 'primary' : ''} />

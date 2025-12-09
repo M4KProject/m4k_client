@@ -9,7 +9,6 @@ export interface BFun {
 }
 
 export interface BData {
-
   /** Type */
   readonly t?: string;
 
@@ -51,29 +50,27 @@ export interface BData {
 
   /** Filter */
   readonly f?: {
-
     /** Dates [start, end] : [['2025-12-01', '2025-12-10']] */
-    readonly d?: [string, string][],
+    readonly d?: [string, string][];
 
     /** Hours [start, end] : [[9, 12], [13.5, 18]] */
-    readonly h?: [number, number][],
+    readonly h?: [number, number][];
 
     /** Week Days [sunday, monday, tuesday, wednesday, thursday, friday, saturday] : [0, 1, 1, 0, 0, 0, 0] */
-    readonly w?: Vector7<boolean>,
+    readonly w?: Vector7<boolean>;
 
     /** DeviceId Dictionary : { "deviceId": 1 } */
-    readonly i?: Dictionary<boolean>,
+    readonly i?: Dictionary<boolean>;
   };
-
 }
 
 export interface BItem extends BData {
   /** Index */
-  readonly i: number; 
+  readonly i: number;
 
   /** Type */
   readonly t: string;
-  
+
   /** Element HTML */
   readonly e?: HTMLElement;
 }

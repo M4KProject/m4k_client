@@ -99,7 +99,7 @@ export class BEditController extends BController {
   }
 
   getSelectPage() {
-    return this.getParent(this.getSelectIndex(), i => i.t === 'page');
+    return this.getParent(this.getSelectIndex(), (i) => i.t === 'page');
   }
 
   async remove() {
@@ -135,7 +135,7 @@ export class BEditController extends BController {
   onAddPage = () => this.add({ t: 'page', p: 0 });
 
   onAddZone = () => {
-    const page = this.getSelectPage()
+    const page = this.getSelectPage();
     if (page) {
       this.add({
         t: 'zone',
@@ -144,13 +144,13 @@ export class BEditController extends BController {
         p: page.i,
       });
     }
-  }
+  };
 
-  onAddTimeline = () => {}
+  onAddTimeline = () => {};
 
-  onAddMedia = () => {}
+  onAddMedia = () => {};
 
-  onAddWeb = () => {}
+  onAddWeb = () => {};
 
-  onSave = () => {}
+  onSave = () => {};
 }

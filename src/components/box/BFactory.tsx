@@ -17,7 +17,11 @@ const c = Css('B', {
   },
 });
 
-const computeProps = (controller: BController, item: BItem, animState: AnimState): BCompProps['props'] => {
+const computeProps = (
+  controller: BController,
+  item: BItem,
+  animState: AnimState
+): BCompProps['props'] => {
   const { i, c: cls, s } = item;
   const style = computeStyle(s);
   const a = item?.a;

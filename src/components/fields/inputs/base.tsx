@@ -5,7 +5,7 @@ import { Button } from '@/components/common/Button';
 import { EyeIcon, EyeOffIcon } from 'lucide-react';
 import { formatSeconds, toDate, toNumber, toString } from 'fluxio';
 
-const getInput = <V = string>(type: string): FieldProps<V, string> => ({
+const getInput = <V = string,>(type: string): FieldProps<V, string> => ({
   input: () => {
     const props = useInputProps();
     return <input {...props} type={type} />;

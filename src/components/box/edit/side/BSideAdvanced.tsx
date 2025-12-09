@@ -4,8 +4,7 @@ import { Comp } from '@/utils/comp';
 import { BDataField, BField, BStyleField } from '../BField';
 import { Field } from '@/components/fields/Field';
 
-const c = Css('BSideAdvanced', {
-});
+const c = Css('BSideAdvanced', {});
 
 export const BSideAdvanced = () => {
   const controller = useBEditController()!;

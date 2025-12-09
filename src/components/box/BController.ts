@@ -31,7 +31,14 @@ import {
 import { BPlayer } from './BPlayer';
 import { PanZoomController } from '@/components/common/PanZoom';
 import { fluxUndefined } from 'fluxio/flux/fluxUndefined';
-import { ALargeSmallIcon, EarthIcon, FileIcon, HomeIcon, ImagePlayIcon, SquareDashedMousePointerIcon } from 'lucide-react';
+import {
+  ALargeSmallIcon,
+  EarthIcon,
+  FileIcon,
+  HomeIcon,
+  ImagePlayIcon,
+  SquareDashedMousePointerIcon,
+} from 'lucide-react';
 import { app } from '@/app';
 import { BText } from './BText';
 import { BPage } from './BPage';
@@ -73,8 +80,8 @@ export class BController {
   readonly click$ = flux<BEvent>({});
   readonly event$ = fluxUnion(this.init$, this.click$);
 
-  readonly pages$ = this.items$.map(items => items.filter(i => i && i.t === 'page'));
-  readonly page$ = this.pages$.map(pages => pages.find(p => this.isVisible(p)));
+  readonly pages$ = this.items$.map((items) => items.filter((i) => i && i.t === 'page'));
+  readonly page$ = this.pages$.map((pages) => pages.find((p) => this.isVisible(p)));
 
   readonly panZoom = new PanZoomController();
 
@@ -256,7 +263,7 @@ export class BController {
   getRoot() {
     return this.getItems()[0]!;
   }
-  
+
   getParent(index?: number, filter: (item: BItem) => boolean = isNotNil): NBItem {
     if (!isUInt(index)) return;
     const items = this.getItems();
@@ -267,11 +274,11 @@ export class BController {
       item = item.p ? items[item.p] : undefined;
     }
   }
-  
+
   getPage(index?: number): NBItem {
-    return this.getParent(index, p => p.t === 'page');
+    return this.getParent(index, (p) => p.t === 'page');
   }
-  
+
   getData(index?: number) {
     return this.toData(this.get(index));
   }

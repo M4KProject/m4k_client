@@ -96,26 +96,14 @@ export const BCalendar = ({ value, onValue }: BCalendarProps) => {
   const daysInMonth = getDaysInMonth(year, month);
   const firstDay = getFirstDayOfMonth(year, month);
 
-  const years = repeat(10, i => 2025 + i).map((y) => [y, String(y)] as [number, string]);
+  const years = repeat(10, (i) => 2025 + i).map((y) => [y, String(y)] as [number, string]);
   const months = MONTHS.map((name, index) => [index, name] as [number, string]);
-
-
 
   return (
     <div {...c('')}>
       <div {...c('Header')}>
-        <Field
-          type="select"
-          value={month}
-          onValue={setMonth}
-          items={months}
-        />
-        <Field
-          type="select"
-          value={year}
-          onValue={setYear}
-          items={years}
-        />
+        <Field type="select" value={month} onValue={setMonth} items={months} />
+        <Field type="select" value={year} onValue={setYear} items={years} />
       </div>
 
       <div {...c('WeekDays')}>

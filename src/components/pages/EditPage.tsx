@@ -51,8 +51,7 @@ export const EditPage = () => {
       await api.media.update(content.id, {
         data: { boxes },
       });
-    }
-    
+    };
   }, [content]);
 
   useEffect(() => {

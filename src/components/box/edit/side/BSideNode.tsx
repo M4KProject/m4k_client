@@ -37,7 +37,7 @@ const c = Css('BSideNode', {
   },
   '-open &Chevron svg': {
     rotate: '90deg',
-  }
+  },
 });
 
 export const BSideNode = ({ i }: { i: number }) => {
@@ -55,15 +55,18 @@ export const BSideNode = ({ i }: { i: number }) => {
 
   return (
     <>
-      <div {...c('', selected && '-selected', children && '-children', open && '-open')} onClick={() => {
-        controller?.click(i);
-        setOpen(p => !p);
-      }}>
-        {!isRoot && hasChildren ? (
+      <div
+        {...c('', selected && '-selected', children && '-children', open && '-open')}
+        onClick={() => {
+          controller?.click(i);
+          setOpen((p) => !p);
+        }}
+      >
+        {!isRoot && hasChildren ?
           <div {...c('Chevron')}>
             <ChevronRightIcon />
           </div>
-        ) : null}
+        : null}
         <div {...c('Icon')} {...tooltipProps(type?.label || '')}>
           <Icon />
         </div>
@@ -71,13 +74,13 @@ export const BSideNode = ({ i }: { i: number }) => {
           <BField prop="n" defaultValue={label} />
         : label}
       </div>
-      {hasChildren && (isRoot || open) ? (
+      {hasChildren && (isRoot || open) ?
         <div {...c('Children')}>
           {children.map((child) => (
             <BSideNode key={child} i={child} />
           ))}
         </div>
-      ) : null}
+      : null}
     </>
   );
 };

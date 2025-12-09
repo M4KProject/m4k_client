@@ -36,9 +36,7 @@ const BMediasItem = ({ media }: { media: MediaModel }) => {
   const selected = useFluxMemo(
     () =>
       controller &&
-      fluxCombine(controller.select$, controller.items$).map(
-        ([select]) => select?.m === mediaId
-      ),
+      fluxCombine(controller.select$, controller.items$).map(([select]) => select?.m === mediaId),
     [controller, mediaId]
   );
   const variants = api.getVariants(media);
