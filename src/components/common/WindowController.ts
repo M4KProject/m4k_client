@@ -10,9 +10,6 @@ import {
   clamp,
   VECTOR4_ZERO,
   mustExist,
-  SizeWH,
-  Transform,
-  PosXY,
   clampVector,
   VECTOR4_MAX,
   toVoid,
@@ -34,10 +31,10 @@ export interface WindowProps extends WindowFooterProps {
   children?: ComponentChildren;
   controller?: WindowController;
   target?: HTMLElement;
-  pos?: PosXY;
-  size?: SizeWH;
-  min?: SizeWH | Transform;
-  max?: SizeWH | Transform;
+  pos?: Vector2;
+  size?: Vector2;
+  min?: Vector2 | Vector4;
+  max?: Vector2 | Vector4;
   draggable?: boolean;
   resizable?: boolean;
 }
@@ -48,9 +45,9 @@ export class WindowController {
   open$ = new Flux(false);
   mounted$ = new Flux(false);
 
-  transform$ = new Flux<Transform>(VECTOR4_ZERO);
-  min: Transform = VECTOR4_ZERO;
-  max: Transform = VECTOR4_ZERO;
+  transform$ = new Flux<Vector4>(VECTOR4_ZERO);
+  min: Vector4 = VECTOR4_ZERO;
+  max: Vector4 = VECTOR4_ZERO;
 
   draggable = false;
   resizable = false;

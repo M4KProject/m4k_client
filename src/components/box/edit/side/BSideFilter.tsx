@@ -1,10 +1,11 @@
-import { Css } from 'fluxio';
+import { Css, dayIndexToShort, firstUpper, repeat, toArray, toFalse, VECTOR3_ZERO } from 'fluxio';
 import { useProp } from '../BField';
 import { Button, ButtonProps } from '@/components/common/Button';
 import { Field } from '@/components/fields/Field';
 import { BItem } from '@/components/box/bTypes';
 import { BCalendar } from '../../../common/BCalendar';
 import { useApi } from '@/hooks/useApi';
+import { useBEditController } from '../useBEditController';
 
 const c = Css('BSideFilter', {
   '': {
@@ -15,24 +16,42 @@ const c = Css('BSideFilter', {
     row: 1,
     gap: 2,
   },
-  DayButtons: {
-    row: 1,
-    gap: 1,
-  },
-  DayButton: {
+  Day: {
     flex: 1,
-    h: 35,
+    h: 38,
+    m: 0,
+    ml: -1,
+    p: 0,
+    border: 'border',
     center: 1,
+    rounded: 0,
   },
-  'DayButton .ButtonContent': {
+  'Day:first-child': { rounded: [5, 0, 0, 5] },
+  'Day:last-child': { rounded: [0, 5, 5, 0] },
+  'Day .ButtonContent': {
     rotate: '-45deg',
     fontSize: '80%',
   },
 });
 
-const DayButton = ({ day, active, ...props }: ButtonProps & { day: number; active?: boolean }) => (
-  <Button {...props} {...c('DayButton')} class={active ? 'primary' : ''} />
-);
+const DayButton = ({ day, ...props}: ButtonProps & { day: number }) => {
+  const controller = useBEditController()!;
+  const [_weekDays, setWeekDays] = useFilterProp('w');
+  const weekDays = _weekDays || VECTOR3_ZERO;
+  return (
+    <Button
+      title={firstUpper(dayIndexToShort(day))}
+      selected={!!(toArray(weekDays)[day])}
+      onClick={() => setWeekDays(() => {
+        const next = [...weekDays];
+        weekDays[day] = !weekDays[day];
+        return weekDays;
+      })}
+      {...props}
+      {...c('Day', props)}
+    />
+  )
+};
 
 const useFilterProp = <K extends keyof NonNullable<BItem['f']>>(
   prop: K
@@ -49,29 +68,24 @@ export const BSideFilter = () => {
   const api = useApi();
   const [dates, setDates] = useFilterProp('d');
   const [hours, setHours] = useFilterProp('h');
-  const [weekDays, setWeekDays] = useFilterProp('w');
 
   const dateRange = dates?.[0] || ['', ''];
   const hourRange = hours?.[0] || [0, 24];
 
-  const toggleDay = (dayIndex: number) => {
-    const current = weekDays || [false, false, false, false, false, false, false];
-    const next = [...current];
-    next[dayIndex] = !current[dayIndex];
-    setWeekDays(next as any);
-  };
+  // const toggleDay = (dayIndex: number) => {
+  //   const current = weekDays || [false, false, false, false, false, false, false];
+  //   const next = [...current];
+  //   next[dayIndex] = !current[dayIndex];
+  //   setWeekDays(next as any);
+  // };
 
   return (
     <div {...c('')}>
       <Field label="Plage de dates" col>
-        <BCalendar
-          current={api.pb.getDate()}
-          value={dateRange as [string, string]}
-          onValue={(v) => setDates([v])}
-        />
+        <BCalendar />
       </Field>
 
-      <Field label="Plage horaire" col>
+      {/* <Field label="Plage horaire" col>
         <div {...c('DateRow')}>
           <Field
             label="Début"
@@ -90,18 +104,16 @@ export const BSideFilter = () => {
             onValue={(v) => setHours([[hourRange[0], v]])}
           />
         </div>
-      </Field>
+      </Field> */}
 
       <Field label="Jours de la semaine" col>
-        <div {...c('DayButtons')}>
-          <DayButton day={0} title="Dim." active={weekDays?.[0]} onClick={() => toggleDay(0)} />
-          <DayButton day={1} title="Lun." active={weekDays?.[1]} onClick={() => toggleDay(1)} />
-          <DayButton day={2} title="Mar." active={weekDays?.[2]} onClick={() => toggleDay(2)} />
-          <DayButton day={3} title="Mer." active={weekDays?.[3]} onClick={() => toggleDay(3)} />
-          <DayButton day={4} title="Jeu." active={weekDays?.[4]} onClick={() => toggleDay(4)} />
-          <DayButton day={5} title="Ven." active={weekDays?.[5]} onClick={() => toggleDay(5)} />
-          <DayButton day={6} title="Sam." active={weekDays?.[6]} onClick={() => toggleDay(6)} />
-        </div>
+        <DayButton day={1} />
+        <DayButton day={2} />
+        <DayButton day={3} />
+        <DayButton day={4} />
+        <DayButton day={5} />
+        <DayButton day={6} />
+        <DayButton day={0} />
       </Field>
     </div>
   );

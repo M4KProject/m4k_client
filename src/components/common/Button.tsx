@@ -33,6 +33,7 @@ const c = Css('Button', {
     transition: 0.5,
     bold: 1,
     fontSize: 'inherit',
+    overflow: 'hidden',
   },
   Sfx: {
     position: 'absolute',
@@ -41,7 +42,6 @@ const c = Css('Button', {
     transition: 0.5,
     scaleX: 0,
     transformOrigin: 'left',
-    rounded: 5,
   },
   Content: {
     position: 'relative',

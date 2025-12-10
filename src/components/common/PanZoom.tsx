@@ -9,7 +9,7 @@ import {
   setStyle,
   mustExist,
   logger,
-  PosXY,
+  Vector2,
 } from 'fluxio';
 import { useRef, useEffect } from 'preact/hooks';
 import { DivProps } from './types';
@@ -48,7 +48,7 @@ export interface PanZoomData {
 }
 
 export interface PanZoomInnerProps extends DivProps {
-  translate$: Flux<PosXY>;
+  translate$: Flux<Vector2>;
   scale$: Flux<number>;
   isDragging$: Flux<boolean>;
   container$: Flux<HTMLDivElement | undefined>;
@@ -70,7 +70,7 @@ export class PanZoomController {
   scale = 1;
   w = 0;
   h = 0;
-  eventXY: PosXY | undefined = undefined;
+  eventXY: Vector2 | undefined = undefined;
   touches: TouchList | null = null;
   isDragging = false;
   isAnimating = false;
