@@ -1,4 +1,4 @@
-import type { Style, Dictionary, Item, NextState, Vector5, Vector7 } from 'fluxio';
+import type { Style, Dictionary, Item, NextState, Bits } from 'fluxio';
 import type { BoxIcon } from 'lucide-react';
 import type { ComponentChildren } from 'preact';
 
@@ -56,11 +56,11 @@ export interface BData {
     /** Hours [start, end] : [[9, 12], [13.5, 18]] */
     readonly h?: [number, number][];
 
-    /** Week Days [sunday, monday, tuesday, wednesday, thursday, friday, saturday] : [0, 1, 1, 0, 0, 0, 0] */
-    readonly w?: Vector7<boolean>;
+    /** Week Days arrayToBits([sunday, monday, tuesday, wednesday, thursday, friday, saturday]) */
+    readonly w?: Bits;
 
     /** DeviceId Dictionary : { "deviceId": 1 } */
-    readonly i?: Dictionary<boolean>;
+    readonly i?: Dictionary<1>;
   };
 }
 
