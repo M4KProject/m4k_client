@@ -63,7 +63,7 @@ const useFilterProp = <K extends keyof NonNullable<BItem['f']>>(
   const [filter, setFilter] = useProp('f');
   const value = filter?.[prop];
   const setValue = (nextValue: NonNullable<BItem['f']>[K]) => {
-    setFilter((prev) => ({ ...prev, [prop]: nextValue }));
+    setFilter((prev) => ({ ...(prev || {}), [prop]: nextValue }));
   };
   return [value, setValue];
 };

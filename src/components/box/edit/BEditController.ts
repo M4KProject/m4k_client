@@ -13,7 +13,7 @@ export class BEditController extends BController {
   readonly side$ = flux<BEditSideName>('');
   readonly selectId$ = flux<number | undefined>(undefined);
   readonly select$ = fluxCombine(this.selectId$, this.items$).map(([index, items]) =>
-    index ? items[index] : undefined
+    isUInt(index) ? items[index] : undefined
   );
 
   constructor(api: Api, router: Router) {

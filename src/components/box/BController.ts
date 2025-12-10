@@ -14,6 +14,7 @@ import {
   isInt,
   isUInt,
   isNotNil,
+  getBit,
 } from 'fluxio';
 import {
   BFun,
@@ -393,7 +394,7 @@ export class BController {
     // Check week days [sunday=0, monday=1, ..., saturday=6]
     if (f.w) {
       const currentDay = now.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
-      if (!f.w[currentDay]) return false;
+      if (!getBit(f.w, currentDay)) return false;
     }
 
     // Check device ID
