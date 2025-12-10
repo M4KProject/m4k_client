@@ -1,4 +1,4 @@
-import { Css, dayIndexToShort, firstUpper, repeat, toArray, toFalse, VECTOR3_ZERO } from 'fluxio';
+import { bitsToArray, Css, dayIndexToShort, firstUpper, getBit, repeat, setBit, toArray, toFalse, VECTOR3_ZERO } from 'fluxio';
 import { useProp } from '../BField';
 import { Button, ButtonProps } from '@/components/common/Button';
 import { Field } from '@/components/fields/Field';
@@ -36,17 +36,21 @@ const c = Css('BSideFilter', {
 
 const DayButton = ({ day, ...props}: ButtonProps & { day: number }) => {
   const controller = useBEditController()!;
-  const [_weekDays, setWeekDays] = useFilterProp('w');
-  const weekDays = _weekDays || VECTOR3_ZERO;
+  const [bits, setBits] = useFilterProp('w');
+  const selected = getBit(bits||0, day);
+  console.debug('DayButton', bits, day, selected);
   return (
     <Button
       title={firstUpper(dayIndexToShort(day))}
-      selected={!!(toArray(weekDays)[day])}
-      onClick={() => setWeekDays(() => {
-        const next = [...weekDays];
-        weekDays[day] = !weekDays[day];
-        return weekDays;
-      })}
+      selected={selected}
+      onClick={() => {
+        const prevBits = bits||0;
+        const prevItem = getBit(prevBits, day);
+        const nextItem = !prevItem;
+        const nextBits = setBit(prevBits, day, nextItem);
+        console.debug('day setBits', day, prevBits, prevItem, nextItem, nextBits);
+        setBits(nextBits);
+      }}
       {...props}
       {...c('Day', props)}
     />
