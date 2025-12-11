@@ -4,7 +4,7 @@ import {
   SmartphoneIcon,
   TvIcon,
   MonitorSmartphoneIcon,
-  RotateCw,
+  RotateCwIcon,
   FileIcon,
   SquareDashedMousePointerIcon,
   ClapperboardIcon,
@@ -96,7 +96,7 @@ export const BSideTree = () => {
               ))}
             </Field>
             <Button
-              icon={RotateCw}
+              icon={RotateCwIcon}
               title="Tourner l'écran"
               onClick={() => screenSize$.set(([w, h]) => [h, w])}
             />
