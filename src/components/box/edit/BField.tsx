@@ -18,7 +18,7 @@ export const useProp = <K extends keyof BItem>(
   prop: K
 ): [BItem[K] | undefined, (next: BPropNext<K>) => void] => {
   const controller = useBEditController();
-  const i = useFlux(controller?.select$)?.i;
+  const i = useFlux(controller.select$)?.i;
   const value = useFluxMemo(() => controller?.prop$(i, prop), [controller, i, prop]);
   return [value, (next: BPropNext<K>) => controller?.setProp(i, prop, next)];
 };
@@ -50,8 +50,8 @@ export const BStyleField = ({ prop, ...props }: FieldProps<any, any> & { prop: s
 
 export const BDataField = () => {
   const controller = useBEditController();
-  const i = useFlux(controller?.select$)?.i;
-  const item = useFluxMemo(() => controller?.item$(i), [controller, i]);
+  const i = useFlux(controller.select$)?.i;
+  const item = useFluxMemo(() => controller.item$(i), [controller, i]);
   const onValue = (next: any) => {
     controller?.set(i, next);
   };

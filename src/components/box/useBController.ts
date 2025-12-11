@@ -4,4 +4,4 @@ import { useContext } from 'preact/hooks';
 
 export const BContext = createContext<BController | undefined>(undefined);
 
-export const useBController = () => useContext(BContext);
+export const useBController = () => useContext(BContext)!;

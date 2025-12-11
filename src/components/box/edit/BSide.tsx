@@ -24,6 +24,7 @@ const c = Css('BSide', {
     elevation: 2,
     w: BSIDE_WIDTH,
     h: '100%',
+    p: 2,
     bg: 'bg',
     overflowX: 'hidden',
     overflowY: 'auto',
@@ -53,7 +54,7 @@ const c = Css('BSide', {
 });
 
 export const BSide = () => {
-  const controller = useBEditController()!;
+  const controller = useBEditController();
   const show$ = useMemo(() => controller.side$.map((p) => !!p), [controller]);
   const side$ = useMemo(() => controller.side$.filter((p) => !!p), [controller]);
   const show = useFlux(show$);

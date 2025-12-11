@@ -50,12 +50,10 @@ export const BFactory = ({ i }: BFactoryProps) => {
   log.d('BFactory', i);
 
   const controller = useBController();
-  const item = useFluxMemo(() => controller?.item$(i), [controller, i]);
+  const item = useFluxMemo(() => controller.item$(i), [controller, i]);
 
-  const show = controller ? controller.check(item) : false;
+  const show = controller.check(item);
   const animState = useAnimState(show, 0.5);
-
-  if (!controller) return null;
 
   const type = controller.getType(item?.t);
   const Comp = type.comp;
@@ -63,7 +61,7 @@ export const BFactory = ({ i }: BFactoryProps) => {
   if (animState === 'unmounted') return null;
 
   const props = useMemo(
-    () => controller && item && computeProps(controller, item, animState),
+    () => item && computeProps(controller, item, animState),
     [controller, item, animState]
   );
 

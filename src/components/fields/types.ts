@@ -56,5 +56,6 @@ export type FieldType =
   | 'check'
   | 'date'
   | 'datetime'
+  | 'time'
   | 'seconds'
   | 'upload';

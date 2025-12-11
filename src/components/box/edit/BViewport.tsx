@@ -36,11 +36,11 @@ const c = Css('BViewport', {
 export const BViewport = () => {
   const controller = useBEditController();
 
-  useEffect(() => controller?.bindKeyDown(), [controller]);
+  useEffect(() => controller.bindKeyDown(), [controller]);
 
   useEffect(() => {
-    controller?.onReady();
-    return controller?.panZoom.ready$.on(controller.onReady);
+    controller.onReady();
+    return controller.panZoom.ready$.on(controller.onReady);
   }, [controller]);
 
   if (!controller) return null;
@@ -49,7 +49,7 @@ export const BViewport = () => {
     <div {...c('')}>
       <BSide />
       <div {...c('Left')}>
-        <PanZoom {...c('PanZoom')} controller={controller?.panZoom}>
+        <PanZoom {...c('PanZoom')} controller={controller.panZoom}>
           <div {...c('Body')}>
             <BFactory i={0} />
           </div>

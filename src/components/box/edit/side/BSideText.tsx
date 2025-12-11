@@ -81,7 +81,7 @@ export const TextAlignButton = ({ icon, v }: { icon: Comp; v: Style['textAlign']
 
 export const BSideText = () => {
   const controller = useBEditController();
-  const registryEntries = Object.entries(controller?.registry || {});
+  const registryEntries = Object.entries(controller.registry || {});
   const types = registryEntries.map(([type, config]) => [type, config.label] as [string, Comp]);
 
   return (

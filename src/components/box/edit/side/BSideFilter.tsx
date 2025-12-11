@@ -1,11 +1,15 @@
 import { bitsToRecord, Css, dayIndexToShort, recordToBits, repeat } from 'fluxio';
 import { useProp } from '../BField';
-import { Field } from '@/components/fields/Field';
+import { Field, FieldCol, FieldRow } from '@/components/fields/Field';
 import { BItem } from '@/components/box/bTypes';
 import { Calendar } from '@/components/common/Calendar';
 import { useApi } from '@/hooks/useApi';
+import { Button } from '@/components/common/Button';
+import { PlusIcon, TrashIcon } from 'lucide-react';
 
 const c = Css('BSideFilter', {
+  TimeSlot: { row: ['center', 'between'], w: '100%' },
+  'TimeSlot .Field': { w: 80 },
 });
 
 const useFilterProp = <K extends keyof NonNullable<BItem['f']>>(
@@ -18,21 +22,6 @@ const useFilterProp = <K extends keyof NonNullable<BItem['f']>>(
   };
   return [value, setValue];
 };
-
-// const HoursField = () => {
-//   const [hours, setHours] = useFilterProp('h');
-
-//   return (
-//     <Field label="Horaires" col>
-//       <Field
-//         type="picker"
-//         items={repeat(24, i => i+1).map(h => [h as any, h])}
-//         value={hours}
-//         onValue={next => {}}
-//       />
-//     </Field>
-//   )
-// }
 
 const WeekDaysField = () => {
   const [dates, setDates] = useFilterProp('w');
@@ -60,12 +49,20 @@ export const BSideFilter = () => {
 
   return (
     <div {...c('')}>
-      <Field label="Date Début" type="date" col />
-      <Field label="Date Fin" type="date" col />
-      <Field label="Heure Début" type="seconds" col />
-      <Field label="Heure Fin" type="seconds" col />
-      {/* <HoursField /> */}
+      <Field label="Date d'affichage" col>
+        <FieldCol>
+          <Field label="Début" type="date" />
+          <Field label="Fin" type="date" />
+        </FieldCol>
+      </Field>
+      <Field label="Crenaux quotidien" col>
+        <FieldRow>
+          <Field type="time" />
+          <Field type="time" />
+        </FieldRow>
+      </Field>
       <WeekDaysField />
+      <Field label="Mots-clés" type="multiline" col />
     </div>
   );
 };

@@ -18,7 +18,7 @@ export interface BMenuButtonProps extends ButtonProps {
 }
 
 export const BMenuButton = ({ name, ...props }: BMenuButtonProps) => {
-  const controller = useBEditController()!;
+  const controller = useBEditController();
   const selected = useFlux(controller?.side$.map((p) => p === name));
   // console.debug('BMenuButton', { controller, page, selected });
 
@@ -44,19 +44,19 @@ export const BMenu = () => {
   const controller = useBEditController();
   const router = useRouter();
 
-  return controller ?
-      <>
-        <BMenuButton
-          title="Retour"
-          icon={ArrowLeftIcon}
-          onClick={() => router.go({ page: 'medias' })}
-        />
-        <BMenuButton title="Liste" icon={ListTreeIcon} name="tree" />
-        <BMenuButton title="Player" icon={PlayerIcon} name="media" />
-        <BMenuButton title="Vue Web" icon={EarthIcon} name="web" />
-        <BMenuButton title="Texte" icon={TextIcon} name="text" />
-        <BMenuButton title="Filtrer" icon={FilterIcon} name="filter" />
-        <BMenuButton title="Avancé" icon={FileSlidersIcon} name="advanced" />
-      </>
-    : null;
+  return (
+    <>
+      <BMenuButton
+        title="Retour"
+        icon={ArrowLeftIcon}
+        onClick={() => router.go({ page: 'medias' })}
+      />
+      <BMenuButton title="Liste" icon={ListTreeIcon} name="tree" />
+      <BMenuButton title="Player" icon={PlayerIcon} name="media" />
+      <BMenuButton title="Vue Web" icon={EarthIcon} name="web" />
+      <BMenuButton title="Texte" icon={TextIcon} name="text" />
+      <BMenuButton title="Filtrer" icon={FilterIcon} name="filter" />
+      <BMenuButton title="Avancé" icon={FileSlidersIcon} name="advanced" />
+    </>
+  );
 };

@@ -7,7 +7,7 @@ import { Field } from '@/components/fields/Field';
 const c = Css('BSideAdvanced', {});
 
 export const BSideAdvanced = () => {
-  const controller = useBEditController()!;
+  const controller = useBEditController();
   const registryEntries = Object.entries(controller.registry || {});
   const types = registryEntries.map(([type, config]) => [type, config.label] as [string, Comp]);
 

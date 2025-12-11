@@ -15,6 +15,7 @@ export const c = Css('Field', {
     row: 'center',
     w: '100%',
     hMin: 30,
+    m: 2,
   },
   Group: {
     row: ['center', 'between'],
@@ -32,7 +33,6 @@ export const c = Css('Field', {
     fg: 'error',
   },
   Label: {
-    // flex: 1,
     textAlign: 'left',
     opacity: 0.6,
     fg: 'fg',
@@ -63,32 +63,21 @@ export const c = Css('Field', {
     fg: 'fg',
     fontSize: '100%',
     fontFamily: 'mono',
-    // elevation: 1,
   },
   ' input:hover,& textarea:hover': {
     borderColor: 'border',
   },
-
-  // // Régle la couleur de l'autocompletion
-  // 'Input:autofill': {
-  //   '-webkit-text-fill-color': 'black',
-  //   '-webkit-box-shadow': '0 0 0 1000px white inset',
-  //   caretColor: 'black',
-  // },
-
-  // // Styles pour les flèches de l'input number (Chrome/Safari/Edge)
-  // 'Input::-webkit-inner-spin-button': {
-  //   opacity: 1,
-  //   backgroundColor: 'white',
-  //   color: 'black',
-  //   cursor: 'pointer',
-  // },
-  // 'Input::-webkit-outer-spin-button': {
-  //   opacity: 1,
-  //   backgroundColor: 'white',
-  //   color: 'black',
-  //   cursor: 'pointer',
-  // },
+  Row: {
+    row: ['center', 'between'],
+    w: '100%',
+  },
+  'Row .Field': {
+    flex: 1,
+  },
+  Col: {
+    col: ['stretch', 'start'],
+    w: '100%',
+  }
 });
 
 const ClearButton = () => {
@@ -107,7 +96,8 @@ const ClearButton = () => {
     : null;
 };
 
-export const Field = <V = any, R = any>(props: FieldProps<V, R>) => {
+// export const Field = <V = any, R = any>(props: FieldProps<V, R>) => {
+export const Field = <V, R>(props: FieldProps<V, R>) => {
   const ctrl = useConstant(() => new FieldController<V, R>());
   ctrl.setProps(props);
 
@@ -147,5 +137,9 @@ export const Field = <V = any, R = any>(props: FieldProps<V, R>) => {
     </FieldProvider>
   );
 };
+
+export const FieldRow = (props: DivProps) => <div {...props} {...c('Row', props)} />;
+
+export const FieldCol = (props: DivProps) => <div {...props} {...c('Col', props)} />;
 
 export const FieldGroup = (props: DivProps) => <div {...props} {...c('Group', props)} />;

@@ -161,7 +161,7 @@ const BHandlesContent = () => {
         <div
           key={name}
           style={style as any}
-          onMouseDown={(event) => controller && startResize(controller, config, name, event)}
+          onMouseDown={(event) => startResize(controller, config, name, event)}
         />
       ))}
     </>
@@ -172,8 +172,6 @@ export const BHandles = () => {
   const controller = useBEditController();
   const { x, y, w, h, a, show } =
     useFluxMemo(() => {
-      if (!controller) return;
-
       const combined$ = fluxCombine(
         controller.click$,
         controller.items$,

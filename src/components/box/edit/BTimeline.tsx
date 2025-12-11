@@ -35,9 +35,9 @@ const BTimelineButton = (props: ButtonProps) => (
 
 export const BTimeline = () => {
   const controller = useBEditController();
-  const select = useFlux(controller?.select$);
+  const select = useFlux(controller.select$);
   const selectIndex = select?.i;
-  const pz = controller?.panZoom;
+  const pz = controller.panZoom;
   const hasSelect = isUInt(selectIndex);
 
   if (!pz) return null;

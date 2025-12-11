@@ -3,7 +3,7 @@ import { useInputProps } from '@/components/fields/hooks';
 import { FieldProps } from '@/components/fields/types';
 import { Button } from '@/components/common/Button';
 import { EyeIcon, EyeOffIcon } from 'lucide-react';
-import { formatSeconds, toDate, toNumber, toString } from 'fluxio';
+import { formatTime, isNumber, parseTime, SECOND, toDate, toNumber, toString } from 'fluxio';
 
 const getInput = <V = string,>(type: string): FieldProps<V, string> => ({
   input: () => {
@@ -39,21 +39,31 @@ const password: FieldProps<string, string> = {
   },
 };
 
+const time: FieldProps<number, string> = {
+  input: () => {
+    const props = useInputProps();
+    return <input {...props} type="text" placeholder={props.placeholder || '00:00'} />;
+  },
+  toValue: parseTime,
+  toRaw: formatTime,
+};
+
 const seconds: FieldProps<number, string> = {
   input: () => {
     const props = useInputProps();
     return <input {...props} type="text" placeholder={props.placeholder || '00:00:00'} />;
   },
-  toValue: toDate,
-  toRaw: formatSeconds,
+  toValue: (r: any) => isNumber(r=parseTime(r)) ? r / SECOND : 0,
+  toRaw: v => formatTime(v ? v * SECOND : 0),
 };
 
 export const baseInputs = {
-  text: text,
-  email: email,
-  password: password,
-  number: number,
-  date: date,
+  text,
+  email,
+  password,
+  number,
+  date,
   datetime: date,
-  seconds: seconds,
+  time,
+  seconds,
 };

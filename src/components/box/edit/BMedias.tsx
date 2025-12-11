@@ -49,9 +49,9 @@ const BMediasItem = ({ media }: { media: MediaModel }) => {
       tooltip={media.title}
       style={{ backgroundImage: url ? `url('${url}')` : undefined }}
       onClick={() => {
-        const select = controller?.select$.get();
+        const select = controller.select$.get();
         if (select && select.i !== undefined) {
-          controller?.update(select.i, { m: media.id });
+          controller.update(select.i, { m: media.id });
         }
       }}
     />

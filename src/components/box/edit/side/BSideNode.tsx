@@ -41,11 +41,11 @@ const c = Css('BSideNode', {
 });
 
 export const BSideNode = ({ i }: { i: number }) => {
-  const controller = useBEditController()!;
+  const controller = useBEditController();
   const item = useFluxMemo(() => controller.item$(i), [controller, i]);
   const selectId$ = controller.selectId$;
   const selected = useFluxMemo(() => selectId$.map((s) => s === i), [selectId$, i]);
-  const type = controller?.getType(item?.t);
+  const type = controller.getType(item?.t);
   const Icon = type?.icon || Square;
   const label = truncate(item?.n || item?.b?.replace(/\*\*/g, '') || type?.label || '', 20);
   const children = item?.r;
@@ -58,7 +58,7 @@ export const BSideNode = ({ i }: { i: number }) => {
       <div
         {...c('', selected && '-selected', children && '-children', open && '-open')}
         onClick={() => {
-          controller?.click(i);
+          controller.click(i);
           setOpen((p) => !p);
         }}
       >

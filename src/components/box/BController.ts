@@ -15,6 +15,7 @@ import {
   isUInt,
   isNotNil,
   getBit,
+  serverDate,
 } from 'fluxio';
 import {
   BFun,
@@ -82,7 +83,7 @@ export class BController {
   readonly event$ = fluxUnion(this.init$, this.click$);
 
   readonly pages$ = this.items$.map((items) => items.filter((i) => i && i.t === 'page'));
-  readonly page$ = this.pages$.map((pages) => pages.find((p) => this.isVisible(p)));
+  readonly page$ = this.pages$.map((pages) => pages.find((p) => this.check(p)));
 
   readonly panZoom = new PanZoomController();
 
@@ -93,11 +94,6 @@ export class BController {
     this.api = api;
     this.router = router;
     app.b = this;
-  }
-
-  isVisible(item: NBItem) {
-    if (!item) return false;
-    if (!item.f) return true;
   }
 
   getDefaultType(d: BData) {
@@ -364,14 +360,14 @@ export class BController {
   }
 
   check(item?: NBItem) {
-    if (!item) return false;
-
-    if (item.h) return false;
+    if (!item || item.h) return false;
 
     const f = item.f;
     if (!f) return true;
 
-    const now = this.api.pb.getDate();
+    // PAGE
+
+    const now = serverDate();
 
     // Check dates [start, end]
     if (f.d) {

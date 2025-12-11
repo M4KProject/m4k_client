@@ -9,10 +9,8 @@ const c = Css('BPage', {
   },
 });
 
-export const BPage: BComp = ({ item, props }) => {
-  return (
-    <div {...props} {...c(props, '')}>
-      {bChildren(item)}
-    </div>
-  );
-};
+export const BPage: BComp = ({ item, props }) => (
+  <div {...props} {...c(props, '')}>
+    {bChildren(item)}
+  </div>
+);
