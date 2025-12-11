@@ -2,7 +2,7 @@ import { bitsToRecord, Css, dayIndexToShort, recordToBits } from 'fluxio';
 import { useProp } from '../BField';
 import { Field } from '@/components/fields/Field';
 import { BItem } from '@/components/box/bTypes';
-import { BCalendar } from '../../../common/BCalendar';
+import { Calendar } from '@/components/common/Calendar';
 import { useApi } from '@/hooks/useApi';
 
 const c = Css('BSideFilter', {
@@ -46,7 +46,7 @@ export const BSideFilter = () => {
   return (
     <div {...c('')}>
       <Field label="Plage de dates" col>
-        <BCalendar />
+        <Calendar />
       </Field>
       <WeekDaysField />
     </div>
