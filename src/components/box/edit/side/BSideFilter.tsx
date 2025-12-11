@@ -1,4 +1,4 @@
-import { bitsToRecord, Css, dayIndexToShort, recordToBits } from 'fluxio';
+import { bitsToRecord, Css, dayIndexToShort, recordToBits, repeat } from 'fluxio';
 import { useProp } from '../BField';
 import { Field } from '@/components/fields/Field';
 import { BItem } from '@/components/box/bTypes';
@@ -18,6 +18,21 @@ const useFilterProp = <K extends keyof NonNullable<BItem['f']>>(
   };
   return [value, setValue];
 };
+
+// const HoursField = () => {
+//   const [hours, setHours] = useFilterProp('h');
+
+//   return (
+//     <Field label="Horaires" col>
+//       <Field
+//         type="picker"
+//         items={repeat(24, i => i+1).map(h => [h as any, h])}
+//         value={hours}
+//         onValue={next => {}}
+//       />
+//     </Field>
+//   )
+// }
 
 const WeekDaysField = () => {
   const [dates, setDates] = useFilterProp('w');
@@ -45,9 +60,11 @@ export const BSideFilter = () => {
 
   return (
     <div {...c('')}>
-      <Field label="Plage de dates" col>
-        <Calendar />
-      </Field>
+      <Field label="Date Début" type="date" col />
+      <Field label="Date Fin" type="date" col />
+      <Field label="Heure Début" type="seconds" col />
+      <Field label="Heure Fin" type="seconds" col />
+      {/* <HoursField /> */}
       <WeekDaysField />
     </div>
   );
