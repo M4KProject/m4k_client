@@ -32,7 +32,7 @@ export const SCREEN_SIZES: ScreenSize[] = [
 ];
 
 export const BSideTree = () => {
-  const controller = useBEditController()!;
+  const controller = useBEditController();
   const screenSize$ = controller.router.screenSize$;
   const [w, h] = useFlux(screenSize$);
   const type = useFlux(controller.select$.map((s) => (s ? s.t : '')));
