@@ -1,13 +1,10 @@
 import { Css } from 'fluxio';
 import { byId, sortItems, fluxDictionary, isUFloat } from 'fluxio';
-import { JobGrid } from '@/components/admin/JobGrid';
 import { selectedById$ } from '@/controllers/selected';
 import { useApi, useGroupMedias } from '@/hooks/useApi';
-import { useIsAdvanced } from '@/router/hooks';
 import { Dictionary, round } from 'fluxio';
-import { Trash2, FolderInput, PlusSquare, Edit, Eye, Download } from 'lucide-react';
+import { Trash2Icon, FolderInputIcon, PlusSquareIcon, EditIcon, EyeIcon, DownloadIcon } from 'lucide-react';
 import { SelectedField } from '@/components/admin/SelectedField';
-import { updateRoute } from '@/router/setters';
 import { useMemo } from 'preact/hooks';
 import { addTr } from '@/hooks/useTr';
 import { MediaModel } from '@/api/models';
@@ -19,6 +16,7 @@ import { Api } from '@/api/Api';
 import { updatePlaylist } from '@/controllers/media';
 import { MediaIcon } from '../medias/MediaIcon';
 import { MediaPreview } from '../medias/MediaPreview';
+import { useIsAdvanced } from '@/hooks/useRoute';
 
 addTr({
   pending: 'en attente',
@@ -93,7 +91,7 @@ const cols: GridCols<MediaModel, MediasGridContext> = {
       <>
         {type === 'folder' && selectedIds.length > 0 && (
           <Button
-            icon={FolderInput}
+            icon={FolderInputIcon}
             tooltip={`Ajouter ${selectedIds.length} élément(s) au dossier`}
             onClick={async () => {
               for (const selectId of selectedIds) {
@@ -106,7 +104,7 @@ const cols: GridCols<MediaModel, MediasGridContext> = {
         {type === 'playlist' && (
           <>
             <Button
-              icon={Edit}
+              icon={EditIcon}
               tooltip="Configurer la playlist"
               onClick={() => {
                 updateRoute({
@@ -119,7 +117,7 @@ const cols: GridCols<MediaModel, MediasGridContext> = {
             />
             {selectedIds.length > 0 && (
               <Button
-                icon={PlusSquare}
+                icon={PlusSquareIcon}
                 tooltip={`Ajouter ${selectedIds.length} élément(s) à la playlist`}
                 onClick={async () => {
                   updatePlaylist(api, id, (playlist) => {
@@ -139,7 +137,7 @@ const cols: GridCols<MediaModel, MediasGridContext> = {
         )}
         {type === 'page' && (
           <Button
-            icon={Edit}
+            icon={EditIcon}
             tooltip="Éditer la page"
             onClick={() => {
               updateRoute({
@@ -152,7 +150,7 @@ const cols: GridCols<MediaModel, MediasGridContext> = {
           />
         )}
         <Button
-          icon={Eye}
+          icon={EyeIcon}
           tooltip="Afficher le media"
           onClick={() => {
             updateRoute({ mediaKey: key, isEdit: false });
@@ -160,13 +158,13 @@ const cols: GridCols<MediaModel, MediasGridContext> = {
         />
         {type !== 'folder' && type !== 'playlist' && (
           <Button
-            icon={Download}
+            icon={DownloadIcon}
             tooltip="Télécharger"
             onClick={() => api.startMediaDownload(id)}
           />
         )}
         <Button
-          icon={Trash2}
+          icon={Trash2Icon}
           color="error"
           tooltip="Supprimer"
           onClick={async () => {

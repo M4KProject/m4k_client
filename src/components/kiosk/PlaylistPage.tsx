@@ -1,6 +1,6 @@
 import { Css } from 'fluxio';
 import { round } from 'fluxio';
-import { ArrowUp, ArrowDown, Copy, Trash2 } from 'lucide-react';
+import { ArrowUpIcon, ArrowDownIcon, CopyIcon, Trash2Icon } from 'lucide-react';
 import { Grid, GridCols } from '@/components/common/Grid';
 import { Field } from '@/components/fields/Field';
 import { Button } from '@/components/common/Button';
@@ -96,25 +96,25 @@ const playlistItemCols: GridCols<
     (_item, ctx, i) => (
       <div style={{ display: 'flex', gap: '0.5em' }}>
         <Button
-          icon={ArrowUp}
+          icon={ArrowUpIcon}
           color="primary"
           tooltip={i === 0 ? 'Aller à la fin' : 'Monter'}
           onClick={() => ctx.handleMoveUp(i)}
         />
         <Button
-          icon={ArrowDown}
+          icon={ArrowDownIcon}
           color="primary"
           tooltip={i === (ctx.playlist?.items?.length || 0) - 1 ? 'Aller au début' : 'Descendre'}
           onClick={() => ctx.handleMoveDown(i)}
         />
         <Button
-          icon={Copy}
+          icon={CopyIcon}
           color="primary"
           tooltip="Dupliquer"
           onClick={() => ctx.handleDuplicate(i)}
         />
         <Button
-          icon={Trash2}
+          icon={Trash2Icon}
           color="error"
           tooltip="Supprimer"
           onClick={() => ctx.handleDelete(i)}

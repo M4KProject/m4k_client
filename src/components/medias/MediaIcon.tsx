@@ -2,16 +2,16 @@ import { MediaType } from '@/api/models';
 import { Button } from '@/components/common/Button';
 import { Css } from 'fluxio';
 import {
-  FolderOpen,
-  Folder,
-  FileImage,
-  Video,
-  FileText,
-  Layout,
-  List,
-  HelpCircle,
-  ChevronDown,
-  ChevronRight,
+  FolderOpenIcon,
+  FolderIcon,
+  FileImageIcon,
+  VideoIcon,
+  FileTextIcon,
+  LayoutIcon,
+  ListIcon,
+  HelpCircleIcon,
+  ChevronDownIcon,
+  ChevronRightIcon,
 } from 'lucide-react';
 import { DivProps } from '../common/types';
 
@@ -25,14 +25,14 @@ const c = Css('MediaIcon', {
   },
 });
 
-const infoByType: Record<MediaType, [string, typeof FolderOpen]> = {
-  content: ['Contenu', Layout],
-  folder: ['Dossier', Folder],
-  image: ['Image', FileImage],
-  pdf: ['PDF', FileText],
-  video: ['Video', Video],
-  unknown: ['Inconnu', HelpCircle],
-  '': ['Inconnu', HelpCircle],
+const infoByType: Record<MediaType, [string, typeof FolderOpenIcon]> = {
+  content: ['Contenu', LayoutIcon],
+  folder: ['Dossier', FolderIcon],
+  image: ['Image', FileImageIcon],
+  pdf: ['PDF', FileTextIcon],
+  video: ['Video', VideoIcon],
+  unknown: ['Inconnu', HelpCircleIcon],
+  '': ['Inconnu', HelpCircleIcon],
 };
 
 export interface MediaIconProps extends DivProps {
@@ -45,11 +45,11 @@ export const MediaIcon = ({ type, isOpen, hasChildren, ...props }: MediaIconProp
   if (!type) return null;
 
   const info = infoByType[type] || infoByType.unknown;
-  let Icon = info[1] || HelpCircle;
+  let Icon = info[1] || HelpCircleIcon;
   let title = info[0] || 'Inconnu';
 
   if (type === 'folder') {
-    Icon = isOpen ? FolderOpen : Folder;
+    Icon = isOpen ? FolderOpenIcon : FolderIcon;
   }
 
   return (
@@ -58,8 +58,8 @@ export const MediaIcon = ({ type, isOpen, hasChildren, ...props }: MediaIconProp
       {hasChildren && (
         <span>
           {isOpen ?
-            <ChevronDown size={12} />
-          : <ChevronRight size={12} />}
+            <ChevronDownIcon size={12} />
+          : <ChevronRightIcon size={12} />}
         </span>
       )}
     </div>

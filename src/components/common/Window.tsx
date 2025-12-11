@@ -3,7 +3,7 @@ import { useFlux } from '@/hooks/useFlux';
 import { portal } from './Portal';
 import { comp } from '@/utils/comp';
 import { useMemo } from 'preact/hooks';
-import { X, Check, XCircle, Ban } from 'lucide-react';
+import { XIcon, CheckIcon, XCircleIcon, BanIcon } from 'lucide-react';
 import { Button } from './Button';
 import {
   useWindowController,
@@ -151,9 +151,9 @@ export const WindowFooter = ({ yes, no, cancel }: WindowFooterProps) => {
 
   return (
     <div {...c('Footer')}>
-      {yes && <Button color="success" icon={Check} title="Oui" onClick={controller.yes} />}
-      {no && <Button color="warn" icon={XCircle} title="Non" onClick={controller.no} />}
-      {cancel && <Button color="error" icon={Ban} title="Annuler" onClick={controller.cancel} />}
+      {yes && <Button color="success" icon={CheckIcon} title="Oui" onClick={controller.yes} />}
+      {no && <Button color="warn" icon={XCircleIcon} title="Non" onClick={controller.no} />}
+      {cancel && <Button color="error" icon={BanIcon} title="Annuler" onClick={controller.cancel} />}
     </div>
   );
 };
@@ -181,7 +181,7 @@ const WindowRender = (props: WindowProps) => {
         <div {...c('Box')} style={boxStyle as any} onClick={stopEvent}>
           <div {...c('Header', draggable && '-draggable')} onMouseDown={controller.drag}>
             {title && <div {...c('Title')}>{title}</div>}
-            <Button {...c('Close')} icon={X} onClick={controller.close} />
+            <Button {...c('Close')} icon={XIcon} onClick={controller.close} />
           </div>
           <div {...c('Content')}>
             {open ? comp(content) : null}

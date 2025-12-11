@@ -1,7 +1,7 @@
 import { Css } from 'fluxio';
 import { Flux } from 'fluxio';
 import { useEffect, useState } from 'preact/hooks';
-import { Globe, Lock } from 'lucide-react';
+import { GlobeIcon, LockIcon } from 'lucide-react';
 import { Branding } from './Branding';
 import { useFlux } from '@/hooks/useFlux';
 import { useInterval } from '@/hooks/useInterval';
@@ -63,7 +63,7 @@ export const CodePinView = ({ open$ }: { open$: Flux<boolean> }) => {
         <div {...c('Sep')} />
         <Button
           title="Online"
-          icon={Globe}
+          icon={GlobeIcon}
           onClick={() => {
             kiosk.offlineMode$.set(false);
           }}

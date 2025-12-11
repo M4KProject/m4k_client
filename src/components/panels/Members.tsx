@@ -1,6 +1,6 @@
 import { Css } from 'fluxio';
 import { Dictionary, toNumber, toString } from 'fluxio';
-import { Trash2 } from 'lucide-react';
+import { Trash2Icon } from 'lucide-react';
 import { Grid, GridCols } from '@/components/common/Grid';
 import { useApi, useDeviceById, useGroupMembers } from '@/hooks/useApi';
 import { DeviceModel, MemberModel } from '@/api/models';
@@ -46,7 +46,7 @@ const cols: GridCols<MemberModel, { deviceById: Dictionary<DeviceModel>; api: Ap
     'Actions',
     ({ id }, { api }) => (
       <Button
-        icon={Trash2}
+        icon={Trash2Icon}
         color="error"
         tooltip="Supprimer"
         onClick={() => api.member.delete(id)}

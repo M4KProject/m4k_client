@@ -2,7 +2,7 @@ import { useState } from 'preact/hooks';
 import { Css } from 'fluxio';
 import logoUrl from '@/assets/logo.svg';
 import loginUrl from '@/assets/login.svg';
-import { Download, Monitor } from 'lucide-react';
+import { DownloadIcon, MonitorIcon } from 'lucide-react';
 import { Apps } from '@/components/admin/Apps';
 import { AuthForm } from '@/components/panels/AuthForm';
 import { Button } from '@/components/common/Button';
@@ -73,13 +73,13 @@ export const AuthPage = () => {
       <AuthForm />
       <div {...c('BottomButtons')}>
         <Button
-          icon={Download}
+          icon={DownloadIcon}
           color="secondary"
           onClick={() => setShowApplications(!showApplications)}
           title="Téléchargement"
         />
         <Button
-          icon={Monitor}
+          icon={MonitorIcon}
           color="secondary"
           onClick={() => {
             routeController.isKiosk$.set(true);

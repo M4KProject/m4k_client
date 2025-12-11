@@ -3,7 +3,7 @@ import { useState, useRef, useEffect } from 'preact/hooks';
 import { Css } from 'fluxio';
 import { isArray } from 'fluxio';
 import { isSearched } from 'fluxio';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDownIcon } from 'lucide-react';
 import { FieldProps } from '@/components/fields/types';
 import { useFieldController, useFieldState } from '@/components/fields/hooks';
 
@@ -233,7 +233,7 @@ const Select = ({
           </div>
         }
         <div {...c('Arrow')}>
-          <ChevronDown />
+          <ChevronDownIcon />
         </div>
       </div>
 

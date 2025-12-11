@@ -1,6 +1,6 @@
 import { Css } from 'fluxio';
 import { useState } from 'preact/hooks';
-import { Send, RefreshCw, FileJson } from 'lucide-react';
+import { SendIcon, RefreshCwIcon, FileJsonIcon } from 'lucide-react';
 import { DeviceModel } from '@/api/models';
 import { Field } from '@/components/fields/Field';
 import { Button } from '@/components/common/Button';
@@ -46,18 +46,18 @@ export const DeviceConsole = ({ consoleOutput, onExecuteAction }: DeviceConsoleP
       <div {...c('Actions')}>
         <Field type="text" value={command} onValue={setCommand} />
         <Button
-          icon={Send}
+          icon={SendIcon}
           onClick={() => {
             onExecuteAction('sh', command.trim());
           }}
         />
         <Button
-          icon={FileJson}
+          icon={FileJsonIcon}
           onClick={() => {
             onExecuteAction('js', command.trim());
           }}
         />
-        <Button icon={RefreshCw} onClick={() => onExecuteAction('refresh')} />
+        <Button icon={RefreshCwIcon} onClick={() => onExecuteAction('refresh')} />
       </div>
     </div>
   );

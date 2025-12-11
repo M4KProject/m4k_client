@@ -1,7 +1,7 @@
 import { Css } from 'fluxio';
 import { groupBy, sortItems } from 'fluxio';
 import { useState, useEffect, useMemo } from 'preact/hooks';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import { MediaViewProps } from './MediaView';
 import { PanZoom, PanZoomController } from '@/components/common/PanZoom';
 import { PdfModel } from '@/api/models';
@@ -108,7 +108,7 @@ export const PdfView = ({ media, divProps }: PdfViewProps) => {
 
       <div {...c('Toolbar')}>
         <Button
-          icon={ChevronLeft}
+          icon={ChevronLeftIcon}
           color={currentPage <= 0 ? 'secondary' : 'primary'}
           onClick={currentPage <= 0 ? undefined : handlePreviousPage}
         />
@@ -116,7 +116,7 @@ export const PdfView = ({ media, divProps }: PdfViewProps) => {
           {currentPage + 1} / {totalPages}
         </div>
         <Button
-          icon={ChevronRight}
+          icon={ChevronRightIcon}
           color={currentPage >= totalPages - 1 ? 'secondary' : 'primary'}
           onClick={currentPage >= totalPages - 1 ? undefined : handleNextPage}
         />

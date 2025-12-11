@@ -1,8 +1,8 @@
 import { useState } from 'preact/hooks';
 import { bridge } from '@/bridge';
 import { logger, randHex, jsonStringify, toError, truncate, withTimeout } from 'fluxio';
-import { Grid, Play } from 'lucide-react';
-import { GridCols } from '@/components/common/Grid';
+import { GridIcon, PlayIcon } from 'lucide-react';
+import { Grid, GridCols } from '@/components/common/Grid';
 import { Button } from '@/components/common/Button';
 import { useConstant } from '@/hooks/useConstant';
 import { useAsyncEffect } from '@/hooks/useAsyncEffect';
@@ -188,7 +188,7 @@ const testCols: GridCols<TestData, { play: (test: TestData) => void }> = {
   error: ['Erreur', (test) => test.result?.error || ''],
   actions: [
     'Actions',
-    (item, { play }) => <Button icon={Play} onClick={() => play(item)} />,
+    (item, { play }) => <Button icon={PlayIcon} onClick={() => play(item)} />,
     { w: 240 },
   ],
 };

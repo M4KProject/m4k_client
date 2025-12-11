@@ -6,7 +6,7 @@ import { Button } from '@/components/common/Button';
 import { Form } from '@/components/common/Form';
 import { toError } from 'fluxio';
 import { addTr } from '@/hooks/useTr';
-import { LogIn, UserPlus, Mail, Key, ArrowLeft } from 'lucide-react';
+import { LogInIcon, UserPlusIcon, MailIcon, KeyIcon, ArrowLeftIcon } from 'lucide-react';
 import { useApi } from '@/hooks/useApi';
 
 addTr({
@@ -76,7 +76,7 @@ export const AuthForm = () => {
             />
             <div {...c('Col')}>
               <Button
-                icon={LogIn}
+                icon={LogInIcon}
                 title="Se connecter"
                 onClick={async () => {
                   setPage('');
@@ -92,12 +92,12 @@ export const AuthForm = () => {
               />
               <Button
                 title="Mot de passe oublié ?"
-                icon={Key}
+                icon={KeyIcon}
                 onClick={() => setPage('forgot-password')}
               />
               <Button
                 title="Vous n'avez pas de compte ? Inscrivez-vous"
-                icon={UserPlus}
+                icon={UserPlusIcon}
                 onClick={() => setPage('sign-up')}
               />
             </div>
@@ -125,11 +125,11 @@ export const AuthForm = () => {
                   setPage('sign-in');
                 }}
                 color="primary"
-                icon={UserPlus}
+                icon={UserPlusIcon}
               />
               <Button
                 title="Vous avez déjà un compte ? Connectez-vous"
-                icon={LogIn}
+                icon={LogInIcon}
                 onClick={() => setPage('sign-in')}
               />
             </div>
@@ -147,11 +147,11 @@ export const AuthForm = () => {
                   // setPage('code');
                 }}
                 color="primary"
-                icon={Mail}
+                icon={MailIcon}
               />
               <Button
                 title="Vous avez déjà un compte ? Connectez-vous"
-                icon={ArrowLeft}
+                icon={ArrowLeftIcon}
                 onClick={() => setPage('sign-in')}
               />
             </div>
@@ -167,12 +167,12 @@ export const AuthForm = () => {
                   /* signWithCode(email, password) */
                 }}
                 color="primary"
-                icon={Key}
+                icon={KeyIcon}
               />
               <Button
                 title="Vous avez déjà un compte ? Connectez-vous"
                 onClick={() => setPage('sign-in')}
-                icon={ArrowLeft}
+                icon={ArrowLeftIcon}
               />
             </div>
           </>

@@ -2,18 +2,18 @@ import { Css, isArray, Style, StyleFlexAlign, StyleFlexJustify } from 'fluxio';
 import { Field } from '@/components/fields/Field';
 import { Button, ButtonProps } from '@/components/common/Button';
 import {
-  AlignStartHorizontal,
-  AlignCenterHorizontal,
-  AlignEndHorizontal,
-  AlignHorizontalJustifyStart,
-  AlignHorizontalJustifyCenter,
-  AlignHorizontalJustifyEnd,
-  AlignStartVertical,
-  AlignCenterVertical,
-  AlignEndVertical,
-  AlignVerticalJustifyStart,
-  AlignVerticalJustifyCenter,
-  AlignVerticalJustifyEnd,
+  AlignStartHorizontalIcon,
+  AlignCenterHorizontalIcon,
+  AlignEndHorizontalIcon,
+  AlignHorizontalJustifyStartIcon,
+  AlignHorizontalJustifyCenterIcon,
+  AlignHorizontalJustifyEndIcon,
+  AlignStartVerticalIcon,
+  AlignCenterVerticalIcon,
+  AlignEndVerticalIcon,
+  AlignVerticalJustifyStartIcon,
+  AlignVerticalJustifyCenterIcon,
+  AlignVerticalJustifyEndIcon,
 } from 'lucide-react';
 import { Comp } from '@/utils/comp';
 import { useBEditController } from '../useBEditController';
@@ -80,20 +80,20 @@ export const BSideLayout = () => {
   return (
     <div {...c('')}>
       <Field name="row">
-        <FlexAlignButton icon={AlignStartHorizontal} row start />
-        <FlexAlignButton icon={AlignCenterHorizontal} row center />
-        <FlexAlignButton icon={AlignEndHorizontal} row end />
-        <FlexAlignButton icon={AlignHorizontalJustifyStart} row justify start />
-        <FlexAlignButton icon={AlignHorizontalJustifyCenter} row justify center />
-        <FlexAlignButton icon={AlignHorizontalJustifyEnd} row justify end />
+        <FlexAlignButton icon={AlignStartHorizontalIcon} row start />
+        <FlexAlignButton icon={AlignCenterHorizontalIcon} row center />
+        <FlexAlignButton icon={AlignEndHorizontalIcon} row end />
+        <FlexAlignButton icon={AlignHorizontalJustifyStartIcon} row justify start />
+        <FlexAlignButton icon={AlignHorizontalJustifyCenterIcon} row justify center />
+        <FlexAlignButton icon={AlignHorizontalJustifyEndIcon} row justify end />
       </Field>
       <Field name="col">
-        <FlexAlignButton icon={AlignStartVertical} start />
-        <FlexAlignButton icon={AlignCenterVertical} center />
-        <FlexAlignButton icon={AlignEndVertical} end />
-        <FlexAlignButton icon={AlignVerticalJustifyStart} justify start />
-        <FlexAlignButton icon={AlignVerticalJustifyCenter} justify center />
-        <FlexAlignButton icon={AlignVerticalJustifyEnd} justify end />
+        <FlexAlignButton icon={AlignStartVerticalIcon} start />
+        <FlexAlignButton icon={AlignCenterVerticalIcon} center />
+        <FlexAlignButton icon={AlignEndVerticalIcon} end />
+        <FlexAlignButton icon={AlignVerticalJustifyStartIcon} justify start />
+        <FlexAlignButton icon={AlignVerticalJustifyCenterIcon} justify center />
+        <FlexAlignButton icon={AlignVerticalJustifyEndIcon} justify end />
       </Field>
       <BStyleField label="Fond" prop="bg" type="color" />
     </div>

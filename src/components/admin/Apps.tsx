@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'preact/hooks';
 import { Css } from 'fluxio';
-import { Download } from 'lucide-react';
+import { DownloadIcon } from 'lucide-react';
 import { sortItems } from 'fluxio';
 import { bridge } from '@/bridge';
 import { Button } from '@/components/common/Button';
@@ -46,7 +46,7 @@ export const AppButton = ({
   return (
     <Button
       {...c('AppButton')}
-      icon={Download}
+      icon={DownloadIcon}
       color="primary"
       onClick={(e) => {
         if (bridge.isInterface) {

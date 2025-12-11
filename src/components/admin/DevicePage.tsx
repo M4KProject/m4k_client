@@ -1,14 +1,13 @@
 import { Css, toString } from 'fluxio';
 import { useEffect, useState } from 'preact/hooks';
-import { RefreshCw, Power, LogOut } from 'lucide-react';
+import { RefreshCwIcon, PowerIcon, LogOutIcon } from 'lucide-react';
 import { DeviceScreen } from '@/components/admin/DeviceScreen';
 import { DeviceConsole } from '@/components/admin/DeviceConsole';
 import { glb, jsonStringify } from 'fluxio';
-import { useApi, useDevice } from '@/hooks/useApi';
-import { Page, PageBody } from '@/components/common/Page';
-import { Toolbar } from '@/components/common/Toolbar';
+import { useApi } from '@/hooks/useApi';
 import { Button } from '@/components/common/Button';
-import { AdminSideBar } from '@/components/admin/AdminSideBar';
+import { useDevice } from '@/hooks/useRoute';
+import { Page } from '../pages/base/Page';
 
 const c = Css('DevicePage', {
   Body: {
@@ -45,14 +44,15 @@ export const DevicePage = () => {
   };
 
   if (!device) {
-    return (
-      <Page {...c('')} side={AdminSideBar}>
-        <Toolbar title="Mode Remote"></Toolbar>
-        <PageBody>
-          <div>Device non trouvé</div>
-        </PageBody>
-      </Page>
-    );
+    return null;
+    // return (
+    //   <Page {...c('')} side={AdminSideBar}>
+    //     <Toolbar title="Mode Remote"></Toolbar>
+    //     <PageBody>
+    //       <div>Device non trouvé</div>
+    //     </PageBody>
+    //   </Page>
+    // );
   }
 
   const deviceWidth = device.info?.width || 1920;
@@ -74,27 +74,6 @@ export const DevicePage = () => {
   const captureUrl =
     device.capture ? api.device.coll.getFileUrl(device.id, toString(device.capture)) : '';
 
-  return (
-    <Page {...c('')} side={AdminSideBar}>
-      <Toolbar title={device.name || device.key}>
-        <Button icon={RefreshCw} tooltip="Rafraîchir" onClick={() => executeAction('refresh')} />
-        <Button icon={Power} tooltip="Redémarrer" onClick={() => executeAction('reboot')} />
-        <Button icon={LogOut} tooltip="Fermer le Kiosk" onClick={() => executeAction('exit')} />
-      </Toolbar>
-      <PageBody {...c('Body')}>
-        <div {...c('Screen')}>
-          <DeviceScreen
-            captureUrl={captureUrl}
-            deviceWidth={deviceWidth}
-            deviceHeight={deviceHeight}
-          />
-          <DeviceConsole
-            device={device}
-            consoleOutput={consoleOutput}
-            onExecuteAction={executeAction}
-          />
-        </div>
-      </PageBody>
-    </Page>
-  );
+  return null;
+  // return (0 
 };

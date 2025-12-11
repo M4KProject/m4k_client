@@ -1,7 +1,7 @@
 import { Css } from 'fluxio';
 import { JSX } from 'preact';
 import { LoadingPage } from '@/components/kiosk/LoadingPage';
-import { MonitorSpeaker, Settings, Bug, Calendar, List, Wrench } from 'lucide-react';
+import { MonitorSpeakerIcon, SettingsIcon, BugIcon, CalendarIcon, ListIcon, WrenchIcon } from 'lucide-react';
 import { CodePinPage } from '@/components/kiosk/CodePinPage';
 import { ConfigPlaylistPage } from '@/components/kiosk/ConfigPlaylistPage';
 import { TestPage } from '@/components/kiosk/TestPage';
@@ -67,35 +67,35 @@ const KioskMenu = () => {
     <>
       <MenuButton
         selected={page === ''}
-        icon={MonitorSpeaker}
+        icon={MonitorSpeakerIcon}
         title="Kiosk"
         onClick={go('kiosk')}
       />
       <MenuButton
         selected={page === 'actions'}
-        icon={Wrench}
+        icon={WrenchIcon}
         title="Actions"
         onClick={go('actions')}
       />
       {/* <SideButton icon={<KeyRound />} page="password" title="Mot de passe" /> */}
       <MenuButton
         selected={page === 'playlist'}
-        icon={List}
+        icon={ListIcon}
         title="Playlist"
         onClick={go('playlist')}
       />
       <MenuButton
         selected={page === 'configPlaylist'}
-        icon={Settings}
+        icon={SettingsIcon}
         title="Config"
         onClick={go('configPlaylist')}
       />
       {/* <SideButton icon={<MdWifi />} page="wifi" title="Wifi" /> */}
-      <MenuButton selected={page === 'test'} icon={Bug} title="Test" onClick={go('test')} />
+      <MenuButton selected={page === 'test'} icon={BugIcon} title="Test" onClick={go('test')} />
       {/* <SideButton icon={<MdListAlt />} page="logs" title="Logs" /> */}
       <MenuButton
         selected={page === 'events'}
-        icon={Calendar}
+        icon={CalendarIcon}
         title="Events"
         onClick={go('events')}
       />

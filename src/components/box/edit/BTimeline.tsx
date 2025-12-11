@@ -1,12 +1,12 @@
 import { Css, isUInt } from 'fluxio';
 import {
-  Maximize2,
-  ZoomIn,
-  ZoomOut,
-  ClipboardCopy,
-  ClipboardPaste,
-  ClipboardX,
-  Save,
+  Maximize2Icon,
+  ZoomInIcon,
+  ZoomOutIcon,
+  ClipboardCopyIcon,
+  ClipboardPasteIcon,
+  ClipboardXIcon,
+  SaveIcon,
 } from 'lucide-react';
 import { Button, ButtonProps } from '@/components/common/Button';
 import { useFlux } from '@/hooks/useFlux';
@@ -46,10 +46,10 @@ export const BTimeline = () => {
     <div {...c('')}>
       {!hasSelect && (
         <>
-          <BTimelineButton icon={ZoomIn} onClick={() => pz.zoomIn()} tooltip="Zoom +" />
-          <BTimelineButton icon={ZoomOut} onClick={() => pz.zoomOut()} tooltip="Zoom -" />
+          <BTimelineButton icon={ZoomInIcon} onClick={() => pz.zoomIn()} tooltip="Zoom +" />
+          <BTimelineButton icon={ZoomOutIcon} onClick={() => pz.zoomOut()} tooltip="Zoom -" />
           <BTimelineButton
-            icon={Maximize2}
+            icon={Maximize2Icon}
             onClick={() => pz.fitToContainer()}
             tooltip="Ajuster au conteneur"
           />
@@ -57,21 +57,21 @@ export const BTimeline = () => {
       )}
       {hasSelect && (
         <>
-          <BTimelineButton icon={ClipboardX} onClick={() => controller.cut()} tooltip="Couper" />
+          <BTimelineButton icon={ClipboardXIcon} onClick={() => controller.cut()} tooltip="Couper" />
           <BTimelineButton
-            icon={ClipboardCopy}
+            icon={ClipboardCopyIcon}
             onClick={() => controller.copy()}
             tooltip="Copier"
           />
           <BTimelineButton
-            icon={ClipboardPaste}
+            icon={ClipboardPasteIcon}
             onClick={() => controller.paste()}
             tooltip="Coller"
           />
         </>
       )}
       <div {...c('Sep')} />
-      <BTimelineButton icon={Save} onClick={controller.onSave} tooltip="Enregistrer" />
+      <BTimelineButton icon={SaveIcon} onClick={controller.onSave} tooltip="Enregistrer" />
     </div>
   );
 };

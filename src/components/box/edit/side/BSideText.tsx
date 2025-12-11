@@ -5,13 +5,13 @@ import { Comp } from '@/utils/comp';
 import { useBEditController } from '../useBEditController';
 import { BField, BStyleField, useProp } from '../BField';
 import {
-  AlignCenterHorizontal,
+  AlignCenterHorizontalIcon,
   AlignCenterIcon,
-  AlignEndHorizontal,
+  AlignEndHorizontalIcon,
   AlignJustifyIcon,
   AlignLeftIcon,
   AlignRightIcon,
-  AlignStartHorizontal,
+  AlignStartHorizontalIcon,
   PlusIcon,
 } from 'lucide-react';
 
@@ -92,9 +92,9 @@ export const BSideText = () => {
       <BStyleField label="Image" prop="fg" type="color" />
       <BStyleField label="Taille" prop="fontSize" type="number" />
       <Field>
-        <FlexAlignButton icon={AlignStartHorizontal} row start />
-        <FlexAlignButton icon={AlignCenterHorizontal} row center />
-        <FlexAlignButton icon={AlignEndHorizontal} row end />
+        <FlexAlignButton icon={AlignStartHorizontalIcon} row start />
+        <FlexAlignButton icon={AlignCenterHorizontalIcon} row center />
+        <FlexAlignButton icon={AlignEndHorizontalIcon} row end />
       </Field>
       <Field>
         <TextAlignButton icon={AlignLeftIcon} v="left" />

@@ -1,6 +1,6 @@
 import { Css, truncate } from 'fluxio';
 import { useFluxMemo } from '@/hooks/useFlux';
-import { ChevronRightIcon, Square } from 'lucide-react';
+import { ChevronRightIcon, SquareIcon } from 'lucide-react';
 import { useBEditController } from '../useBEditController';
 import { BField } from '../BField';
 import { tooltipProps } from '@/components/common/Tooltip';
@@ -46,7 +46,7 @@ export const BSideNode = ({ i }: { i: number }) => {
   const selectId$ = controller.selectId$;
   const selected = useFluxMemo(() => selectId$.map((s) => s === i), [selectId$, i]);
   const type = controller.getType(item?.t);
-  const Icon = type?.icon || Square;
+  const Icon = type?.icon || SquareIcon;
   const label = truncate(item?.n || item?.b?.replace(/\*\*/g, '') || type?.label || '', 20);
   const children = item?.r;
   const [open, setOpen] = useState(false);

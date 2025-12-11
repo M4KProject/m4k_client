@@ -1,26 +1,21 @@
 import {
   Css,
-  DAY,
   flux,
   formatDateTime,
   humanize,
-  isDefined,
   MINUTE,
   round,
   SECOND,
-  secondsToDate,
   toDate,
   toItem,
   toTime,
 } from 'fluxio';
-import { toError } from 'fluxio';
-import { useEffect, useMemo, useState } from 'preact/hooks';
-import { useApi, useGroupMedias, useMediaById } from '@/hooks/useApi';
+import { useEffect } from 'preact/hooks';
+import { useApi, useGroupMedias } from '@/hooks/useApi';
 import { DeviceModel } from '@/api/models';
 import { Field } from '@/components/fields/Field';
 import { Button } from '@/components/common/Button';
-import { Form } from '@/components/common/Form';
-import { useGroup, useRouter } from '@/hooks/useRoute';
+import { useRouter } from '@/hooks/useRoute';
 import { useFlux } from '@/hooks/useFlux';
 import { tooltipProps } from '../common/Tooltip';
 import { Panel } from './base/Panel';
