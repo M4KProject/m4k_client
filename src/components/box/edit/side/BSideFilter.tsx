@@ -10,6 +10,10 @@ import { PlusIcon, TrashIcon } from 'lucide-react';
 const c = Css('BSideFilter', {
   TimeSlot: { row: ['center', 'between'], w: '100%' },
   'TimeSlot .Field': { w: 80 },
+  WeekDay: {
+    rotate: '-45deg',
+    fontSize: '80%',
+  }
 });
 
 const useFilterProp = <K extends keyof NonNullable<BItem['f']>>(
@@ -23,6 +27,11 @@ const useFilterProp = <K extends keyof NonNullable<BItem['f']>>(
   return [value, setValue];
 };
 
+const WeekDay = ({ i }: { i: number }) => {
+  const name = dayIndexToShort(i)
+  return <span {...c('WeekDay')}>{name}</span>;
+}
+
 const WeekDaysField = () => {
   const [dates, setDates] = useFilterProp('w');
   const value = bitsToRecord(dates||0);
@@ -32,7 +41,7 @@ const WeekDaysField = () => {
       label="Jours de la semaine"
       col
       type="picker"
-      items={[1,2,3,4,5,6,0].map(v => [v as any, dayIndexToShort(v)])}
+      items={[1,2,3,4,5,6,0].map(v => [v as any, () => <WeekDay i={v} />])}
       value={value}
       onValue={next => setDates(recordToBits(next))}
     />

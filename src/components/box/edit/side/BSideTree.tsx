@@ -18,6 +18,8 @@ import { useFlux } from '@/hooks/useFlux';
 import { BSideNode } from './BSideNode';
 import { Css } from 'fluxio';
 import { BSideSep } from './BSideSep';
+import { BField } from '../BField';
+import { mediaType, pageType, playerType, textType, webType, zoneType } from '../../BController';
 
 const c = Css('BSideTree', {});
 
@@ -30,6 +32,22 @@ export const SCREEN_SIZES: ScreenSize[] = [
   [1024, 768, 'Tablet', TabletSmartphoneIcon],
   [360, 640, 'Smartphone', SmartphoneIcon],
 ];
+
+export const BFieldType = () => {
+  const controller = useBEditController();
+  const entries = Object.entries(controller.registry||{}).filter(e => e[0] !== 'root');
+  const types = entries.map(([type, config]) => [type, config.icon] as [string, any]);
+
+  return (
+    <BField label="Changer de Type" prop="t" type="picker" col defaultValue="box" items={[
+      ['zone', zoneType.icon],
+      ['player', playerType.icon],
+      ['media', mediaType.icon],
+      ['text', textType.icon],
+      ['web', webType.icon],
+    ]} />
+  )
+}
 
 export const BSideTree = () => {
   const controller = useBEditController();
@@ -47,9 +65,16 @@ export const BSideTree = () => {
   //     controller?.panZoom.setSize(w, h);
   //   };
 
+  console.debug('BSideTree', type);
+
   return (
     <div {...c('')}>
       <BSideNode i={0} />
+      <Button icon={pageType.icon} title="Ajouter une Page" color="primary" />
+      {(type && type !== "root") && (
+        <Button icon={zoneType.icon} title="Ajouter une zone" color="primary" />
+      )}
+      <BFieldType />
       <Field label="Ajouter">
         <Button
           color="primary"

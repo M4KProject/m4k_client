@@ -59,17 +59,25 @@ export const MediaIcon = FileIcon;
 export const TextIcon = ALargeSmallIcon;
 export const WebIcon = EarthIcon;
 
-const root: BType = { comp: BRoot, label: 'Écran', r: 1, layout: 1, icon: RootIcon };
-const page: BType = { comp: BPage, label: 'Page', r: 1, layout: 1, icon: PageIcon };
-const zone: BType = { comp: BZone, label: 'Zone', r: 1, a: 1, layout: 1, icon: ZoneIcon };
-const player: BType = { comp: BPlayer, label: 'Player', r: 1, a: 1, icon: PlayerIcon };
-const media: BType = { comp: BMedia, label: 'Media', m: 1, a: 1, icon: MediaIcon };
-const text: BType = { comp: BText, label: 'Texte', b: 1, a: 1, icon: TextIcon };
-const web: BType = { comp: BWeb, label: 'Vue Web', a: 1, icon: WebIcon };
+export const rootType: BType = { comp: BRoot, label: 'Écran', r: 1, layout: 1, icon: RootIcon };
+export const pageType: BType = { comp: BPage, label: 'Page', r: 1, layout: 1, icon: PageIcon };
+export const zoneType: BType = { comp: BZone, label: 'Zone', r: 1, a: 1, layout: 1, icon: ZoneIcon };
+export const playerType: BType = { comp: BPlayer, label: 'Player', r: 1, a: 1, icon: PlayerIcon };
+export const mediaType: BType = { comp: BMedia, label: 'Media', m: 1, a: 1, icon: MediaIcon };
+export const textType: BType = { comp: BText, label: 'Texte', b: 1, a: 1, icon: TextIcon };
+export const webType: BType = { comp: BWeb, label: 'Vue Web', a: 1, icon: WebIcon };
 
 export class BController {
   readonly log = logger('BController');
-  readonly registry: Dictionary<BType> = { root, page, zone, text, web, player, media };
+  readonly registry: Dictionary<BType> = {
+    root: rootType,
+    page: pageType,
+    zone: zoneType,
+    text: textType,
+    web: webType,
+    player: playerType,
+    media: mediaType,
+  };
 
   readonly funs: Dictionary<(boxEvent: BEvent) => void> = {};
 
@@ -189,7 +197,7 @@ export class BController {
   }
 
   getType(type: string | undefined) {
-    return type ? this.registry[type] || zone : zone;
+    return type ? this.registry[type] || zoneType : zoneType;
   }
 
   funCall(fun: BFun | undefined, boxEvent: BEvent) {
