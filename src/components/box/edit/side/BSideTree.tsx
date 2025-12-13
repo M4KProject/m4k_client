@@ -13,13 +13,14 @@ import {
 } from 'lucide-react';
 import { useBEditController } from '../useBEditController';
 import { Field } from '@/components/fields/Field';
-import { Button } from '@/components/common/Button';
+import { Button, ButtonProps } from '@/components/common/Button';
 import { useFlux } from '@/hooks/useFlux';
 import { BSideNode } from './BSideNode';
 import { Css } from 'fluxio';
 import { BSideSep } from './BSideSep';
-import { BField } from '../BField';
-import { mediaType, pageType, playerType, textType, webType, zoneType } from '../../BController';
+import { BField, useProp } from '../BField';
+import { MediaIcon, mediaType, pageType, PlayerIcon, playerType, TextIcon, textType, WebIcon, webType, ZoneIcon, zoneType } from '../../BController';
+import { Comp } from '@/utils/comp';
 
 const c = Css('BSideTree', {});
 
@@ -33,19 +34,34 @@ export const SCREEN_SIZES: ScreenSize[] = [
   [360, 640, 'Smartphone', SmartphoneIcon],
 ];
 
+export const BTypeButton = ({ value, ...props }: { value: string } & ButtonProps) => {
+  const [type, setType] = useProp('t');
+
+  const selected = type === value;
+
+  const handle = () => {
+    if (selected) return;
+    setType(value);
+  }
+
+  return (
+    <Button {...props} selected={selected} onClick={handle} />
+  )
+}
+
 export const BFieldType = () => {
   const controller = useBEditController();
   const entries = Object.entries(controller.registry||{}).filter(e => e[0] !== 'root');
   const types = entries.map(([type, config]) => [type, config.icon] as [string, any]);
 
   return (
-    <BField label="Changer de Type" prop="t" type="picker" col defaultValue="box" items={[
-      ['zone', zoneType.icon],
-      ['player', playerType.icon],
-      ['media', mediaType.icon],
-      ['text', textType.icon],
-      ['web', webType.icon],
-    ]} />
+    <Field>
+      <BTypeButton value="zone" icon={ZoneIcon} />
+      <BTypeButton value="player" icon={PlayerIcon} />
+      <BTypeButton value="media" icon={MediaIcon} />
+      <BTypeButton value="text" icon={TextIcon} />
+      <BTypeButton value="web" icon={WebIcon} />
+    </Field>
   )
 }
 
@@ -69,44 +85,13 @@ export const BSideTree = () => {
 
   return (
     <div {...c('')}>
+      <BFieldType />
+      <BSideSep />
       <BSideNode i={0} />
       <Button icon={pageType.icon} title="Ajouter une Page" color="primary" />
       {(type && type !== "root") && (
         <Button icon={zoneType.icon} title="Ajouter une zone" color="primary" />
       )}
-      <BFieldType />
-      <Field label="Ajouter">
-        <Button
-          color="primary"
-          icon={FileIcon}
-          tooltip="Ajouter une Page"
-          onClick={controller.onAddPage}
-        />
-        <Button
-          color="primary"
-          icon={SquareDashedMousePointerIcon}
-          tooltip="Ajouter une Zone"
-          onClick={controller.onAddZone}
-        />
-        <Button
-          color="primary"
-          icon={ClapperboardIcon}
-          tooltip="Ajouter un Player"
-          onClick={controller.onAddTimeline}
-        />
-        <Button
-          color="primary"
-          icon={ImagePlusIcon}
-          tooltip="Ajouter un Média"
-          onClick={controller.onAddMedia}
-        />
-        <Button
-          color="primary"
-          icon={EarthIcon}
-          tooltip="Ajouter une Vue Web"
-          onClick={controller.onAddWeb}
-        />
-      </Field>
       <BSideSep />
       {type === 'root' ||
         (type === '' && (
