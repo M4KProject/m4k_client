@@ -38,6 +38,7 @@ import {
   EarthIcon,
   FileIcon,
   HomeIcon,
+  ImageIcon,
   ImagePlayIcon,
   SquareDashedMousePointerIcon,
 } from 'lucide-react';
@@ -55,7 +56,7 @@ export const RootIcon = HomeIcon;
 export const PageIcon = FileIcon;
 export const ZoneIcon = SquareDashedMousePointerIcon;
 export const PlayerIcon = ImagePlayIcon;
-export const MediaIcon = FileIcon;
+export const MediaIcon = ImageIcon;
 export const TextIcon = ALargeSmallIcon;
 export const WebIcon = EarthIcon;
 
