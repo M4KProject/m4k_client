@@ -1,9 +1,11 @@
 import {
   ArrowLeftIcon,
+  BanIcon,
   EarthIcon,
   FileSlidersIcon,
   FilterIcon,
   ListTreeIcon,
+  SaveIcon,
   TextIcon,
 } from 'lucide-react';
 import { useBEditController } from './useBEditController';
@@ -12,6 +14,7 @@ import { useFlux } from '@/hooks/useFlux';
 import { Button, ButtonProps } from '@/components/common/Button';
 import { BEditSideName } from './BEditController';
 import { PlayerIcon } from '../BController';
+import { MenuSep } from '@/components/pages/base/Menu';
 
 export interface BMenuButtonProps extends ButtonProps {
   name?: BEditSideName;
@@ -47,15 +50,18 @@ export const BMenu = () => {
   return (
     <>
       <BMenuButton
-        title="Retour"
-        icon={ArrowLeftIcon}
-        onClick={() => router.go({ page: 'medias' })}
+        title="Annuler"
+        icon={BanIcon}
+        onClick={controller.onCancel}
       />
+      <BMenuButton title="Enregistrer" icon={SaveIcon} onClick={controller.onSave} />
+      <MenuSep />
       <BMenuButton title="Liste" icon={ListTreeIcon} name="tree" />
       <BMenuButton title="Player" icon={PlayerIcon} name="media" />
       <BMenuButton title="Vue Web" icon={EarthIcon} name="web" />
       <BMenuButton title="Texte" icon={TextIcon} name="text" />
       <BMenuButton title="Filtrer" icon={FilterIcon} name="filter" />
+      <MenuSep />
       <BMenuButton title="Avancé" icon={FileSlidersIcon} name="advanced" />
     </>
   );

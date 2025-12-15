@@ -1,11 +1,18 @@
 import { clipboardCopy, clipboardPaste } from '@/utils/clipboard';
 import { BController } from '../BController';
 import { flux, fluxCombine, isItem, isUInt, logger, onHtmlEvent, randColor } from 'fluxio';
-import { BData, BNext } from '../bTypes';
+import { BData, BNext, NBItem } from '../bTypes';
 import { Api } from '@/api/Api';
 import { Router } from '@/controllers/Router';
 
 export type BEditSideName = '' | 'tree' | 'media' | 'web' | 'text' | 'filter' | 'advanced';
+
+export interface HistoryContext {
+  prev: readonly NBItem[];
+  next?: readonly NBItem[];
+  undo: (readonly NBItem[])[];
+  redo: (readonly NBItem[])[];
+}
 
 export class BEditController extends BController {
   log = logger('BEditController');
@@ -15,23 +22,28 @@ export class BEditController extends BController {
   readonly select$ = fluxCombine(this.selectId$, this.items$).map(([index, items]) =>
     isUInt(index) ? items[index] : undefined
   );
+  readonly player$ = fluxCombine(this.selectId$, this.items$).map(([id]) => this.getParent(id, p => p.t === 'player'));
+  readonly playerChildren$ = fluxCombine(this.player$, this.items$).map(([player]) => this.getChildren(player));
+
+  isEditHistory = false;
+  readonly undo$ = flux<(readonly NBItem[])[]>([]);
+  readonly redo$ = flux<(readonly NBItem[])[]>([]);
 
   constructor(api: Api, router: Router) {
     super(api, router);
+    this.log.d('constructor');
 
-    this.click$.on((e) => this.selectId$.set(e.i));
-  }
-
-  ready() {
-    console.debug('BViewport ready');
-
-    const pz = this.panZoom;
-    const viewporteEl = pz.viewport();
-    onHtmlEvent(viewporteEl, 'click', (event) => {
-      this.click$.set({ el: viewporteEl, event });
+    this.click$.on((e) => {
+      this.log.d('click', e);
+      this.selectId$.set(e.i);
     });
 
-    // this.panZoomFit();
+    this.items$.on(items => {
+      this.log.d('items', items, this.isEditHistory);
+      if (this.isEditHistory) return;
+      this.undo$.set(prev => [...prev, items]);
+      this.redo$.set([]);
+    });
   }
 
   panZoomFit() {
@@ -56,18 +68,18 @@ export class BEditController extends BController {
       switch (key) {
         case 'ctrl+x':
         case 'meta+x':
-          this.cut();
+          this.onCut();
           break;
         case 'ctrl+c':
         case 'meta+c':
-          this.copy();
+          this.onCopy();
           break;
         case 'ctrl+v':
         case 'meta+v':
-          this.paste();
+          this.onPaste();
           break;
         case 'backspace':
-          this.remove();
+          this.onDelete();
           break;
       }
     });
@@ -102,25 +114,25 @@ export class BEditController extends BController {
     return this.getParent(this.getSelectIndex(), (i) => i.t === 'page');
   }
 
-  async remove() {
+  onDelete = async () => {
     const index = this.getSelectIndex();
     this.delete(index);
   }
 
-  async cut() {
+  onCut = async () => {
     const index = this.getSelectIndex();
     const data = this.getData(index);
     await clipboardCopy(data);
     this.delete(index);
   }
 
-  async copy() {
+  onCopy = async () => {
     const index = this.getSelectIndex();
     const data = this.getData(index);
     await clipboardCopy(data);
   }
 
-  async paste() {
+  onPaste = async () => {
     const index = this.getSelectIndex();
     const item = this.get(index);
     if (!item) return;
@@ -130,11 +142,25 @@ export class BEditController extends BController {
     }
   }
 
-  onReady = () => this.ready();
+  onReady = () => {
+    this.log.d('onReady');
 
-  onAddPage = () => this.add({ t: 'page', p: 0 });
+    const pz = this.panZoom;
+    const viewporteEl = pz.viewport();
+    onHtmlEvent(viewporteEl, 'click', (event) => {
+      this.click$.set({ el: viewporteEl, event });
+    });
+
+    // this.panZoomFit();
+  }
+
+  onAddPage = () => {
+    this.log.d('onAddPage');
+    this.add({ t: 'page', p: 0 });
+  }
 
   onAddZone = () => {
+    this.log.d('onAddZone');
     const page = this.getSelectPage();
     if (page) {
       this.add({
@@ -146,11 +172,64 @@ export class BEditController extends BController {
     }
   };
 
-  onAddTimeline = () => {};
+  onAddTimeline = () => {
+    this.log.d('onAddTimeline');
+  };
 
-  onAddMedia = () => {};
+  onAddMedia = () => {
+    this.log.d('onAddMedia');
+  };
 
-  onAddWeb = () => {};
+  onUpdateMedia = () => {
+    this.log.d('onUpdateMedia');
+  };
 
-  onSave = () => {};
+  onAddWeb = () => {
+    this.log.d('onAddWeb');
+  };
+
+  history(apply: (ctx: HistoryContext) => void) {
+    const prev = this.items$.get();
+    const prevUndo = this.undo$.get();
+    const prevRedo = this.redo$.get();
+    const undo = [...prevUndo];
+    const redo = [...prevRedo];
+
+    const ctx: HistoryContext = { prev, undo, redo };
+    apply(ctx);
+
+    this.log.d('history', prev, prevUndo, prevRedo, ctx);
+    if(!ctx.next) return;
+
+    this.isEditHistory = true;
+
+    this.items$.set(ctx.next);
+    this.undo$.set(ctx.undo);
+    this.redo$.set(ctx.redo);
+
+    this.isEditHistory = false;
+  }
+
+  onUndo = () => {
+    this.history(ctx => {
+      ctx.next = ctx.undo.pop();
+      ctx.redo.push(ctx.prev);
+    });
+  };
+
+  onRedo = () => {
+    this.history(ctx => {
+      ctx.next = ctx.redo.pop();
+      ctx.undo.push(ctx.prev);
+    });
+  };
+
+  onSave = () => {
+    this.log.d('onSave');
+  };
+
+  onCancel = () => {
+    this.log.d('onCancel');
+    this.router.go({ page: 'medias' });
+  };
 }

@@ -7,6 +7,11 @@ import {
   ClipboardPasteIcon,
   ClipboardXIcon,
   SaveIcon,
+  PlusIcon,
+  ArrowLeftIcon,
+  UndoIcon,
+  RedoIcon,
+  DeleteIcon,
 } from 'lucide-react';
 import { Button, ButtonProps } from '@/components/common/Button';
 import { useFlux } from '@/hooks/useFlux';
@@ -14,28 +19,47 @@ import { useBEditController } from './useBEditController';
 
 const c = Css('BTimeline', {
   '': {
-    h: 80,
     bg: 'bg',
     elevation: 1,
     row: ['center', 'center'],
     zIndex: 10,
+    p: 4,
   },
   Sep: {
-    w: 16,
+    flex: 1,
   },
   Button: {
+    m: 2,
     bg: 'bg',
     elevation: 1,
+    center: 1,
   },
+  'Button svg': { wh: 30 },
+  Media: {
+    wh: 80,
+    m: 2,
+    bg: 'bg',
+    elevation: 1,
+    center: 1,
+  },
+  'Media svg': { wh: 60 },
 });
 
 const BTimelineButton = (props: ButtonProps) => (
-  <Button color="primary" {...props} {...c('Button', props)} />
+  <Button {...props} {...c('Button', props)} />
 );
+
+const BTimelineMedia = (props: ButtonProps) => {
+  return (
+    <Button {...props} {...c('Media', props)} />
+  )
+};
 
 export const BTimeline = () => {
   const controller = useBEditController();
   const select = useFlux(controller.select$);
+  const player = useFlux(controller.player$);
+  const playerChildren = useFlux(controller.playerChildren$);
   const selectIndex = select?.i;
   const pz = controller.panZoom;
   const hasSelect = isUInt(selectIndex);
@@ -44,34 +68,35 @@ export const BTimeline = () => {
 
   return (
     <div {...c('')}>
-      {!hasSelect && (
-        <>
-          <BTimelineButton icon={ZoomInIcon} onClick={() => pz.zoomIn()} tooltip="Zoom +" />
-          <BTimelineButton icon={ZoomOutIcon} onClick={() => pz.zoomOut()} tooltip="Zoom -" />
-          <BTimelineButton
-            icon={Maximize2Icon}
-            onClick={() => pz.fitToContainer()}
-            tooltip="Ajuster au conteneur"
-          />
-        </>
-      )}
+      <BTimelineButton icon={ZoomInIcon} onClick={() => pz.zoomIn()} tooltip="Zoom +" />
+      <BTimelineButton icon={ZoomOutIcon} onClick={() => pz.zoomOut()} tooltip="Zoom -" />
+      <BTimelineButton
+        icon={Maximize2Icon}
+        onClick={() => pz.fitToContainer()}
+        tooltip="Ajuster au conteneur"
+      />
       {hasSelect && (
         <>
-          <BTimelineButton icon={ClipboardXIcon} onClick={() => controller.cut()} tooltip="Couper" />
-          <BTimelineButton
-            icon={ClipboardCopyIcon}
-            onClick={() => controller.copy()}
-            tooltip="Copier"
-          />
-          <BTimelineButton
-            icon={ClipboardPasteIcon}
-            onClick={() => controller.paste()}
-            tooltip="Coller"
-          />
+          <BTimelineButton icon={DeleteIcon} onClick={controller.onDelete} tooltip="Supprimer" />
+          <BTimelineButton icon={ClipboardXIcon} onClick={controller.onCut} tooltip="Couper" />
+          <BTimelineButton icon={ClipboardCopyIcon} onClick={controller.onCopy} tooltip="Copier" />
+          <BTimelineButton icon={ClipboardPasteIcon} onClick={controller.onPaste} tooltip="Coller" />
         </>
       )}
       <div {...c('Sep')} />
-      <BTimelineButton icon={SaveIcon} onClick={controller.onSave} tooltip="Enregistrer" />
+      {player && (
+        <>
+          {playerChildren.map(c => c && (
+            <BTimelineMedia key={c.i} icon={PlusIcon} onClick={controller.onAddMedia} tooltip={c.i} />
+          ))}
+          <BTimelineMedia icon={PlusIcon} onClick={controller.onAddMedia} tooltip="Ajouter un média" />
+        </>
+      )}
+      <div {...c('Sep')} />
+      <BTimelineButton icon={UndoIcon} onClick={controller.onUndo} tooltip="Annuler la modification" />
+      <BTimelineButton icon={RedoIcon} onClick={controller.onRedo} tooltip="Retablir la modification"  />
+      <BTimelineButton icon={SaveIcon} onClick={controller.onSave} tooltip="Enregistrer" color="primary" />
+      <BTimelineButton icon={ArrowLeftIcon} onClick={controller.onCancel} tooltip="Annuler" color="error" />
     </div>
   );
 };

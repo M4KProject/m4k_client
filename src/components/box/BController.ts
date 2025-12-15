@@ -16,6 +16,8 @@ import {
   isNotNil,
   getBit,
   serverDate,
+  toMe,
+  isItem,
 } from 'fluxio';
 import {
   BFun,
@@ -262,23 +264,35 @@ export class BController {
     return this.items$.get();
   }
 
-  get(index?: number) {
-    return isUInt(index) ? this.getItems()[index] : null;
+  getId(idOrItem?: number|NBItem) {
+    return isItem(idOrItem) ? idOrItem.i : isUInt(idOrItem) ? idOrItem : undefined;
+  }
+
+  get(idOrItem?: number|NBItem) {
+    const i = this.getId(idOrItem);
+    return i ? this.getItems()[i] : undefined;
   }
 
   getRoot() {
     return this.getItems()[0]!;
   }
 
-  getParent(index?: number, filter: (item: BItem) => boolean = isNotNil): NBItem {
-    if (!isUInt(index)) return;
+  getParent(idOrItem?: number|NBItem, filter: (item: BItem) => boolean = isNotNil): NBItem {
     const items = this.getItems();
-    let item = items[index];
+    let item = this.get(idOrItem);
     while (true) {
       if (!item) return;
       if (filter(item)) return item;
       item = item.p ? items[item.p] : undefined;
     }
+  }
+
+  getChildren(idOrItem?: number|NBItem) {
+    const item = this.get(idOrItem);
+    if (!item) return [];
+    const items = this.getItems();
+    const ids = item.r || [];
+    return ids.map(id => items[id]);
   }
 
   getPage(index?: number): NBItem {
