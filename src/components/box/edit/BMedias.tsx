@@ -4,6 +4,7 @@ import { MediaModel } from '@/api/models';
 import { useFluxMemo } from '@/hooks/useFlux';
 import { Button } from '@/components/common/Button';
 import { useBEditController } from './useBEditController';
+import { MediaController } from '@/controllers/MediaController';
 
 const c = Css('BMedias', {
   '': {
@@ -76,3 +77,15 @@ export const BMedias = () => {
     </div>
   );
 };
+
+export const BMediasForm = () => {
+  return (
+    <div {...c('Form')}>
+      <BMedias />
+    </div>
+  );
+}
+
+export const openMedias = (ctrl: MediaController, boxId: number) => {
+  
+}
