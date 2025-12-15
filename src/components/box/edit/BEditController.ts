@@ -9,9 +9,11 @@ export type BEditSideName = '' | 'tree' | 'media' | 'web' | 'text' | 'filter' | 
 
 export interface HistoryContext {
   prev: readonly NBItem[];
-  next?: readonly NBItem[];
+  prevUndo: (readonly NBItem[])[];
+  prevRedo: (readonly NBItem[])[];
   undo: (readonly NBItem[])[];
   redo: (readonly NBItem[])[];
+  next?: readonly NBItem[];
 }
 
 export class BEditController extends BController {
@@ -195,10 +197,9 @@ export class BEditController extends BController {
     const undo = [...prevUndo];
     const redo = [...prevRedo];
 
-    const ctx: HistoryContext = { prev, undo, redo };
+    const ctx: HistoryContext = { prev, prevUndo, prevRedo, undo, redo };
     apply(ctx);
 
-    this.log.d('history', prev, prevUndo, prevRedo, ctx);
     if(!ctx.next) return;
 
     this.isEditHistory = true;
@@ -212,15 +213,23 @@ export class BEditController extends BController {
 
   onUndo = () => {
     this.history(ctx => {
-      ctx.next = ctx.undo.pop();
-      ctx.redo.push(ctx.prev);
+      const prev = ctx.undo.pop();
+      if (prev) {
+        ctx.next = prev;
+        ctx.redo.push(ctx.prev);
+      }
+      this.log.d('onUndo', ctx);
     });
   };
 
   onRedo = () => {
     this.history(ctx => {
-      ctx.next = ctx.redo.pop();
-      ctx.undo.push(ctx.prev);
+      const next = ctx.redo.pop();
+      if (next) {
+        ctx.next = next;
+        ctx.undo.push(ctx.prev);
+      }
+      this.log.d('onRedo', ctx);
     });
   };
 
