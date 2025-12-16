@@ -4,6 +4,7 @@ import { flux, fluxCombine, isItem, isUInt, logger, onHtmlEvent, randColor } fro
 import { BData, BNext, NBItem } from '../bTypes';
 import { Api } from '@/api/Api';
 import { Router } from '@/controllers/Router';
+import { openBMediasWindow } from './BMediasWindow';
 
 export type BEditSideName = '' | 'tree' | 'media' | 'web' | 'text' | 'filter' | 'advanced';
 
@@ -178,8 +179,9 @@ export class BEditController extends BController {
     this.log.d('onAddTimeline');
   };
 
-  onAddMedia = () => {
+  onAddMedia = (e: Event) => {
     this.log.d('onAddMedia');
+    openBMediasWindow(e);
   };
 
   onUpdateMedia = () => {

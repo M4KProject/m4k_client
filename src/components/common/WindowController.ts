@@ -30,7 +30,7 @@ export interface WindowProps extends WindowFooterProps {
   content?: Comp;
   children?: ComponentChildren;
   controller?: WindowController;
-  target?: HTMLElement;
+  target?: HTMLElement|Event;
   pos?: Vector2;
   size?: Vector2;
   min?: Vector2 | Vector4;
@@ -86,9 +86,11 @@ export class WindowController {
     let x: number;
     let y: number;
 
-    if (target instanceof HTMLElement) {
+    const targetEl = target instanceof Event ? target.target : target;
+
+    if (targetEl instanceof HTMLElement) {
       // Center window on target position
-      const rect = target.getBoundingClientRect();
+      const rect = targetEl.getBoundingClientRect();
       const targetCenterX = rect.left + rect.width / 2;
       const targetCenterY = rect.top + rect.height / 2;
       x = targetCenterX - w / 2;
