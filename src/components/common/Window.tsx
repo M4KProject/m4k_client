@@ -144,16 +144,17 @@ const edges: [string, Vector4, EdgeStyle][] = EDGES.map(([name, dir, [top, left]
   ];
 });
 
-export const WindowFooter = ({ yes, no, cancel }: WindowFooterProps) => {
+export const WindowFooter = ({ yes, no, cancel, confirm }: WindowFooterProps) => {
   const controller = useWindowController();
-  const hasButtons = yes || no || cancel;
+  const hasButtons = yes || no || cancel || confirm;
   if (!hasButtons) return null;
 
   return (
     <div {...c('Footer')}>
-      {yes && <Button color="success" icon={CheckIcon} title="Oui" onClick={controller.yes} />}
-      {no && <Button color="warn" icon={XCircleIcon} title="Non" onClick={controller.no} />}
-      {cancel && <Button color="error" icon={BanIcon} title="Annuler" onClick={controller.cancel} />}
+      {yes && <Button color="success" icon={CheckIcon} title="Oui" onClick={controller.handle('yes')} />}
+      {no && <Button color="warn" icon={XCircleIcon} title="Non" onClick={controller.handle('no')} />}
+      {cancel && <Button color="error" icon={BanIcon} title="Annuler" onClick={controller.handle('cancel')} />}
+      {confirm && <Button color="success" icon={CheckIcon} title="Valider" onClick={controller.handle('confirm')} />}
     </div>
   );
 };
@@ -164,7 +165,7 @@ const WindowRender = (props: WindowProps) => {
     [props.controller]
   );
 
-  const { modal, draggable, resizable, title, content, children, yes, no, cancel } = props;
+  const { modal, draggable, resizable, title, content, children, yes, no, cancel, confirm } = props;
 
   const mounted = useFlux(controller.mounted$);
   const open = useFlux(controller.open$);
@@ -187,7 +188,7 @@ const WindowRender = (props: WindowProps) => {
             {open ? comp(content) : null}
             {open ? children : null}
           </div>
-          <WindowFooter yes={yes} no={no} cancel={cancel} />
+          <WindowFooter yes={yes} no={no} cancel={cancel} confirm={confirm} />
           {resizable &&
             edges.map(([name, dir, style]) => (
               <div key={name} style={style as any} onMouseDown={controller.resize(dir)} />

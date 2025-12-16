@@ -53,6 +53,7 @@ import { BMedia } from './BMedia';
 import { Api } from '@/api/Api';
 import { Router } from '@/controllers/Router';
 import { BWeb } from './BWeb';
+import { MediaController } from '@/controllers/MediaController';
 
 export const RootIcon = HomeIcon;
 export const PageIcon = FileIcon;
@@ -100,10 +101,12 @@ export class BController {
 
   readonly api: Api;
   readonly router: Router;
+  readonly mediaController: MediaController;
 
-  constructor(api: Api, router: Router) {
+  constructor(api: Api, router: Router, mediaController: MediaController) {
     this.api = api;
     this.router = router;
+    this.mediaController = mediaController;
     app.b = this;
   }
 

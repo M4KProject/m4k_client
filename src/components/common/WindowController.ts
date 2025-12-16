@@ -22,6 +22,7 @@ export interface WindowFooterProps {
   yes?: (controller: WindowController) => void;
   no?: (controller: WindowController) => void;
   cancel?: (controller: WindowController) => void;
+  confirm?: (controller: WindowController) => void;
 }
 
 export interface WindowProps extends WindowFooterProps {
@@ -204,7 +205,7 @@ export class WindowController {
   close = () => {
     console.debug('WindowController close');
     if (!this.response$.get()) {
-      this.cancel();
+      this.setResponse('cancel');
       return;
     }
     this.open$.set(false);
@@ -223,14 +224,15 @@ export class WindowController {
     if (this.response$.get()) return;
     this.response$.set(response);
     this.close();
-    if (response === 'yes') this.props.yes?.(this);
-    else if (response === 'no') this.props.no?.(this);
-    else if (response === 'cancel') this.props.cancel?.(this);
+    const method = (this.props as any)[response];
+    if (method) method(this);
   }
 
-  yes = () => this.setResponse('yes');
-  no = () => this.setResponse('no');
-  cancel = () => this.setResponse('cancel');
+  handle(response: string) {
+    return () => {
+      this.setResponse(response);
+    };
+  }
 
   drag = (e: Event) => this.startDrag(e);
 

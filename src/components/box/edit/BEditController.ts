@@ -4,7 +4,9 @@ import { flux, fluxCombine, isItem, isUInt, logger, onHtmlEvent, randColor } fro
 import { BData, BNext, NBItem } from '../bTypes';
 import { Api } from '@/api/Api';
 import { Router } from '@/controllers/Router';
-import { openBMediasWindow } from './BMediasWindow';
+import { createWindow } from '@/components/common/Window';
+import { MediaController } from '@/controllers/MediaController';
+import { Medias } from '@/components/panels/Medias';
 
 export type BEditSideName = '' | 'tree' | 'media' | 'web' | 'text' | 'filter' | 'advanced';
 
@@ -32,8 +34,8 @@ export class BEditController extends BController {
   readonly undo$ = flux<(readonly NBItem[])[]>([]);
   readonly redo$ = flux<(readonly NBItem[])[]>([]);
 
-  constructor(api: Api, router: Router) {
-    super(api, router);
+  constructor(api: Api, router: Router, mediaController: MediaController) {
+    super(api, router, mediaController);
     this.log.d('constructor');
 
     this.click$.on((e) => {
@@ -179,9 +181,32 @@ export class BEditController extends BController {
     this.log.d('onAddTimeline');
   };
 
-  onAddMedia = (e: Event) => {
+  onAddMedia = (target: Event) => {
     this.log.d('onAddMedia');
-    openBMediasWindow(e);
+
+    const player = this.player$.get();
+    if (!player) return;
+
+    createWindow({
+      target,
+      modal: true,
+      title: 'Sélectionner un média',
+      content: Medias,
+      cancel: () => {
+        this.log.d('onAddMedia cancel');
+      },
+      confirm: () => {
+        this.log.d('confirm', player);
+        const mediaId = this.mediaController.select$.get()?.id;
+        if (!mediaId) return;
+        this.add({
+          p: player.i,
+          m: mediaId,
+        })
+      },
+      size: [800, 600],
+      min: [400, 300],
+    });
   };
 
   onUpdateMedia = () => {

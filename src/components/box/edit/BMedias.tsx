@@ -85,7 +85,3 @@ export const BMediasForm = () => {
     </div>
   );
 }
-
-export const openMedias = (ctrl: MediaController, boxId: number) => {
-  
-}
