@@ -14,8 +14,13 @@ import {
   DeleteIcon,
 } from 'lucide-react';
 import { Button, ButtonProps } from '@/components/common/Button';
-import { useFlux } from '@/hooks/useFlux';
+import { useFlux, useFluxMemo } from '@/hooks/useFlux';
 import { useBEditController } from './useBEditController';
+import { BItem } from '../bTypes';
+import { fluxUndefined } from 'fluxio/flux/fluxUndefined';
+import { useMediaController } from '@/hooks/useMediaController';
+import { MediaView } from '@/components/medias/MediaView';
+import { MediaPreview } from '@/components/medias/MediaPreview';
 
 const c = Css('BTimeline', {
   '': {
@@ -49,7 +54,17 @@ const BTimelineButton = (props: ButtonProps) => (
   <Button {...props} {...c('Button', props)} />
 );
 
-const BTimelineMedia = (props: ButtonProps) => {
+const BTimelineMedia = ({ box, ...props }: { box?: BItem } & ButtonProps) => {
+  const mediaController = useMediaController();
+  const mediaById = useFlux(mediaController.mediaById$)
+  const media = mediaById[box?.m||''];
+  
+  if (media) {
+    <Button {...props} {...c('Media', props)}>
+      <MediaPreview media={media} />
+    </Button>
+  }
+
   return (
     <Button {...props} {...c('Media', props)} />
   )
@@ -87,7 +102,7 @@ export const BTimeline = () => {
       {player && (
         <>
           {playerChildren.map(c => c && (
-            <BTimelineMedia key={c.i} icon={PlusIcon} onClick={controller.onAddMedia} tooltip={c.i} />
+            <BTimelineMedia key={c.i} icon={PlusIcon} onClick={controller.onAddMedia} box={c} />
           ))}
           <BTimelineMedia icon={PlusIcon} onClick={controller.onAddMedia} tooltip="Ajouter un média" />
         </>
