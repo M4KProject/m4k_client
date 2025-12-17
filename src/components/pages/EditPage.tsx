@@ -68,7 +68,7 @@ export const EditPage = () => {
 
   return (
     <BContext value={controller}>
-      <Page {...c('')} menu={BMenu}>
+      <Page {...c('')} menu={null}>
         <BViewport />
         <JobsWindow />
       </Page>

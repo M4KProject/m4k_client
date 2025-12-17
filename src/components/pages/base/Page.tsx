@@ -56,9 +56,13 @@ export const Page = ({ menu, children, ...props }: PageProps) => {
 
   return (
     <div {...props} {...c('')}>
-      <Toolbar openMenu$={openMenu$} />
+      {menu && (
+        <Toolbar openMenu$={openMenu$} />
+      )}
       <div {...c('Body')}>
-        <Menu openMenu$={openMenu$} menu={menu} />
+        {menu && (
+          <Menu openMenu$={openMenu$} menu={menu} />
+        )}
         <div {...c('Scroll')}>
           <div {...c('Content', props)}>{children}</div>
         </div>

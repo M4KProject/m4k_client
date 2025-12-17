@@ -3,7 +3,7 @@ import { Field } from '@/components/fields/Field';
 import { useFlux, useFluxMemo } from '@/hooks/useFlux';
 import { BData, BItem, BPropNext } from '@/components/box/bTypes';
 import { FieldProps } from '@/components/fields/types';
-import { useBEditController } from './useBEditController';
+import { useBEditController } from '../useBEditController';
 
 const c = Css('BField', {
   Sep: {
@@ -37,25 +37,6 @@ export const BField = ({
       {...props}
     />
   );
-};
-
-export const BStyleField = ({ prop, ...props }: FieldProps<any, any> & { prop: string }) => {
-  const [style, setStyle] = useProp('s');
-  const value = ((style || {}) as any)[prop] as any;
-  const onValue = (value: any) => {
-    setStyle((prev) => ({ ...prev, [prop]: value }));
-  };
-  return <Field {...c('')} name={prop} value={value} onValue={onValue} {...props} />;
-};
-
-export const BDataField = () => {
-  const controller = useBEditController();
-  const i = useFlux(controller.select$)?.i;
-  const item = useFluxMemo(() => controller.item$(i), [controller, i]);
-  const onValue = (next: any) => {
-    controller?.set(i, next);
-  };
-  return <Field {...c('')} label="B" name="box" type="json" value={item} onValue={onValue} col />;
 };
 
 export const BFieldSep = () => <div {...c('Sep')} />;

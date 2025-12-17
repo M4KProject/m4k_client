@@ -1,5 +1,5 @@
 import { bitsToRecord, Css, dayIndexToShort, recordToBits, repeat } from 'fluxio';
-import { useProp } from '../BField';
+import { useProp } from '../fields/BField';
 import { Field, FieldCol, FieldRow } from '@/components/fields/Field';
 import { BItem } from '@/components/box/bTypes';
 import { Calendar } from '@/components/common/Calendar';

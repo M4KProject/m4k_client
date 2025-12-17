@@ -2,7 +2,7 @@ import { Css, truncate } from 'fluxio';
 import { useFluxMemo } from '@/hooks/useFlux';
 import { ChevronRightIcon, SquareIcon } from 'lucide-react';
 import { useBEditController } from '../useBEditController';
-import { BField } from '../BField';
+import { BField } from '../fields/BField';
 import { tooltipProps } from '@/components/common/Tooltip';
 import { useState } from 'preact/hooks';
 

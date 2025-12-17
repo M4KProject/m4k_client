@@ -11,17 +11,20 @@ import {
   toTime,
 } from 'fluxio';
 import { useEffect } from 'preact/hooks';
-import { useApi, useGroupMedias } from '@/hooks/useApi';
+import { useApi, useGroupMedias, useMediaById } from '@/hooks/useApi';
 import { DeviceModel } from '@/api/models';
 import { Field } from '@/components/fields/Field';
 import { Button } from '@/components/common/Button';
-import { useRouter } from '@/hooks/useRoute';
-import { useFlux } from '@/hooks/useFlux';
+import { useMedia, useRouter } from '@/hooks/useRoute';
+import { useFlux, useFluxMemo } from '@/hooks/useFlux';
 import { tooltipProps } from '../common/Tooltip';
 import { Panel } from './base/Panel';
 import { useConstant } from '@/hooks/useConstant';
 import { PbUpdate } from 'pblite';
 import { EditIcon, InfoIcon } from 'lucide-react';
+import { createWindow } from '../common/Window';
+import { Medias } from './Medias';
+import { useMediaController } from '@/hooks/useMediaController';
 
 const c = Css('Device', {
   '': { w: 300, h: 200 },
@@ -158,6 +161,27 @@ export const Device = ({ device }: { device: DeviceModel }) => {
 
   const info = toItem(device.info);
 
+  const mediaId = device.media;
+  const media = useFluxMemo(() => api.media.find$({ id: mediaId }), [api, mediaId]);
+  const mediaController = useMediaController();
+
+  const handleMedia = (e: Event) => {
+    createWindow({
+      // target: e,
+      modal: true,
+      title: 'Sélectionner un média',
+      content: Medias,
+      cancel: () => {},
+      confirm: () => {
+        const mediaId = mediaController.select$.get()?.id;
+        if (!mediaId) return;
+        update({ media: mediaId });
+      },
+      size: [800, 600],
+      min: [400, 300],
+    });
+  }
+
   return (
     <Panel
       {...c('', selected && '-selected', onlineCls)}
@@ -176,20 +200,21 @@ export const Device = ({ device }: { device: DeviceModel }) => {
           />
         </>
       }
-    >
+      >
       <div {...c('Capture')}></div>
       <div {...c('Footer')}>
         <Button
           icon={InfoIcon}
           tooltip={() => <pre>{humanize({ id: device.id, key: device.key, ...info })}</pre>}
         />
-        <Field
+        <Button title={media?.title} color="primary" onClick={handleMedia}/>
+        {/* <Field
           containerProps={c('Media')}
           type="select"
           value={device.media}
           onValue={(media) => update({ media })}
           items={contents.map((m) => [m.id, m.title])}
-        />
+        /> */}
         <Button
           color="primary"
           icon={EditIcon}

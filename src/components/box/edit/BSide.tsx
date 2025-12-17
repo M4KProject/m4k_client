@@ -54,25 +54,26 @@ const c = Css('BSide', {
 });
 
 export const BSide = () => {
-  const controller = useBEditController();
-  const show$ = useMemo(() => controller.side$.map((p) => !!p), [controller]);
-  const side$ = useMemo(() => controller.side$.filter((p) => !!p), [controller]);
-  const show = useFlux(show$);
-  const side = useFlux(side$);
-  const animState = useAnimState(show, 400);
-  const unmounted = animState === 'unmounted';
-
-  if (unmounted) return null;
+  // const controller = useBEditController();
+  // const show$ = useMemo(() => controller.side$.map((p) => !!p), [controller]);
+  // const side$ = useMemo(() => controller.side$.filter((p) => !!p), [controller]);
+  // const show = useFlux(show$);
+  // const side = useFlux(side$);
+  // const animState = useAnimState(show, 400);
+  // const unmounted = animState === 'unmounted';
+  // if (unmounted) return null;
+  // <div {...c('', isAnimStateOpen(animState) && `-open`)}></div>
 
   return (
-    <div {...c('', isAnimStateOpen(animState) && `-open`)}>
+    <div {...c('')}>
       <div {...c('Body')}>
-        {side === 'tree' && <BSideTree />}
+        <BSideTree />
+        {/* {side === 'tree' && <BSideTree />}
         {side === 'media' && <BSideMedia />}
         {side === 'web' && <BSideWeb />}
         {side === 'text' && <BSideText />}
         {side === 'filter' && <BSideFilter />}
-        {side === 'advanced' && <BSideAdvanced />}
+        {side === 'advanced' && <BSideAdvanced />} */}
       </div>
     </div>
   );

@@ -15,7 +15,7 @@ const c = Css('Devices', {
 export const Devices = () => {
   const devices = useGroupDevices();
 
-  const handleAdd = async () => {
+  const handleAdd = () => {
     createWindow({
       title: 'Pairer un nouvel écran',
       content: DevicePairing,
