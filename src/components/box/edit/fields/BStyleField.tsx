@@ -1,7 +1,7 @@
-import { Field } from "@/components/fields/Field";
-import { Css } from "fluxio";
-import { useProp } from "./BField";
-import { FieldProps } from "@/components/fields/types";
+import { Field } from '@/components/fields/Field';
+import { Css } from 'fluxio';
+import { useProp } from './BField';
+import { FieldProps } from '@/components/fields/types';
 
 const c = Css('BStyleField', {});
 

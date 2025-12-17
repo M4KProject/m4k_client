@@ -65,7 +65,14 @@ export const WebIcon = EarthIcon;
 
 export const rootType: BType = { comp: BRoot, label: 'Écran', r: 1, layout: 1, icon: RootIcon };
 export const pageType: BType = { comp: BPage, label: 'Page', r: 1, layout: 1, icon: PageIcon };
-export const zoneType: BType = { comp: BZone, label: 'Zone', r: 1, a: 1, layout: 1, icon: ZoneIcon };
+export const zoneType: BType = {
+  comp: BZone,
+  label: 'Zone',
+  r: 1,
+  a: 1,
+  layout: 1,
+  icon: ZoneIcon,
+};
 export const playerType: BType = { comp: BPlayer, label: 'Player', r: 1, a: 1, icon: PlayerIcon };
 export const mediaType: BType = { comp: BMedia, label: 'Media', m: 1, a: 1, icon: MediaIcon };
 export const textType: BType = { comp: BText, label: 'Texte', b: 1, a: 1, icon: TextIcon };
@@ -267,11 +274,15 @@ export class BController {
     return this.items$.get();
   }
 
-  getId(idOrItem?: number|NBItem) {
-    return isItem(idOrItem) ? idOrItem.i : isUInt(idOrItem) ? idOrItem : undefined;
+  getId(idOrItem?: number | NBItem) {
+    return (
+      isItem(idOrItem) ? idOrItem.i
+      : isUInt(idOrItem) ? idOrItem
+      : undefined
+    );
   }
 
-  get(idOrItem?: number|NBItem) {
+  get(idOrItem?: number | NBItem) {
     const i = this.getId(idOrItem);
     return i ? this.getItems()[i] : undefined;
   }
@@ -280,7 +291,7 @@ export class BController {
     return this.getItems()[0]!;
   }
 
-  getParent(idOrItem?: number|NBItem, filter: (item: BItem) => boolean = isNotNil): NBItem {
+  getParent(idOrItem?: number | NBItem, filter: (item: BItem) => boolean = isNotNil): NBItem {
     const items = this.getItems();
     let item = this.get(idOrItem);
     while (true) {
@@ -290,12 +301,12 @@ export class BController {
     }
   }
 
-  getChildren(idOrItem?: number|NBItem) {
+  getChildren(idOrItem?: number | NBItem) {
     const item = this.get(idOrItem);
     if (!item) return [];
     const items = this.getItems();
     const ids = item.r || [];
-    return ids.map(id => items[id]);
+    return ids.map((id) => items[id]);
   }
 
   getPage(index?: number): NBItem {

@@ -34,7 +34,10 @@ export const EditPage = () => {
   //   }
   // }
 
-  const controller = useMemo(() => new BEditController(api, router, mediaController), [api, router, mediaController]);
+  const controller = useMemo(
+    () => new BEditController(api, router, mediaController),
+    [api, router, mediaController]
+  );
 
   useEffect(() => {
     if (!content) return;

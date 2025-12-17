@@ -50,24 +50,20 @@ const c = Css('BTimeline', {
   'Media svg': { wh: 60 },
 });
 
-const BTimelineButton = (props: ButtonProps) => (
-  <Button {...props} {...c('Button', props)} />
-);
+const BTimelineButton = (props: ButtonProps) => <Button {...props} {...c('Button', props)} />;
 
 const BTimelineMedia = ({ box, ...props }: { box?: BItem } & ButtonProps) => {
   const mediaController = useMediaController();
-  const mediaById = useFlux(mediaController.mediaById$)
-  const media = mediaById[box?.m||''];
-  
+  const mediaById = useFlux(mediaController.mediaById$);
+  const media = mediaById[box?.m || ''];
+
   if (media) {
     <Button {...props} {...c('Media', props)}>
       <MediaPreview media={media} />
-    </Button>
+    </Button>;
   }
 
-  return (
-    <Button {...props} {...c('Media', props)} />
-  )
+  return <Button {...props} {...c('Media', props)} />;
 };
 
 export const BTimeline = () => {
@@ -95,23 +91,52 @@ export const BTimeline = () => {
           <BTimelineButton icon={DeleteIcon} onClick={controller.onDelete} tooltip="Supprimer" />
           <BTimelineButton icon={ClipboardXIcon} onClick={controller.onCut} tooltip="Couper" />
           <BTimelineButton icon={ClipboardCopyIcon} onClick={controller.onCopy} tooltip="Copier" />
-          <BTimelineButton icon={ClipboardPasteIcon} onClick={controller.onPaste} tooltip="Coller" />
+          <BTimelineButton
+            icon={ClipboardPasteIcon}
+            onClick={controller.onPaste}
+            tooltip="Coller"
+          />
         </>
       )}
       <div {...c('Sep')} />
       {player && (
         <>
-          {playerChildren.map(c => c && (
-            <BTimelineMedia key={c.i} icon={PlusIcon} onClick={controller.onAddMedia} box={c} />
-          ))}
-          <BTimelineMedia icon={PlusIcon} onClick={controller.onAddMedia} tooltip="Ajouter un média" />
+          {playerChildren.map(
+            (c) =>
+              c && (
+                <BTimelineMedia key={c.i} icon={PlusIcon} onClick={controller.onAddMedia} box={c} />
+              )
+          )}
+          <BTimelineMedia
+            icon={PlusIcon}
+            onClick={controller.onAddMedia}
+            tooltip="Ajouter un média"
+          />
         </>
       )}
       <div {...c('Sep')} />
-      <BTimelineButton icon={UndoIcon} onClick={controller.onUndo} tooltip="Annuler la modification" />
-      <BTimelineButton icon={RedoIcon} onClick={controller.onRedo} tooltip="Retablir la modification"  />
-      <BTimelineButton icon={SaveIcon} onClick={controller.onSave} tooltip="Enregistrer" color="primary" />
-      <BTimelineButton icon={ArrowLeftIcon} onClick={controller.onCancel} tooltip="Annuler" color="error" />
+      <BTimelineButton
+        icon={UndoIcon}
+        onClick={controller.onUndo}
+        tooltip="Annuler la modification"
+      />
+      <BTimelineButton
+        icon={RedoIcon}
+        onClick={controller.onRedo}
+        tooltip="Retablir la modification"
+      />
+      <BTimelineButton
+        icon={SaveIcon}
+        onClick={controller.onSave}
+        tooltip="Enregistrer"
+        color="primary"
+      />
+      <BTimelineButton
+        icon={ArrowLeftIcon}
+        onClick={controller.onCancel}
+        tooltip="Annuler"
+        color="error"
+      />
     </div>
   );
 };

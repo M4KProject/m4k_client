@@ -31,7 +31,7 @@ export interface WindowProps extends WindowFooterProps {
   content?: Comp;
   children?: ComponentChildren;
   controller?: WindowController;
-  target?: HTMLElement|Event;
+  target?: HTMLElement | Event;
   pos?: Vector2;
   size?: Vector2;
   min?: Vector2 | Vector4;

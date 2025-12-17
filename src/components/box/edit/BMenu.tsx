@@ -49,11 +49,7 @@ export const BMenu = () => {
 
   return (
     <>
-      <BMenuButton
-        title="Annuler"
-        icon={BanIcon}
-        onClick={controller.onCancel}
-      />
+      <BMenuButton title="Annuler" icon={BanIcon} onClick={controller.onCancel} />
       <BMenuButton title="Enregistrer" icon={SaveIcon} onClick={controller.onSave} />
       <MenuSep />
       <BMenuButton title="Liste" icon={ListTreeIcon} name="tree" />

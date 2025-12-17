@@ -30,23 +30,21 @@ const Picker = () => {
   const isSelected = (index: any) => !!values[index];
 
   const getHandle = (index: any) => () => {
-    const next = {...values};
+    const next = { ...values };
     if (next[index]) delete next[index];
     else next[index] = 1;
     controller.update({ raw: next });
-  }
+  };
 
   return (
     <div {...props} {...c('', props)}>
-      {config.items?.map((item) => isArray(item) ? (
-        <Button
-          key={item[0]}
-          selected={isSelected(item[0])}
-          onClick={getHandle(item[0])}
-        >
-          {comp(item[1])}
-        </Button>
-      ) : null)}
+      {config.items?.map((item) =>
+        isArray(item) ?
+          <Button key={item[0]} selected={isSelected(item[0])} onClick={getHandle(item[0])}>
+            {comp(item[1])}
+          </Button>
+        : null
+      )}
     </div>
   );
 };

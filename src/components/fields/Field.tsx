@@ -77,7 +77,7 @@ export const c = Css('Field', {
   Col: {
     col: ['stretch', 'start'],
     w: '100%',
-  }
+  },
 });
 
 const ClearButton = () => {

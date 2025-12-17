@@ -27,8 +27,12 @@ export class BEditController extends BController {
   readonly select$ = fluxCombine(this.selectId$, this.items$).map(([index, items]) =>
     isUInt(index) ? items[index] : undefined
   );
-  readonly player$ = fluxCombine(this.selectId$, this.items$).map(([id]) => this.getParent(id, p => p.t === 'player'));
-  readonly playerChildren$ = fluxCombine(this.player$, this.items$).map(([player]) => this.getChildren(player));
+  readonly player$ = fluxCombine(this.selectId$, this.items$).map(([id]) =>
+    this.getParent(id, (p) => p.t === 'player')
+  );
+  readonly playerChildren$ = fluxCombine(this.player$, this.items$).map(([player]) =>
+    this.getChildren(player)
+  );
 
   isEditHistory = false;
   readonly undo$ = flux<(readonly NBItem[])[]>([]);
@@ -43,10 +47,10 @@ export class BEditController extends BController {
       this.selectId$.set(e.i);
     });
 
-    this.items$.on(items => {
+    this.items$.on((items) => {
       this.log.d('items', items, this.isEditHistory);
       if (this.isEditHistory) return;
-      this.undo$.set(prev => [...prev, items]);
+      this.undo$.set((prev) => [...prev, items]);
       this.redo$.set([]);
     });
   }
@@ -122,20 +126,20 @@ export class BEditController extends BController {
   onDelete = async () => {
     const index = this.getSelectIndex();
     this.delete(index);
-  }
+  };
 
   onCut = async () => {
     const index = this.getSelectIndex();
     const data = this.getData(index);
     await clipboardCopy(data);
     this.delete(index);
-  }
+  };
 
   onCopy = async () => {
     const index = this.getSelectIndex();
     const data = this.getData(index);
     await clipboardCopy(data);
-  }
+  };
 
   onPaste = async () => {
     const index = this.getSelectIndex();
@@ -145,7 +149,7 @@ export class BEditController extends BController {
     if (isItem(d)) {
       this.add({ ...d, p: item.t === d.t ? item.p : item.i });
     }
-  }
+  };
 
   onReady = () => {
     this.log.d('onReady');
@@ -157,12 +161,12 @@ export class BEditController extends BController {
     });
 
     // this.panZoomFit();
-  }
+  };
 
   onAddPage = () => {
     this.log.d('onAddPage');
     this.add({ t: 'page', p: 0 });
-  }
+  };
 
   onAddZone = () => {
     this.log.d('onAddZone');
@@ -202,7 +206,7 @@ export class BEditController extends BController {
         this.add({
           p: player.i,
           m: mediaId,
-        })
+        });
       },
       size: [800, 600],
       min: [400, 300],
@@ -227,7 +231,7 @@ export class BEditController extends BController {
     const ctx: HistoryContext = { prev, prevUndo, prevRedo, undo, redo };
     apply(ctx);
 
-    if(!ctx.next) return;
+    if (!ctx.next) return;
 
     this.isEditHistory = true;
 
@@ -239,7 +243,7 @@ export class BEditController extends BController {
   }
 
   onUndo = () => {
-    this.history(ctx => {
+    this.history((ctx) => {
       const prev = ctx.undo.pop();
       if (prev) {
         ctx.next = prev;
@@ -250,7 +254,7 @@ export class BEditController extends BController {
   };
 
   onRedo = () => {
-    this.history(ctx => {
+    this.history((ctx) => {
       const next = ctx.redo.pop();
       if (next) {
         ctx.next = next;

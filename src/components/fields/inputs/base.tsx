@@ -53,8 +53,8 @@ const seconds: FieldProps<number, string> = {
     const props = useInputProps();
     return <input {...props} type="text" placeholder={props.placeholder || '00:00:00'} />;
   },
-  toValue: (r: any) => isNumber(r=parseTime(r)) ? r / SECOND : 0,
-  toRaw: v => formatTime(v ? v * SECOND : 0),
+  toValue: (r: any) => (isNumber((r = parseTime(r))) ? r / SECOND : 0),
+  toRaw: (v) => formatTime(v ? v * SECOND : 0),
 };
 
 export const baseInputs = {

@@ -1,7 +1,14 @@
 import { Css } from 'fluxio';
 import { JSX } from 'preact';
 import { LoadingPage } from '@/components/kiosk/LoadingPage';
-import { MonitorSpeakerIcon, SettingsIcon, BugIcon, CalendarIcon, ListIcon, WrenchIcon } from 'lucide-react';
+import {
+  MonitorSpeakerIcon,
+  SettingsIcon,
+  BugIcon,
+  CalendarIcon,
+  ListIcon,
+  WrenchIcon,
+} from 'lucide-react';
 import { CodePinPage } from '@/components/kiosk/CodePinPage';
 import { ConfigPlaylistPage } from '@/components/kiosk/ConfigPlaylistPage';
 import { TestPage } from '@/components/kiosk/TestPage';

@@ -75,5 +75,5 @@ export const DevicePage = () => {
     device.capture ? api.device.coll.getFileUrl(device.id, toString(device.capture)) : '';
 
   return null;
-  // return (0 
+  // return (0
 };

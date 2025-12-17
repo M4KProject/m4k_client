@@ -1,7 +1,7 @@
-import { Field } from "@/components/fields/Field";
-import { useBEditController } from "../useBEditController";
-import { useFlux, useFluxMemo } from "@/hooks/useFlux";
-import { Css } from "fluxio";
+import { Field } from '@/components/fields/Field';
+import { useBEditController } from '../useBEditController';
+import { useFlux, useFluxMemo } from '@/hooks/useFlux';
+import { Css } from 'fluxio';
 
 const c = Css('BDataField', {});
 

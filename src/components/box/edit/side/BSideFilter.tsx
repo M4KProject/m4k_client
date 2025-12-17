@@ -13,7 +13,7 @@ const c = Css('BSideFilter', {
   WeekDay: {
     rotate: '-45deg',
     fontSize: '80%',
-  }
+  },
 });
 
 const useFilterProp = <K extends keyof NonNullable<BItem['f']>>(
@@ -28,25 +28,25 @@ const useFilterProp = <K extends keyof NonNullable<BItem['f']>>(
 };
 
 const WeekDay = ({ i }: { i: number }) => {
-  const name = dayIndexToShort(i)
+  const name = dayIndexToShort(i);
   return <span {...c('WeekDay')}>{name}</span>;
-}
+};
 
 const WeekDaysField = () => {
   const [dates, setDates] = useFilterProp('w');
-  const value = bitsToRecord(dates||0);
+  const value = bitsToRecord(dates || 0);
 
   return (
     <Field
       label="Jours de la semaine"
       col
       type="picker"
-      items={[1,2,3,4,5,6,0].map(v => [v as any, () => <WeekDay i={v} />])}
+      items={[1, 2, 3, 4, 5, 6, 0].map((v) => [v as any, () => <WeekDay i={v} />])}
       value={value}
-      onValue={next => setDates(recordToBits(next))}
+      onValue={(next) => setDates(recordToBits(next))}
     />
-  )
-}
+  );
+};
 
 export const BSideFilter = () => {
   const api = useApi();

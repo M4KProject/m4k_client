@@ -151,10 +151,28 @@ export const WindowFooter = ({ yes, no, cancel, confirm }: WindowFooterProps) =>
 
   return (
     <div {...c('Footer')}>
-      {yes && <Button color="success" icon={CheckIcon} title="Oui" onClick={controller.handle('yes')} />}
-      {no && <Button color="warn" icon={XCircleIcon} title="Non" onClick={controller.handle('no')} />}
-      {cancel && <Button color="error" icon={BanIcon} title="Annuler" onClick={controller.handle('cancel')} />}
-      {confirm && <Button color="success" icon={CheckIcon} title="Valider" onClick={controller.handle('confirm')} />}
+      {yes && (
+        <Button color="success" icon={CheckIcon} title="Oui" onClick={controller.handle('yes')} />
+      )}
+      {no && (
+        <Button color="warn" icon={XCircleIcon} title="Non" onClick={controller.handle('no')} />
+      )}
+      {cancel && (
+        <Button
+          color="error"
+          icon={BanIcon}
+          title="Annuler"
+          onClick={controller.handle('cancel')}
+        />
+      )}
+      {confirm && (
+        <Button
+          color="success"
+          icon={CheckIcon}
+          title="Valider"
+          onClick={controller.handle('confirm')}
+        />
+      )}
     </div>
   );
 };

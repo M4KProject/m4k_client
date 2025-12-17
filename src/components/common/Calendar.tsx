@@ -1,4 +1,30 @@
-import { addDay, Css, DAY, endOfMonth, endOfWeek, floor, formatDate, cloneDate, getMonth, getMonthDay, getTime, getYear, isDate, MONTH_NAMES, repeat, serverDate, setMonth, setMonthDay, setYear, startOfMonth, startOfWeek, toString, DAY_SHORTS, dayIndexToShort, normalizeIndex } from 'fluxio';
+import {
+  addDay,
+  Css,
+  DAY,
+  endOfMonth,
+  endOfWeek,
+  floor,
+  formatDate,
+  cloneDate,
+  getMonth,
+  getMonthDay,
+  getTime,
+  getYear,
+  isDate,
+  MONTH_NAMES,
+  repeat,
+  serverDate,
+  setMonth,
+  setMonthDay,
+  setYear,
+  startOfMonth,
+  startOfWeek,
+  toString,
+  DAY_SHORTS,
+  dayIndexToShort,
+  normalizeIndex,
+} from 'fluxio';
 import { Button } from '@/components/common/Button';
 import { Field } from '@/components/fields/Field';
 import { useState } from 'preact/hooks';
@@ -16,7 +42,7 @@ const c = Css('Calendar', {
 
   Title: { wMin: '14%', wMax: '14%', center: 1 },
   Btn: { wMin: '14%', wMax: '14%' },
-  
+
   // WeekDays: {
   //   row: ['stretch', 'center'],
   //   gap: 1,
@@ -63,7 +89,7 @@ export const Calendar = ({}: CalendarProps) => {
   const monthDaysCount = getMonthDay(monthEnd);
   const daysCount = floor((getTime(end) - getTime(start)) / DAY);
 
-  console.debug('Calendar', { day, month, year, start, end, monthDaysCount, daysCount })
+  console.debug('Calendar', { day, month, year, start, end, monthDaysCount, daysCount });
 
   return (
     <div {...c('')}>
@@ -71,22 +97,22 @@ export const Calendar = ({}: CalendarProps) => {
         containerProps={c('Day')}
         type="select"
         value={day}
-        onValue={(v) => setValue(d => setMonthDay(d, v))}
-        items={repeat(monthDaysCount, i => i+1).map(d => [d, d])}
+        onValue={(v) => setValue((d) => setMonthDay(d, v))}
+        items={repeat(monthDaysCount, (i) => i + 1).map((d) => [d, d])}
       />
       <Field
         containerProps={c('Month')}
         type="select"
         value={month}
-        onValue={(v) => setValue(d => setMonth(d, v))}
+        onValue={(v) => setValue((d) => setMonth(d, v))}
         items={MONTH_NAMES.map((name, index) => [index, name])}
       />
       <Field
         containerProps={c('Year')}
         type="select"
         value={year}
-        onValue={(v) => setValue(d => setYear(d, v))}
-        items={[year-2, year-1, year, year+1, year+2].map(y => [y, y])}
+        onValue={(v) => setValue((d) => setYear(d, v))}
+        items={[year - 2, year - 1, year, year + 1, year + 2].map((y) => [y, y])}
       />
       {/* {repeat(7, i => dayIndexToShort(normalizeIndex(i+1, 7))).map(name => (
         <div {...c('Title')}><span>{name}</span></div>

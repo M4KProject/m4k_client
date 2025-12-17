@@ -1,7 +1,7 @@
-import { Field } from "@/components/fields/Field";
-import { Css } from "fluxio";
-import { Button } from "@/components/common/Button";
-import { useBEditController } from "../useBEditController";
+import { Field } from '@/components/fields/Field';
+import { Css } from 'fluxio';
+import { Button } from '@/components/common/Button';
+import { useBEditController } from '../useBEditController';
 import {
   MonitorIcon,
   TabletSmartphoneIcon,
@@ -10,7 +10,7 @@ import {
   MonitorSmartphoneIcon,
   RotateCwIcon,
 } from 'lucide-react';
-import { useFlux } from "@/hooks/useFlux";
+import { useFlux } from '@/hooks/useFlux';
 
 const c = Css('BScreenField', {});
 
@@ -25,30 +25,30 @@ export const SCREEN_SIZES: ScreenSize[] = [
 ];
 
 export const BScreenField = () => {
-    const controller = useBEditController();
-    const screenSize$ = controller.router.screenSize$;
-    const [w, h] = useFlux(screenSize$);
+  const controller = useBEditController();
+  const screenSize$ = controller.router.screenSize$;
+  const [w, h] = useFlux(screenSize$);
 
   return (
     <>
-        <Field label="Écran" name="screen">
-            <Field value={w} onValue={(w) => screenSize$.set([w, h])} />
-            <Field value={h} onValue={(h) => screenSize$.set([w, h])} />
-        </Field>
-        <Field {...c('')} name="screenBtn">
-            {SCREEN_SIZES.map(([w, h, title, icon]) => (
-                <Button
-                    icon={icon}
-                    tooltip={`${title} (${w}x${h})`}
-                    onClick={() => screenSize$.set([w, h])}
-                />
-            ))}
-            <Button
-                icon={RotateCwIcon}
-                tooltip="Tourner l'écran"
-                onClick={() => screenSize$.set(([w, h]) => [h, w])}
-            />
-        </Field>
+      <Field label="Écran" name="screen">
+        <Field value={w} onValue={(w) => screenSize$.set([w, h])} />
+        <Field value={h} onValue={(h) => screenSize$.set([w, h])} />
+      </Field>
+      <Field {...c('')} name="screenBtn">
+        {SCREEN_SIZES.map(([w, h, title, icon]) => (
+          <Button
+            icon={icon}
+            tooltip={`${title} (${w}x${h})`}
+            onClick={() => screenSize$.set([w, h])}
+          />
+        ))}
+        <Button
+          icon={RotateCwIcon}
+          tooltip="Tourner l'écran"
+          onClick={() => screenSize$.set(([w, h]) => [h, w])}
+        />
+      </Field>
     </>
-  )
-}
+  );
+};

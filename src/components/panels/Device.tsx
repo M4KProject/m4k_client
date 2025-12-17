@@ -180,7 +180,7 @@ export const Device = ({ device }: { device: DeviceModel }) => {
       size: [800, 600],
       min: [400, 300],
     });
-  }
+  };
 
   return (
     <Panel
@@ -200,14 +200,14 @@ export const Device = ({ device }: { device: DeviceModel }) => {
           />
         </>
       }
-      >
+    >
       <div {...c('Capture')}></div>
       <div {...c('Footer')}>
         <Button
           icon={InfoIcon}
           tooltip={() => <pre>{humanize({ id: device.id, key: device.key, ...info })}</pre>}
         />
-        <Button title={media?.title} color="primary" onClick={handleMedia}/>
+        <Button title={media?.title} color="primary" onClick={handleMedia} />
         {/* <Field
           containerProps={c('Media')}
           type="select"

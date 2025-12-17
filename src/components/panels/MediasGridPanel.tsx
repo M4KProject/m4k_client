@@ -3,7 +3,14 @@ import { byId, sortItems, fluxDictionary, isUFloat } from 'fluxio';
 import { selectedById$ } from '@/controllers/selected';
 import { useApi, useGroupMedias } from '@/hooks/useApi';
 import { Dictionary, round } from 'fluxio';
-import { Trash2Icon, FolderInputIcon, PlusSquareIcon, EditIcon, EyeIcon, DownloadIcon } from 'lucide-react';
+import {
+  Trash2Icon,
+  FolderInputIcon,
+  PlusSquareIcon,
+  EditIcon,
+  EyeIcon,
+  DownloadIcon,
+} from 'lucide-react';
 import { SelectedField } from '@/components/admin/SelectedField';
 import { useMemo } from 'preact/hooks';
 import { addTr } from '@/hooks/useTr';

@@ -20,7 +20,7 @@ import { BScreenField } from '../fields/BScreenField';
 const c = Css('BSideTree', {});
 
 export const BSideTree = () => {
-    const controller = useBEditController();
+  const controller = useBEditController();
   const type = useFlux(controller.select$.map((s) => (s ? s.t : '')));
 
   //   const [sizeIndex, setSizeIndex] = useState(0);
@@ -41,7 +41,7 @@ export const BSideTree = () => {
       <BSideSep />
       <BSideNode i={0} />
       <Button icon={pageType.icon} title="Ajouter une Page" color="primary" />
-      {(type && type !== "root") && (
+      {type && type !== 'root' && (
         <Button icon={zoneType.icon} title="Ajouter une zone" color="primary" />
       )}
       <BSideSep />
