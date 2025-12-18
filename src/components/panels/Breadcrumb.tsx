@@ -16,7 +16,7 @@ import { Fragment } from 'preact/jsx-runtime';
 
 const c = Css('Breadcrumb', {
   '': {
-    rowWrap: 1,
+    row: 1,
     w: '100%',
     bg: 'bg',
     elevation: 1,

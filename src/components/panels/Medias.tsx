@@ -9,8 +9,15 @@ import { Breadcrumb } from '@/components/panels/Breadcrumb';
 
 const c = Css('Medias', {
   '': {
-    rowWrap: 1,
+    wh: '100%',
     p: 8,
+    col: 1,
+  },
+  Items: {
+    flex: 1,
+    rowWrap: 1,
+    overflowX: 'hidden',
+    overflowY: 'auto',
   },
   Back: {
     wh: 100,
@@ -45,12 +52,13 @@ export const Medias = ({ type }: { type?: MediaModel['type'] }) => {
   return (
     <div {...c('')}>
       <Breadcrumb />
-
-      {medias
-        .filter((m) => m && (m.parent || '') === (parentId || ''))
-        .map((media) => (
-          <MediaItem key={media.id} media={media} />
-        ))}
+      <div {...c('Items')}>
+        {medias
+          .filter((m) => m && (m.parent || '') === (parentId || ''))
+          .map((media) => (
+            <MediaItem key={media.id} media={media} />
+          ))}
+      </div>
     </div>
   );
 };

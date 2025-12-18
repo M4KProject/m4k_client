@@ -23,10 +23,9 @@ const c = Css('Page', {
   },
   Content: {
     position: 'absolute',
-    overflowX: 'hidden',
-    overflowY: 'auto',
+    overflow: 'hidden',
     wh: '100%',
-    rowWrap: 1,
+    col: 1,
     alignItems: 'stretch',
     flex: 1,
     bg: 'body',
@@ -48,7 +47,7 @@ const c = Css('Page', {
 // };
 
 export interface PageProps extends DivProps {
-  menu?: Comp;
+  menu?: Comp | false;
 }
 
 export const Page = ({ menu, children, ...props }: PageProps) => {
@@ -56,9 +55,9 @@ export const Page = ({ menu, children, ...props }: PageProps) => {
 
   return (
     <div {...props} {...c('')}>
-      {menu && <Toolbar openMenu$={openMenu$} />}
+      {menu !== false && <Toolbar openMenu$={openMenu$} />}
       <div {...c('Body')}>
-        {menu && <Menu openMenu$={openMenu$} menu={menu} />}
+        {menu !== false && <Menu openMenu$={openMenu$} menu={menu} />}
         <div {...c('Scroll')}>
           <div {...c('Content', props)}>{children}</div>
         </div>

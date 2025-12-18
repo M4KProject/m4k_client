@@ -62,7 +62,7 @@ export const c = Css('Field', {
     bg: 'bg',
     fg: 'fg',
     fontSize: '100%',
-    fontFamily: 'mono',
+    fontFamily: 'inherit',
   },
   ' input:hover,& textarea:hover': {
     borderColor: 'border',

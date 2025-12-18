@@ -83,6 +83,14 @@ export class BEditController extends BController {
         case 'meta+c':
           this.onCopy();
           break;
+        case 'ctrl+z':
+        case 'meta+z':
+          this.onUndo();
+          break;
+        case 'ctrl+shift+z':
+        case 'meta+shift+z':
+          this.onRedo();
+          break;
         case 'ctrl+v':
         case 'meta+v':
           this.onPaste();
