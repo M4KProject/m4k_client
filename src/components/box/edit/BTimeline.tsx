@@ -88,14 +88,6 @@ export const BTimeline = () => {
       />
       {hasSelect && (
         <>
-          <BTimelineButton icon={DeleteIcon} onClick={controller.onDelete} tooltip="Supprimer" />
-          <BTimelineButton icon={ClipboardXIcon} onClick={controller.onCut} tooltip="Couper" />
-          <BTimelineButton icon={ClipboardCopyIcon} onClick={controller.onCopy} tooltip="Copier" />
-          <BTimelineButton
-            icon={ClipboardPasteIcon}
-            onClick={controller.onPaste}
-            tooltip="Coller"
-          />
         </>
       )}
       <div {...c('Sep')} />

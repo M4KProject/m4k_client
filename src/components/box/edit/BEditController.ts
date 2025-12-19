@@ -1,6 +1,6 @@
 import { clipboardCopy, clipboardPaste } from '@/utils/clipboard';
 import { BController } from '../BController';
-import { flux, fluxCombine, isItem, isUInt, logger, onHtmlEvent, randColor } from 'fluxio';
+import { Dictionary, flux, fluxCombine, isItem, isUInt, logger, onHtmlEvent, randColor } from 'fluxio';
 import { BData, BNext, NBItem } from '../bTypes';
 import { Api } from '@/api/Api';
 import { Router } from '@/controllers/Router';
@@ -63,42 +63,37 @@ export class BEditController extends BController {
   }
 
   bindKeyDown() {
+    const { onCut, onCopy, onUndo, onRedo, onPaste, onUp, onDown, onLeft, onRight, onDelete } = this;
+    const map: Dictionary<() => void> = {
+      'ctrl+x': onCut,
+      'meta+x': onCut,
+      'ctrl+c': onCopy,
+      'meta+c': onCopy,
+      'ctrl+z': onUndo,
+      'meta+z': onUndo,
+      'ctrl+shift+z': onRedo,
+      'meta+shift+z': onRedo,
+      'ctrl+v': onPaste,
+      'meta+v': onPaste,
+      'meta+up': onUp,
+      'meta+down': onDown,
+      'meta+left': onLeft,
+      'meta+right': onRight,
+      'backspace': onDelete,
+    };
     return onHtmlEvent(0, 'keydown', (e) => {
       const key = (
         (e.ctrlKey ? 'ctrl+' : '') +
         (e.metaKey ? 'meta+' : '') +
         (e.shiftKey ? 'shift+' : '') +
         (e.altKey ? 'alt+' : '') +
-        e.key
+        e.key.replace('arrow', '')
       ).toLowerCase();
 
       console.debug('keydown', e.metaKey, key, e);
 
-      switch (key) {
-        case 'ctrl+x':
-        case 'meta+x':
-          this.onCut();
-          break;
-        case 'ctrl+c':
-        case 'meta+c':
-          this.onCopy();
-          break;
-        case 'ctrl+z':
-        case 'meta+z':
-          this.onUndo();
-          break;
-        case 'ctrl+shift+z':
-        case 'meta+shift+z':
-          this.onRedo();
-          break;
-        case 'ctrl+v':
-        case 'meta+v':
-          this.onPaste();
-          break;
-        case 'backspace':
-          this.onDelete();
-          break;
-      }
+      const method = map[key];
+      if (method) method();
     });
   }
 
@@ -158,6 +153,18 @@ export class BEditController extends BController {
       this.add({ ...d, p: item.t === d.t ? item.p : item.i });
     }
   };
+
+  onUp = async () => {
+  }
+  
+  onDown = async () => {
+  }
+
+  onLeft = async () => {
+  }
+  
+  onRight = async () => {
+  }
 
   onReady = () => {
     this.log.d('onReady');

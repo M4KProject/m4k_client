@@ -29,7 +29,7 @@ const c = Css('BHandles', {
   '-show': {
     display: 'block',
   },
-  ' div': {
+  ' b': {
     display: 'none',
     position: 'absolute',
     wh: '10px',
@@ -38,9 +38,19 @@ const c = Css('BHandles', {
     bg: 'bg',
     pointerEvents: 'all',
   },
-  '-a div': {
+  '-a b': {
     display: 'block',
   },
+  // Copy: {
+  //   position: 'absolute',
+  //   r: 0,
+  //   b: 0,
+  //   h: 40,
+  //   row: 1,
+  //   pointerEvents: 'all',
+  // },
+  // 'Copy .Button': { bg: 'white' },
+  // 'Copy svg': { wh: 20 },
 });
 
 type P = 0 | 0.5 | 1;
@@ -158,7 +168,7 @@ const BHandlesContent = () => {
   return (
     <>
       {handles.map(([name, config, style]) => (
-        <div
+        <b
           key={name}
           style={style as any}
           onMouseDown={(event) => startResize(controller, config, name, event)}
@@ -167,6 +177,18 @@ const BHandlesContent = () => {
     </>
   );
 };
+
+// const BHandlesCopy = () => {
+//   const { onDelete, onCut, onCopy, onPaste } = useBEditController();
+//   return (
+//     <div {...c('Copy')}>
+//       <Button icon={DeleteIcon} onClick={onDelete} tooltip="Supprimer (suppr)" />
+//       <Button icon={ClipboardXIcon} onClick={onCut} tooltip="Couper (ctrl+x)" />
+//       <Button icon={ClipboardCopyIcon} onClick={onCopy} tooltip="Copier (ctrl+c)" />
+//       <Button icon={ClipboardPasteIcon} onClick={onPaste} tooltip="Coller (ctrl+v)" />
+//     </div>
+//   );
+// }
 
 export const BHandles = () => {
   const controller = useBEditController();
@@ -213,6 +235,7 @@ export const BHandles = () => {
         height: h + 'px',
       }}
     >
+      {/* <BHandlesCopy /> */}
       <BHandlesContent />
     </div>
   );

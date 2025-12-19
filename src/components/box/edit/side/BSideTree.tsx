@@ -37,20 +37,6 @@ export const BSideTree = () => {
 
   return (
     <div {...c('')}>
-      <BFieldType />
-      <BSideSep />
-      <BSideNode i={0} />
-      <Button icon={pageType.icon} title="Ajouter une Page" color="primary" />
-      {type && type !== 'root' && (
-        <Button icon={zoneType.icon} title="Ajouter une zone" color="primary" />
-      )}
-      <BSideSep />
-      {type === 'root' ||
-        (type === '' && (
-          <>
-            <BScreenField />
-          </>
-        ))}
       {/* <Button icon={PlusIcon} title="Ajouter une page" /> */}
     </div>
   );

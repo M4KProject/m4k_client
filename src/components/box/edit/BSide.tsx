@@ -9,6 +9,14 @@ import { useMemo } from 'preact/hooks';
 import { BSideText } from './side/BSideText';
 import { BSideWeb } from './side/BSideWeb';
 import { BSideAdvanced } from './side/BSideAdvanced';
+import { BSideNode } from './side/BSideNode';
+import { BSideSep } from './side/BSideSep';
+import { BFieldType } from './fields/BTypeField';
+import { Field } from '@/components/fields/Field';
+import { Button } from '@/components/common/Button';
+import { ClipboardCopyIcon, ClipboardPasteIcon, ClipboardXIcon, DeleteIcon } from 'lucide-react';
+import { BScreenField } from './fields/BScreenField';
+import { PageIcon, ZoneIcon } from '../BController';
 
 const BSIDE_WIDTH = 260;
 
@@ -54,7 +62,9 @@ const c = Css('BSide', {
 });
 
 export const BSide = () => {
-  // const controller = useBEditController();
+  const controller = useBEditController();
+  const { onDelete, onCut, onCopy, onPaste, onUp, onDown, onLeft, onRight } = controller;
+  const type = useFlux(controller.select$.map((s) => (s ? s.t : '')));
   // const show$ = useMemo(() => controller.side$.map((p) => !!p), [controller]);
   // const side$ = useMemo(() => controller.side$.filter((p) => !!p), [controller]);
   // const show = useFlux(show$);
@@ -67,7 +77,35 @@ export const BSide = () => {
   return (
     <div {...c('')}>
       <div {...c('Body')}>
-        <BSideTree />
+        <BSideNode i={0} />
+        <BSideSep />
+        <BFieldType />
+        <Field name="copy">
+          <Button icon={DeleteIcon} onClick={onDelete} tooltip="Supprimer (suppr)" />
+          <Button icon={ClipboardXIcon} onClick={onCut} tooltip="Couper (ctrl x)" />
+          <Button icon={ClipboardCopyIcon} onClick={onCopy} tooltip="Copier (ctrl c)" />
+          <Button icon={ClipboardPasteIcon} onClick={onPaste} tooltip="Coller (ctrl v)" />
+        </Field>
+        <Field name="move">
+          <Button icon={ClipboardPasteIcon} onClick={onUp} tooltip="Monter (ctrl ▲)" />
+          <Button icon={ClipboardPasteIcon} onClick={onDown} tooltip="Décendre (ctrl ▼)" />
+          <Button icon={ClipboardPasteIcon} onClick={onLeft} tooltip="Décendre (ctrl ◄)" />
+          <Button icon={ClipboardPasteIcon} onClick={onRight} tooltip="Décendre (ctrl ►)" />
+        </Field>
+        <Button icon={PageIcon} title="Ajouter une Page" color="primary" />
+        {type && type !== 'root' && (
+          <Button icon={ZoneIcon} title="Ajouter une zone" color="primary" />
+        )}
+        <BSideSep />
+        {type === 'root' ||
+          (type === '' && (
+            <>
+              <BScreenField />
+            </>
+          ))}
+
+        {/* <BSideTree /> */}
+
         {/* {side === 'tree' && <BSideTree />}
         {side === 'media' && <BSideMedia />}
         {side === 'web' && <BSideWeb />}
