@@ -6,7 +6,7 @@ import { useMemo } from 'preact/hooks';
 
 const c = Css('Grid', {
   '': {
-    m: 4,
+    w: '100%',
   },
   Head: {
     row: ['center', 'between'],

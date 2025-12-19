@@ -24,6 +24,8 @@ const c = Css('Panel', {
     flex: 1,
     bg: 'bg',
     rowWrap: 1,
+    overflowX: 'visible',
+    overflowY: 'auto',
   },
   '-col &Content': {
     col: ['stretch', 'start'],

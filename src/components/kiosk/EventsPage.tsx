@@ -3,6 +3,7 @@ import { jsonStringify } from 'fluxio';
 import { bridge, BridgeSignalEvent } from '@/bridge';
 import { useEffect, useState } from 'preact/hooks';
 import { Panel } from '../panels/base/Panel';
+import { CalendarIcon } from 'lucide-react';
 
 const c = Css('EventsPage', {
   ' pre': {
@@ -26,7 +27,7 @@ export const EventsPage = () => {
   }, [bridge]);
 
   return (
-    <Panel {...c('')} icon={null} title="Liste des événements">
+    <Panel {...c('')} icon={CalendarIcon} header="Liste des événements">
       {events.map((e, i) => (
         <pre key={i}>{jsonStringify(e)}</pre>
       ))}

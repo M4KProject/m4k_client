@@ -64,7 +64,7 @@ const playlistItemCols: GridCols<
     playlist: any;
   }
 > = {
-  mimeType: ['Type', (item) => item.mimeType],
+  mimeType: ['Type', (item) => item.mimeType, { w: 60 }],
   preview: [
     'Aperçu',
     (item) =>
@@ -76,11 +76,11 @@ const playlistItemCols: GridCols<
           }}
         />
       ),
-    { cls: c('PreviewCell') },
+    { cls: c('PreviewCell'), flex: 1 },
   ],
-  filename: ['Nom du fichier', (item) => getFileName(item.path)],
-  size: ['Taille', (item) => sizeFormat(item.size)],
-  format: ['Format', (item) => `${item.width}x${item.height}`],
+  filename: ['Nom du fichier', (item) => getFileName(item.path), { flex: 2 }],
+  size: ['Taille', (item) => sizeFormat(item.size), { w: 70 }],
+  format: ['Format', (item) => `${item.width}x${item.height}`, { w: 70 }],
   duration: [
     'Durée (s)',
     (item, ctx, i) => (
@@ -89,7 +89,7 @@ const playlistItemCols: GridCols<
         value={round(item.waitMs / 1000, 2)}
         onValue={(waitMs) => ctx.handleDurationUpdate(i, Number(waitMs))}
       />
-    ),
+    ), { w: 80 }
   ],
   actions: [
     'Actions',
@@ -120,8 +120,8 @@ const playlistItemCols: GridCols<
           onClick={() => ctx.handleDelete(i)}
         />
       </div>
-    ),
-  ],
+    ), { w: 70 }
+  ]
 };
 
 export const PlaylistPage = () => {

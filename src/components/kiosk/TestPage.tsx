@@ -1,7 +1,7 @@
 import { useState } from 'preact/hooks';
 import { bridge } from '@/bridge';
 import { logger, randHex, jsonStringify, toError, truncate, withTimeout } from 'fluxio';
-import { GridIcon, PlayIcon } from 'lucide-react';
+import { BugIcon, GridIcon, PlayIcon } from 'lucide-react';
 import { Grid, GridCols } from '@/components/common/Grid';
 import { Button } from '@/components/common/Button';
 import { useConstant } from '@/hooks/useConstant';
@@ -181,15 +181,15 @@ const showValue = (value: any) =>
   );
 
 const testCols: GridCols<TestData, { play: (test: TestData) => void }> = {
-  name: ['Nom', (test) => test.name],
-  duration: ['Durée', (test) => `${test.result?.ms || 0}ms`],
-  value: ['Valeur', (test) => showValue(test.result?.value)],
-  expected: ['Attendue', (test) => showValue(test.expect)],
-  error: ['Erreur', (test) => test.result?.error || ''],
+  name: ['Nom', (test) => test.name, { w: 70 }],
+  duration: ['Durée', (test) => `${test.result?.ms || 0}ms`, { w: 60 }],
+  value: ['Valeur', (test) => showValue(test.result?.value), { flex: 2 }],
+  expected: ['Attendue', (test) => showValue(test.expect), { flex: 2 }],
+  error: ['Erreur', (test) => test.result?.error || '', { flex: 3 }],
   actions: [
     'Actions',
     (item, { play }) => <Button icon={PlayIcon} onClick={() => play(item)} />,
-    { w: 240 },
+    { w: 70 },
   ],
 };
 
@@ -234,7 +234,7 @@ export const TestPage = () => {
   }, []);
 
   return (
-    <Panel icon={null} title="Test des fonctions">
+    <Panel icon={BugIcon} header="Test des fonctions">
       <Form>
         <Field label="Script" required type="multiline" value={script} onValue={setScript} />
         <Field
