@@ -4,7 +4,8 @@ import { JSX } from 'preact/jsx-runtime';
 const c = Css('Form', {
   '': {
     col: 'stretch',
-    m: 8,
+    w: '100%',
+    boxSizing: 'border-box',
     p: 8,
   },
   Title: {

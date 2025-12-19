@@ -25,16 +25,20 @@ const c = Css('Panel', {
     bg: 'bg',
     rowWrap: 1,
   },
+  '-col &Content': {
+    col: ['stretch', 'start'],
+  },
 });
 
 export interface PanelProps extends DivProps {
   icon?: Comp;
   header?: Comp;
+  col?: boolean;
 }
 
-export const Panel = ({ icon, header, children, ...props }: PanelProps) => {
+export const Panel = ({ icon, header, children, col, ...props }: PanelProps) => {
   return (
-    <div {...props} {...c('', props)}>
+    <div {...props} {...c('', col && '-col', props)}>
       <div {...c('Header')}>
         {comp(icon)}
         {comp(header)}

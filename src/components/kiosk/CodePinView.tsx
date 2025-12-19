@@ -22,9 +22,6 @@ const c = Css('CodePinView', {
   Buttons: {
     row: 1,
   },
-  Sep: {
-    flex: 1,
-  },
   ' .Button': {
     flex: 1,
   },
@@ -57,10 +54,9 @@ export const CodePinView = ({ open$ }: { open$: Flux<boolean> }) => {
 
   return (
     <Form {...c('')}>
-      <Field type="password" label="Code PIN" value={codePin} onValue={setCodePin} />
+      <Field type="password" label="Code PIN" value={codePin} onValue={setCodePin} col />
       <div {...c('Buttons')}>
-        <Button title="Valider" color="primary" icon={Lock} onClick={handleClose} />
-        <div {...c('Sep')} />
+        <Button title="Valider" color="primary" icon={LockIcon} onClick={handleClose} />
         <Button
           title="Online"
           icon={GlobeIcon}

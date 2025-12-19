@@ -17,6 +17,7 @@ import { RoutePage } from '@/controllers/Router';
 
 const c = Css('App', {
   '': {
+    wh: '100%',
     row: 'stretch',
     position: 'fixed',
     overflow: 'auto',

@@ -3,9 +3,9 @@ import { useFluxState } from '@/hooks/useFlux';
 import { Form } from '@/components/common/Form';
 import { Field } from '@/components/fields/Field';
 import { useKiosk } from '@/hooks/useKiosk';
-import { Page } from '../pages/base/Page';
 import { Panel } from '../panels/base/Panel';
 import { contentRotation$ } from '@/controllers/contentRotation$';
+import { SettingsIcon } from 'lucide-react';
 
 // const useSetting = (key: string): [string | null, (next: string | null) => Promise<void>] => {
 //   const [value, setValue] = useState<string | null>('');
@@ -61,7 +61,7 @@ export const ConfigPlaylistPage = () => {
   // const [startUrl, setStartUrl] = useSetting('startUrl');
 
   return (
-    <Panel icon={null} title="Configuration">
+    <Panel icon={SettingsIcon} header="Configuration" col>
       <Form title="Configuration Kiosk">
         <Field
           type="password"

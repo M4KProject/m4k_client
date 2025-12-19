@@ -133,7 +133,6 @@ const KioskContent = () => {
       <div {...c('')}>
         <Corners />
         <KioskRouter />
-        <DialogContainer />
       </div>
     );
   }
@@ -142,7 +141,6 @@ const KioskContent = () => {
     <Page menu={KioskMenu}>
       <Corners />
       <KioskRouter />
-      <DialogContainer />
     </Page>
   );
 };

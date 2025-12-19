@@ -1,4 +1,4 @@
-import { Css, Flux, isDefined } from 'fluxio';
+import { Css, Flux, isBoolean, isDefined } from 'fluxio';
 import { useFlux } from '@/hooks/useFlux';
 import { Button, ButtonProps } from '@/components/common/Button';
 import { DivProps } from '@/components/common/types';
@@ -98,7 +98,7 @@ export const MenuFlex = () => <div {...c('Flex')} />;
 export const MenuButton = ({ page, ...props }: MenuButtonProps) => {
   const routeController = useRouter();
   const route = useRoute();
-  const selected = props.selected || page === route.page;
+  const selected = isBoolean(props.selected) ? props.selected : page === route.page;
   console.debug('MenuButton', { page, routePage: route.page, selected });
   return (
     <Button
