@@ -13,6 +13,9 @@ const c = Css('BSideNode', {
     cursor: 'pointer',
     h: 28,
   },
+  ' .Field': {
+    flex: 1,
+  },
   '-selected': {
     bold: 1,
     fg: 'primary',

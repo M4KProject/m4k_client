@@ -3,7 +3,9 @@ import { Page } from './base/Page';
 import { Devices } from '../panels/Devices';
 
 const c = Css('DevicesPage', {
-  '': {},
+  '': {
+    rowWrap: 1,
+  },
 });
 
 export const DevicesPage = () => {

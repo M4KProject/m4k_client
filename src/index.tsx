@@ -6,30 +6,32 @@ import { App } from '@/components/App';
 
 const log = logger('main');
 
-const main = async () => {
-  log.d('start');
+import './api/ApiClient';
 
-  initServiceWorker();
-  render(<App />, document.body);
-};
+// const main = async () => {
+//   log.d('start');
 
-main();
+//   initServiceWorker();
+//   render(<App />, document.body);
+// };
 
-// addResponsiveListener();
-// let isDevice = isDevice$.get();
-// log.d('isDevice', isDevice);
+// main();
 
-// if (isNil(isDevice)) {
-//   if (bridge.isInterface) {
-//     isDevice = true;
-//     log.d('isInterface');
-//   }
-// }
+// // addResponsiveListener();
+// // let isDevice = isDevice$.get();
+// // log.d('isDevice', isDevice);
 
-// if (isDevice) {
-//   log.d('mountDevice');
-//   await mountDevice();
-// } else {
-//   log.d('mountAdmin');
-//   await mountAdmin();
-// }
+// // if (isNil(isDevice)) {
+// //   if (bridge.isInterface) {
+// //     isDevice = true;
+// //     log.d('isInterface');
+// //   }
+// // }
+
+// // if (isDevice) {
+// //   log.d('mountDevice');
+// //   await mountDevice();
+// // } else {
+// //   log.d('mountAdmin');
+// //   await mountAdmin();
+// // }

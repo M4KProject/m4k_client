@@ -39,10 +39,6 @@ const c = Css('BSide', {
     col: ['stretch', 'start'],
     zIndex: 20,
   },
-  'Body > div': {
-    col: ['stretch', 'start'],
-    p: 4,
-  },
   // ' &Content': {
   //   transition: 0.4,
   //   translateX: '-100%',
@@ -77,6 +73,10 @@ export const BSide = () => {
   return (
     <div {...c('')}>
       <div {...c('Body')}>
+        <Button icon={PageIcon} title="Ajouter une Page" color="primary" />
+        {type && type !== 'root' && (
+          <Button icon={ZoneIcon} title="Ajouter une zone" color="primary" />
+        )}
         <BSideNode i={0} />
         <BSideSep />
         <BFieldType />
@@ -92,10 +92,6 @@ export const BSide = () => {
           <Button icon={ClipboardPasteIcon} onClick={onLeft} tooltip="Décendre (ctrl ◄)" />
           <Button icon={ClipboardPasteIcon} onClick={onRight} tooltip="Décendre (ctrl ►)" />
         </Field>
-        <Button icon={PageIcon} title="Ajouter une Page" color="primary" />
-        {type && type !== 'root' && (
-          <Button icon={ZoneIcon} title="Ajouter une zone" color="primary" />
-        )}
         <BSideSep />
         {type === 'root' ||
           (type === '' && (
@@ -103,6 +99,9 @@ export const BSide = () => {
               <BScreenField />
             </>
           ))}
+        {type === 'page' && (
+          <BSideFilter />
+        )}
 
         {/* <BSideTree /> */}
 

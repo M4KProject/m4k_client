@@ -4,7 +4,10 @@ import { Account } from '../panels/Account';
 import { Groups } from '@/components/panels/Groups';
 
 const c = Css('DashboardPage', {
-  '': { alignContent: 'stretch' },
+  '': {
+    row: ['stretch', 'around'],
+    alignContent: 'stretch',
+  },
 });
 
 export const DashboardPage = () => {

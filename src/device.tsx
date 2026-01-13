@@ -1,3 +1,1 @@
-import { mountDevice } from './device/mountDevice';
-
-mountDevice();
+import './index';
