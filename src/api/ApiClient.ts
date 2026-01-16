@@ -1,10 +1,13 @@
-import { FIVE_MINUTES, flux, fluxStored, isString, logger, req, ReqError, ReqMethod, ReqOptions, ReqParams, serverTime, syncServerTime, toDate } from "fluxio";
+import { FIVE_MINUTES, flux, fluxStored, isString, logger, minifyUuid, req, ReqError, ReqMethod, ReqOptions, ReqParams, serverTime, syncServerTime, toDate, uuid } from "fluxio";
 
 export interface M_Base {
     id: string;
     created: Date;
     updated: Date;
 };
+
+export type M_Create<T extends M_Base> = Omit<Omit<Omit<T, 'id'>, 'created'>, 'updated'>;
+export type M_Update<T extends M_Base> = Partial<M_Create<T>>;
 
 export interface M_GroupId {
     groupId: string;
@@ -34,21 +37,18 @@ export interface M_Member extends M_Base, M_GroupId, M_UserId {
     role: number;
 };
 
-export interface M_Media extends M_Base, M_GroupId, M_Key, M_UserId {
-    data: unknown;
-    generated: Date;
-    type: string;
-    title: string;
-    desc: string;
-    mime: string;
-    size: number;
-    width: number;
-    height: number;
-    seconds: number;
-    source: string;
-    variants: unknown;
-    parentId: string;
-    depIds: string[];
+export interface M_Media extends M_Base, M_GroupId, M_UserId {
+    data?: any;
+    type: 'content'|'image'|'video';
+    name: string;
+    desc?: string;
+    mime?: string;
+    size?: number;
+    width?: number;
+    height?: number;
+    seconds?: number;
+    source?: string;
+    parentId?: string;
 };
 
 export interface M_Device extends M_Base, M_GroupId, M_Key, M_UserId {
@@ -105,146 +105,64 @@ export interface ApiOptions<T extends M_Base> {
 
 export class ApiClient {
     log = logger(this.key);
-    url = fluxStored<string>(this.key + '.url', '', isString);
-    groupId = fluxStored<string>(this.key + '.groupId', '', isString);
-    token = fluxStored<string>(this.key + '.token', '', isString);
-    error = flux<ReqError<any> | null>(null);
-    timeout = 10000;
-    
-    // auth$ = fluxStored<PbAuth | undefined>(this.key + 'Auth$', undefined, isPbAuth);
-    // url$ = fluxStored<string>(this.key + 'Url$', '', isString);
-    // _realtime?: any;
 
+    url$ = fluxStored<string>(this.key + '.url', '', isString);
+    groupId$ = fluxStored<string>(this.key + '.groupId', '', isString);
+    token$ = fluxStored<string>(this.key + '.token', '', isString);
+
+    url: string = '';
+    groupId: string = '';
+    token: string = '';
+
+    timeout = 10000;
+
+    devices = new ApiRest<M_Device>(this, 'devices');
+    groups = new ApiRest<M_Group>(this, 'groups');
+    jobs = new ApiRest<M_Job>(this, 'jobs');
+    medias = new ApiRest<M_Media>(this, 'medias');
+    members = new ApiRest<M_Member>(this, 'members');
+    users = new ApiRest<M_User>(this, 'users');
+    
     constructor(public readonly key: string = 'pbClient') {
-        this.url.on((url) => this.log.d('url', url));
-        this.groupId.on((groupId) => this.log.d('groupId', groupId));
-        this.token.on((token) => this.log.d('token', token));
-        this.error.on((error) => this.log.d('error', error));
+        this.url$.on((url) => {
+            this.log.d('url', url);
+            this.url = url;
+        });
+        this.groupId$.on((groupId) => {
+            this.log.d('groupId', groupId);
+            this.groupId = groupId;
+        });
+        this.token$.on((token) => {
+            this.log.d('token', token);
+            this.token = token;
+        });
+
         this.getTime();
         // this.auth$.on((auth) => this.log.d('auth', auth));
     }
 
-    // getReqOptions<T extends M_Base>(
-    //     method: ReqMethod,
-    //     url: string,
-    //     o: ApiOptions<T> = {}
-    // ): ReqOptions {
-    //     const result: ReqOptions = {
-    //         baseUrl: this.url$.get(),
-    //         method,
-    //         url,
-    //         onError: this.error$.setter(),
-    //         timeout: this.timeoutMs,
-    //         // form: o.data,
-    //         ...o.req,
-    //         // params: pbParams(o),
-    //         headers: {
-    //             ...this.getAuthHeaders(),
-    //             ...o.req?.headers,
-    //         },
-    //     };
-    //     // this.log.d('reqOptions', method, url, o, result);
-    //     return result;
-    // }
-
-
-    // getApiUrl() {
-    //     return this.url$.get();
-    // }
-
-    // setApiUrl(url: string) {
-    //     this.log.d('setUrl', url);
-    //     this.url$.set(url);
-    //     this.initTime();
-    // }
-
-    // getUrl(path?: string, params?: Dictionary<string>) {
-    //     const apiUrl = this.getApiUrl() || '/api/';
-    //     let url = path ? pathJoin(apiUrl, path) : apiUrl;
-    //     if (count(params) > 0) url = setUrlParams(url, params);
-    //     // this.log.d('getUrl', apiUrl, path, params, url);
-    //     return url;
-    // }
-
-    // setAuth(auth: PbAuth | undefined) {
-    //     this.log.d('setAuth', auth);
-    //     if (auth) {
-    //         if (!isString(auth.token)) throw toError('no auth token');
-    //         if (!isString(auth.id)) throw toError('no auth id');
-    //     }
-    //     this.auth$.set(auth);
-    //     return auth;
-    // }
-
-    // getAuth() {
-    //     return this.auth$.get();
-    // }
-
-    // getAuthId() {
-    //     return this.getAuth()?.id;
-    // }
-
-    // getToken() {
-    //     return this.getAuth()?.token || '';
-    // }
-
-    // getAuthHeaders() {
-    //     const token = this.getToken();
-    //     return {
-    //         Authorization: `Bearer ${token}`,
-    //         // 'X-Auth-Token': token,
-    //     };
-    // }
-
-
-    // req<T extends PbModel>(method: ReqMethod, idOrUrl: string, o: PbOptions<T> = {}) {
-    //     const reqOptions = this.getReqOptions(method, idOrUrl, o);
-    //     return req(reqOptions).catch((error) => {
-    //         this.log.w('req error', error);
-    //         throw error;
-    //     });
-    // }
-
-    // getDate() {
-    //     return serverDate();
-    // }
-
-    // logout() {
-    //     this.auth$.set(undefined);
-    // }
-
-    // authRefresh(o: PbOptions<any> = {}) {
-    //     const auth = this.getAuth();
-    //     this.log.i('refreshToken', auth, o);
-    //     if (!auth) return;
-    //     return this.req('POST', `collections/${auth.coll}/auth-refresh`, {
-    //         ...o,
-    //     })
-    //         .then((result: any) => {
-    //         this.log.d('authRefresh', result);
-    //         const { token, record } = result || {};
-    //         return this.setAuth({ ...record, coll: auth.coll, token });
-    //         })
-    //         .catch((error) => {
-    //         this.log.e('authRefresh', error);
-    //         if (error instanceof ReqError) {
-    //             if (error.status === 401) {
-    //             this.logout();
-    //             throw toError(error.message);
-    //             }
-    //         }
-    //         });
-    // }
+    setGroup(group: M_Group|string) {
+        if (isString(group)) this.groupId$.set(group);
+        else this.groupId$.set(group?.id||'');
+    }
 
     reqOptions<T>(method: ReqMethod, url: string, options: ReqOptions<T> = {}): ReqOptions<T> {
-        const token = this.token.get();
+        const groupId = minifyUuid(this.groupId);
+        const token = minifyUuid(this.token);
         return {
             method,
             url,
-            baseUrl: 'http://127.0.0.1:4002',
-            onError: this.error.setter(),
+            baseUrl: 'https://api.i.m4k.fr/',
+            onError: error => {
+                console.warn('api', method, url, options, error);
+            },
             timeout: this.timeout,
+            retry: 1,
             ...options,
+            params: {
+                group: groupId ? groupId : undefined,
+                ...options.params,
+            },
             headers: {
                 Authorization: `Bearer ${token}`,
                 'X-Auth-Token': token,
@@ -263,6 +181,14 @@ export class ApiClient {
 
     post<T>(url: string, json?: any, options: ReqOptions<T> = {}) {
         return this.req('POST', url, { ...options, json });
+    }
+
+    put<T>(url: string, json?: any, options: ReqOptions<T> = {}) {
+        return this.req('PUT', url, { ...options, json });
+    }
+
+    delete<T>(url: string, params?: ReqParams, options: ReqOptions<T> = {}) {
+        return this.req('DELETE', url, { ...options, params });
     }
 
     getHealth() {
@@ -290,16 +216,40 @@ export class ApiClient {
 
     async login(email: string, password: string) {
         const login = await this.post<{ token: string, expiresAt: string, expiresIn: number, user: M_User }>('auth/login', { email, password });
-        this.token.set(login.token);
+        this.token$.set(login.token);
         return login;
     }
 
     me() {
-        return this.get('auth/me');
+        return this.get<M_User>('auth/me');
     }
 
     logout() {
         return this.post('auth/logout');
+    }
+}
+
+export class ApiRest<T extends M_Base> {
+    constructor(public api: ApiClient, public name: string) {}
+
+    list(): Promise<T[]> {
+        return this.api.get<T[]>(`${this.name}`);
+    }
+
+    get(id: string): Promise<T> {
+        return this.api.get<T>(`${this.name}/${id}`);
+    }
+
+    create(data: M_Create<T>): Promise<T> {
+        return this.api.post<T>(`${this.name}`, data);
+    }
+
+    update(id: string, changes: M_Update<T>): Promise<T> {
+        return this.api.put<T>(`${this.name}/${id}`, changes);
+    }
+
+    remove(id: string): Promise<T> {
+        return this.api.delete<T>(`${this.name}/${id}`);
     }
 }
 
@@ -316,8 +266,32 @@ export class ApiClient {
     const login = await api.login(email, password);
     console.debug('login', login);
 
-    const me = await api.me();
-    console.debug('me', me);
+    const user = await api.me();
+    console.debug('user', user);
+
+    const group = await api.groups.create({ key: uuid(), name: 'TEST', config: {} });
+    console.debug('group', group);
+    
+    api.setGroup(group);
+
+    const media = await api.medias.create({
+        type: 'content',
+        data: {},
+        name: 'test'+uuid(),
+        groupId: group.id,
+        userId: user.id,
+    });
+    console.debug('media', media);
+
+    const updatedMedia = await api.medias.update(media.id, {
+        data: {
+            deps: ['a', 'b']
+        },
+    });
+    console.debug('updatedMedia', updatedMedia);
+
+    const removedMedia = await api.medias.remove(media.id);
+    console.debug('removedMedia', removedMedia);
 
     const logout = await api.logout();
     console.debug('logout', logout);
