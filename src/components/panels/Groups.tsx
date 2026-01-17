@@ -23,10 +23,10 @@ export const Groups = () => {
   const handleAdd = async () => {
     const auth = api.pb.getAuth();
     if (!auth) return;
-    const group = await api.group.create({ name: 'Nouveau Groupe', user: auth.id });
+    const group = await api.groups.create({ name: 'Nouveau Groupe', user: auth.id });
     if (group) {
       const role = Role.viewer;
-      await api.member.create({ user: auth.id, group: group.id, role });
+      await api.members.create({ userId: auth.id, groupId: group.id, role });
     }
   };
 

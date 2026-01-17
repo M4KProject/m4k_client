@@ -1,6 +1,6 @@
 import { Css, isEmpty, truncate } from 'fluxio';
 import { useApi } from '@/hooks/useApi';
-import { MediaModel } from '@/api/models';
+import { Media } from '@/api/models';
 import { useMediaController } from '@/hooks/useMediaController';
 import { useOver } from '@/hooks/useOver';
 import { Anim } from '../common/Anim';
@@ -63,7 +63,7 @@ const c = Css('MediaItem', {
   },
 });
 
-export const MediaItem = ({ media }: { media: MediaModel }) => {
+export const MediaItem = ({ media }: { media: Media }) => {
   const [over, overProps] = useOver();
   const id = media.id;
   const controller = useMediaController();
@@ -74,11 +74,9 @@ export const MediaItem = ({ media }: { media: MediaModel }) => {
 
   if (!media) return null;
 
-  const variants = api.getVariants(media);
-  const images = variants.filter((v) => v.type === 'image');
-  const videos = variants.filter((v) => v.type === 'video');
-
-  const previewUrl = api.getMediaUrl(images[0], 360);
+  const images = api.medias.getImageInfos(media, 'thumb');
+  const videos = api.medias.getVideoInfos(media, 'hd');
+  const previewUrl = images[0]?.url;
 
   return (
     <div
@@ -110,14 +108,14 @@ export const MediaItem = ({ media }: { media: MediaModel }) => {
                 }}
               >
                 {videos.map((v, i) => (
-                  <source key={i} type={v.mime} src={api.getMediaUrl(v)} />
+                  <source key={i} type={v.mime} src={v.url} />
                 ))}
               </video>
             )}
           />
         )}
       </div>
-      <div {...c('Title')}>{truncate(media.title, 20)}</div>
+      <div {...c('Title')}>{truncate(media.name, 20)}</div>
     </div>
   );
 };

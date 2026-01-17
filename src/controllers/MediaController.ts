@@ -86,7 +86,7 @@ export class MediaController {
           : media.type === 'content' ? 'Nouveau Contenu'
           : 'Nouveau')
       ),
-      userId: media.userId || this.api.needAuthUserId(),
+      userId: media.userId || this.api.needUserId(),
       groupId: media.groupId || this.router.needGroupId(),
       parentId: media.parentId || this.parent$.get()?.id,
     };

@@ -119,7 +119,7 @@ export interface Member extends ModelBase {
 
 export interface Media extends ModelBase {
     data?: any;
-    type: string;
+    type: MediaType;
     name: string;
     desc?: string;
     mime?: string;
@@ -261,6 +261,6 @@ export type FilterVal = string|number|(string|number)[];
 export type FilterItem<T = any> = T | [FilterOp0] | [FilterOp1, FilterVal] | [FilterOp2, FilterVal, FilterVal];
 export type Filter<T extends ModelBase> = string|{ [P in keyof T]?: FilterItem<T[P]> };
 
-export type MediaType =  'content' | 'folder' | 'image' | 'pdf' | 'video' | 'unknown' | '';
+export type MediaType =  'content' | 'folder' | 'image' | 'pdf' | 'video' | 'unknown' | 'playlist' | '';
 
-export type MediaFormat = ''|'thumb'|'hd';
+export type MediaFormat = '' | 'thumb' | 'hd';

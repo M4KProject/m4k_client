@@ -2,7 +2,7 @@ import { useApi } from '@/hooks/useApi';
 import { Field } from '@/components/fields/Field';
 import { Css } from 'fluxio';
 import { useRouter } from '@/hooks/useRoute';
-import { GroupModel } from '@/api/models';
+import { Group } from '@/api/models';
 import { useFlux } from '@/hooks/useFlux';
 import { Panel } from './base/Panel';
 
@@ -22,7 +22,7 @@ const c = Css('Group', {
   },
 });
 
-export const Group = ({ group }: { group: GroupModel }) => {
+export const Group = ({ group }: { group: Group }) => {
   const api = useApi();
   const router = useRouter();
   const selected = useFlux(router.groupId$.map((id) => group.id === id));

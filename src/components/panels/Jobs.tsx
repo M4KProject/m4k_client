@@ -8,11 +8,11 @@ import {
 } from 'lucide-react';
 import { Css } from 'fluxio';
 import { byId } from 'fluxio';
-import { useApi, useGroupJobs, useGroupMedias } from '@/hooks/useApi';
+import { useApi, useJobs, useMedias } from '@/hooks/useApi';
 import { filterItems, Dictionary } from 'fluxio';
 import { addTr } from '@/hooks/useTr';
 import { Grid, GridCols } from '@/components/common/Grid';
-import { JobModel, MediaModel } from '@/api/models';
+import { Job, Media } from '@/api/models';
 import { Tr } from '@/components/common/Tr';
 import { Button } from '@/components/common/Button';
 import { useFlux } from '@/hooks/useFlux';
@@ -71,7 +71,7 @@ addTr({
   deleted: 'Supprimé',
 });
 
-const cols: GridCols<JobModel, { mediaById: Dictionary<MediaModel>; api: Api }> = {
+const cols: GridCols<Job, { mediaById: Dictionary<Media>; api: Api }> = {
   action: ['Action', (job) => <Tr>{job.action}</Tr>],
   statut: [
     'Statut',
@@ -121,7 +121,7 @@ const cols: GridCols<JobModel, { mediaById: Dictionary<MediaModel>; api: Api }> 
         icon={Trash2}
         color="error"
         tooltip="Supprimer"
-        onClick={() => api.job.delete(job.id)}
+        onClick={() => api.jobs.remove(job.id)}
       />
     ),
   ],
@@ -129,21 +129,21 @@ const cols: GridCols<JobModel, { mediaById: Dictionary<MediaModel>; api: Api }> 
 
 export interface JobsProps {
   class?: string;
-  filter?: (job: JobModel | UploadItem) => boolean;
+  filter?: (job: Job | UploadItem) => boolean;
   window?: boolean;
 }
 
 export const Jobs = ({ filter, ...props }: JobsProps) => {
   const api = useApi();
-  const jobs = useGroupJobs();
+  const jobs = useJobs();
   const uploadJobs = useFlux(uploadMediaJobs$);
   const uploadJobsList = Object.values(uploadJobs).filter((j) => j !== undefined);
-  const allJobs: (JobModel | UploadItem)[] = [...jobs, ...uploadJobsList] as any;
+  const allJobs: (Job | UploadItem)[] = [...jobs, ...uploadJobsList] as any;
   filterItems(allJobs, filter);
   // sortItems(allJobs, job => -new Date(job.updated).getTime());
 
-  const medias = useGroupMedias();
-  const mediaById = byId(medias.filter((m): m is MediaModel => m !== undefined));
+  const medias = useMedias();
+  const mediaById = byId(medias.filter((m): m is Media => m !== undefined));
 
   return (
     <div {...c('', props)}>

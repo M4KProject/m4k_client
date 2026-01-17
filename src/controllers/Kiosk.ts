@@ -1,5 +1,5 @@
 import { Api } from '@/api/Api';
-import { DeviceModel } from '@/api/models';
+import { ApiAuth, Device } from '@/api/models';
 import { app } from '@/app';
 import { bridge, BridgeResizeOptions } from '@/bridge';
 import {
@@ -23,6 +23,7 @@ import {
   logger,
   flux,
   getUrlParams,
+  serverDate,
 } from 'fluxio';
 import { PbAuth } from 'pblite';
 import copyPlaylist from './copyPlaylist';
@@ -62,9 +63,9 @@ export class Kiosk {
 
   email$ = fluxStored<string>('kioskEmail$', '', isString);
   password$ = fluxStored<string>('kioskPassword$', '', isString);
-  auth$ = fluxStored<PbAuth | undefined>('kioskAuth$', undefined, isItem);
-  device$ = fluxStored<DeviceModel | null>('kioskDevice$', null, isItem);
-  action$ = fluxStored<DeviceModel['action'] | undefined>('kioskAction$', undefined, isItem);
+  auth$ = fluxStored<ApiAuth | undefined>('kioskAuth$', undefined, isItem);
+  device$ = fluxStored<Device | null>('kioskDevice$', null, isItem);
+  action$ = fluxStored<Device['action'] | undefined>('kioskAction$', undefined, isItem);
   codePin$ = fluxStored<string>('kioskPin$', 'yoyo', isStringValid);
   copyDir$ = fluxStored<string>('kioskDir$', 'playlist', isStringValid);
   bgColor$ = fluxStored<string>('kioskBgColor$', '#000000', isStringValid);
@@ -97,19 +98,19 @@ export class Kiosk {
   }
 
   getDate() {
-    return this.api.pb.getDate();
+    return serverDate();
   }
 
-  async login(): Promise<DeviceModel> {
+  async login(): Promise<Device> {
     let email = this.email$.get();
     let password = this.password$.get();
     console.debug('deviceLogin', email);
 
-    let deviceAuth: PbAuth | undefined = undefined;
+    let deviceAuth: ApiAuth | undefined = undefined;
 
     if (email && password) {
       try {
-        deviceAuth = await this.api.userColl.login(email, password);
+        deviceAuth = await this.api.login(email, password);
         console.debug('deviceLogin login deviceAuth', deviceAuth);
       } catch (error) {
         console.info('deviceLogin login error', error);
@@ -123,8 +124,8 @@ export class Kiosk {
       password = randString(20);
 
       try {
-        await this.api.userColl.signUp(email, password);
-        deviceAuth = await this.api.userColl.login(email, password);
+        await this.api.register(email, password);
+        deviceAuth = await this.api.login(email, password);
         console.debug('deviceLogin signUp user', deviceAuth);
       } catch (error) {
         console.info('deviceLogin signUp error', error);
@@ -141,7 +142,7 @@ export class Kiosk {
     const info = await bridge.deviceInfo();
     info.started = this.getDate();
 
-    const device = await this.api.device.coll.upsert(
+    const device = await this.api.devices.upsert(
       { user: deviceAuth.id },
       {
         user: deviceAuth.id,
@@ -165,7 +166,7 @@ export class Kiosk {
     this.unsubscribe();
 
     console.debug('deviceStart subscribe', device.id);
-    this.unsubscribe = this.api.device.coll.on((device, action) => {
+    this.unsubscribe = this.api.devices.on((device, action) => {
       console.debug('deviceStart subscribe', action, device);
       if (action === 'delete') {
         this.login();
@@ -186,7 +187,7 @@ export class Kiosk {
 
     if (!device) throw new Error('no device');
 
-    device = await this.api.device.update(device.id, {
+    device = await this.api.devices.update(device.id, {
       online: this.getDate(),
     });
     console.debug('deviceLoop updated', device);
@@ -206,15 +207,15 @@ export class Kiosk {
     }
   }
 
-  async capture(device: DeviceModel, options?: BridgeResizeOptions | undefined) {
+  async capture(device: Device, options?: BridgeResizeOptions | undefined) {
     const base64 = await bridge.capture(options);
     const blob = base64toBlob(base64);
     if (isBlob(blob)) {
-      await this.api.device.update(device.id, { capture: blob }, { select: [] });
+      await this.api.devices.update(device.id, { capture: blob }, { select: [] });
     }
   }
 
-  async execAction(device: DeviceModel, action: string, input?: string) {
+  async execAction(device: Device, action: string, input?: string) {
     switch (action) {
       case 'reload':
         return bridge.reload();
@@ -244,7 +245,7 @@ export class Kiosk {
     }
   }
 
-  async runAction(device: DeviceModel) {
+  async runAction(device: Device) {
     console.debug('runAction', device.action, device.input, device);
 
     if (!device) throw toError('no device');
@@ -252,7 +253,7 @@ export class Kiosk {
     const { action, input } = device;
     if (!action) return;
 
-    await this.api.device.update(device.id, { action: '', online: this.getDate() });
+    await this.api.devices.update(device.id, { action: '', online: this.getDate() });
 
     let value: any = null;
     let error: any = null;
@@ -263,7 +264,7 @@ export class Kiosk {
       error = err;
     }
 
-    await this.api.device.update(device.id, {
+    await this.api.devices.update(device.id, {
       action: '',
       result: {
         success: !error,

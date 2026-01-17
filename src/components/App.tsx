@@ -12,8 +12,8 @@ import { MediasPage } from '@/components/pages/MediasPage';
 import { DevicesPage } from '@/components/pages/DevicesPage';
 import { KioskPage } from '@/components/pages/KioskPage';
 import { AuthPage } from '@/components/pages/AuthPage';
-import { useAuth } from '@/hooks/useApi';
 import { RoutePage } from '@/controllers/Router';
+import { useAuth } from '@/hooks/useApi';
 
 const c = Css('App', {
   '': {

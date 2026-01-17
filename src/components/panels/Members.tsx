@@ -2,11 +2,11 @@ import { Css } from 'fluxio';
 import { Dictionary, toNumber, toString } from 'fluxio';
 import { Trash2Icon } from 'lucide-react';
 import { Grid, GridCols } from '@/components/common/Grid';
-import { useApi, useDeviceById, useGroupMembers } from '@/hooks/useApi';
-import { DeviceModel, MemberModel } from '@/api/models';
+import { useApi, useDeviceById, useMembers } from '@/hooks/useApi';
 import { Field } from '@/components/fields/Field';
 import { Button } from '@/components/common/Button';
 import { Api } from '@/api/Api';
+import { Device, Member } from '@/api/models';
 
 const c = Css('Members', {
   Actions: {
@@ -14,7 +14,7 @@ const c = Css('Members', {
   },
 });
 
-const cols: GridCols<MemberModel, { deviceById: Dictionary<DeviceModel>; api: Api }> = {
+const cols: GridCols<Member, { deviceById: Dictionary<Device>; api: Api }> = {
   id: ['Appareil', ({ device }) => <Field type="switch" value={!!device} readonly />, { w: 50 }],
   name: [
     'Email',
@@ -23,7 +23,7 @@ const cols: GridCols<MemberModel, { deviceById: Dictionary<DeviceModel>; api: Ap
   desc: [
     'Description',
     ({ id, desc }, { api }) => (
-      <Field type="text" value={desc} onValue={(desc) => api.member.update(id, { desc })} />
+      <Field type="text" value={desc} onValue={(desc) => api.members.update(id, { desc })} />
     ),
   ],
   role: [
@@ -37,7 +37,7 @@ const cols: GridCols<MemberModel, { deviceById: Dictionary<DeviceModel>; api: Ap
           ['30', 'Administrateur'],
         ]}
         value={toString(role)}
-        onValue={(role) => api.member.update(id, { role: toNumber(role) })}
+        onValue={(role) => api.members.update(id, { role: toNumber(role) })}
       />
     ),
     { w: 140 },
@@ -49,7 +49,7 @@ const cols: GridCols<MemberModel, { deviceById: Dictionary<DeviceModel>; api: Ap
         icon={Trash2Icon}
         color="error"
         tooltip="Supprimer"
-        onClick={() => api.member.delete(id)}
+        onClick={() => api.members.remove(id)}
       />
     ),
     { w: 120, cls: c('Actions') },
@@ -58,7 +58,7 @@ const cols: GridCols<MemberModel, { deviceById: Dictionary<DeviceModel>; api: Ap
 
 export const Members = () => {
   const api = useApi();
-  const members = useGroupMembers();
+  const members = useMembers();
   const deviceById = useDeviceById();
 
   return <Grid {...c('')} cols={cols} items={members} ctx={{ deviceById, api }} />;

@@ -1,7 +1,7 @@
 import { Css } from 'fluxio';
 import { byId, sortItems, fluxDictionary, isUFloat } from 'fluxio';
 import { selectedById$ } from '@/controllers/selected';
-import { useApi, useGroupMedias } from '@/hooks/useApi';
+import { useApi, useMedias } from '@/hooks/useApi';
 import { Dictionary, round } from 'fluxio';
 import {
   Trash2Icon,
@@ -14,7 +14,7 @@ import {
 import { SelectedField } from '@/components/admin/SelectedField';
 import { useMemo } from 'preact/hooks';
 import { addTr } from '@/hooks/useTr';
-import { MediaModel } from '@/api/models';
+import { Media } from '@/api/models';
 import { Grid, GridCols } from '@/components/common/Grid';
 import { Field } from '@/components/fields/Field';
 import { Button } from '@/components/common/Button';
@@ -46,14 +46,14 @@ interface MediasGridContext {
   getTab: (id: string) => number;
   getIsOpen: (id: string) => boolean;
   setIsOpen: (id: string, isOpen: boolean) => void;
-  getChildren: (id: string) => MediaModel[];
+  getChildren: (id: string) => Media[];
 }
 
-const cols: GridCols<MediaModel, MediasGridContext> = {
+const cols: GridCols<Media, MediasGridContext> = {
   select: ['', ({ id }) => <SelectedField id={id} />, { w: 30 }],
   title: [
     'Titre',
-    ({ id, type, title }, { api, getTab, getIsOpen, setIsOpen, getChildren }) => (
+    ({ id, type, name }, { api, getTab, getIsOpen, setIsOpen, getChildren }) => (
       <>
         <div style={{ width: 24 * getTab(id) }} />
         <div onClick={() => setIsOpen(id, !getIsOpen(id))}>
@@ -63,7 +63,7 @@ const cols: GridCols<MediaModel, MediasGridContext> = {
             hasChildren={type === 'folder' && getChildren(id).length > 0}
           />
         </div>
-        <Field value={title} onValue={(title) => api.media.update(id, { title })} />
+        <Field value={name} onValue={(name) => api.medias.update(id, { name })} />
       </>
     ),
   ],
@@ -103,7 +103,7 @@ const cols: GridCols<MediaModel, MediasGridContext> = {
             onClick={async () => {
               for (const selectId of selectedIds) {
                 selectedById$.setItem(selectId, undefined);
-                await api.media.update(selectId, { parent: id });
+                await api.medias.update(selectId, { parentId: id });
               }
             }}
           />
@@ -176,9 +176,9 @@ const cols: GridCols<MediaModel, MediasGridContext> = {
           tooltip="Supprimer"
           onClick={async () => {
             for (const c of getChildren(id)) {
-              api.media.update(c.id, { parent: null as any });
+              api.medias.update(c.id, { parentId: null as any });
             }
-            api.media.delete(id);
+            api.medias.remove(id);
           }}
         />
       </>
@@ -189,9 +189,9 @@ const cols: GridCols<MediaModel, MediasGridContext> = {
 
 const openById$ = fluxDictionary<boolean>();
 
-export const MediasGridPanel = ({ type }: { type?: MediaModel['type'] }) => {
+export const MediasGridPanel = ({ type }: { type?: Media['type'] }) => {
   const api = useApi();
-  const medias = useGroupMedias(type);
+  const medias = useMedias(type);
   const openById = useFlux(openById$);
   const isAdvanced = useIsAdvanced();
   const allSelectedById = useFlux(selectedById$);
@@ -202,10 +202,10 @@ export const MediasGridPanel = ({ type }: { type?: MediaModel['type'] }) => {
   const tabById: Dictionary<number> = {};
   const rootMedias = mediasByParent[''] || [];
 
-  const items: MediaModel[] = [];
+  const items: Media[] = [];
 
-  const deep = (medias: MediaModel[], tab: number) => {
-    sortItems(medias, (m) => m.title ?? '');
+  const deep = (medias: Media[], tab: number) => {
+    sortItems(medias, (m) => m.name ?? '');
     for (const media of medias) {
       const id = media.id;
       items.push(media);

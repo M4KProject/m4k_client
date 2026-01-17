@@ -53,10 +53,16 @@ export class Api {
     this.client.setGroup(group);
   }
 
-  needAuthUserId(): string {
+  needUserId(): string {
     const userId = this.client.auth$.get()?.userId;
     if (userId) return userId;
-    throw new Error('No auth.');
+    throw new Error('No auth');
+  }
+
+  needGroupId(): string {
+    const groupId = this.client.groupId$.get();
+    if (groupId) return groupId;
+    throw new Error('No group');
   }
 }
 

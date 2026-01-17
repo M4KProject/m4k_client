@@ -1,5 +1,5 @@
 import { Api } from '@/api/Api';
-import { BaseMediaModel, JobModel, MediaModel, PageModel, PlaylistModel } from '@/api/models';
+import { Job, Media, PlaylistMedia } from '@/api/models';
 import {
   deepClone,
   getChanges,
@@ -16,10 +16,10 @@ import {
 
 const MAX_CONCURRENT_UPLOADS = 3;
 
-export interface UploadItem extends JobModel {
+export interface UploadItem extends Job {
   file: File;
-  folder?: MediaModel;
-  playlist?: MediaModel;
+  folder?: Media;
+  playlist?: Media;
 }
 
 export const uploadMediaJobs$ = fluxDictionary<UploadItem>();
@@ -40,22 +40,20 @@ const startUploadMedia = async (api: Api, item: UploadItem) => {
     update(id, { status: 'processing' });
 
     console.debug('upload creating', { item });
-    const media = await api.media.create(
+    const media = await api.medias.create(
       {
         title: String(file.name),
         source: file,
         group: api.needGroupId(),
-        user: api.needAuthId(),
+        user: api.needUserId(),
         parent: folder?.id,
       },
       {
-        req: {
-          xhr: true,
-          timeout: 5 * 60 * 1000,
-          onProgress: (progress) => {
-            console.debug('upload progress', id, progress);
-            update(id, { progress: progress * 100 });
-          },
+        xhr: true,
+        timeout: 5 * 60 * 1000,
+        onProgress: (progress) => {
+          console.debug('upload progress', id, progress);
+          update(id, { progress: progress * 100 });
         },
       }
     );
@@ -64,7 +62,7 @@ const startUploadMedia = async (api: Api, item: UploadItem) => {
 
     if (playlist) {
       console.debug('upload apply playlist', { item, media, playlist });
-      await api.media.apply(playlist.id, (next) => {
+      await api.medias.apply(playlist.id, (next) => {
         if (!next.deps) next.deps = [];
         next.deps.push(media.id);
         if (!next.data) next.data = {};
@@ -133,12 +131,12 @@ export const uploadMedia = (
   return ids;
 };
 
-export const updateMedia = async <T extends MediaModel>(
+export const updateMedia = async <T extends Media>(
   api: Api,
   id: string,
   apply: (next: T) => void
 ) => {
-  const prev = api.media.get(id);
+  const prev = api.medias.get(id);
   if (!prev) return;
   const next = deepClone(prev);
   if (!isItem(next.data)) next.data = {};
@@ -146,11 +144,11 @@ export const updateMedia = async <T extends MediaModel>(
   next.deps = uniq(next.deps || []);
   const changes = getChanges(prev, next);
   if (!isEmpty(changes)) {
-    return await api.media.update(id, changes);
+    return await api.medias.update(id, changes);
   }
 };
 
-const cleanPlaylist = (api: Api, next: PlaylistModel) => {
+const cleanPlaylist = (api: Api, next: PlaylistMedia) => {
   if (!isItem(next.data)) next.data = {};
   const data = next.data;
 
@@ -158,7 +156,7 @@ const cleanPlaylist = (api: Api, next: PlaylistModel) => {
   data.items = data.items.filter(isItem);
   const items = data.items;
 
-  const mediaById = api.media.byId();
+  const mediaById = api.medias.byId();
   const itemsByMediaId = groupBy(items, (item) => item.media || '');
   delete itemsByMediaId[''];
 
