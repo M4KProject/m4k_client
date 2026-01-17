@@ -52,7 +52,7 @@ export const EditPage = () => {
     controller.onSave = async () => {
       const boxes = controller.getAllData();
       console.debug('EditPage save', boxes);
-      await api.media.update(content.id, {
+      await api.medias.update(content.id, {
         data: { boxes },
       });
     };

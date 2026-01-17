@@ -2,7 +2,7 @@ import { Css } from 'fluxio';
 import { Dictionary } from 'fluxio';
 import { JSX } from 'preact';
 import { DivProps } from '@/components/common/types';
-import { MediaAnim, MediaFit, MediaModel } from '@/api/models';
+import { MediaAnim, MediaFit, Media } from '@/api/models';
 
 const c = Css('MediaView', {
   '': {
@@ -37,9 +37,9 @@ const c = Css('MediaView', {
   '-fill': { bgMode: 'fill' },
 });
 
-export interface MediaViewProps<T extends MediaModel = any> {
+export interface MediaViewProps<T extends Media = any> {
   media: T;
-  mediaById: Dictionary<MediaModel>;
+  mediaById: Dictionary<Media>;
   fit?: MediaFit;
   anim?: MediaAnim;
   seconds?: number;

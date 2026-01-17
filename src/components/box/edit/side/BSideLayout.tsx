@@ -17,7 +17,8 @@ import {
 } from 'lucide-react';
 import { Comp } from '@/utils/comp';
 import { useBEditController } from '../useBEditController';
-import { BStyleField, useProp } from '../fields/BField';
+import { useProp } from '../fields/BField';
+import { BStyleField } from '../fields/BStyleField';
 
 const c = Css('BSideLayout', {
   '': {

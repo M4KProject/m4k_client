@@ -1,17 +1,10 @@
-import { BData, NBData } from '@/components/box/bTypes';
-import {
-  _DeviceModel,
-  _MediaModel,
-  _GroupModel,
-  _JobModel,
-  _MemberModel,
-  _UserModel,
-  _LockModel,
-  _SuperuserModel,
-  _ApplicationModel,
-} from './models.generated';
+import { NBData } from "@/components/box/bTypes";
 
-export * from './models.generated';
+export enum Role {
+  viewer = 10,
+  editor = 20,
+  admin = 30,
+}
 
 export type FieldType =
   | 'email'
@@ -87,16 +80,121 @@ export interface PlaylistEntry {
   anim?: MediaAnim;
 }
 
-// export interface PlaylistContentModel extends ContentModel {
-//   type: 'playlist';
-//   data: {
-//     items: PlaylistEntry[];
-//   };
-// }
+
+export interface ModelBase {
+    id: string;
+    created: Date;
+    updated: Date;
+};
+
+export type ModelCreate<T extends ModelBase> = Omit<Omit<Omit<Omit<Omit<T, 'id'>, 'created'>, 'updated'>, 'userId'>, 'groupId'> & Partial<T>;
+export type ModelUpdate<T extends ModelBase> = Partial<ModelCreate<T>>;
+
+export interface ModelGroupId {
+  groupId: string;
+};
+
+export interface User extends ModelBase {
+    name: string;
+    password: string;
+    email: string;
+};
+
+export interface Group extends ModelBase {
+    name: string;
+    key: string;
+    config?: {
+      isDark?: boolean;
+      primary?: string;
+      secondary?: string;
+    };
+};
+
+export interface Member extends ModelBase {
+    desc: string;
+    role: Role;
+    groupId: string;
+    userId: string;
+};
+
+export interface Media extends ModelBase {
+    data?: any;
+    type: string;
+    name: string;
+    desc?: string;
+    mime?: string;
+    size?: number;
+    width?: number;
+    height?: number;
+    seconds?: number;
+    source?: string;
+    parentId?: string;
+    groupId: string;
+    userId: string;
+};
+
+export interface Device extends ModelBase {
+    name: string;
+    started: Date;
+    online: Date;
+    type: string;
+    info: unknown;
+    action: string;
+    input: unknown;
+    result: unknown;
+    version: number;
+    width: number;
+    height: number;
+    status: string;
+    capture: string;
+    groupId: string;
+    userId: string;
+    key: string;
+};
+
+export interface Job extends ModelBase {
+    name: string;
+    action: string;
+    input: unknown;
+    result: unknown;
+    status: string;
+    progress: number;
+    error: string;
+    logs: string;
+    files: unknown;
+    mediaId: string;
+    groupId: string;
+};
+
+export interface Lock extends ModelBase {
+    groupId: string;
+    key: string;
+};
+
+export interface Log extends ModelBase {
+    data: unknown;
+    level: string;
+    message: string;
+    ip: string;
+    groupId: string;
+    userId: string;
+};
+
+export interface Application extends ModelBase {};
+
+export interface ApiAuth {
+  token: string;
+  expiresAt: string,
+  userId: string;
+  email: string;
+}
+
+///// MEDIAS /////
 
 export interface FileInfo {
+  path: string;
   mime: string;
-  type: MediaType;
+  type: 'image'|'video';
   bytes: number;
   width?: number;
   height?: number;
@@ -106,152 +204,63 @@ export interface FileInfo {
   page?: number;
 }
 
-export interface PdfData {
-  pagesCount?: number;
-  variants?: FileInfo[];
+
+
+
+
+
+
+export interface FolderMedia extends Media {
+  type: 'folder';
+  data?: undefined;
 }
 
 export interface VideoData {
   nbFrames?: number;
-  variants?: FileInfo[];
+  files?: FileInfo[];
+}
+export interface VideoMedia extends Media {
+  type: 'video';
+  data?: VideoData;
 }
 
 export interface ImageData {
-  variants?: FileInfo[];
+  files?: FileInfo[];
+}
+export interface ImageMedia extends Media {
+  type: 'image';
+  data?: ImageData;
+}
+
+export interface PdfData {
+  pagesCount?: number;
+  files?: FileInfo[];
+}
+export interface PdfMedia extends Media {
+  type: 'pdf';
+  data?: PdfData;
 }
 
 export interface PlaylistData {
   items?: PlaylistEntry[];
+}
+export interface PlaylistMedia extends Media {
+  type: 'playlist';
+  data?: PlaylistData;
 }
 
 export interface PageData {
   boxes?: NBData[];
 }
 
-export interface BaseMediaModel extends _MediaModel {
-  // paths?: string[];
-  // order?: string;
-}
+export type FilterOp0 = 'null'|'!null'|'exists'|'!exists';
+export type FilterOp1 = '='|'>'|'<'|'>='|'<='|'!='|'like'|'!like'|'ilike'|'!ilike'|'in'|'!in';
+export type FilterOp2 = 'between'|'!between';
+export type FilterOp = FilterOp0|FilterOp1|FilterOp2;
+export type FilterVal = string|number|(string|number)[];
+export type FilterItem<T = any> = T | [FilterOp0] | [FilterOp1, FilterVal] | [FilterOp2, FilterVal, FilterVal];
+export type Filter<T extends ModelBase> = string|{ [P in keyof T]?: FilterItem<T[P]> };
 
-export interface FolderModel extends BaseMediaModel {
-  type: 'folder';
-  data?: undefined;
-}
+export type MediaType =  'content' | 'folder' | 'image' | 'pdf' | 'video' | 'unknown' | '';
 
-export interface VideoModel extends BaseMediaModel {
-  type: 'video';
-  data?: VideoData;
-}
-
-export interface ImageModel extends BaseMediaModel {
-  type: 'image';
-  data?: ImageData;
-}
-
-export interface PdfModel extends BaseMediaModel {
-  type: 'pdf';
-  data?: PdfData;
-}
-
-// export interface PlaylistModel extends BaseMediaModel {
-//   type: 'playlist';
-//   data?: PlaylistData;
-// }
-
-// export interface PageModel extends BaseMediaModel {
-//   type: 'page';
-//   data?: PageData;
-// }
-
-export interface MediaModel extends BaseMediaModel {
-  data?: VideoData & ImageData & PdfData & PlaylistData & PageData;
-}
-
-export type MediaType = MediaModel['type'] & string;
-
-export interface GroupModel extends _GroupModel {
-  data?: {
-    isDark?: boolean;
-    primary?: string;
-    secondary?: string;
-  };
-}
-
-export interface JobModel extends Omit<_JobModel, 'action'> {
-  action?: _JobModel['action'] | 'upload';
-}
-
-export interface ConvertJobModel extends JobModel {
-  action: 'convert';
-  input: {};
-}
-
-export enum Role {
-  viewer = 10,
-  editor = 20,
-  admin = 30,
-}
-
-export interface MemberModel extends _MemberModel {
-  role?: Role; // admin > editor > viewer
-}
-
-export interface UserModel extends Omit<_UserModel, 'tokenKey'> {}
-
-export interface ApplicationModel extends _ApplicationModel {}
-
-export interface DeviceModel extends _DeviceModel {
-  // config?: {
-  //     kiosk?: boolean;
-  //     startUrl?: string;
-  //     url?: string;
-  //     zipPath?: string;
-  //     installDir?: string;
-  //     logs?: boolean;
-  //     logsRemote?: ''|'debug'|'info'|'warn'|'error';
-  //     screenBrightness?: number;
-  //     script?: string|string[];
-  //     rotate?: number;
-  //     webviewRotate?: number;
-  //     settings?: TMap<any>;
-  //     default?: number;
-  //     reloadIntervalMs?: number;
-  //     updateIntervalMs?: number;
-  //     usbUpdateIntervalMs?: number;
-  //     captureIntervalMs?: number;
-  //     captureType?: 'device'|'preview';
-  //     playlist?: {
-  //         timer?: number;
-  //         items?: {
-  //             timer?: number;
-  //             fileUrl?: string;
-  //         }[],
-  //     };
-  // };
-  // info?: {
-  //     webview?: string;
-  //     soft?: string;
-  //     os?: string;
-  //     ip?: string;
-  //     width?: number;
-  //     height?: number;
-  //     internalStorage?: string;
-  //     externalStorage?: string;
-  //     softId?: string;
-  //     softName?: string;
-  //     model?: string;
-  // };
-  // result?: {
-  //     action?: _DeviceModel['action'];
-  //     input?: _DeviceModel['input'];
-  //     success?: boolean;
-  //     error?: { name?: string; message: string };
-  //     value?: any;
-  // };
-}
-
-export interface LockModel extends _LockModel {}
-
-export interface SuperUserModel extends _SuperuserModel {}
-
-export type ItemId = string | { id: string };
+export type MediaFormat = ''|'thumb'|'hd';

@@ -1,7 +1,7 @@
 import { Css } from 'fluxio';
-import { MediaModel } from '@/api/models';
 import { useApi } from '@/hooks/useApi';
 import { Button } from '@/components/common/Button';
+import { Media } from '@/api/models';
 
 const c = Css('MediaPreview', {
   '': {
@@ -24,13 +24,13 @@ const c = Css('MediaPreview', {
   },
 });
 
-export const MediaPreview = ({ media }: { media?: MediaModel }) => {
+export const MediaPreview = ({ media }: { media?: Media }) => {
   const api = useApi();
-  const variants = api.getVariants(media);
-  const images = variants.filter((v) => v.type === 'image');
-  const videos = variants.filter((v) => v.type === 'video');
 
   if (!media) return null;
+
+  const thumbUrl = api.medias.getImageUrl(media, 'thumb');
+  const videos = api.medias.getVideoInfos(media, 'hd');
 
   return (
     <Button
@@ -52,18 +52,18 @@ export const MediaPreview = ({ media }: { media?: MediaModel }) => {
             }}
           >
             {videos.map((v, i) => (
-              <source key={i} type={v.mime} src={api.getMediaUrl(v)} />
+              <source key={i} type={v.mime} src={v.url} />
             ))}
           </video>
         : <div
             {...c('Image')}
             style={{
-              backgroundImage: `url('${api.getMediaUrl(images[0], 360)}')`,
+              backgroundImage: `url('${thumbUrl}')`,
             }}
           />
       }
       style={{
-        backgroundImage: `url('${api.getMediaUrl(images[0], 360)}')`,
+        backgroundImage: `url('${thumbUrl}')`,
       }}
     />
   );

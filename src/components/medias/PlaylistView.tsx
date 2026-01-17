@@ -2,18 +2,19 @@ import { Css } from 'fluxio';
 import { useState } from 'preact/hooks';
 import { MediaView, MediaViewProps } from './MediaView';
 import { isNotEmpty } from 'fluxio';
-import { PlaylistEntry, PlaylistModel } from '@/api/models';
+import { PlaylistMedia, PlaylistEntry } from '@/api/models';
 import { useTimeout } from '@/hooks/useTimeout';
 
 const c = Css('PlaylistView', {});
 
-export type PlaylistViewProps = MediaViewProps<PlaylistModel>;
+export type PlaylistViewProps = MediaViewProps<PlaylistMedia>;
 
 export const PlaylistView = ({ media, mediaById, fit, anim, divProps }: PlaylistViewProps) => {
   const [index, setIndex] = useState(0);
 
   const data = media.data || {};
-  const dataItems = data.items || (media?.deps || []).map((id) => ({ media: id }) as PlaylistEntry);
+  // const dataItems = data.items || (media?.deps || []).map((id) => ({ media: id }) as PlaylistEntry);
+  const dataItems = data.items || [];
   const items = dataItems
     .map((d): MediaViewProps | undefined => {
       const media = mediaById[d.media!];

@@ -1,5 +1,4 @@
 import {
-  ArrowLeftIcon,
   BanIcon,
   EarthIcon,
   FileSlidersIcon,

@@ -1,7 +1,7 @@
 import { Css } from 'fluxio';
 import { useState } from 'preact/hooks';
 import { SendIcon, RefreshCwIcon, FileJsonIcon } from 'lucide-react';
-import { DeviceModel } from '@/api/models';
+import { Device } from '@/api/models';
 import { Field } from '@/components/fields/Field';
 import { Button } from '@/components/common/Button';
 
@@ -32,7 +32,7 @@ const c = Css('DeviceConsole', {
 });
 
 interface DeviceConsoleProps {
-  device: DeviceModel;
+  device: Device;
   consoleOutput: string;
   onExecuteAction: (action: string, input?: any) => Promise<void>;
 }

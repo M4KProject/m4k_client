@@ -3,7 +3,7 @@ import { Field } from '@/components/fields/Field';
 import { Button, ButtonProps } from '@/components/common/Button';
 import { Comp } from '@/utils/comp';
 import { useBEditController } from '../useBEditController';
-import { BField, BStyleField, useProp } from '../fields/BField';
+import { BField, useProp } from '../fields/BField';
 import {
   AlignCenterHorizontalIcon,
   AlignCenterIcon,
@@ -14,6 +14,7 @@ import {
   AlignStartHorizontalIcon,
   PlusIcon,
 } from 'lucide-react';
+import { BStyleField } from '../fields/BStyleField';
 
 const c = Css('BSideText', {});
 

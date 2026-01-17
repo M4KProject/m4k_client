@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from 'preact/hooks';
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react';
 import { MediaViewProps } from './MediaView';
 import { PanZoom, PanZoomController } from '@/components/common/PanZoom';
-import { PdfModel } from '@/api/models';
+import { PdfMedia } from '@/api/models';
 import { Button } from '@/components/common/Button';
 import { useApi } from '@/hooks/useApi';
 import { app } from '@/app';
@@ -51,15 +51,14 @@ const c = Css('PdfView', {
   },
 });
 
-export type PdfViewProps = MediaViewProps<PdfModel>;
+export type PdfViewProps = MediaViewProps<PdfMedia>;
 
 export const PdfView = ({ media, divProps }: PdfViewProps) => {
   const api = useApi();
   const [currentPage, setCurrentPage] = useState(0);
   const panZoom = useMemo(() => new PanZoomController(), []);
 
-  const variants = api.getVariants(media);
-  const images = variants.filter((v) => v.type === 'image');
+  const images = api.medias.getImageInfos(media, 'hd');
   const imagesByPage = groupBy(images, (i) => i.page);
   const pages = sortItems(Object.keys(imagesByPage), Number);
   const totalPages = pages.length;
@@ -98,7 +97,7 @@ export const PdfView = ({ media, divProps }: PdfViewProps) => {
           <div
             {...c('Page')}
             style={{
-              backgroundImage: `url('${api.getMediaUrl(currentImage)}')`,
+              backgroundImage: `url('${currentImage.url}')`,
               width: `${currentImage.width}px`,
               height: `${currentImage.height}px`,
             }}

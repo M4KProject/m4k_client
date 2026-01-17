@@ -1,5 +1,5 @@
 import { Api } from '@/api/Api';
-import { MediaModel } from '@/api/models';
+import { Media, ModelCreate } from '@/api/models';
 import { createWindow } from '@/components/common/Window';
 import { getSingleton } from '@/utils/ioc';
 import {
@@ -7,12 +7,12 @@ import {
   flux,
   fluxCombine,
   fluxDictionary,
+  isItem,
   isNumber,
   logger,
   toNumber,
   toVoid,
 } from 'fluxio';
-import { PbCreate } from 'pblite';
 import { Router } from './Router';
 
 export class MediaController {
@@ -21,31 +21,31 @@ export class MediaController {
   api = getSingleton(Api);
   router = getSingleton(Router);
 
-  select$ = flux<MediaModel | undefined>(undefined);
-  medias$ = flux<MediaModel[]>([]);
-  mediaById$ = fluxDictionary<MediaModel>(this.medias$.map((medias) => byId(medias)));
+  select$ = flux<Media | undefined>(undefined);
+  medias$ = flux<Media[]>([]);
+  mediaById$ = fluxDictionary<Media>(this.medias$.map((medias) => byId(medias)));
 
   parent$ = fluxCombine(this.select$, this.mediaById$).map(([select, mediaById]) => {
     if (select) {
       if (select.type === 'folder') return select;
-      if (select.parent) return mediaById[select.parent];
+      if (select.parentId) return mediaById[select.parentId];
     }
     return undefined;
   });
 
   breadcrumb$ = fluxCombine(this.select$, this.mediaById$).map(([select, mediaById]) => {
     let node = select;
-    const results: MediaModel[] = [];
+    const results: Media[] = [];
     while (node) {
       results.push(node);
-      node = node.parent ? mediaById[node.parent] : undefined;
+      node = node.parentId ? mediaById[node.parentId] : undefined;
     }
     return results.reverse();
   });
 
   constructor() {}
 
-  click(media: MediaModel) {
+  click(media: Media) {
     return () => this.select$.set(media);
   }
 
@@ -53,56 +53,57 @@ export class MediaController {
     this.parent$.set((parent) => this.getParent(parent));
   };
 
-  getTitle(title?: string) {
-    console.debug('getNextTitle', title);
+  getName(name: string = 'sans nom'): string {
+    console.debug('getName', name);
     let i = 1;
-    const start = (title || 'sans nom').replace(/ \(([0-9]+)\)$/, (_, v) => {
+    const start = name.replace(/ \(([0-9]+)\)$/, (_, v) => {
       const n = toNumber(v);
       if (isNumber(n)) i = n;
       return '';
     });
-    console.debug('getNextTitle start', title, start, i);
+    console.debug('getName start', name, start, i);
     const medias = this.medias$.get();
     while (true) {
-      if (!medias.find((m) => m?.title === title)) break;
-      title = i === 1 ? start : `${start} (${i})`;
+      if (!medias.find((m) => m?.name === name)) break;
+      name = i === 1 ? start : `${start} (${i})`;
       i++;
     }
-    console.debug('getNextTitle end', title, start, i);
-    return title;
+    console.debug('getName end', name, start, i);
+    return name;
   }
 
-  getParent(media?: MediaModel) {
-    const parentId = media?.parent;
+  getParent(media?: Media) {
+    const parentId = media?.parentId;
     return parentId ? this.mediaById$.getItem(parentId) : undefined;
   }
 
-  prepare(media: PbCreate<MediaModel>): PbCreate<MediaModel> {
+  prepare(media: ModelCreate<Media>): ModelCreate<Media> {
     return {
       ...media,
-      title: this.getTitle(
-        media.title ||
+      name: this.getName(
+        media.name ||
           (media.type === 'folder' ? 'Nouveau Dossier'
           : media.type === 'content' ? 'Nouveau Contenu'
           : 'Nouveau')
       ),
-      user: media.user || this.api.needAuthId(),
-      group: media.group || this.router.needGroupId(),
-      parent: media.parent || this.parent$.get()?.id,
+      userId: media.userId || this.api.needAuthUserId(),
+      groupId: media.groupId || this.router.needGroupId(),
+      parentId: media.parentId || this.parent$.get()?.id,
     };
   }
 
-  create(media: PbCreate<MediaModel>) {
-    return this.api.media.create(this.prepare(media));
+  create(media: ModelCreate<Media>) {
+    return this.api.medias.create(this.prepare(media));
   }
 
-  update(media: MediaModel | string, changes: Partial<PbCreate<MediaModel>>) {
-    return this.api.media.update(media, changes);
+  update(media: Media | string, changes: Partial<ModelCreate<Media>>) {
+    const id = isItem(media) ? media.id : media;
+    return this.api.medias.update(id, changes);
   }
 
-  addFolder = () => this.create({ type: 'folder' });
+  addFolder = () => this.create({ type: 'folder', name: 'Dossier' });
 
-  addContent = () => this.create({ type: 'content' });
+  addContent = () => this.create({ type: 'content', name: 'Contenu' });
 
   upload = (files: File[]) => {
     // (files) => {
@@ -138,10 +139,11 @@ export class MediaController {
     createWindow({
       modal: true,
       title: 'Êtes-vous sûr ?',
-      content: `Êtes-vous sûr de vouloir supprimer le fichier multimédia : « ${media.title} » ?`,
+      content: `Êtes-vous sûr de vouloir supprimer le fichier multimédia : « ${media.name} » ?`,
       yes: () => {
         if (media.type === 'folder') this.back();
-        this.api.media.delete(media);
+        const id = isItem(media) ? media.id : media;
+        this.api.medias.remove(id);
       },
       cancel: toVoid,
       size: [350, 150],

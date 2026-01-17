@@ -74,7 +74,7 @@ const useErrorItems = () => {
   };
 
   useEffect(() =>
-    api.pb.error$.on((e: any) => {
+    api.client.error$.on((e: any) => {
       pushItem(errorToItem(e));
     })
   );

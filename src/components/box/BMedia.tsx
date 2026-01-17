@@ -1,6 +1,6 @@
-import { Css } from 'fluxio';
+import { byId, Css } from 'fluxio';
 import { BComp } from './bTypes';
-import { useMediaById, useApi } from '@/hooks/useApi';
+import { useMedias, useApi } from '@/hooks/useApi';
 import { useFlux } from '@/hooks/useFlux';
 import { addComp, MediaView } from '@/components/medias/MediaView';
 import { ImageView } from '../medias/ImageView';
@@ -20,9 +20,9 @@ const c = Css('BMedia', {
 export const BMedia: BComp = ({ i, item, props }) => {
   console.debug('BMedia', i, item, props);
   const mediaId = item.m;
-  const api = useApi();
-  const media = useFlux(mediaId ? api.media.find$(mediaId) : undefined);
-  const mediaById = useMediaById();
+  const medias = useMedias();
+  const mediaById = byId(medias);
+  const media = mediaId ? mediaById[mediaId] : undefined;
 
   if (!media) {
     return (

@@ -8,7 +8,6 @@ import {
   VideoIcon,
   FileTextIcon,
   LayoutIcon,
-  ListIcon,
   HelpCircleIcon,
   ChevronDownIcon,
   ChevronRightIcon,

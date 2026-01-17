@@ -1,8 +1,10 @@
 import { Css } from 'fluxio';
 import { useBEditController } from '../useBEditController';
 import { Comp } from '@/utils/comp';
-import { BDataField, BField, BStyleField } from '../fields/BField';
+import { BField } from '../fields/BField';
 import { Field } from '@/components/fields/Field';
+import { BDataField } from '../fields/BDataField';
+import { BStyleField } from '../fields/BStyleField';
 
 const c = Css('BSideAdvanced', {});
 

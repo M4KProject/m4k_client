@@ -1,7 +1,7 @@
 import { Css } from 'fluxio';
 import { useApi } from '@/hooks/useApi';
 import { MediaViewProps } from './MediaView';
-import { VideoModel } from '@/api/models';
+import { VideoMedia } from '@/api/models';
 
 const c = Css('VideoView', {
   '': {
@@ -22,13 +22,12 @@ const c = Css('VideoView', {
   },
 });
 
-export type VideoViewProps = MediaViewProps<VideoModel>;
+export type VideoViewProps = MediaViewProps<VideoMedia>;
 
 export const VideoView = ({ media, onNext, fit, divProps }: VideoViewProps) => {
   const api = useApi();
-  const variants = api.getVariants(media);
-  const videos = variants.filter((v) => v.type === 'video');
-  const images = variants.filter((v) => v.type === 'image');
+  const videos = api.medias.getVideoInfos(media, 'hd');
+  const images = api.medias.getImageInfos(media, 'hd');
   const posterImage = images[0];
 
   return (
@@ -36,7 +35,7 @@ export const VideoView = ({ media, onNext, fit, divProps }: VideoViewProps) => {
       {...divProps}
       {...c('', divProps)}
       style={{
-        backgroundImage: posterImage ? `url('${api.getMediaUrl(posterImage)}')` : undefined,
+        backgroundImage: posterImage ? `url('${posterImage.url}')` : undefined,
         ...divProps?.style,
       }}
     >
@@ -53,7 +52,7 @@ export const VideoView = ({ media, onNext, fit, divProps }: VideoViewProps) => {
         }}
       >
         {videos.map((v, i) => (
-          <source key={i} type={v.mime} src={api.getMediaUrl(v)} />
+          <source key={i} type={v.mime} src={v.url} />
         ))}
         Votre navigateur ne supporte pas la lecture vidéo.
       </video>

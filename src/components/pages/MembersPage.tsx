@@ -35,12 +35,12 @@ const CreateMemberForm = ({ onClose }: { onClose: () => void }) => {
     }
     setError('');
     try {
-      if (isNew) {
-        await api.userColl.create({ email, password, passwordConfirm: password });
-        await api.member.create({ email, group: group.id, role: Role.editor });
-      } else {
-        await api.member.create({ email, group: group.id, role: Role.editor });
-      }
+      // if (isNew) {
+      //   await api.users.create({ email, password });
+      //   await api.members.create({ email, groupId: group.id, role: Role.editor });
+      // } else {
+      //   await api.members.create({ email, groupId: group.id, role: Role.editor });
+      // }
       onClose();
     } catch (e) {
       console.warn('create member', e);

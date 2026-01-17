@@ -1,5 +1,5 @@
 import { Api } from '@/api/Api';
-import { Sync } from '@/api/sync';
+import { ApiSync } from '@/api/ApiSync';
 import { app } from '@/app';
 import { getSingleton } from '@/utils/ioc';
 import {
@@ -39,15 +39,11 @@ const routerItem = <T extends PbModel & { key?: string }>(
   key$: Pipe<string, Route>,
   id$: Flux<string>,
   up$: Flux,
-  sync: Sync<T>
+  sync: ApiSync<T>
 ) =>
   fluxCombine(key$, id$, up$).map(([key, id]) => {
     console.debug('routerItem', sync.name, key, id);
-    const keyItem = sync.get([{ key }, { id: key }]);
-    console.debug('routerItem keyItem', sync.name, keyItem?.id, keyItem?.key);
-    const idItem = sync.get(id);
-    console.debug('routerItem idItem', sync.name, idItem?.id, idItem?.key);
-    const item = keyItem || idItem;
+    const item = sync.getByKey(key);
     console.debug('routerItem item', sync.name, item?.id, item?.key);
     const itemId = item?.id || '';
     setTimeout(() => id$.set(itemId), 0);
@@ -70,20 +66,20 @@ export class Router {
   group$ = routerItem(
     this.route$.map((r) => r.group || ''),
     this.groupId$,
-    this.api.group.up$,
-    this.api.group
+    this.api.groups.byId$,
+    this.api.groups
   );
   media$ = routerItem(
     this.route$.map((r) => r.media || ''),
     this.mediaId$,
-    this.api.media.up$,
-    this.api.media
+    this.api.medias.byId$,
+    this.api.medias
   );
   device$ = routerItem(
     this.route$.map((r) => r.device || ''),
     this.deviceId$,
-    this.api.device.up$,
-    this.api.device
+    this.api.devices.byId$,
+    this.api.devices
   );
 
   isKiosk$ = fluxStored<boolean>('isKiosk', false, isBoolean);

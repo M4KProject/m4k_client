@@ -1,10 +1,9 @@
-import { useApi, useGroupMedias } from '@/hooks/useApi';
+import { useApi, useMedias } from '@/hooks/useApi';
 import { Css, fluxCombine } from 'fluxio';
-import { MediaModel } from '@/api/models';
+import { Media } from '@/api/models';
 import { useFluxMemo } from '@/hooks/useFlux';
 import { Button } from '@/components/common/Button';
 import { useBEditController } from './useBEditController';
-import { MediaController } from '@/controllers/MediaController';
 
 const c = Css('BMedias', {
   '': {
@@ -30,7 +29,7 @@ const c = Css('BMedias', {
   },
 });
 
-const BMediasItem = ({ media }: { media: MediaModel }) => {
+const BMediasItem = ({ media }: { media: Media }) => {
   const api = useApi();
   const controller = useBEditController();
   const mediaId = media.id;
@@ -40,15 +39,13 @@ const BMediasItem = ({ media }: { media: MediaModel }) => {
       fluxCombine(controller.select$, controller.items$).map(([select]) => select?.m === mediaId),
     [controller, mediaId]
   );
-  const variants = api.getVariants(media);
-  const image = variants.find((v) => v.type === 'image');
-  const url = image ? api.getMediaUrl(image, 80) : undefined;
+  const thumbUrl = api.medias.getImageUrl(media, 'thumb');
 
   return (
     <Button
       {...c('Item', selected && 'Item-selected')}
-      tooltip={media.title}
-      style={{ backgroundImage: url ? `url('${url}')` : undefined }}
+      tooltip={media.name}
+      style={{ backgroundImage: thumbUrl ? `url('${thumbUrl}')` : undefined }}
       onClick={() => {
         const select = controller.select$.get();
         if (select && select.i !== undefined) {
@@ -60,7 +57,7 @@ const BMediasItem = ({ media }: { media: MediaModel }) => {
 };
 
 const BMediasContent = () => {
-  const medias = useGroupMedias();
+  const medias = useMedias();
   return (
     <>
       {medias.map((media) => (

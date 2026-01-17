@@ -1,25 +1,22 @@
 import { Css } from 'fluxio';
 import { MediaViewProps } from './MediaView';
-import { ImageModel } from '@/api/models';
+import { ImageMedia } from '@/api/models';
 import { useApi } from '@/hooks/useApi';
 
 const c = Css('ImageView', {});
 
-export type ImageViewProps = MediaViewProps<ImageModel>;
+export type ImageViewProps = MediaViewProps<ImageMedia>;
 
 export const ImageView = ({ media, divProps }: ImageViewProps) => {
   const api = useApi();
-  const variants = api.getVariants(media);
-  const images = variants.filter((v) => v.type === 'image');
-  const image = images[0];
-  const imageUrl = api.getMediaUrl(image);
+  const imageUrl = api.medias.getImageUrl(media, 'hd');
 
   return (
     <div
       {...divProps}
       {...c('', divProps)}
       style={{
-        backgroundImage: image ? `url('${imageUrl}')` : undefined,
+        backgroundImage: imageUrl ? `url('${imageUrl}')` : undefined,
         ...divProps?.style,
       }}
     />

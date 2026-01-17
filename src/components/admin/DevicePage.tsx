@@ -36,7 +36,7 @@ export const DevicePage = () => {
   const executeAction = async (action: string, input?: any) => {
     if (!device) return;
     try {
-      await api.device.update(device.id, { action: action as any, input });
+      await api.devices.update(device.id, { action: action as any, input });
       setConsoleOutput((p) => p + `> Action: ${action}\n`);
     } catch (error) {
       setConsoleOutput((p) => p + `> Error: ${error}\n`);
@@ -72,7 +72,7 @@ export const DevicePage = () => {
   }
 
   const captureUrl =
-    device.capture ? api.device.coll.getFileUrl(device.id, toString(device.capture)) : '';
+    device.capture ? api.devices.getFileUrl(device.id, toString(device.capture)) : '';
 
   return null;
   // return (0

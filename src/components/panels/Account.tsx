@@ -21,7 +21,7 @@ export const Account = () => {
   const api = useApi();
   const router = useRouter();
   const theme = useFlux(theme$);
-  const auth = useFlux(api.pb.auth$);
+  const auth = useFlux(api.client.auth$);
   const [passwordError, setPasswordError] = useState('');
   const [password, setPassword] = useState('');
   const [oldPassword, setOldPassword] = useState('');
@@ -31,7 +31,7 @@ export const Account = () => {
 
   const handleUpdatePassword = async () => {
     try {
-      await api.userColl.update(auth.id, { oldPassword, password, passwordConfirm: password });
+      await api.users.update(auth.userId, { password });
       setPasswordError('');
       setPassword('');
     } catch (_error) {
@@ -42,7 +42,7 @@ export const Account = () => {
   return (
     <Panel icon={UserIcon} header="Mon Compte" {...c('')}>
       <Form title="Mon compte">
-        <Field label="ID de l'utilisateur" name="user_id" value={auth.id} readonly />
+        <Field label="ID de l'utilisateur" name="user_id" value={auth.userId} readonly />
         <Field
           label="Email de l'utilisateur"
           name="username"
@@ -98,7 +98,7 @@ export const Account = () => {
           color="secondary"
           title="Deconnexion"
           icon={LogOut}
-          onClick={() => api.pb.logout()}
+          onClick={() => api.logout()}
         />
       </Form>
     </Panel>
