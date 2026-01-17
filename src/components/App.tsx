@@ -69,7 +69,7 @@ const AppContent = () => {
 
   return (
     <div {...c('')}>
-      <AppRouter />
+      {/* <AppRouter /> */}
       <Errors />
     </div>
   );

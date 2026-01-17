@@ -22,7 +22,7 @@ const c = Css('Group', {
   },
 });
 
-export const Group = ({ group }: { group: Group }) => {
+export const GroupPanel = ({ group }: { group: Group }) => {
   const api = useApi();
   const router = useRouter();
   const selected = useFlux(router.groupId$.map((id) => group.id === id));
@@ -40,7 +40,7 @@ export const Group = ({ group }: { group: Group }) => {
           <Field
             value={group.name}
             onValue={(name) => {
-              api.group.update(group.id, { name });
+              api.groups.update(group.id, { name });
             }}
           />
         </>
@@ -51,23 +51,23 @@ export const Group = ({ group }: { group: Group }) => {
         label="Clé"
         value={group.key}
         onValue={(key) => {
-          api.group.update(group.id, { key });
+          api.groups.update(group.id, { key });
         }}
       />
       <Field
         type="color"
-        value={group.data?.primary}
+        value={group.config?.primary}
         onValue={(primary) => {
-          api.group.apply(group.id, (prev) => {
+          api.groups.apply(group.id, (prev) => {
             prev.data = { ...prev.data, primary };
           });
         }}
       />
       <Field
         type="color"
-        value={group.data?.secondary}
+        value={group.config?.secondary}
         onValue={(secondary) => {
-          api.group.apply(group.id, (prev) => {
+          api.groups.apply(group.id, (prev) => {
             prev.data = { ...prev.data, secondary };
           });
         }}
