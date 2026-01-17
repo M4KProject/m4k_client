@@ -85,6 +85,7 @@ export interface ModelBase {
     id: string;
     created: Date;
     updated: Date;
+    removed?: Date;
 };
 
 export type ModelCreate<T extends ModelBase> = Omit<Omit<Omit<Omit<Omit<T, 'id'>, 'created'>, 'updated'>, 'userId'>, 'groupId'> & Partial<T>;
@@ -253,14 +254,41 @@ export interface PageData {
   boxes?: NBData[];
 }
 
-export type FilterOp0 = 'null'|'!null'|'exists'|'!exists';
-export type FilterOp1 = '='|'>'|'<'|'>='|'<='|'!='|'like'|'!like'|'ilike'|'!ilike'|'in'|'!in';
-export type FilterOp2 = 'between'|'!between';
-export type FilterOp = FilterOp0|FilterOp1|FilterOp2;
-export type FilterVal = string|number|(string|number)[];
-export type FilterItem<T = any> = T | [FilterOp0] | [FilterOp1, FilterVal] | [FilterOp2, FilterVal, FilterVal];
-export type Filter<T extends ModelBase> = string|{ [P in keyof T]?: FilterItem<T[P]> };
+// export type FilterOp0 = 'null'|'!null'|'exists'|'!exists';
+// export type FilterOp1 = '='|'>'|'<'|'>='|'<='|'!='|'like'|'!like'|'ilike'|'!ilike'|'in'|'!in';
+// export type FilterOp2 = 'between'|'!between';
+// export type FilterOp = FilterOp0|FilterOp1|FilterOp2;
+// export type FilterVal = string|number|(string|number)[];
+// export type FilterItem<T = any> = T | [FilterOp0] | [FilterOp1, FilterVal] | [FilterOp2, FilterVal, FilterVal];
+// export type Filter<T extends ModelBase> = string|{ [P in keyof T]?: FilterItem<T[P]> };
+
+export type FilterOp0 = 'null' | '!null' | 'exists' | '!exists';
+export type FilterOp1 =
+  | '='
+  | '>'
+  | '<'
+  | '>='
+  | '<='
+  | '!='
+  | 'like'
+  | '!like'
+  | 'ilike'
+  | '!ilike'
+  | 'in'
+  | '!in';
+export type FilterOp2 = 'between' | '!between';
+export type FilterOp = FilterOp0 | FilterOp1 | FilterOp2;
+export type FilterVal = string | number | (string | number)[];
+export type FilterProp<T = unknown> =
+  | T
+  | [FilterOp0]
+  | [FilterOp1, FilterVal]
+  | [FilterOp2, FilterVal, FilterVal];
+export type Filter<T extends ModelBase = ModelBase> = { [P in keyof T]?: FilterProp<T[P]> };
 
 export type MediaType =  'content' | 'folder' | 'image' | 'pdf' | 'video' | 'unknown' | 'playlist' | '';
 
 export type MediaFormat = '' | 'thumb' | 'hd';
+
+export type ItemOrId<T extends { id: string } = { id: string }> = string | T;
+

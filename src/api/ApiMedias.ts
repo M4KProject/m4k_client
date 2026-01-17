@@ -1,7 +1,7 @@
-import { ApiSync } from "./ApiSync";
+import { ApiRest } from "./ApiRest";
 import { ImageMedia, Media, MediaFormat, MediaType } from "./models";
 
-export class ApiMedias extends ApiSync<Media> {
+export class ApiMedias extends ApiRest<Media> {
   getFileInfos(media: Media, type: MediaType, format: MediaFormat = '', download?: boolean) {
     let infos = (media as ImageMedia).data?.files || [];
     infos = infos.filter((v) => v.type === type);

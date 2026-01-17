@@ -87,4 +87,16 @@ export class ApiClient {
     getFileUrl(path: string, format: MediaFormat = '', download: boolean = false) {
         return `${this.baseUrl}/files/${path}?format=${format}${download?'&download=1':''}`;
     }
+
+    needUserId(): string {
+        const userId = this.auth$.get()?.userId;
+        if (userId) return userId;
+        throw new Error('No auth');
+    }
+
+    needGroupId(): string {
+        const groupId = this.groupId$.get();
+        if (groupId) return groupId;
+        throw new Error('No group');
+    }
 }

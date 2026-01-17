@@ -1,21 +1,21 @@
 import { FIVE_MINUTES, logger, syncServerTime, toDate } from "fluxio";
 import { ApiAuth, Application, Device, Group, Job, Member, User } from "./models";
 import { ApiClient } from "./ApiClient";
-import { ApiSync } from "./ApiSync";
 import { ApiMedias } from "./ApiMedias";
+import { ApiRest } from "./ApiRest";
 
 export class Api {
   log = logger('api');
 
   client = new ApiClient();
 
-  devices = new ApiSync<Device>(this.client, 'devices');
-  groups = new ApiSync<Group>(this.client, 'groups');
-  jobs = new ApiSync<Job>(this.client, 'jobs');
+  devices = new ApiRest<Device>(this.client, 'devices');
+  groups = new ApiRest<Group>(this.client, 'groups');
+  jobs = new ApiRest<Job>(this.client, 'jobs');
   medias = new ApiMedias(this.client, 'medias');
-  members = new ApiSync<Member>(this.client, 'members');
-  users = new ApiSync<User>(this.client, 'users');
-  applications = new ApiSync<Application>(this.client, 'applications');
+  members = new ApiRest<Member>(this.client, 'members');
+  users = new ApiRest<User>(this.client, 'users');
+  applications = new ApiRest<Application>(this.client, 'applications');
 
   constructor() {
     this.log.d('initTime');
@@ -54,15 +54,11 @@ export class Api {
   }
 
   needUserId(): string {
-    const userId = this.client.auth$.get()?.userId;
-    if (userId) return userId;
-    throw new Error('No auth');
+    return this.client.needUserId();
   }
 
   needGroupId(): string {
-    const groupId = this.client.groupId$.get();
-    if (groupId) return groupId;
-    throw new Error('No group');
+    return this.client.needGroupId();
   }
 }
 
