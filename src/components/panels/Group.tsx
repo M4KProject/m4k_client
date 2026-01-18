@@ -1,10 +1,8 @@
-import { useApi } from '@/hooks/useApi';
 import { Field } from '@/components/fields/Field';
 import { Css } from 'fluxio';
-import { useRouter } from '@/hooks/useRoute';
-import { GroupModel } from '@/api/models';
 import { useFlux } from '@/hooks/useFlux';
 import { Panel } from './base/Panel';
+import { api2, MGroup } from '@/api2';
 
 const c = Css('Group', {
   '': { w: 250 },
@@ -22,10 +20,8 @@ const c = Css('Group', {
   },
 });
 
-export const Group = ({ group }: { group: GroupModel }) => {
-  const api = useApi();
-  const router = useRouter();
-  const selected = useFlux(router.groupId$.map((id) => group.id === id));
+export const Group = ({ group, refresh }: { group: MGroup, refresh: () => void }) => {
+  const selected = useFlux(api2.client.groupId$.map((id) => group.id === id));
 
   return (
     <Panel
@@ -35,12 +31,14 @@ export const Group = ({ group }: { group: GroupModel }) => {
           <Field
             type="check"
             value={selected}
-            onValue={(v) => v && router.go({ group: group.key || group.id })}
+            onValue={(v) => v && api2.setGroup(group)}
           />
           <Field
             value={group.name}
-            onValue={(name) => {
-              api.group.update(group.id, { name });
+            onValue={async (name) => {
+              if (group.name === name) return;
+              await api2.groups.update(group.id, { name });
+              refresh();
             }}
           />
         </>
@@ -50,26 +48,30 @@ export const Group = ({ group }: { group: GroupModel }) => {
       <Field
         label="Clé"
         value={group.key}
-        onValue={(key) => {
-          api.group.update(group.id, { key });
+        onValue={async (key) => {
+          if (group.key === key) return;
+          await api2.groups.update(group.id, { key });
+          refresh();
         }}
       />
       <Field
         type="color"
-        value={group.data?.primary}
-        onValue={(primary) => {
-          api.group.apply(group.id, (prev) => {
-            prev.data = { ...prev.data, primary };
-          });
+        value={group.config?.primary}
+        onValue={async (primary) => {
+          // await api2.groups.apply(group.id, (p) => {
+          //   p.config = { ...p.config, primary }
+          // });
+          // refresh();
         }}
       />
       <Field
         type="color"
-        value={group.data?.secondary}
-        onValue={(secondary) => {
-          api.group.apply(group.id, (prev) => {
-            prev.data = { ...prev.data, secondary };
+        value={group.config?.secondary}
+        onValue={async (secondary) => {
+          await api2.groups.apply(group.id, (p) => {
+            p.config = { ...p.config, secondary }
           });
+          refresh();
         }}
       />
     </Panel>

@@ -7,7 +7,8 @@ import { Form } from '@/components/common/Form';
 import { toError } from 'fluxio';
 import { addTr } from '@/hooks/useTr';
 import { LogInIcon, UserPlusIcon, MailIcon, KeyIcon, ArrowLeftIcon } from 'lucide-react';
-import { useApi } from '@/hooks/useApi';
+import { api2 } from '@/api2';
+import { Tr } from '@/components/common/Tr';
 
 addTr({
   'Failed to authenticate.': 'Échec, vérifier le mot de passe.',
@@ -32,7 +33,6 @@ const c = Css('AuthForm', {
 });
 
 export const AuthForm = () => {
-  const api = useApi();
   const isAuthLoading = false; // useFlux(isAuthLoading$);
   const [page, setPage] = useState('sign-in');
   const [email, setEmail] = useState('');
@@ -81,7 +81,7 @@ export const AuthForm = () => {
                 onClick={async () => {
                   setPage('');
                   try {
-                    await api.userColl.login(email, password);
+                    await api2.login(email, password);
                     setPasswordError('');
                   } catch (error) {
                     setPasswordError(toError(error).message);
@@ -96,7 +96,12 @@ export const AuthForm = () => {
                 onClick={() => setPage('forgot-password')}
               />
               <Button
-                title="Vous n'avez pas de compte ? Inscrivez-vous"
+                title={(
+                  <>
+                    <Tr>Vous n'avez pas de compte ?</Tr>
+                    <br /><Tr>Inscrivez-vous</Tr>
+                  </>
+                )}
                 icon={UserPlusIcon}
                 onClick={() => setPage('sign-up')}
               />
@@ -121,14 +126,19 @@ export const AuthForm = () => {
                 title="S'inscrire"
                 onClick={async () => {
                   setPage('');
-                  await api.userColl.signUp(email, password);
+                  await api2.register(email, password);
                   setPage('sign-in');
                 }}
                 color="primary"
                 icon={UserPlusIcon}
               />
               <Button
-                title="Vous avez déjà un compte ? Connectez-vous"
+                title={(
+                  <>
+                    <Tr>Vous avez déjà un compte ?</Tr>
+                    <br /><Tr>Connectez-vous</Tr>
+                  </>
+                )}
                 icon={LogInIcon}
                 onClick={() => setPage('sign-in')}
               />
@@ -142,7 +152,7 @@ export const AuthForm = () => {
                 title="Réinitialiser le mot de passe par email"
                 onClick={async () => {
                   setPage('');
-                  await api.userColl.passwordReset(email);
+                  await api2.passwordReset(email);
                   setPage('sign-in');
                   // setPage('code');
                 }}
@@ -150,7 +160,12 @@ export const AuthForm = () => {
                 icon={MailIcon}
               />
               <Button
-                title="Vous avez déjà un compte ? Connectez-vous"
+                title={(
+                  <>
+                    <Tr>Vous avez déjà un compte ?</Tr>
+                    <br /><Tr>Connectez-vous</Tr>
+                  </>
+                )}
                 icon={ArrowLeftIcon}
                 onClick={() => setPage('sign-in')}
               />
@@ -170,7 +185,12 @@ export const AuthForm = () => {
                 icon={KeyIcon}
               />
               <Button
-                title="Vous avez déjà un compte ? Connectez-vous"
+                title={(
+                  <>
+                    <Tr>Vous avez déjà un compte ?</Tr>
+                    <br /><Tr>Connectez-vous</Tr>
+                  </>
+                )}
                 onClick={() => setPage('sign-in')}
                 icon={ArrowLeftIcon}
               />

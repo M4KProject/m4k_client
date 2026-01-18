@@ -76,7 +76,7 @@ const c = Css('Button', {
   '-big &Content': { flex: 0 },
 });
 
-type BaseButtonProps = Omit<Props['button'] & Props['a'], 'onClick'> & {
+type BaseButtonProps = Omit<Omit<Props['button'] & Props['a'], 'onClick'>, 'title'> & {
   onClick?: (e: Event) => void;
 };
 
@@ -88,7 +88,7 @@ export interface ButtonProps extends BaseButtonProps {
   selected?: boolean;
   icon?: Comp | true;
   before?: Comp;
-  title?: string;
+  title?: Comp;
   link?: boolean;
   tooltip?: Comp;
 }
@@ -124,7 +124,7 @@ export const Button = ({
       {comp(before)}
       {icon && icon !== true && <div {...c('Icon')}>{comp(icon)}</div>}
       <div {...c('Content')}>
-        {title && <Tr>{title}</Tr>}
+        {comp(title)}
         {children}
       </div>
     </>

@@ -5,10 +5,10 @@ import { useFlux } from '@/hooks/useFlux';
 import { theme$, updateTheme } from '@/utils/theme';
 import { Form } from '@/components/common/Form';
 import { Field } from '@/components/fields/Field';
-import { useApi } from '@/hooks/useApi';
 import { Panel } from './base/Panel';
 import { Button } from '../common/Button';
 import { useIsAdvanced, useRouter } from '@/hooks/useRoute';
+import { api2 } from '@/api2';
 
 const c = Css('Account', {
   '': {
@@ -18,10 +18,9 @@ const c = Css('Account', {
 });
 
 export const Account = () => {
-  const api = useApi();
   const router = useRouter();
   const theme = useFlux(theme$);
-  const auth = useFlux(api.pb.auth$);
+  const auth = useFlux(api2.client.auth$);
   const [passwordError, setPasswordError] = useState('');
   const [password, setPassword] = useState('');
   const [oldPassword, setOldPassword] = useState('');
@@ -31,7 +30,7 @@ export const Account = () => {
 
   const handleUpdatePassword = async () => {
     try {
-      await api.userColl.update(auth.id, { oldPassword, password, passwordConfirm: password });
+      await api2.users.update(auth.userId, { password });
       setPasswordError('');
       setPassword('');
     } catch (_error) {
@@ -42,7 +41,7 @@ export const Account = () => {
   return (
     <Panel icon={UserIcon} header="Mon Compte" {...c('')}>
       <Form title="Mon compte">
-        <Field label="ID de l'utilisateur" name="user_id" value={auth.id} readonly />
+        <Field label="ID de l'utilisateur" name="user_id" value={auth.userId} readonly />
         <Field
           label="Email de l'utilisateur"
           name="username"
@@ -68,17 +67,6 @@ export const Account = () => {
           onValue={(isUserDark) => updateTheme({ isUserDark })}
         />
         <Field
-          label="Ancien mot de passe"
-          name="current-password"
-          type="password"
-          value={oldPassword}
-          onValue={setOldPassword}
-          error={passwordError}
-          props={{
-            autoComplete: 'current-password',
-          }}
-        />
-        <Field
           label="Nouveau mot de passe"
           name="new-password"
           type="password"
@@ -98,7 +86,7 @@ export const Account = () => {
           color="secondary"
           title="Deconnexion"
           icon={LogOut}
-          onClick={() => api.pb.logout()}
+          onClick={() => api2.logout()}
         />
       </Form>
     </Panel>

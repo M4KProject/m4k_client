@@ -12,8 +12,9 @@ import { MediasPage } from '@/components/pages/MediasPage';
 import { DevicesPage } from '@/components/pages/DevicesPage';
 import { KioskPage } from '@/components/pages/KioskPage';
 import { AuthPage } from '@/components/pages/AuthPage';
-import { useAuth } from '@/hooks/useApi';
 import { RoutePage } from '@/controllers/Router';
+import { useFlux } from '@/hooks/useFlux';
+import { api2 } from '@/api2';
 
 const c = Css('App', {
   '': {
@@ -46,10 +47,10 @@ const AppRouter = () => {
 };
 
 const AppContent = () => {
-  const auth = useAuth();
+  const isAuth = useFlux(api2.client.isAuth$);
   const isKiosk = useIsKiosk();
 
-  console.debug('AppContent', { c, auth, isKiosk });
+  console.debug('AppContent', { c, isAuth, isKiosk });
 
   if (isKiosk) {
     return (
@@ -59,7 +60,7 @@ const AppContent = () => {
     );
   }
 
-  if (!auth) {
+  if (!isAuth) {
     return (
       <div {...c('')}>
         <AuthPage />

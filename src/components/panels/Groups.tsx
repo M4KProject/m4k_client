@@ -1,10 +1,10 @@
 import { PlusIcon, UsersIcon } from 'lucide-react';
-import { useApi, useGroups } from '@/hooks/useApi';
 import { Button } from '@/components/common/Button';
 import { Panel } from './base/Panel';
-import { Css } from 'fluxio';
-import { Role } from '@/api/models';
+import { Css, uuid } from 'fluxio';
 import { Group } from './Group';
+import { usePromise } from '@/hooks/usePromise';
+import { api2 } from '@/api2';
 
 const c = Css('Groups', {
   '': {
@@ -17,25 +17,21 @@ const c = Css('Groups', {
 });
 
 export const Groups = () => {
-  const api = useApi();
-  const groups = useGroups();
+  const [groups, _error, _isLoading, refresh] = usePromise(() => api2.groups.list(), []);
 
   const handleAdd = async () => {
-    const auth = api.pb.getAuth();
-    if (!auth) return;
-    const group = await api.group.create({ name: 'Nouveau Groupe', user: auth.id });
-    if (group) {
-      const role = Role.viewer;
-      await api.member.create({ user: auth.id, group: group.id, role });
-    }
+    const group = await api2.groups.create({ key: uuid(), name: 'Nouveau Groupe' });
+    await api2.setGroup(group);
+    await api2.groups.update(group.id, { key: group.id });
+    refresh();
   };
 
   console.debug('Groups', { groups });
 
   return (
     <Panel icon={UsersIcon} header="Mes Groups" {...c('')}>
-      {groups.map((group) => (
-        <Group key={group.id} group={group} />
+      {(groups||[]).map((group) => (
+        <Group key={group.id} group={group} refresh={refresh} />
       ))}
       <Button
         {...c('AddButton')}
