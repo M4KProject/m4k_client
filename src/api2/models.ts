@@ -93,7 +93,6 @@ export type MCreate<T extends MBase> = Omit<T, 'id'|'created'|'updated'|'userId'
 export type MUpdate<T extends MBase> = Partial<T>;
 
 export interface MUser extends MBase {
-    name: string;
     password: string;
     email: string;
 };
@@ -113,6 +112,9 @@ export interface MMember extends MBase {
     role: Role;
     groupId: string;
     userId: string;
+
+    email?: string,
+    deviceId?: string,
 };
 
 export interface MMedia extends MBase {

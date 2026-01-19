@@ -4,27 +4,25 @@ import { Members } from '../panels/Members';
 import { Button } from '../common/Button';
 import { PlusIcon } from 'lucide-react';
 import { showDialog } from '../common/Dialog';
-import { useApi } from '@/hooks/useApi';
 import { useState } from 'preact/hooks';
-import { Role } from '@/api/models';
 import { Form } from '../common/Form';
 import { Field } from '../fields/Field';
-import { useGroup } from '@/hooks/useRoute';
+import { api2 } from '@/api2';
+import { useFlux } from '@/hooks/useFlux';
 
 const c = Css('MembersPage', {
   '': {},
 });
 
 const CreateMemberForm = ({ onClose }: { onClose: () => void }) => {
-  const api = useApi();
-  const group = useGroup();
+  const groupId = useFlux(api2.client.groupId$);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isNew, setIsNewField] = useState(false);
   const [error, setError] = useState('');
 
   const handle = async () => {
-    if (!group) return;
+    if (!groupId) return;
     if (!email) {
       setError('Email requis');
       return;
@@ -35,16 +33,14 @@ const CreateMemberForm = ({ onClose }: { onClose: () => void }) => {
     }
     setError('');
     try {
-      if (isNew) {
-        await api.userColl.create({ email, password, passwordConfirm: password });
-        await api.member.create({ email, group: group.id, role: Role.editor });
-      } else {
-        await api.member.create({ email, group: group.id, role: Role.editor });
-      }
+      if (isNew) await api2.register(email, password, false);
+      await api2.members.create({ email, desc: '', groupId, role: 20 });
+      api2.members.refresh();
       onClose();
     } catch (e) {
       console.warn('create member', e);
       if (e instanceof ReqError) {
+        console.warn('create member', e.status, e.message, e.ctx.data);
         if (e.status === 404 && !isNew) {
           setIsNewField(true);
           setPassword(randString(10));

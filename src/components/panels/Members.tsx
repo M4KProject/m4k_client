@@ -1,12 +1,12 @@
 import { Css } from 'fluxio';
-import { Dictionary, toNumber, toString } from 'fluxio';
+import { toNumber, toString } from 'fluxio';
 import { Trash2Icon } from 'lucide-react';
 import { Grid, GridCols } from '@/components/common/Grid';
-import { useApi, useDeviceById, useGroupMembers } from '@/hooks/useApi';
-import { DeviceModel, MemberModel } from '@/api/models';
 import { Field } from '@/components/fields/Field';
 import { Button } from '@/components/common/Button';
-import { Api } from '@/api/Api';
+import { api2, MMember } from '@/api2';
+import { useEffect } from 'preact/hooks';
+import { useFlux } from '@/hooks/useFlux';
 
 const c = Css('Members', {
   Actions: {
@@ -14,21 +14,21 @@ const c = Css('Members', {
   },
 });
 
-const cols: GridCols<MemberModel, { deviceById: Dictionary<DeviceModel>; api: Api }> = {
-  id: ['Appareil', ({ device }) => <Field type="switch" value={!!device} readonly />, { w: 50 }],
-  name: [
-    'Email',
-    ({ device, email }, { deviceById }) => (device ? deviceById[device]?.name : email),
-  ],
+const cols: GridCols<MMember> = {
+  // id: ['Appareil', ({ devickId }) => <Field type="switch" value={deviceId} readonly />, { w: 50 }],
+  name: ['Email', ({ email }) => email],
   desc: [
     'Description',
-    ({ id, desc }, { api }) => (
-      <Field type="text" value={desc} onValue={(desc) => api.member.update(id, { desc })} />
+    ({ id, desc }) => (
+      <Field type="text" value={desc} onValue={async (desc) => {
+        await api2.members.update(id, { desc });
+        api2.members.refresh();
+      }} />
     ),
   ],
   role: [
     'Droit',
-    ({ id, role }, { api }) => (
+    ({ id, role }) => (
       <Field
         type="select"
         items={[
@@ -37,19 +37,25 @@ const cols: GridCols<MemberModel, { deviceById: Dictionary<DeviceModel>; api: Ap
           ['30', 'Administrateur'],
         ]}
         value={toString(role)}
-        onValue={(role) => api.member.update(id, { role: toNumber(role) })}
+        onValue={async (role) => {
+          await api2.members.update(id, { role: toNumber(role) });
+          api2.members.refresh();
+        }}
       />
     ),
     { w: 140 },
   ],
   actions: [
     'Actions',
-    ({ id }, { api }) => (
+    ({ id }) => (
       <Button
         icon={Trash2Icon}
         color="error"
         tooltip="Supprimer"
-        onClick={() => api.member.delete(id)}
+        onClick={async () => {
+          await api2.members.remove(id);
+          api2.members.refresh();
+        }}
       />
     ),
     { w: 120, cls: c('Actions') },
@@ -57,9 +63,12 @@ const cols: GridCols<MemberModel, { deviceById: Dictionary<DeviceModel>; api: Ap
 };
 
 export const Members = () => {
-  const api = useApi();
-  const members = useGroupMembers();
-  const deviceById = useDeviceById();
+  const allMembers = useFlux(api2.members.items$);
+  useEffect(() => api2.members.refresh(), []);
 
-  return <Grid {...c('')} cols={cols} items={members} ctx={{ deviceById, api }} />;
+  if (!allMembers) return;
+
+  const members = allMembers.filter(m => !m.deviceId);
+
+  return <Grid {...c('')} cols={cols} items={members} ctx={{}} />;
 };

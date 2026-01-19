@@ -12,7 +12,7 @@ import { api2 } from '@/api2';
 
 const c = Css('Account', {
   '': {
-    wMin: 300,
+    wMin: 400,
     flex: 1,
   },
 });
@@ -67,7 +67,7 @@ export const Account = () => {
           onValue={(isUserDark) => updateTheme({ isUserDark })}
         />
         <Field
-          label="Nouveau mot de passe"
+          label="Mot de passe"
           name="new-password"
           type="password"
           value={password}

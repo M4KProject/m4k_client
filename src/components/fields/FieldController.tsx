@@ -31,8 +31,10 @@ export class FieldController<V, R> {
   private readonly listeners: Listener<FieldState<V, R>>[] = [];
 
   public state: FieldState<V, R> = { config: {} };
+  initValue: any;
 
   subscribe(listener: Listener<FieldState<V, R>>): Unsubscribe {
+    this.log.d('subscribe');
     this.listeners.push(listener);
     return () => {
       removeItem(this.listeners, listener);
@@ -40,6 +42,7 @@ export class FieldController<V, R> {
   }
 
   setProps(props: FieldProps<V, R>) {
+    this.log.d('setProps', props);
     const { value, error, ...rest } = props;
 
     const hash = Object.values(rest).join(';');
@@ -73,6 +76,7 @@ export class FieldController<V, R> {
     });
 
     this.log = logger(`Field:${config.name || type}`);
+    this.log.d('reset', type, config, props);
 
     const value = config.stored ? getStorage().get(config.stored, config.value) : config.value;
     this.propsValue = props.value;
@@ -87,17 +91,14 @@ export class FieldController<V, R> {
       this.log.e('toRaw error', value, error);
     }
 
-    this.state = {
-      raw,
-      value,
-      error,
-      config,
-    };
+    this.initValue = value;
+    this.state = { raw, value, error, config };
     this.next = undefined;
-    this.notify();
+    // this.notify();
   }
 
   update(next?: NextState<Partial<FieldState<V, R>>>) {
+    this.log.d('update', next);
     const prev = this.next || this.state;
     const changes = isFunction(next) ? next(prev) : next;
     this.next = { ...prev, ...changes };
@@ -113,6 +114,7 @@ export class FieldController<V, R> {
   }
 
   apply() {
+    this.log.d('apply');
     const changes = this.next && getChanges(this.state, this.next);
     if (isNotEmpty(changes)) {
       let { value, raw, event, error } = changes;
@@ -147,11 +149,14 @@ export class FieldController<V, R> {
   }
 
   notify() {
+    this.log.d('notify');
     const state = this.state;
     const value = state.value;
+    const onValue = this.config.onValue;
 
-    if (isDefined(value)) {
-      this.config.onValue?.(value);
+    if (isDefined(value) && onValue) {
+      console.debug('///// onValue /////', value);
+      onValue(value);
     }
 
     for (const listener of this.listeners) {
@@ -164,6 +169,7 @@ export class FieldController<V, R> {
   }
 
   private _onChange(event: any) {
+    this.log.d('_onChange', event);
     if (this.config.readonly) return;
     const raw = event instanceof Event ? (event.target as any).value : event;
     this.update({ raw, event });

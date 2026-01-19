@@ -5,6 +5,8 @@ import { Css, uuid } from 'fluxio';
 import { Group } from './Group';
 import { usePromise } from '@/hooks/usePromise';
 import { api2 } from '@/api2';
+import { useFlux } from '@/hooks/useFlux';
+import { useEffect } from 'preact/hooks';
 
 const c = Css('Groups', {
   '': {
@@ -17,21 +19,22 @@ const c = Css('Groups', {
 });
 
 export const Groups = () => {
-  const [groups, _error, _isLoading, refresh] = usePromise(() => api2.groups.list(), []);
+  const groups = useFlux(api2.groups.items$);
+  useEffect(() => api2.groups.refresh(), []);
 
   const handleAdd = async () => {
     const group = await api2.groups.create({ key: uuid(), name: 'Nouveau Groupe' });
     await api2.setGroup(group);
     await api2.groups.update(group.id, { key: group.id });
-    refresh();
+    api2.groups.refresh();
   };
 
   console.debug('Groups', { groups });
 
   return (
-    <Panel icon={UsersIcon} header="Mes Groups" {...c('')}>
+    <Panel icon={UsersIcon} header="Mes Groupes" {...c('')}>
       {(groups||[]).map((group) => (
-        <Group key={group.id} group={group} refresh={refresh} />
+        <Group key={group.id} group={group} />
       ))}
       <Button
         {...c('AddButton')}

@@ -1,13 +1,24 @@
-import { deepClone, getChanges, isEmpty, logger, Logger, ReqOptions } from "fluxio";
+import { deepClone, flux, fluxStored, getChanges, isEmpty, isItems, logger, Logger, ReqOptions } from "fluxio";
 import { ApiClient } from "./ApiClient";
 import { MFilter, MId, MBase, MCreate, MUpdate, MOptions } from "./models";
 import { toId } from "./ApiHelpers";
 
 export class ApiRest<T extends MBase> {
     readonly log: Logger;
+    readonly items$ = fluxStored<T[]>(this.name+'$', [], isItems);
 
     constructor(public client: ApiClient, public name: string) {
         this.log = logger(name);
+    }
+
+    async load() {
+        const items = await this.list();
+        this.items$.set(items);
+        return items;
+    }
+
+    refresh() {
+        this.load();
     }
 
     async list(filter?: MFilter<T>, options?: MOptions<T[], T>): Promise<T[]> {

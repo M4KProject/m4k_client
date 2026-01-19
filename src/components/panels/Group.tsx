@@ -20,7 +20,7 @@ const c = Css('Group', {
   },
 });
 
-export const Group = ({ group, refresh }: { group: MGroup, refresh: () => void }) => {
+export const Group = ({ group }: { group: MGroup }) => {
   const selected = useFlux(api2.client.groupId$.map((id) => group.id === id));
 
   return (
@@ -36,9 +36,8 @@ export const Group = ({ group, refresh }: { group: MGroup, refresh: () => void }
           <Field
             value={group.name}
             onValue={async (name) => {
-              if (group.name === name) return;
               await api2.groups.update(group.id, { name });
-              refresh();
+              api2.groups.refresh();
             }}
           />
         </>
@@ -49,19 +48,18 @@ export const Group = ({ group, refresh }: { group: MGroup, refresh: () => void }
         label="Clé"
         value={group.key}
         onValue={async (key) => {
-          if (group.key === key) return;
           await api2.groups.update(group.id, { key });
-          refresh();
+          api2.groups.refresh();
         }}
       />
       <Field
         type="color"
         value={group.config?.primary}
         onValue={async (primary) => {
-          // await api2.groups.apply(group.id, (p) => {
-          //   p.config = { ...p.config, primary }
-          // });
-          // refresh();
+          await api2.groups.apply(group.id, (p) => {
+            p.config = { ...p.config, primary }
+          });
+          api2.groups.refresh();
         }}
       />
       <Field
@@ -71,7 +69,7 @@ export const Group = ({ group, refresh }: { group: MGroup, refresh: () => void }
           await api2.groups.apply(group.id, (p) => {
             p.config = { ...p.config, secondary }
           });
-          refresh();
+          api2.groups.refresh();
         }}
       />
     </Panel>

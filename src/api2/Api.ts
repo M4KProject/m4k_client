@@ -31,17 +31,18 @@ export class Api {
     return this.client.req('GET', '/health', options)
   }
   
-  async register(email: string, password: string, options?: MOptions<MAuth>) {
-    await this.client.post<MAuth>('auth/register', { email, password }, options);
-    return await this.login(email, password, options);
+  async register(email: string, password: string, login: boolean = true) {
+    await this.client.post<MAuth>('auth/register', { email, password });
+    if (!login) return;
+    return await this.login(email, password);
   }
 
-  async login(email: string, password: string, options?: MOptions<MAuth>) {
-    const auth = await this.client.post<MAuth>('auth/login', { email, password }, options);
+  async login(email: string, password: string) {
+    const auth = await this.client.post<MAuth>('auth/login', { email, password });
     return this.setAuth(auth);
   }
 
-  async passwordReset(email: string, options?: MOptions<MAuth>) {
+  async passwordReset(email: string) {
     throw new Error('Method not implemented.');
   }
 
