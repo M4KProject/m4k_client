@@ -4,8 +4,7 @@ import { Button, ButtonProps } from '@/components/common/Button';
 import { DivProps } from '@/components/common/types';
 import { comp, Comp } from '@/utils/comp';
 import { MonitorIcon, FolderIcon, UsersIcon, HomeIcon } from 'lucide-react';
-import { useRouter } from '@/hooks/useRoute';
-import { useRoute } from '@/hooks/useRoute';
+import { usePage, useRouter } from '@/hooks/useRoute';
 import { RoutePage } from '@/controllers/Router';
 
 export const MENU_MIN = 32;
@@ -96,20 +95,15 @@ export const MenuSep = () => <div {...c('Sep')} />;
 export const MenuFlex = () => <div {...c('Flex')} />;
 
 export const MenuButton = ({ page, ...props }: MenuButtonProps) => {
-  const routeController = useRouter();
-  const route = useRoute();
-  const selected = isBoolean(props.selected) ? props.selected : page === route.page;
-  console.debug('MenuButton', { page, routePage: route.page, selected });
+  const router = useRouter();
+  const routePage = usePage();
+  const selected = isBoolean(props.selected) ? props.selected : page === routePage;
+  console.debug('MenuButton', { page, routePage, selected });
   return (
     <Button
       {...props}
       selected={selected}
-      onClick={
-        props.onClick ||
-        (() => {
-          routeController.go({ page });
-        })
-      }
+      onClick={props.onClick || (() => router.go({ page }))}
     />
   );
 };

@@ -1,5 +1,5 @@
-import { useState } from 'preact/hooks';
-import { Css } from 'fluxio';
+import { useEffect, useState } from 'preact/hooks';
+import { Css, fluxStored, isString } from 'fluxio';
 import { Loading } from '@/components/common/Loading';
 import { Field } from '@/components/fields/Field';
 import { Button } from '@/components/common/Button';
@@ -9,6 +9,7 @@ import { addTr } from '@/hooks/useTr';
 import { LogInIcon, UserPlusIcon, MailIcon, KeyIcon, ArrowLeftIcon } from 'lucide-react';
 import { api2 } from '@/api2';
 import { Tr } from '@/components/common/Tr';
+import { useFlux, useFluxState } from '@/hooks/useFlux';
 
 addTr({
   'Failed to authenticate.': 'Échec, vérifier le mot de passe.',
@@ -32,10 +33,13 @@ const c = Css('AuthForm', {
   },
 });
 
+const email$ = fluxStored('email', '', isString);
+
 export const AuthForm = () => {
   const isAuthLoading = false; // useFlux(isAuthLoading$);
   const [page, setPage] = useState('sign-in');
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useFluxState(email$);
+  // const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
 

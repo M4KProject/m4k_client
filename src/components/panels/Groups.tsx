@@ -1,12 +1,10 @@
 import { PlusIcon, UsersIcon } from 'lucide-react';
 import { Button } from '@/components/common/Button';
 import { Panel } from './base/Panel';
-import { Css, uuid } from 'fluxio';
+import { Css } from 'fluxio';
 import { Group } from './Group';
-import { usePromise } from '@/hooks/usePromise';
 import { api2 } from '@/api2';
 import { useFlux } from '@/hooks/useFlux';
-import { useEffect } from 'preact/hooks';
 
 const c = Css('Groups', {
   '': {
@@ -20,13 +18,10 @@ const c = Css('Groups', {
 
 export const Groups = () => {
   const groups = useFlux(api2.groups.items$);
-  useEffect(() => api2.groups.refresh(), []);
 
   const handleAdd = async () => {
-    const group = await api2.groups.create({ key: uuid(), name: 'Nouveau Groupe' });
-    await api2.setGroup(group);
-    await api2.groups.update(group.id, { key: group.id });
-    api2.groups.refresh();
+    const group = await api2.groups.create({ name: 'Nouveau Groupe' });
+    await api2.setGroupId(group);
   };
 
   console.debug('Groups', { groups });

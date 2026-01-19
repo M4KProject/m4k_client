@@ -1,20 +1,53 @@
-import { deepClone, flux, fluxStored, getChanges, isEmpty, isItems, logger, Logger, ReqOptions } from "fluxio";
+import { byId, deepClone, Dictionary, fluxCombine, fluxStored, getChanges, isArray, isDictionaryOfItem, isEmpty, isNotNil, isString, logger, Logger } from "fluxio";
 import { ApiClient } from "./ApiClient";
-import { MFilter, MId, MBase, MCreate, MUpdate, MOptions } from "./models";
+import { MFilter, MId, MBase, MCreate, MUpdate, MOptions, MGroup } from "./models";
 import { toId } from "./ApiHelpers";
 
 export class ApiRest<T extends MBase> {
     readonly log: Logger;
-    readonly items$ = fluxStored<T[]>(this.name+'$', [], isItems);
+    readonly dico$ = fluxStored<Dictionary<T>>(this.name+'.dico', {}, isDictionaryOfItem);
+    readonly items$ = this.dico$.map(dico => Object.values(dico));
+    readonly id$ = fluxStored<string>(this.name+'.id', '', isString);
+    readonly item$ = fluxCombine(this.id$, this.dico$).map(([id, dico]) => dico[id]);
 
     constructor(public client: ApiClient, public name: string) {
         this.log = logger(name);
     }
 
+    select(mId: MId<T>) {
+        this.id$.set(toId(mId));
+    }
+
+    getByKey(key: string) {
+        return this.items$.get().find(item => (item as any).key === key) || this.dico$.get()[key];
+    }
+
+    getIdByKey(key: string) {
+        return this.getByKey(key)?.id || '';
+    }
+
+    private _rm(items: T|T[]) {
+        const filteredItems = (isArray(items) ? items : [items]).filter(isNotNil);
+        if (!filteredItems.length) return;
+        this.dico$.set(dico => {
+            const next = { ...dico };
+            const ids = Object.keys(byId(filteredItems));
+            for (const id of ids) delete next[id];
+            return next;
+        });
+    }
+
+    private _set(items: T|T[]) {
+        const filteredItems = (isArray(items) ? items : [items]).filter(isNotNil);
+        if (!filteredItems.length) return;
+        this.dico$.set(dico => {
+            return { ...dico, ...byId(filteredItems) };
+        });
+    }
+
     async load() {
         const items = await this.list();
-        this.items$.set(items);
-        return items;
+        this.dico$.set(byId(items));
     }
 
     refresh() {
@@ -39,6 +72,7 @@ export class ApiRest<T extends MBase> {
         try {
             const item = await this.client.get<T>(`${this.name}/${id}`, options);
             this.log.d('get', id, options, item);
+            this._set(item);
             return item || undefined;
         }
         catch(error) {
@@ -51,6 +85,7 @@ export class ApiRest<T extends MBase> {
         try {
             const item = await this.client.post<T>(`${this.name}`, data, options);
             this.log.d('create', data, options, item);
+            this._set(item);
             return item;
         }
         catch(error) {
@@ -65,6 +100,7 @@ export class ApiRest<T extends MBase> {
         try {
             const item = await this.client.put<T>(`${this.name}/${id}`, changes, options);
             this.log.d('update', id, changes, options, item);
+            this._set(item);
             return item || undefined;
         }
         catch(error) {
@@ -79,6 +115,7 @@ export class ApiRest<T extends MBase> {
         try {
             const item = await this.client.delete<T>(`${this.name}/${id}`, options);
             this.log.d('remove', id, options, item);
+            this._rm(item);
             return item;
         }
         catch(error) {

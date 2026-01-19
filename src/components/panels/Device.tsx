@@ -6,25 +6,25 @@ import {
   MINUTE,
   round,
   SECOND,
+  serverTime,
   toDate,
   toItem,
   toTime,
 } from 'fluxio';
 import { useEffect } from 'preact/hooks';
-import { useApi, useGroupMedias, useMediaById } from '@/hooks/useApi';
-import { DeviceModel } from '@/api/models';
 import { Field } from '@/components/fields/Field';
 import { Button } from '@/components/common/Button';
-import { useMedia, useRouter } from '@/hooks/useRoute';
-import { useFlux, useFluxMemo } from '@/hooks/useFlux';
+import { useRouter } from '@/hooks/useRoute';
+import { useFlux } from '@/hooks/useFlux';
 import { tooltipProps } from '../common/Tooltip';
 import { Panel } from './base/Panel';
 import { useConstant } from '@/hooks/useConstant';
-import { PbUpdate } from 'pblite';
 import { EditIcon, InfoIcon } from 'lucide-react';
 import { createWindow } from '../common/Window';
 import { Medias } from './Medias';
 import { useMediaController } from '@/hooks/useMediaController';
+import { api2, MDevice, MUpdate } from '@/api2';
+import { useMediaDico, useMedias } from '@/hooks/useApi2';
 
 const c = Css('Device', {
   '': { w: 300, h: 200 },
@@ -66,70 +66,12 @@ const c = Css('Device', {
   },
 });
 
-//   type: [
-//     'Type',
-//     (d) => (
-//     ),
-//     { if: (_col, ctx) => !!ctx.isAdvanced },
-//   ],
-//   name: [
-//     'Nom',
-//     (d, { api }) => <Field value={d.name} onValue={(name) => api.device.update(d.id, { name })} />,
-//   ],
-//   resolution: ['Résolution', (d) => `${d.info?.width || 0}x${d.info?.height || 0}`],
-//   created: ['Création', (d) => formatDate(d.created)],
-//   media: [
-//     'Playlist',
-//     (d, { api, medias }) => (
-//       <Field
-//         type="select"
-//         items={medias
-//           .filter((media) => media.type === 'content')
-//           .map((media) => [media.id, media.title || media.key || media.id])}
-//         value={d.media}
-//         onValue={(media) => api.device.update(d.id, { media })}
-//       />
-//     ),
-//   ],
-//   actions: [
-//     'Actions',
-//     (d, { api, isAdvanced, handleRemote }) => (
-//       <div style={{ display: 'flex', gap: '0.5em' }}>
-//         <Button
-//           icon={RefreshCw}
-//           color="primary"
-//           tooltip="Rafraîchir"
-//           onClick={() => api.device.update(d.id, { action: 'reload' })}
-//         />
-//         <Button
-//           icon={Power}
-//           color="primary"
-//           tooltip="Redémarrer"
-//           onClick={() => api.device.update(d.id, { action: 'reboot' })}
-//         />
-//         {isAdvanced && (
-//           <Button icon={Settings} tooltip="Mode remote" onClick={() => handleRemote(d)} />
-//         )}
-//         {isAdvanced && (
-//           <Button
-//             icon={Trash2}
-//             color="error"
-//             tooltip="Supprimer"
-//             onClick={() => api.device.delete(d.id)}
-//           />
-//         )}
-//       </div>
-//     ),
-//   ],
-// };
-
 const useOnlineDelay = (online: string | Date | undefined) => {
-  const api = useApi();
   const delay$ = useConstant(() => flux<number>(0));
 
   useEffect(() => {
     const refresh = () => {
-      const now = api.pb.getTime();
+      const now = serverTime();
       const delay = online ? now - toTime(online) : 0;
       delay$.set(delay);
     };
@@ -141,11 +83,9 @@ const useOnlineDelay = (online: string | Date | undefined) => {
   return useFlux(delay$);
 };
 
-export const Device = ({ device }: { device: DeviceModel }) => {
-  const api = useApi();
+export const Device = ({ device }: { device: MDevice }) => {
   const router = useRouter();
-  const selected = useFlux(router.deviceId$.map((id) => device.id === id));
-
+  const selected = useFlux(api2.devices.id$.map((id) => device.id === id));
   const delay = useOnlineDelay(device.online);
   const seconds = round(delay / SECOND);
   const onlineCls =
@@ -153,16 +93,17 @@ export const Device = ({ device }: { device: DeviceModel }) => {
     : delay < MINUTE ? '-latency'
     : '-offline';
 
-  const contents = useGroupMedias().filter((m) => m.type === 'content');
+  const contents = useMedias().filter((m) => m.type === 'content');
 
-  const update = (changes: PbUpdate<DeviceModel>) => {
-    api.device.update(device.id, changes);
+  const update = (changes: MUpdate<MDevice>) => {
+    api2.devices.update(device.id, changes);
   };
 
   const info = toItem(device.info);
 
-  const mediaId = device.media;
-  const media = useFluxMemo(() => api.media.find$({ id: mediaId }), [api, mediaId]);
+  const mediaId = device.mediaId;
+  const mediaDico = useMediaDico();
+  const media = mediaDico[mediaId];
   const mediaController = useMediaController();
 
   const handleMedia = (e: Event) => {
@@ -175,7 +116,7 @@ export const Device = ({ device }: { device: DeviceModel }) => {
       confirm: () => {
         const mediaId = mediaController.select$.get()?.id;
         if (!mediaId) return;
-        update({ media: mediaId });
+        update({ mediaId });
       },
       size: [800, 600],
       min: [400, 300],
@@ -190,13 +131,12 @@ export const Device = ({ device }: { device: DeviceModel }) => {
           <Field
             type="check"
             value={selected}
-            onValue={(v) => v && router.deviceId$.set(device.id)}
+            onValue={(v) => v && api2.devices.select(device)}
           />
           <Field value={device.name} onValue={(name) => update({ name })} />
           <div
             {...c('Online')}
             {...tooltipProps(`${seconds} ${formatDateTime(toDate(device.online))}`)}
-            onClick={() => update({ online: api.pb.getDate() })}
           />
         </>
       }
@@ -207,23 +147,15 @@ export const Device = ({ device }: { device: DeviceModel }) => {
           icon={InfoIcon}
           tooltip={() => <pre>{humanize({ id: device.id, key: device.key, ...info })}</pre>}
         />
-        <Button title={media?.title} color="primary" onClick={handleMedia} />
-        {/* <Field
-          containerProps={c('Media')}
-          type="select"
-          value={device.media}
-          onValue={(media) => update({ media })}
-          items={contents.map((m) => [m.id, m.title])}
-        /> */}
+        <Button title={media?.name} color="primary" onClick={handleMedia} />
         <Button
           color="primary"
           icon={EditIcon}
           onClick={() => {
-            if (device.media) {
-              router.screenSize$.set([info.width || 1920, info.height || 1080]);
-              router.go({ page: 'edit', media: device.media });
+            if (device.mediaId) {
+              router.screenSize$.set([device.width || 1920, device.height || 1080]);
+              router.go({ page: 'edit', mediaId: device.mediaId });
             }
-            // TODO else crée le media
           }}
         />
       </div>

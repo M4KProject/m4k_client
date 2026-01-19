@@ -4,8 +4,8 @@ import { useApi } from '@/hooks/useApi';
 import { Field } from '@/components/fields/Field';
 import { Button } from '@/components/common/Button';
 import { Form } from '@/components/common/Form';
-import { useGroup } from '@/hooks/useRoute';
 import { useWindowController } from '../common/WindowController';
+import { useGroup } from '@/hooks/useApi2';
 
 const c = Css('DevicePairing', {
   Buttons: {

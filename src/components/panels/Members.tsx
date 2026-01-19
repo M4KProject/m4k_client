@@ -20,10 +20,7 @@ const cols: GridCols<MMember> = {
   desc: [
     'Description',
     ({ id, desc }) => (
-      <Field type="text" value={desc} onValue={async (desc) => {
-        await api2.members.update(id, { desc });
-        api2.members.refresh();
-      }} />
+      <Field type="text" value={desc} onValue={async (desc) => api2.members.update(id, { desc })} />
     ),
   ],
   role: [
@@ -39,7 +36,6 @@ const cols: GridCols<MMember> = {
         value={toString(role)}
         onValue={async (role) => {
           await api2.members.update(id, { role: toNumber(role) });
-          api2.members.refresh();
         }}
       />
     ),
@@ -54,7 +50,6 @@ const cols: GridCols<MMember> = {
         tooltip="Supprimer"
         onClick={async () => {
           await api2.members.remove(id);
-          api2.members.refresh();
         }}
       />
     ),
@@ -64,7 +59,6 @@ const cols: GridCols<MMember> = {
 
 export const Members = () => {
   const allMembers = useFlux(api2.members.items$);
-  useEffect(() => api2.members.refresh(), []);
 
   if (!allMembers) return;
 

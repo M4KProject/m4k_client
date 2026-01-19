@@ -1,13 +1,8 @@
 import { Css, toString } from 'fluxio';
 import { useEffect, useState } from 'preact/hooks';
-import { RefreshCwIcon, PowerIcon, LogOutIcon } from 'lucide-react';
-import { DeviceScreen } from '@/components/admin/DeviceScreen';
-import { DeviceConsole } from '@/components/admin/DeviceConsole';
 import { glb, jsonStringify } from 'fluxio';
-import { useApi } from '@/hooks/useApi';
-import { Button } from '@/components/common/Button';
-import { useDevice } from '@/hooks/useRoute';
-import { Page } from '../pages/base/Page';
+import { useDevice } from '@/hooks/useApi2';
+import { api2 } from '@/api2';
 
 const c = Css('DevicePage', {
   Body: {
@@ -22,7 +17,6 @@ const c = Css('DevicePage', {
 });
 
 export const DevicePage = () => {
-  const api = useApi();
   const device = useDevice();
 
   const [consoleOutput, setConsoleOutput] = useState('Console ready...\n');
@@ -36,7 +30,7 @@ export const DevicePage = () => {
   const executeAction = async (action: string, input?: any) => {
     if (!device) return;
     try {
-      await api.device.update(device.id, { action: action as any, input });
+      await api2.devices.update(device.id, { action: action as any, input });
       setConsoleOutput((p) => p + `> Action: ${action}\n`);
     } catch (error) {
       setConsoleOutput((p) => p + `> Error: ${error}\n`);
@@ -55,8 +49,8 @@ export const DevicePage = () => {
     // );
   }
 
-  const deviceWidth = device.info?.width || 1920;
-  const deviceHeight = device.info?.height || 1080;
+  const deviceWidth = device.width || 1920;
+  const deviceHeight = device.height || 1080;
   const aspectRatio = deviceWidth / deviceHeight;
 
   // Calcul de la taille d'affichage (max 80% de la fenêtre)
@@ -72,7 +66,7 @@ export const DevicePage = () => {
   }
 
   const captureUrl =
-    device.capture ? api.device.coll.getFileUrl(device.id, toString(device.capture)) : '';
+    device.capture ? api2.devices.getFileUrl(device.id, toString(device.capture)) : '';
 
   return null;
   // return (0

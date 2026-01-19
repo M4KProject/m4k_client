@@ -1,8 +1,9 @@
 import { Field } from '@/components/fields/Field';
 import { Css } from 'fluxio';
-import { useFlux } from '@/hooks/useFlux';
+import { useFluxMemo } from '@/hooks/useFlux';
 import { Panel } from './base/Panel';
 import { api2, MGroup } from '@/api2';
+import { useRouter } from '@/hooks/useRoute';
 
 const c = Css('Group', {
   '': { w: 250 },
@@ -21,7 +22,8 @@ const c = Css('Group', {
 });
 
 export const Group = ({ group }: { group: MGroup }) => {
-  const selected = useFlux(api2.client.groupId$.map((id) => group.id === id));
+  const router = useRouter();
+  const selected = useFluxMemo(() => api2.groups.id$.map((id) => group.id === id));
 
   return (
     <Panel
@@ -31,14 +33,11 @@ export const Group = ({ group }: { group: MGroup }) => {
           <Field
             type="check"
             value={selected}
-            onValue={(v) => v && api2.setGroup(group)}
+            onValue={(v) => v && router.go({ group: group.key })}
           />
           <Field
             value={group.name}
-            onValue={async (name) => {
-              await api2.groups.update(group.id, { name });
-              api2.groups.refresh();
-            }}
+            onValue={async (name) => api2.groups.update(group.id, { name })}
           />
         </>
       }
@@ -49,7 +48,6 @@ export const Group = ({ group }: { group: MGroup }) => {
         value={group.key}
         onValue={async (key) => {
           await api2.groups.update(group.id, { key });
-          api2.groups.refresh();
         }}
       />
       <Field
@@ -59,7 +57,6 @@ export const Group = ({ group }: { group: MGroup }) => {
           await api2.groups.apply(group.id, (p) => {
             p.config = { ...p.config, primary }
           });
-          api2.groups.refresh();
         }}
       />
       <Field
@@ -69,7 +66,6 @@ export const Group = ({ group }: { group: MGroup }) => {
           await api2.groups.apply(group.id, (p) => {
             p.config = { ...p.config, secondary }
           });
-          api2.groups.refresh();
         }}
       />
     </Panel>

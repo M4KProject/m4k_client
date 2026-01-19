@@ -4,7 +4,7 @@ import { Errors } from '@/components/admin/Errors';
 import { refreshTheme } from '@/utils/theme';
 import { addFont } from '@/utils/addFont';
 import { EditPage } from '@/components/pages/EditPage';
-import { useIsKiosk, useRoute } from '@/hooks/useRoute';
+import { useIsKiosk, usePage } from '@/hooks/useRoute';
 import { Comp, comp } from '@/utils/comp';
 import { DashboardPage } from '@/components/pages/DashboardPage';
 import { MembersPage } from '@/components/pages/MembersPage';
@@ -42,7 +42,7 @@ const CompByPage: Partial<Record<RoutePage, Comp>> = {
 };
 
 const AppRouter = () => {
-  const { page } = useRoute();
+  const page = usePage();
   return comp(CompByPage[page || 'dashboard'] || DashboardPage);
 };
 
@@ -76,26 +76,6 @@ const AppContent = () => {
   );
 };
 
-// export const AppSync = () => {
-//   const api = useApi();
-//   const { group: groupKey } = useRoute();
-//   const group = useFlux(groupKey ? api.group.find$({ key: groupKey }) : undefined);
-//   const groupId = group?.id;
-//   const { isDark, primary, secondary } = group?.data || {};
-
-//   useEffect(() => {
-//     api.groupId$.set(groupId ?? '');
-//   }, [groupId]);
-
-//   useEffect(() => {
-//     updateTheme({ isDark, primary, secondary });
-//   }, [isDark, primary, secondary]);
-
-//   console.debug('AppSync', { groupKey, group, groupId });
-
-//   return null;
-// };
-
 export const App = () => {
   console.debug('App');
 
@@ -106,7 +86,6 @@ export const App = () => {
 
   return (
     <div id="app" {...c('')}>
-      {/* <AppSync /> */}
       <AppContent />
     </div>
   );

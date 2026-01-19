@@ -2,7 +2,8 @@ import { Css, Flux } from 'fluxio';
 import { DivProps } from '@/components/common/types';
 import { Button } from '@/components/common/Button';
 import { UserIcon, MenuIcon } from 'lucide-react';
-import { useRouter, useGroup } from '@/hooks/useRoute';
+import { useRouter } from '@/hooks/useRoute';
+import { useGroup } from '@/hooks/useApi2';
 
 const c = Css('Toolbar', {
   '': {

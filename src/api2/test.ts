@@ -20,7 +20,7 @@ import { Api } from "./Api";
     const group = await api.groups.create({ key: uuid(), name: 'TEST', config: {} });
     console.debug('group', group);
     
-    api.setGroup(group);
+    api.groups.select(group);
 
     const media = await api.medias.create({
         type: 'content',

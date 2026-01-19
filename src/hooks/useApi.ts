@@ -5,7 +5,7 @@ import { GroupModel, MediaModel } from '@/api/models';
 import { Sync } from '@/api/sync';
 import { Api } from '@/api/Api';
 import { useSingleton } from './useSingleton';
-import { useGroupId, useIsAdvanced } from './useRoute';
+import { useIsAdvanced } from './useRoute';
 
 export const useApi = () => useSingleton(Api);
 

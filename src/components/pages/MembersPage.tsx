@@ -15,7 +15,7 @@ const c = Css('MembersPage', {
 });
 
 const CreateMemberForm = ({ onClose }: { onClose: () => void }) => {
-  const groupId = useFlux(api2.client.groupId$);
+  const groupId = useFlux(api2.groups.id$);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isNew, setIsNewField] = useState(false);
@@ -35,7 +35,6 @@ const CreateMemberForm = ({ onClose }: { onClose: () => void }) => {
     try {
       if (isNew) await api2.register(email, password, false);
       await api2.members.create({ email, desc: '', groupId, role: 20 });
-      api2.members.refresh();
       onClose();
     } catch (e) {
       console.warn('create member', e);

@@ -1,8 +1,9 @@
-import { FIVE_MINUTES, logger, syncServerTime, toDate } from "fluxio";
+import { FIVE_MINUTES, fluxCombine, logger, syncServerTime, toDate } from "fluxio";
 import { MAuth, MApplication, MDevice, MGroup, MJob, MMember, MUser, MId, MOptions } from "./models";
 import { ApiClient } from "./ApiClient";
 import { ApiMedias } from "./ApiMedias";
 import { ApiRest } from "./ApiRest";
+import { toId } from "./ApiHelpers";
 
 export class Api {
   log = logger('api2');
@@ -19,12 +20,34 @@ export class Api {
 
   constructor() {
     this.log.d('initTime');
+
+    this.groups.id$.on(id => {
+      this.client.groupId = id;
+      this.refresh();
+    });
+    this.client.auth$.map(a => a?.userId).on(() => this.refresh());
+
+    this.client.groupId = this.groups.id$.get();
+    this.refresh();
+
     syncServerTime(async () => {
       const result = await this.client.get<{ date: string }>('time');
       const time = toDate(result.date).getTime();
       this.log.d('serverTime', result, time);
       return time;
     }, FIVE_MINUTES);
+  }
+
+  refresh() {
+    if (!this.client.auth$.get()) return;
+
+    this.devices.load();
+    this.groups.load();
+    this.jobs.load();
+    this.medias.load();
+    this.members.load();
+    this.users.load();
+    this.applications.load();
   }
   
   getHealth(options?: MOptions) {
@@ -56,21 +79,29 @@ export class Api {
     return promise;
   }
 
+  getAuth() {
+    return this.client.auth$.get();
+  }
+
   setAuth(auth: MAuth) {
     this.client.auth$.set(auth);
     return auth;
   }
 
-  setGroup(mId: MId<MGroup>) {
-    this.client.setGroup(mId);
+  setGroupId(mId: MId<MGroup>) {
+    this.groups.id$.set(toId(mId));
   }
 
   needUserId(): string {
-    return this.client.needUserId();
+    const userId = this.client.auth$.get()?.userId;
+    if (userId) return userId;
+    throw new Error('No auth');
   }
 
   needGroupId(): string {
-    return this.client.needGroupId();
+    const groupId = this.groups.id$.get();
+    if (groupId) return groupId;
+    throw new Error('No group');
   }
 }
 

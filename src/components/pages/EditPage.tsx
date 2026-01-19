@@ -3,12 +3,12 @@ import { useEffect, useMemo } from 'preact/hooks';
 import { BViewport } from '@/components/box/edit/BViewport';
 import { useApi } from '@/hooks/useApi';
 import { Page } from './base/Page';
-import { BMenu } from '../box/edit/BMenu';
 import { BEditController } from '../box/edit/BEditController';
 import { BContext } from '../box/useBController';
-import { useMedia, useRouter } from '@/hooks/useRoute';
+import { useRouter } from '@/hooks/useRoute';
 import { JobsWindow } from '../panels/Jobs';
 import { useMediaController } from '@/hooks/useMediaController';
+import { useMedia } from '@/hooks/useApi2';
 
 const c = Css('EditPage', {
   '': {

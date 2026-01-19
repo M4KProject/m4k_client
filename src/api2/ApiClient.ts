@@ -1,11 +1,10 @@
-import { Dictionary, flux, fluxStored, isItem, isString, logger, minifyUuid, MINUTE, req, ReqError, ReqMethod, ReqOptions, SECOND, serverDate } from "fluxio";
-import { MAuth, MGroup, MId, MFormat, MOptions } from "./models";
-import { toId } from "./ApiHelpers";
+import { Dictionary, flux, fluxStored, isItem, logger, MINUTE, req, ReqError, ReqMethod, ReqOptions, SECOND, serverDate } from "fluxio";
+import { MAuth, MFormat, MOptions } from "./models";
 
 export class ApiClient {
     log = logger(this.key);
 
-    groupId$ = fluxStored<string>(this.key + '.groupId', '', isString);
+    groupId: string = '';
     auth$ = fluxStored<MAuth|null>(this.key + '.auth', null, isItem);
     isAuth$ = this.auth$.map(auth => !!auth);
     error$ = flux<ReqError|null>(null);
@@ -15,9 +14,6 @@ export class ApiClient {
     timeout = 10 * SECOND;
 
     constructor(public readonly key: string = 'pbClient') {
-        this.groupId$.on((groupId) => {
-            this.log.d('groupId', groupId);
-        });
         this.auth$.on((auth) => {
             this.log.d('auth', auth);
             this.checkExpiresAt();
@@ -33,10 +29,6 @@ export class ApiClient {
         if (!isAuth) this.auth$.set(null);
     }
 
-    setGroup(mId: MId<MGroup>) {
-        this.groupId$.set(toId(mId));
-    }
-
     reqOptions<T=any, U=T>(method: ReqMethod, url: string, options?: MOptions<T, U>, json?: any): ReqOptions<T> {
         const { fields, limit, offset, params, headers, ...reqOptions } = options || {};
         const h: Dictionary<string> = {};
@@ -48,7 +40,7 @@ export class ApiClient {
             h['X-Auth-Token'] = token;
         }
 
-        const groupId = minifyUuid(this.groupId$.get());
+        const groupId = this.groupId;
         if (groupId) p.group = groupId;
         if (fields) p.fields = fields;
         if (limit) p.limit = limit;
@@ -93,17 +85,5 @@ export class ApiClient {
 
     getFileUrl(path: string, format: MFormat = '', download: boolean = false) {
         return `${this.baseUrl}/files/${path}?format=${format}${download?'&download=1':''}`;
-    }
-
-    needUserId(): string {
-        const userId = this.auth$.get()?.userId;
-        if (userId) return userId;
-        throw new Error('No auth');
-    }
-
-    needGroupId(): string {
-        const groupId = this.groupId$.get();
-        if (groupId) return groupId;
-        throw new Error('No group');
     }
 }

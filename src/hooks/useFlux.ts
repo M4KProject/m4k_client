@@ -51,5 +51,5 @@ export const useFluxItem = <T = any>(
   return [state, (next) => flux && flux.setItem(key, next)];
 };
 
-export const useFluxMemo = <T = any>(factory: () => NFlux<T>, inputs: Inputs) =>
+export const useFluxMemo = <T = any>(factory: () => NFlux<T>, inputs: Inputs = []) =>
   useFlux(useMemo(factory, inputs));

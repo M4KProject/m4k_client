@@ -1,4 +1,3 @@
-import { ModelBase } from "@/api/models.base";
 import type { NBData } from "@/components/box/bTypes";
 import type { ReqOptions } from "fluxio";
 
@@ -89,7 +88,7 @@ export interface MBase {
     removed?: Date;
 };
 
-export type MCreate<T extends MBase> = Omit<T, 'id'|'created'|'updated'|'userId'|'groupId'> & Partial<T>;
+export type MCreate<T extends MBase> = Omit<T, 'id'|'created'|'updated'|'userId'|'groupId'|'key'> & Partial<T>;
 export type MUpdate<T extends MBase> = Partial<T>;
 
 export interface MUser extends MBase {
@@ -119,7 +118,8 @@ export interface MMember extends MBase {
 
 export interface MMedia extends MBase {
     type: MMediaType;
-    name: string;
+    key: string;
+    title: string;
     data?: any;
     desc?: string;
     mime?: string;
@@ -134,6 +134,7 @@ export interface MMedia extends MBase {
 };
 
 export interface MDevice extends MBase {
+    key: string;
     name: string;
     started: Date;
     online: Date;
@@ -147,9 +148,9 @@ export interface MDevice extends MBase {
     height: number;
     status: string;
     capture: string;
+    mediaId: string;
     groupId: string;
     userId: string;
-    key: string;
 };
 
 export interface MJob extends MBase {

@@ -1,30 +1,21 @@
-import { Api } from '@/api/Api';
-import { Sync } from '@/api/sync';
+import { api2 } from '@/api2';
 import { app } from '@/app';
-import { getSingleton } from '@/utils/ioc';
 import {
   createUrl,
-  Flux,
   flux,
-  fluxCombine,
   fluxStored,
   glb,
   isBoolean,
-  isDeepEqual,
   isDefined,
   isEmpty,
-  isString,
-  isStringValid,
+  isNotNil,
   isVector2,
   logger,
   onEvent,
-  Pipe,
   toBoolean,
-  toError,
   Vector2,
 } from 'fluxio';
 import { getUrlParams } from 'fluxio';
-import { PbModel } from 'pblite';
 
 export type RoutePage = '' | 'dashboard' | 'members' | 'devices' | 'medias' | 'edit' | 'view';
 
@@ -33,91 +24,55 @@ export interface Route {
   group?: string;
   media?: string;
   device?: string;
+  kiosk?: boolean;
+  advanced?: boolean;
 }
-
-const routerItem = <T extends PbModel & { key?: string }>(
-  key$: Pipe<string, Route>,
-  id$: Flux<string>,
-  up$: Flux,
-  sync: Sync<T>
-) =>
-  fluxCombine(key$, id$, up$).map(([key, id]) => {
-    console.debug('routerItem', sync.name, key, id);
-    const keyItem = sync.get([{ key }, { id: key }]);
-    console.debug('routerItem keyItem', sync.name, keyItem?.id, keyItem?.key);
-    const idItem = sync.get(id);
-    console.debug('routerItem idItem', sync.name, idItem?.id, idItem?.key);
-    const item = keyItem || idItem;
-    console.debug('routerItem item', sync.name, item?.id, item?.key);
-    const itemId = item?.id || '';
-    setTimeout(() => id$.set(itemId), 0);
-    return item;
-  });
 
 export class Router {
   log = logger('Router');
 
-  api = getSingleton(Api);
-
   url$ = flux('');
-  route$ = flux<Route>({});
+  page$ = flux<RoutePage>('');
   search$ = flux<string>('');
-
-  groupId$ = fluxStored<string>('groupId', '', isString);
-  mediaId$ = fluxStored<string>('mediaId', '', isString);
-  deviceId$ = fluxStored<string>('deviceId', '', isString);
-
-  group$ = routerItem(
-    this.route$.map((r) => r.group || ''),
-    this.groupId$,
-    this.api.group.up$,
-    this.api.group
-  );
-  media$ = routerItem(
-    this.route$.map((r) => r.media || ''),
-    this.mediaId$,
-    this.api.media.up$,
-    this.api.media
-  );
-  device$ = routerItem(
-    this.route$.map((r) => r.device || ''),
-    this.deviceId$,
-    this.api.device.up$,
-    this.api.device
-  );
-
   isKiosk$ = fluxStored<boolean>('isKiosk', false, isBoolean);
   isAdvanced$ = fluxStored<boolean>('isAdvanced', false, isBoolean);
-
   screenSize$ = fluxStored<Vector2>('screenSize', [1920, 1080], isVector2);
-
-  routeDevice$ = this.route$.map((r) => r.device);
-  routeGroup$ = this.route$.map((r) => r.group);
-  routeMedia$ = this.route$.map((r) => r.media);
-  routePage$ = this.route$.map((r) => r.page);
 
   constructor() {
     app.router = this;
-    this.route$.isEqual = isDeepEqual;
 
     this.url$.on((url) => {
-      const p = getUrlParams(url);
-      const s = (p.path || '').split('/').filter((s) => s);
-      const last = this.route$.get();
+      this.log.d('url', url);
 
-      const page = (p.page as RoutePage) || (s[1] as RoutePage) || last.page;
-      const group = p.group || s[0] || last.group;
-      const media = p.media || s[2] || last.media;
-      const device = p.device || last.device;
+      const page$ = this.page$;
+      const search$ = this.search$;
+      const groupId$ = api2.groups.id$;
+      const mediaId$ = api2.medias.id$;
+      const deviceId$ = api2.devices.id$;
+
+      const p = getUrlParams(url);
+      const s = (p.path || '').split('/');
+
+      const page = (s[2] || p.page || page$.get()) as RoutePage;
+      const search = p.search || search$.get();
+      const group = s[1] || p.group || groupId$.get();
+      const media = s[3] || p.media || mediaId$.get();
+      const device = p.device || deviceId$.get();
+
+      const groupId = api2.groups.getIdByKey(group);
+      const mediaId = api2.groups.getIdByKey(media);
+      const deviceId = api2.groups.getIdByKey(device);
+
+      this.log.d('url parse', { p, s, page, search, group, media, device, groupId, mediaId, deviceId });
+      
+      page$.set(page);
+      search$.set(search);
+      groupId$.set(groupId);
+      mediaId$.set(mediaId);
+      deviceId$.set(deviceId);
 
       if (isDefined(p.kiosk)) this.isKiosk$.set(isEmpty(p.kiosk) || toBoolean(p.kiosk));
       if (isDefined(p.advanced)) this.isAdvanced$.set(isEmpty(p.advanced) || toBoolean(p.advanced));
-
-      const route: Route = { group, page, media, device };
-
-      this.log.d('parse', route);
-
-      this.route$.set(route);
     });
 
     if (glb.window) {
@@ -128,32 +83,23 @@ export class Router {
     }
   }
 
-  getGroupId() {
-    return this.group$.get()?.id;
-  }
-
-  needGroupId() {
-    const id = this.getGroupId();
-    if (!isStringValid(id)) throw toError('no group id');
-    return id;
-  }
-
-  goUrl(url: string) {
+  private goUrl(url: string) {
     this.log.i('goUrl', url);
 
     glb.history?.pushState(null, '', url);
     this.url$.set(url);
   }
 
-  go(changes: Partial<Route>) {
-    this.log.d('go', changes);
+  go(route: Route) {
+    this.log.d('go', route);
 
-    const current = this.route$.get();
-    const route = { ...current, ...changes };
+    const page = route.page || this.page$.get();
+    const group = route.group || api2.groups.item$.get()?.key;
+    const media = route.media || api2.medias.item$.get()?.key;
+    const device = route.device || api2.devices.item$.get()?.key;
 
-    const { group, page, media } = route;
-    const isKiosk = this.isKiosk$.get();
-    const isAdvanced = this.isAdvanced$.get();
+    const kiosk = this.isKiosk$.get() || undefined;
+    const advanced = this.isAdvanced$.get() || undefined;
 
     const segments =
       media ? [group, page, media]
@@ -165,8 +111,9 @@ export class Router {
     console.debug('go path', path);
 
     const url = createUrl(null, path, {
-      kiosk: isKiosk || undefined,
-      advanced: isAdvanced || undefined,
+      kiosk,
+      advanced,
+      device,
     });
 
     this.log.d('go url', url);
