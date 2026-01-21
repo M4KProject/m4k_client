@@ -6,6 +6,7 @@ import { Sync } from '@/api/sync';
 import { Api } from '@/api/Api';
 import { useSingleton } from './useSingleton';
 import { useIsAdvanced } from './useRoute';
+import { useGroupId } from './useApi2';
 
 export const useApi = () => useSingleton(Api);
 

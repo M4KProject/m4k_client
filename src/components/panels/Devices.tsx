@@ -1,10 +1,10 @@
-import { Css } from 'fluxio';
+import { Css, toVoid } from 'fluxio';
 import { PlusIcon } from 'lucide-react';
-import { useGroupDevices } from '@/hooks/useApi';
 import { Button } from '@/components/common/Button';
 import { Device } from './Device';
 import { DevicePairing } from './DevicePairing';
 import { createWindow } from '../common/Window';
+import { useDevices } from '@/hooks/useApi2';
 
 const c = Css('Devices', {
   '': {
@@ -13,12 +13,16 @@ const c = Css('Devices', {
 });
 
 export const Devices = () => {
-  const devices = useGroupDevices();
+  const devices = useDevices();
 
   const handleAdd = () => {
     createWindow({
+      modal: true,
       title: 'Pairer un nouvel écran',
       content: DevicePairing,
+      cancel: toVoid,
+      size: [350, 150],
+      min: [200, 200],
     });
   };
 

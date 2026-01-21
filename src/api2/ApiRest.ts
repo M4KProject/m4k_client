@@ -66,6 +66,14 @@ export class ApiRest<T extends MBase> {
         }
     }
 
+    async one(filter?: MFilter<T>, options?: MOptions<T[], T>): Promise<T|undefined> {
+        const items = await this.list(filter, { ...options, offset: 0, limit: 1 });
+        const item = items[0];
+        if (!item) return;
+        this._set(item);
+        return item;
+    }
+
     async get(mId: MId<T>, options?: MOptions<T>): Promise<T|undefined> {
         const id = toId(mId);
         if (!id) return undefined;

@@ -5,8 +5,8 @@ import { Grid, GridCols } from '@/components/common/Grid';
 import { Field } from '@/components/fields/Field';
 import { Button } from '@/components/common/Button';
 import { useFlux } from '@/hooks/useFlux';
-import { useKiosk } from '@/hooks/useKiosk';
 import { Panel } from '../panels/base/Panel';
+import { kPlaylist$, PlaylistItem } from '@/controllers/Kiosk';
 
 const c = Css('Playlist', {
   Preview: {
@@ -44,15 +44,6 @@ const getFileName = (path?: string) => {
   return path.split('/').pop() || path;
 };
 
-interface PlaylistItem {
-  mimeType?: string;
-  path?: string;
-  size?: number;
-  width?: number;
-  height?: number;
-  waitMs: number;
-}
-
 const playlistItemCols: GridCols<
   PlaylistItem,
   {
@@ -86,7 +77,7 @@ const playlistItemCols: GridCols<
     (item, ctx, i) => (
       <Field
         type="number"
-        value={round(item.waitMs / 1000, 2)}
+        value={round((item.waitMs||5000) / 1000, 2)}
         onValue={(waitMs) => ctx.handleDurationUpdate(i, Number(waitMs))}
       />
     ), { w: 80 }
@@ -125,36 +116,38 @@ const playlistItemCols: GridCols<
 };
 
 export const PlaylistPage = () => {
-  const kiosk = useKiosk();
-  const playlist = useFlux(kiosk.playlist$);
+  const playlist = useFlux(kPlaylist$) || {};
+  const pItems = playlist?.items || [];
 
   const handleDurationUpdate = (index: number, newDuration: number) => {
     if (!playlist) return;
 
     const updatedPlaylist = {
       ...playlist,
-      items: playlist.items.map((item, i) =>
+      items: pItems.map((item, i) =>
         i === index ? { ...item, waitMs: newDuration * 1000 } : item
       ),
     };
 
-    kiosk.playlist$.set(updatedPlaylist);
+    kPlaylist$.set(updatedPlaylist);
   };
 
   const handleDuplicate = (index: number) => {
     if (!playlist) return;
 
-    const itemToDuplicate = playlist.items[index];
+    const itemToDuplicate = pItems[index];
+    if (!itemToDuplicate) return;
+
     const updatedPlaylist = {
       ...playlist,
       items: [
-        ...playlist.items.slice(0, index + 1),
+        ...pItems.slice(0, index + 1),
         { ...itemToDuplicate },
-        ...playlist.items.slice(index + 1),
+        ...pItems.slice(index + 1),
       ],
     };
 
-    kiosk.playlist$.set(updatedPlaylist);
+    kPlaylist$.set(updatedPlaylist);
   };
 
   const handleDelete = (index: number) => {
@@ -162,25 +155,29 @@ export const PlaylistPage = () => {
 
     const updatedPlaylist = {
       ...playlist,
-      items: playlist.items.filter((_, i) => i !== index),
+      items: pItems.filter((_, i) => i !== index),
     };
 
-    kiosk.playlist$.set(updatedPlaylist);
+    kPlaylist$.set(updatedPlaylist);
   };
 
   const handleMoveUp = (index: number) => {
     if (!playlist) return;
 
-    const items = [...playlist.items];
+    const items = [...pItems];
     const item = items[index];
+    if (!item) return;
 
     if (index === 0) {
-      // Premier élément : déplacer à la fin
       items.splice(index, 1);
       items.push(item);
     } else {
-      // Échanger avec l'élément précédent
-      [items[index - 1], items[index]] = [items[index], items[index - 1]];
+      const a = items[index];
+      const b = items[index - 1];
+      if (!a) return;
+      if (!b) return;
+      items[index - 1] = a;
+      items[index] = b;
     }
 
     const updatedPlaylist = {
@@ -188,22 +185,26 @@ export const PlaylistPage = () => {
       items,
     };
 
-    kiosk.playlist$.set(updatedPlaylist);
+    kPlaylist$.set(updatedPlaylist);
   };
 
   const handleMoveDown = (index: number) => {
     if (!playlist) return;
 
-    const items = [...playlist.items];
+    const items = [...pItems];
     const item = items[index];
+    if (!item) return;
 
-    if (index === playlist.items.length - 1) {
-      // Dernier élément : déplacer au début
+    if (index === pItems.length - 1) {
       items.splice(index, 1);
       items.unshift(item);
     } else {
-      // Échanger avec l'élément suivant
-      [items[index], items[index + 1]] = [items[index + 1], items[index]];
+      const a = items[index];
+      const b = items[index - 1];
+      if (!a) return;
+      if (!b) return;
+      items[index - 1] = a;
+      items[index] = b;
     }
 
     const updatedPlaylist = {
@@ -211,7 +212,7 @@ export const PlaylistPage = () => {
       items,
     };
 
-    kiosk.playlist$.set(updatedPlaylist);
+    kPlaylist$.set(updatedPlaylist);
   };
   return (
     <Panel icon={null} title="Élément dans la playlist">
@@ -225,7 +226,7 @@ export const PlaylistPage = () => {
           handleDelete,
           playlist,
         }}
-        items={playlist?.items || []}
+        items={pItems}
       />
     </Panel>
   );

@@ -1,4 +1,5 @@
 import type { NBData } from "@/components/box/bTypes";
+import type { KAction } from "@/controllers/Kiosk";
 import type { ReqOptions } from "fluxio";
 
 export enum Role {
@@ -133,16 +134,35 @@ export interface MMedia extends MBase {
     userId: string;
 };
 
+export interface MDeviceInfo {
+
+}
+
+export interface MDeviceResult {
+    started: Date|string,
+    input?: any,
+    action: KAction,
+    ended?: Date|string,
+    success?: boolean,
+    error?: {
+      name: string,
+      message: string,
+    },
+    value?: any,
+}
+
+export type MDeviceStatus = '' | 'started' | 'updated' | 'action_started' | 'action_ended';
+
 export interface MDevice extends MBase {
     key: string;
     name: string;
     started: Date;
     online: Date;
     type: string;
-    info: unknown;
-    action: string;
-    input: unknown;
-    result: unknown;
+    info: MDeviceInfo;
+    action: KAction;
+    input: any;
+    result: MDeviceResult;
     version: number;
     width: number;
     height: number;
@@ -186,8 +206,9 @@ export interface MApplication extends MBase {};
 export interface MAuth {
   token: string;
   expiresAt: string,
-  userId: string;
   email: string;
+  userId: string;
+  deviceId?: string;
 }
 
 ///// MEDIAS /////

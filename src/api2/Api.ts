@@ -54,14 +54,19 @@ export class Api {
     return this.client.req('GET', '/health', options)
   }
   
-  async register(email: string, password: string, login: boolean = true) {
+  async authRegister(email: string, password: string, login: boolean = true) {
     await this.client.post<MAuth>('auth/register', { email, password });
     if (!login) return;
-    return await this.login(email, password);
+    return await this.authLogin(email, password);
   }
 
-  async login(email: string, password: string) {
+  async authLogin(email: string, password: string) {
     const auth = await this.client.post<MAuth>('auth/login', { email, password });
+    return this.setAuth(auth);
+  }
+
+  async authDevice(email: string, password: string) {
+    const auth = await this.client.post<MAuth>('auth/device', { email, password });
     return this.setAuth(auth);
   }
 

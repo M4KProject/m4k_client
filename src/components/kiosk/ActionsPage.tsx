@@ -1,4 +1,4 @@
-import { Css } from 'fluxio';
+import { Css, setItem, setKey, toVoid } from 'fluxio';
 import { getStorage, glb, toError } from 'fluxio';
 import copyPlaylist from '@/controllers/copyPlaylist';
 import { newProgressDialog } from '@/components/kiosk/ProgressView';
@@ -6,7 +6,8 @@ import { Apps } from '@/components/admin/Apps';
 import { usePromise } from '@/hooks/usePromise';
 import { Button } from '@/components/common/Button';
 import { bridge } from '@/bridge';
-import { useKiosk } from '@/hooks/useKiosk';
+import { getDeviceId, kConfig$ } from '@/controllers/Kiosk';
+import { api2 } from '@/api2';
 
 const c = Css('Actions', {
   '': {
@@ -131,7 +132,6 @@ const clearCacheAndReload = async () => {
 };
 
 export const ActionsPage = () => {
-  const kiosk = useKiosk();
   const [info] = usePromise(() => bridge.deviceInfo(), []);
 
   return (
@@ -151,11 +151,7 @@ export const ActionsPage = () => {
         <Button color="secondary" onClick={clearCacheAndReload}>
           Vider le cache et recharger
         </Button>
-        <Button
-          onClick={async () => {
-            await copyPlaylist(kiosk, `@storage/${kiosk.copyDir$.get()}`);
-          }}
-        >
+        <Button onClick={copyPlaylist}>
           Copier la playlist locale
         </Button>
         <Button onClick={() => bridge.exit()}>Quitter</Button>
@@ -227,15 +223,13 @@ export const ActionsPage = () => {
       <div {...c('Buttons')}>
         <h3>Autre :</h3>
         <Button
-          onClick={async () => {
-            kiosk.url$.set('https://boardscreen.fr/');
-            await bridge.restart();
-          }}
+          onClick={() => kConfig$.set(config => ({ ...config, url: 'https://boardscreen.fr/' }))}
         >
           Boardscreen
         </Button>
         <Button
           onClick={async () => {
+            await api2.devices.remove(getDeviceId()).catch(toVoid);
             localStorage.clear();
             location.href = '/';
           }}

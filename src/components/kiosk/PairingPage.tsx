@@ -3,7 +3,8 @@ import { Branding } from '@/components/kiosk/Branding';
 import { useFlux } from '@/hooks/useFlux';
 import { LoadingSpinner } from '@/components/common/Loading';
 import { Button } from '@/components/common/Button';
-import { useKiosk } from '@/hooks/useKiosk';
+import { api2 } from '@/api2';
+import { kPage$, setKProp } from '@/controllers/Kiosk';
 
 const c = Css('PairingPage', {
   '': {
@@ -51,8 +52,7 @@ const c = Css('PairingPage', {
 });
 
 export const PairingPage = () => {
-  const kiosk = useKiosk();
-  const device = useFlux(kiosk.device$);
+  const device = useFlux(api2.devices.item$);
   const pairingCode = device?.key || device?.id || 'Chargement...';
 
   return (
@@ -69,8 +69,8 @@ export const PairingPage = () => {
             title="Mode Offline"
             color="secondary"
             onClick={() => {
-              kiosk.offlineMode$.set(true);
-              kiosk.page$.set('kiosk');
+              setKProp('offlineMode', true);
+              kPage$.set('kiosk');
             }}
           />
         </div>

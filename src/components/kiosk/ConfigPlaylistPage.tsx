@@ -2,10 +2,10 @@ import { round } from 'fluxio';
 import { useFluxState } from '@/hooks/useFlux';
 import { Form } from '@/components/common/Form';
 import { Field } from '@/components/fields/Field';
-import { useKiosk } from '@/hooks/useKiosk';
 import { Panel } from '../panels/base/Panel';
 import { contentRotation$ } from '@/controllers/contentRotation$';
 import { SettingsIcon } from 'lucide-react';
+import { kConfig$, useKProp } from '@/controllers/Kiosk';
 
 // const useSetting = (key: string): [string | null, (next: string | null) => Promise<void>] => {
 //   const [value, setValue] = useState<string | null>('');
@@ -44,16 +44,17 @@ import { SettingsIcon } from 'lucide-react';
 //   return [toNumber(value, defVal), (next) => setValue(isNil(next) ? null : String(next))];
 // };
 
+const codePin$ = kConfig$;
+
 export const ConfigPlaylistPage = () => {
-  const kiosk = useKiosk();
-  const [codePin, setCodePin] = useFluxState(kiosk.codePin$);
-  const [url, setUrl] = useFluxState(kiosk.url$);
-  const [bgColor, setBgColor] = useFluxState(kiosk.bgColor$);
-  const [copyDir, setCopyDir] = useFluxState(kiosk.copyDir$);
-  const [itemDurationMs, setItemDurationMs] = useFluxState(kiosk.itemDurationMs$);
-  const [itemFit, setItemFit] = useFluxState(kiosk.itemFit$);
-  const [itemAnim, setItemAnim] = useFluxState(kiosk.itemAnim$);
-  const [hasVideoMuted, setHasVideoMuted] = useFluxState(kiosk.hasVideoMuted$);
+  const [codePin, setCodePin] = useKProp('codePin');
+  const [url, setUrl] = useKProp('url');
+  const [bgColor, setBgColor] = useKProp('bgColor');
+  const [copyDir, setCopyDir] = useKProp('copyDir');
+  const [itemDurationMs, setItemDurationMs] = useKProp('itemDurationMs');
+  const [itemFit, setItemFit] = useKProp('itemFit');
+  const [itemAnim, setItemAnim] = useKProp('itemAnim');
+  const [hasVideoMuted, setHasVideoMuted] = useKProp('hasVideoMuted');
   const [contentRotation, setContentRotation] = useFluxState(contentRotation$);
 
   // const [isAutoPermissions, setIsAutoPermissions] = useBooleanSetting('isAutoPermissions', true);
@@ -86,7 +87,7 @@ export const ConfigPlaylistPage = () => {
         />
         <Field
           label="Durée d'affichage d'une image (en secondes)"
-          value={round(itemDurationMs / 1000, 1)}
+          value={round((itemDurationMs||0) / 1000, 1)}
           onValue={(s) => setItemDurationMs(s * 1000)}
         />
         <Field

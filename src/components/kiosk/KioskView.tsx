@@ -8,7 +8,8 @@ import { KioskVideo } from '@/components/kiosk/KioskVideo';
 import { usePromise } from '@/hooks/usePromise';
 import { useFlux } from '@/hooks/useFlux';
 import { Button } from '@/components/common/Button';
-import { useKiosk } from '@/hooks/useKiosk';
+import { kPlaylist$, useKProp } from '@/controllers/Kiosk';
+import { api2 } from '@/api2';
 
 const log = logger('KioskView');
 
@@ -136,18 +137,17 @@ const KioskItem = ({
 };
 
 export const KioskView = () => {
-  const kiosk = useKiosk();
-  const device = useFlux(kiosk.device$);
+  const device = useFlux(api2.devices.item$);
 
   const [open, setOpen] = useState(false);
   const [count, setCount] = useState(0);
 
-  const url = useFlux(kiosk.url$);
-  const bgColor = useFlux(kiosk.bgColor$).trim();
-  const playlist = useFlux(kiosk.playlist$);
-  const itemDurationMs = useFlux(kiosk.itemDurationMs$);
-  const itemFit = useFlux(kiosk.itemFit$);
-  const itemAnim = useFlux(kiosk.itemAnim$);
+  const [url] = useKProp('url');
+  const [bgColor] = useKProp('bgColor');
+  const playlist = useFlux(kPlaylist$);
+  const [itemDurationMs] = useKProp('itemDurationMs');
+  const [itemFit] = useKProp('itemFit');
+  const [itemAnim] = useKProp('itemAnim');
 
   const items = playlist?.items?.filter((i) => i) || [];
   const length = items?.length || 0;
@@ -165,11 +165,11 @@ export const KioskView = () => {
   log.d('KioskPage', { prev, curr, next, device });
 
   useEffect(() => {
-    log.d('playlist', kiosk.playlist$.get());
+    log.d('playlist', playlist);
   }, []);
 
   // Si un contenu est associé au device, l'afficher via ContentViewer
-  if (device?.media) {
+  if (device?.mediaId) {
     return (
       <div {...c('Container')}>{/* TODO media <ContentViewer contentKey={device?.media} /> */}</div>
     );

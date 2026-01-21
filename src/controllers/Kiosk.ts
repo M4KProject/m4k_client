@@ -1,35 +1,47 @@
-import { Api } from '@/api/Api';
-import { DeviceModel } from '@/api/models';
 import { app } from '@/app';
-import { bridge, BridgeResizeOptions } from '@/bridge';
+import { bridge, BridgeFileInfo, BridgeResizeOptions } from '@/bridge';
 import {
   sleep,
-  toString,
   uuid,
   toError,
-  jsonParse,
   randString,
-  ReqError,
   toVoid,
   fluxStored,
-  isString,
   isItem,
-  isItems,
-  isBlob,
-  base64toBlob,
   isStringValid,
-  isNumber,
-  isBoolean,
   logger,
   flux,
-  getUrlParams,
+  serverDate,
+  isUuid,
+  SECOND,
+  Dictionary,
+  isDictionary,
+  notImplemented,
 } from 'fluxio';
-import { PbAuth } from 'pblite';
-import copyPlaylist from './copyPlaylist';
-import { getSingleton } from '@/utils/ioc';
+import { api2, MDeviceResult } from '@/api2';
+import { fluxProp } from 'fluxio';
+import { useMemo } from 'preact/hooks';
+import { useFluxState } from '@/hooks/useFlux';
+
+export interface DeviceLogin {
+  email?: string;
+  password?: string;
+}
 
 export type ItemFit = 'contain' | 'cover' | 'fill';
 export type ItemAnim = 'rightToLeft' | 'topToBottom' | 'fade' | 'zoom';
+
+export interface DeviceConfig {
+    copyDir?: string;
+    bgColor?: string; // '#000000'
+    url?: string;
+    itemDurationMs?: number; // 5000
+    itemFit?: ItemFit; // 'contain'
+    itemAnim?: ItemAnim; // 'zoom'
+    hasVideoMuted?: boolean; // true
+    offlineMode?: boolean; // false
+    codePin?: string; // yoyo
+}
 
 export const isItemFit = (v: string) => v === 'contain' || v === 'cover' || v === 'fill';
 export const isItemAnim = (v: string) =>
@@ -48,421 +60,161 @@ export type KioskPage =
   | 'pairing'
   | '';
 
-export interface KioskPlaylist {
-  items: any[];
+export interface PlaylistItem extends BridgeFileInfo {
+  waitMs?: number;
 }
 
-export const isKioskPlaylist = (playlist: KioskPlaylist) =>
-  isItem(playlist) && isItems(playlist.items);
+const log = logger('Kiosk');
+export const kPage$ = flux<KioskPage>('kiosk');
+export const kConfig$ = fluxStored<DeviceConfig>('kConfig', {}, isItem);
+export const kLogin$ = fluxStored<DeviceLogin>('kLogin', {}, isItem);
+export const kCodePin$ = fluxStored<string>('kCodePin', 'yoyo', isStringValid);
+export const kPlaylist$ = fluxStored<{ items?: (BridgeFileInfo)[] }>('kPlaylist', {}, isItem);
 
-export class Kiosk {
-  log = logger('Kiosk');
+app.kPage$ = kPage$;
+app.kConfig$ = kConfig$;
 
-  api = getSingleton(Api);
+export const setKProp = <K extends keyof DeviceConfig>(prop: K, value: DeviceConfig[K]) => (
+  kConfig$.set(config => ({ ...config, [prop]: value })));
 
-  email$ = fluxStored<string>('kioskEmail$', '', isString);
-  password$ = fluxStored<string>('kioskPassword$', '', isString);
-  auth$ = fluxStored<PbAuth | undefined>('kioskAuth$', undefined, isItem);
-  device$ = fluxStored<DeviceModel | null>('kioskDevice$', null, isItem);
-  action$ = fluxStored<DeviceModel['action'] | undefined>('kioskAction$', undefined, isItem);
-  codePin$ = fluxStored<string>('kioskPin$', 'yoyo', isStringValid);
-  copyDir$ = fluxStored<string>('kioskDir$', 'playlist', isStringValid);
-  bgColor$ = fluxStored<string>('kioskBgColor$', '#000000', isStringValid);
-  url$ = fluxStored<string>('kioskUrl$', '', isString);
-  itemDurationMs$ = fluxStored<number>('kioskItemDurationMs$', 5000, isNumber);
-  itemFit$ = fluxStored<ItemFit>('kioskItemFit$', 'contain', isItemFit);
-  itemAnim$ = fluxStored<ItemAnim>('kioskItemAnim$', 'zoom', isItemAnim);
-  hasVideoMuted$ = fluxStored<boolean>('kioskHasVideoMuted$', true, isBoolean);
-  offlineMode$ = fluxStored<boolean>('kioskOfflineMode$', false, isBoolean);
-  playlist$ = fluxStored<KioskPlaylist>('kioskPlaylist$', { items: [] }, isKioskPlaylist);
+export const useKProp$ = <K extends keyof DeviceConfig>(prop: K) => (
+  useMemo(() => fluxProp(kConfig$, prop), [prop]));
 
-  page$ = flux<KioskPage>('kiosk');
+export const useKProp = <K extends keyof DeviceConfig>(prop: K) => (
+  useFluxState(useKProp$(prop)));
 
-  constructor() {
-    app.kiosk = this;
+export const kLogin = async () => {
+  let login = kLogin$.get();
 
-    this.device$.on((device) => {
-      this.action$.set(device?.action);
-    });
+  if (!isStringValid(login.email)) login.email = uuid() + '@d.m4k.fr';
+  if (!isStringValid(login.password)) login.password = randString(20);
 
-    this.action$.on(() => {
-      const device = this.device$.get();
-      if (device) this.runAction(device);
-    });
+  await api2.authDevice(login.email, login.password);
 
-    bridge.subscribe(async (e) => {
-      if (e.type !== 'storage' || e.action !== 'mounted') return;
-      await copyPlaylist(this, `${e.path}/${this.copyDir$.get()}`);
-    });
+  const auth = api2.getAuth();
+  const deviceId = auth?.deviceId;
+  if (!isUuid(deviceId)) throw toError('no auth deviceId');
+
+  api2.devices.id$.set(deviceId);
+
+  const info = await bridge.deviceInfo();
+
+  await api2.devices.update(deviceId, {
+    started: serverDate(),
+    online: serverDate(),
+    info,
+  }, { fields: ['id'] });
+}
+
+const capture = async (input: BridgeResizeOptions) => {
+    // const base64 = await bridge.capture();
+    // const blob = base64toBlob(base64);
+    // if (isBlob(blob)) {
+    //   await this.api.device.update(device.id, { capture: blob }, { select: [] });
+    // }
+}
+
+let _input: Dictionary<any> = {};
+
+const getInputString = () => _input.value;
+
+const notImplementedAction = () => {
+  throw notImplemented('action');
+};
+
+const actionDico = {
+  '': toVoid,
+  reload: () => bridge.reload(),
+  reboot: () => bridge.reboot(),
+  restart: () => bridge.restart(),
+  exit: () => bridge.exit(),
+  capture: () => capture(_input as BridgeResizeOptions),
+  js: () => bridge.evalJs(getInputString()),
+  sh: () => bridge.sh(getInputString()),
+  su: () => bridge.su(getInputString()),
+  info: () => bridge.deviceInfo(),
+  ping: () => _input,
+  kioskOn: () => bridge.setKioskOn(true),
+  kioskOff: () => bridge.setKioskOn(false),
+  screenOn: () => bridge.setScreenOn(true),
+  screenOff: () => bridge.setScreenOn(false),
+};
+
+export type KAction = keyof typeof actionDico;
+
+const execAction = async (deviceId: string, action: KAction, input: any) => {
+  _input = isDictionary(input) ? input : { value: input };
+
+  const fun = actionDico[action] || notImplementedAction;
+
+    const result = await fun();
+    log.d('execAction', action, input, result);
+
+    return {
+      success: true,
+      result,
+    };
+}
+
+const onAction = async (deviceId: string, action: KAction) => {
+  const result: MDeviceResult = { action, started: serverDate() };
+  const device = await api2.devices.update(deviceId, { action: '', result }, { fields: ['input'] });
+  if (!device) throw toError('onAction no device');
+
+  const input = result.input = device.input;
+
+  try {
+    const value = await execAction(deviceId, action, input);
+    result.success = true;
+    result.value = value;
+  }
+  catch (error) {
+    log.w('execAction', action, input, error);
+    const { name, message } = toError(error);
+    result.success = true;
+    result.error = { name, message };
   }
 
-  getDate() {
-    return this.api.pb.getDate();
-  }
+  result.ended = serverDate();
 
-  async login(): Promise<DeviceModel> {
-    let email = this.email$.get();
-    let password = this.password$.get();
-    console.debug('deviceLogin', email);
+  log.i('execAction', action, input, result);
 
-    let deviceAuth: PbAuth | undefined = undefined;
+  await api2.devices.update(deviceId, { action: '', input: null, result }, { fields: ['id'] });
+}
 
-    if (email && password) {
-      try {
-        deviceAuth = await this.api.userColl.login(email, password);
-        console.debug('deviceLogin login deviceAuth', deviceAuth);
-      } catch (error) {
-        console.info('deviceLogin login error', error);
-        if (!(error instanceof ReqError)) throw error;
-        if (error.status !== 400) throw error;
-      }
-    }
+export const getDeviceId = api2.devices.id$.getter();
 
-    if (!deviceAuth) {
-      email = uuid() + '@m4k.fr';
-      password = randString(20);
+const onLoop = async () => {
+  const deviceId = getDeviceId();
 
-      try {
-        await this.api.userColl.signUp(email, password);
-        deviceAuth = await this.api.userColl.login(email, password);
-        console.debug('deviceLogin signUp user', deviceAuth);
-      } catch (error) {
-        console.info('deviceLogin signUp error', error);
-        throw error;
-      }
-    }
+  const device = await api2.devices.update(deviceId, { online: serverDate() }, { fields: ['id', 'key', 'action'] });
+  if (!device) throw toError('no device');
 
-    if (!deviceAuth) throw new Error('no user');
+  const action = device.action;
+  if (action) await onAction(deviceId, action);
+}
 
-    this.auth$.set(deviceAuth);
-    this.email$.set(email);
-    this.password$.set(password);
+let _isKInit = false;
+export const kInit = async () => {
+  if (_isKInit) return;
+  _isKInit = true;
 
-    const info = await bridge.deviceInfo();
-    info.started = this.getDate();
+  await kLogin();
 
-    const device = await this.api.device.coll.upsert(
-      { user: deviceAuth.id },
-      {
-        user: deviceAuth.id,
-        online: this.getDate(),
-        info,
-      }
-    );
-    console.debug('deviceLogin device', device);
+  bridge.subscribe(async (e) => {
+    if (e.type !== 'storage' || e.action !== 'mounted') return;
+    // await copyPlaylist(this, `${e.path}/${this.copyDir$.get()}`);
+  });
 
-    this.device$.set(device);
-
-    return device;
-  }
-
-  unsubscribe = toVoid;
-
-  async start() {
-    console.debug('deviceStart');
-    const device = await this.login();
-
-    this.unsubscribe();
-
-    console.debug('deviceStart subscribe', device.id);
-    this.unsubscribe = this.api.device.coll.on((device, action) => {
-      console.debug('deviceStart subscribe', action, device);
-      if (action === 'delete') {
-        this.login();
-        return;
-      }
-      this.device$.set(device);
-    }, device.id);
-
-    while (true) {
-      await this.loop();
-      await sleep(10000);
-    }
-  }
-
-  async loop() {
-    let device = this.device$.get();
-    console.debug('deviceLoop device', device);
-
-    if (!device) throw new Error('no device');
-
-    device = await this.api.device.update(device.id, {
-      online: this.getDate(),
-    });
-    console.debug('deviceLoop updated', device);
-    if (!device) throw new Error('no device update');
-
-    this.device$.set(device);
-  }
-
-  async init() {
-    while (true) {
-      try {
-        await this.start();
-      } catch (e) {
-        console.warn('deviceInit', toError(e));
-      }
-      await sleep(60000);
-    }
-  }
-
-  async capture(device: DeviceModel, options?: BridgeResizeOptions | undefined) {
-    const base64 = await bridge.capture(options);
-    const blob = base64toBlob(base64);
-    if (isBlob(blob)) {
-      await this.api.device.update(device.id, { capture: blob }, { select: [] });
-    }
-  }
-
-  async execAction(device: DeviceModel, action: string, input?: string) {
-    switch (action) {
-      case 'reload':
-        return bridge.reload();
-      case 'reboot':
-        return await bridge.reboot();
-      case 'restart':
-        return await bridge.restart();
-      case 'exit':
-        return await bridge.exit();
-      case 'capture':
-        await this.capture(device, jsonParse(input || '') as BridgeResizeOptions);
-        return;
-      case 'js':
-        return await bridge.evalJs(toString(input));
-      case 'sh':
-        return await bridge.sh(toString(input));
-      case 'su':
-        return await bridge.su(toString(input));
-      case 'info':
-        return await bridge.deviceInfo();
-      case 'ping':
-        return input;
-      case 'kiosk_on':
-        return await bridge.setKioskOn(input !== 'false');
-      case 'screen_on':
-        return await bridge.setScreenOn(input !== 'false');
-    }
-  }
-
-  async runAction(device: DeviceModel) {
-    console.debug('runAction', device.action, device.input, device);
-
-    if (!device) throw toError('no device');
-
-    const { action, input } = device;
-    if (!action) return;
-
-    await this.api.device.update(device.id, { action: '', online: this.getDate() });
-
-    let value: any = null;
-    let error: any = null;
-
+  while (true) {
     try {
-      value = await this.execAction(device, action, input);
-    } catch (err) {
-      error = err;
+      await onLoop();
+    }
+    catch (error) {
+      log.e('kInterval', error);
+      await kLogin();
     }
 
-    await this.api.device.update(device.id, {
-      action: '',
-      result: {
-        success: !error,
-        action,
-        input,
-        value,
-        error,
-      },
-      online: this.getDate(),
-    });
+    await sleep(5 * SECOND);
   }
 }
-
-// import { m4k } from "@common/m4k";
-// import supabase from "./supabase";
-// import { uuid } from "fluxio";
-// import { actionRepo, deviceSync } from "./repos";
-// import { User } from "@supabase/supabase-js";
-// import { Tables } from "./database.types";
-// import { sleep } from "fluxio/async";
-// import { pbDevices, pbUsers } from './pb';
-
-// type Device = Tables<"devices">
-// type Action = Tables<"actions">
-
-// let device: Device|null = null
-
-// const getCredentials = async () => {
-
-//     console.info('auth get credentials', email)
-
-//     if (email && password) return { email, password }
-// }
-
-// const createCredentials = async () => {
-//     const newEmail = uuid() + '@k.m4k.fr'
-//     const newPassword = uuid()
-
-//     console.info('auth new credentials', newEmail)
-
-//     await m4k.set("auth_email", newEmail)
-//     await m4k.set("auth_password", newPassword)
-
-//     return await getCredentials()
-// }
-
-// const authUser = async (): Promise<User> => {
-//     const auth = await supabase.auth.getSession().catch((e) => {
-//         console.warn('authUser getSession', e)
-//         return null
-//     })
-//     const session = auth?.data.session
-//     if (session) return session.user
-
-//     let credentials = await getCredentials()
-//     console.debug('auth credentials', credentials)
-
-//     if (!credentials) {
-//         credentials = await createCredentials()
-//         console.debug('auth new credentials', credentials)
-//         if (!credentials) throw new Error('no new credentials')
-
-//         const signUpResponse = await supabase.auth.signUp(credentials)
-//         const signUpError = signUpResponse.error
-//         const signUpSession = signUpResponse.data.session
-
-//         if (signUpError) throw signUpError
-//         if (!signUpSession?.user) throw new Error("no signUp user")
-//     }
-
-//     if (credentials) {
-//         console.debug('auth signInWithPassword', credentials)
-//         const signInResponse = await supabase.auth.signInWithPassword(credentials).catch((error) => {
-//             console.warn('authUser signInWithPassword', error)
-//             return null
-//         })
-//         console.debug('auth signInResponse', signInResponse)
-
-//         const signInError = signInResponse?.error
-//         const signInSession = signInResponse?.data.session
-
-//         if (signInError?.code === 'invalid_credentials') {
-//             console.debug('auth invalid_credentials')
-//             await m4k.set("auth_email", undefined)
-//             await m4k.set("auth_password", undefined)
-//             return await authUser()
-//         }
-
-//         if (signInError) throw signInError
-//         if (!signInSession?.user) throw new Error("no signIn user")
-
-//         return signInSession.user
-//     }
-
-//     throw new Error('no signIn')
-// }
-
-// const getOrCreateDevice = async () => {
-//     if (device) return device
-
-//     const user = await authUser()
-
-//     device = await deviceSync.findOne({ user_id: user.id })
-//     if (device) return device
-
-//     device = await deviceSync.insert({ user_id: user.id })
-//     return device
-// }
-
-// const getActions = async () => {
-//     const device = await getOrCreateDevice()
-
-//     const actions = await actionRepo.query(query => query
-//         .eq('device_id', device.id)
-//         .not('started_at', 'is', null)
-//         .order('created_at', { ascending: false })
-//     )
-
-//     return actions
-// }
-
-// const deviceInit = async () => {
-//     return;
-
-//     const started_at = new Date().toISOString()
-
-//     try {
-//         const user = await authUser()
-//         console.info('user', user)
-
-//         const device = await getOrCreateDevice()
-//         console.info('device', device)
-
-//         const deviceInfo = await m4k.deviceInfo();
-//         await deviceSync.update(device.id, {
-//             type: deviceInfo.model,
-//             started_at: new Date().toISOString(),
-//             online_at: new Date().toISOString(),
-//             width: deviceInfo.width,
-//             height: deviceInfo.height,
-//             version: deviceInfo.software,
-//         })
-//     }
-//     catch (error) {
-//         console.error('deviceInit', error)
-//     }
-
-//     // const session = await deviceAuth()
-//     // console.debug("deviceInit session", session)
-
-//     // const userId = session.user.id
-//     // const device = await getOrCreateDevice(userId)
-//     // if (device.name) await m4k.set("name", device.name)
-
-//     // const createDevice = async (): Promise<DeviceModel> => {
-//     //     try {
-//     //         const username = 'U_' + Date.now().toString(16) + randString(3);
-//     //         const password = 'P_' + randString(20);
-//     //         logInfo('create device', username);
-//     //         await deviceSync.create({ username, password, passwordConfirm: password }, { select: ['id'] });
-//     //         setLogin({ username, password });
-//     //         logInfo('create device ok', username);
-//     //         return await deviceLogin();
-//     //     }
-//     //     catch (error) {
-//     //         logError('create device error', error);
-//     //         throw error;
-//     //     }
-//     // }
-
-//     // const deviceLogin = async (): Promise<DeviceModel> => {
-//     //     try {
-//     //         const { username, password } = (await getLogin()) || {};
-//     //         if (!username || !password) return createDevice();
-//     //         logInfo('wait device login', { username });
-//     //         const device = await deviceSync.login(username, password);
-//     //         if (device) logInfo('device login ok', username, device.id);
-//     //         return device;
-//     //     }
-//     //     catch (e: any) {
-//     //         const err = toError(e);
-//     //         logWarn('device login error', err.data, err);
-//     //         if (err.code === 400) {
-//     //             await sleep(2000);
-//     //             return await createDevice();
-//     //         }
-//     //         throw err;
-//     //     }
-//     // }
-
-//     // while(true) {
-//     //     try {
-//     //         const device = await deviceLogin();
-//     //         if (device) return device;
-//     //     }
-//     //     catch (error) {}
-//     //     await sleep(10000);
-//     // }
-
-// }
-
-// export default deviceInit

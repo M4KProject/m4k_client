@@ -18,13 +18,12 @@ import { EventsPage } from '@/components/kiosk/EventsPage';
 import { PlaylistPage } from '@/components/kiosk/PlaylistPage';
 import { PairingPage } from '@/components/kiosk/PairingPage';
 import { useEffect } from 'preact/hooks';
-import { DialogContainer } from './DialogContainer';
 import { useFlux } from '@/hooks/useFlux';
-import { useKiosk } from '@/hooks/useKiosk';
 import { Page } from '../pages/base/Page';
 import { MenuButton } from '../pages/base/Menu';
 import { KioskView } from './KioskView';
-import { KioskPage } from '@/controllers/Kiosk';
+import { kConfig$, kInit, KioskPage, kPage$ } from '@/controllers/Kiosk';
+import { api2 } from '@/api2';
 
 const c = Css('DeviceApp', {
   '': {
@@ -59,16 +58,14 @@ const CompByPage: Record<KioskPage, () => JSX.Element> = {
 };
 
 const KioskRouter = () => {
-  const kiosk = useKiosk();
-  const page = useFlux(kiosk.page$);
+  const page = useFlux(kPage$);
   const Page = CompByPage[page] || ActionsPage;
   return <Page />;
 };
 
 const KioskMenu = () => {
-  const kiosk = useKiosk();
-  const page = useFlux(kiosk.page$);
-  const go = (page: KioskPage) => () => kiosk.page$.set(page);
+  const page = useFlux(kPage$);
+  const go = (page: KioskPage) => () => kPage$.set(page);
 
   return (
     <>
@@ -113,18 +110,16 @@ const KioskMenu = () => {
 };
 
 const KioskContent = () => {
-  const kiosk = useKiosk();
-
   useEffect(() => {
-    kiosk.init();
+    kInit();
   }, []);
 
-  const page = useFlux(kiosk.page$);
-  const device = useFlux(kiosk.device$);
+  const page = useFlux(kPage$);
+  const device = useFlux(api2.devices.item$);
 
   useEffect(() => {
-    if (!device?.group && !kiosk.offlineMode$.get()) {
-      kiosk.page$.set('pairing');
+    if (!device?.groupId && !kConfig$.get().offlineMode) {
+      kPage$.set('pairing');
     }
   }, [device]);
 

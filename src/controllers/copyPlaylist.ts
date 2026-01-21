@@ -1,17 +1,19 @@
 import { newProgressDialog } from '@/components/kiosk/ProgressView';
 import { bridge, BridgeFileInfo } from '@/bridge';
 import { logger, sleep, jsonStringify, toError } from 'fluxio';
-import { Kiosk } from './Kiosk';
+import { kConfig$, kPlaylist$ } from './Kiosk';
 
 const log = logger('copyPlaylist');
 
 const PLAYLIST_DIR = 'playlist';
 
-const copyPlaylist = async (kiosk: Kiosk, fromDir: string) => {
+const copyPlaylist = async () => {
   if (!bridge) return;
 
-  const fromDirInfo = await bridge.fileInfo(fromDir);
-  if (fromDirInfo.type !== 'dir') return;
+  const copyDirName = kConfig$.get().copyDir || 'playlist';
+  const copyDir = `@storage/${copyDirName}`;
+  const copyDirInfo = await bridge.fileInfo(copyDir);
+  if (copyDirInfo.type !== 'dir') return;
 
   await sleep(2000);
 
@@ -71,7 +73,7 @@ const copyPlaylist = async (kiosk: Kiosk, fromDir: string) => {
 
   let sourceFilesCount = 0;
   await newFilesProcess(
-    fromDir,
+    copyDir,
     `Copie des fichiers`,
     (fileName, type) => fileName[0] !== '.' && !!type,
     async (files) => {
@@ -167,7 +169,7 @@ const copyPlaylist = async (kiosk: Kiosk, fromDir: string) => {
   );
 
   log.d('playlist items', items);
-  kiosk.playlist$.set({ items });
+  kPlaylist$.set({ items })
 
   // Wait for localStorage persistence
   await sleep(5000);

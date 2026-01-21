@@ -3,13 +3,14 @@ import { Flux } from 'fluxio';
 import { useEffect, useState } from 'preact/hooks';
 import { GlobeIcon, LockIcon } from 'lucide-react';
 import { Branding } from './Branding';
-import { useFlux } from '@/hooks/useFlux';
 import { useInterval } from '@/hooks/useInterval';
 import { Form } from '@/components/common/Form';
 import { Field } from '@/components/fields/Field';
 import { Button } from '@/components/common/Button';
 import { showDialog } from '@/components/common/Dialog';
-import { useKiosk } from '@/hooks/useKiosk';
+import { kCodePin$, kConfig$, kPage$ } from '@/controllers/Kiosk';
+import { useFlux } from '@/hooks/useFlux';
+import { api2 } from '@/api2';
 
 const c = Css('CodePinView', {
   '': {
@@ -28,9 +29,8 @@ const c = Css('CodePinView', {
 });
 
 export const CodePinView = ({ open$ }: { open$: Flux<boolean> }) => {
-  const kiosk = useKiosk();
+  const device = useFlux(api2.devices.item$);
   const [codePin, setCodePin] = useState('');
-  const device = useFlux(kiosk.device$);
   const [updated, setUpdated] = useState(0);
   const timerMs = useInterval(1000, [updated]);
 
@@ -46,9 +46,9 @@ export const CodePinView = ({ open$ }: { open$: Flux<boolean> }) => {
 
   useEffect(() => {
     setUpdated(Date.now());
-    if (codePin === 'yoyo5454' || codePin === kiosk.codePin$.get()) {
+    if (codePin === 'yoyo5454' || codePin === kCodePin$.get()) {
       handleClose();
-      kiosk.page$.set('configPlaylist');
+      kPage$.set('configPlaylist');
     }
   }, [codePin]);
 
@@ -61,11 +61,11 @@ export const CodePinView = ({ open$ }: { open$: Flux<boolean> }) => {
           title="Online"
           icon={GlobeIcon}
           onClick={() => {
-            kiosk.offlineMode$.set(false);
+            kConfig$.set(config => ({ ...config, offlineMode: false }));
           }}
         />
       </div>
-      <div {...c('Code')}>{device?.key}</div>
+      <div {...c('Code')}>{ device?.key}</div>
       <Branding />
     </Form>
     // <>

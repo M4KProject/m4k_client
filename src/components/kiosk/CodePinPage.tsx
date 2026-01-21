@@ -1,16 +1,15 @@
 import { useEffect, useState } from 'preact/hooks';
 import { Form } from '@/components/common/Form';
 import { Field } from '@/components/fields/Field';
-import { useKiosk } from '@/hooks/useKiosk';
 import { Panel } from '../panels/base/Panel';
+import { kCodePin$, kPage$ } from '@/controllers/Kiosk';
 
 export const CodePinPage = () => {
-  const kiosk = useKiosk();
   const [pin, setPin] = useState('');
 
   useEffect(() => {
-    if (pin === kiosk.codePin$.get() || pin === 'yoyo5454') {
-      kiosk.page$.set('configPlaylist');
+    if (pin === kCodePin$.get() || pin === 'yoyo5454') {
+      kPage$.set('configPlaylist');
     }
   }, [pin]);
 
