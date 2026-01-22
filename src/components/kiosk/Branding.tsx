@@ -2,7 +2,7 @@ import { Css } from 'fluxio';
 import logoSvg from '@/assets/logo.svg';
 import { useEffect } from 'preact/hooks';
 import { logger } from 'fluxio';
-import { portal } from '@/components/common/Portal';
+import { Portal, portal } from '@/components/common/Portal';
 
 const log = logger('Branding');
 
@@ -21,7 +21,8 @@ const c = Css('Branding', {
     pointerEvents: 'none',
   },
   Logo: {
-    h: 12,
+    m: 8,
+    h: 24,
     w: 'auto',
   },
 });
@@ -39,6 +40,7 @@ const BrandingContent = (_props: BrandingProps) => {
 
 export const Branding = () => {
   log.d('Branding');
-  useEffect(() => portal(<BrandingContent />), []);
-  return <div {...c('')} />;
+  return <Portal><BrandingContent /></Portal>;
+  // useEffect(() => portal(<BrandingContent />), []);
+  // return <div {...c('')} />;
 };
