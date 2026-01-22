@@ -26,7 +26,7 @@ export class ApiRest<T extends MBase> {
         return this.getByKey(key)?.id || '';
     }
 
-    private _rm(items: T|T[]) {
+    protected _rm(items: T|T[]) {
         const filteredItems = (isArray(items) ? items : [items]).filter(isNotNil);
         if (!filteredItems.length) return;
         this.dico$.set(dico => {
@@ -37,7 +37,7 @@ export class ApiRest<T extends MBase> {
         });
     }
 
-    private _set(items: T|T[]) {
+    protected _set(items: T|T[]) {
         const filteredItems = (isArray(items) ? items : [items]).filter(isNotNil);
         if (!filteredItems.length) return;
         this.dico$.set(dico => {

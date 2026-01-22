@@ -1,4 +1,4 @@
-import { Css } from 'fluxio';
+import { Css, setCss } from 'fluxio';
 import { useEffect } from 'preact/hooks';
 import { Errors } from '@/components/admin/Errors';
 import { refreshTheme } from '@/utils/theme';
@@ -25,8 +25,6 @@ const c = Css('App', {
     inset: 0,
     bg: 'bg',
     fg: 'fg',
-    fontFamily: 'Roboto',
-    fontSize: '18px',
   },
   '-loading': {
     center: 1,
@@ -81,6 +79,7 @@ export const App = () => {
 
   useEffect(() => {
     addFont('Roboto');
+    setCss('font', `* { font-family: Roboto; font-size: 18px; }`);
     refreshTheme();
   }, []);
 

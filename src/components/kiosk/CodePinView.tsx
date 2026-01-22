@@ -8,9 +8,10 @@ import { Form } from '@/components/common/Form';
 import { Field } from '@/components/fields/Field';
 import { Button } from '@/components/common/Button';
 import { showDialog } from '@/components/common/Dialog';
-import { kCodePin$, kConfig$, kPage$ } from '@/controllers/Kiosk';
+import { kCodePin$, kPage$, setKProp } from '@/controllers/Kiosk';
 import { useFlux } from '@/hooks/useFlux';
 import { api2 } from '@/api2';
+import { bridge } from '@/bridge';
 
 const c = Css('CodePinView', {
   '': {
@@ -61,7 +62,8 @@ export const CodePinView = ({ open$ }: { open$: Flux<boolean> }) => {
           title="Online"
           icon={GlobeIcon}
           onClick={() => {
-            kConfig$.set(config => ({ ...config, offlineMode: false }));
+            setKProp('offlineMode', false);
+            bridge.reload();
           }}
         />
       </div>

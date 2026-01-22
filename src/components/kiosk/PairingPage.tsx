@@ -4,7 +4,8 @@ import { useFlux } from '@/hooks/useFlux';
 import { LoadingSpinner } from '@/components/common/Loading';
 import { Button } from '@/components/common/Button';
 import { api2 } from '@/api2';
-import { kPage$, setKProp } from '@/controllers/Kiosk';
+import { kPage$, setKProp, useKDevice } from '@/controllers/Kiosk';
+import { bridge } from '@/bridge';
 
 const c = Css('PairingPage', {
   '': {
@@ -14,11 +15,11 @@ const c = Css('PairingPage', {
   },
   Container: {
     bg: 'bg',
-    p: 2,
-    rounded: 6,
+    p: 8,
+    rounded: 8,
     elevation: 3,
     textAlign: 'center',
-    w: 240,
+    w: 340,
   },
   Title: {
     fg: 'fg',
@@ -52,8 +53,8 @@ const c = Css('PairingPage', {
 });
 
 export const PairingPage = () => {
-  const device = useFlux(api2.devices.item$);
-  const pairingCode = device?.key || device?.id || 'Chargement...';
+  const device = useKDevice();
+  const pairingCode = device?.key || 'Chargement';
 
   return (
     <div {...c('')}>
@@ -70,7 +71,7 @@ export const PairingPage = () => {
             color="secondary"
             onClick={() => {
               setKProp('offlineMode', true);
-              kPage$.set('kiosk');
+              bridge.reload();
             }}
           />
         </div>

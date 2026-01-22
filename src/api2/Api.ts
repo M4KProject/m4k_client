@@ -4,13 +4,14 @@ import { ApiClient } from "./ApiClient";
 import { ApiMedias } from "./ApiMedias";
 import { ApiRest } from "./ApiRest";
 import { toId } from "./ApiHelpers";
+import { ApiDevices } from "./ApiDevices";
 
 export class Api {
   log = logger('api2');
 
   client = new ApiClient();
 
-  devices = new ApiRest<MDevice>(this.client, 'devices');
+  devices = new ApiDevices(this.client, 'devices');
   groups = new ApiRest<MGroup>(this.client, 'groups');
   jobs = new ApiRest<MJob>(this.client, 'jobs');
   medias = new ApiMedias(this.client, 'medias');
@@ -40,6 +41,7 @@ export class Api {
 
   refresh() {
     if (!this.client.auth$.get()) return;
+    if (!this.client.groupId) return;
 
     this.devices.load();
     this.groups.load();
@@ -62,11 +64,6 @@ export class Api {
 
   async authLogin(email: string, password: string) {
     const auth = await this.client.post<MAuth>('auth/login', { email, password });
-    return this.setAuth(auth);
-  }
-
-  async authDevice(email: string, password: string) {
-    const auth = await this.client.post<MAuth>('auth/device', { email, password });
     return this.setAuth(auth);
   }
 

@@ -208,7 +208,11 @@ export interface MAuth {
   expiresAt: string,
   email: string;
   userId: string;
-  deviceId?: string;
+}
+
+export interface MAuthDevice extends MAuth {
+  deviceId: string;
+  deviceKey: string;
 }
 
 ///// MEDIAS /////

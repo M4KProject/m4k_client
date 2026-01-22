@@ -1,9 +1,8 @@
 import { useEffect, useRef } from 'preact/hooks';
 import { logger } from 'fluxio';
 import { Css } from 'fluxio';
-import { useFlux } from '@/hooks/useFlux';
 import { useConstant } from '@/hooks/useConstant';
-import { kConfig$ } from '@/controllers/Kiosk';
+import { useKProp } from '@/controllers/Kiosk';
 
 const log = logger('KioskVideo');
 
@@ -22,7 +21,7 @@ export const KioskVideo = ({
 }) => {
   const ref = useRef<HTMLVideoElement>(null);
   const el = ref.current;
-  const hasVideoMuted = useFlux(kConfig$.get().hasVideoMuted);
+  const hasVideoMuted = useKProp('hasVideoMuted');
 
   const tryPlay = () => {
     if (el && el.paused && !el.ended && v.isCurr) {

@@ -5,46 +5,7 @@ import { Field } from '@/components/fields/Field';
 import { Panel } from '../panels/base/Panel';
 import { contentRotation$ } from '@/controllers/contentRotation$';
 import { SettingsIcon } from 'lucide-react';
-import { kConfig$, useKProp } from '@/controllers/Kiosk';
-
-// const useSetting = (key: string): [string | null, (next: string | null) => Promise<void>] => {
-//   const [value, setValue] = useState<string | null>('');
-
-//   useAsyncEffect(async () => {
-//     const curr = await bridge.getSetting(key);
-//     setValue(curr);
-//   }, [key]);
-
-//   return [value, (next) => bridge.setSetting(key, next)];
-// };
-
-// const useBooleanSetting = (
-//   key: string,
-//   defVal: boolean
-// ): [boolean, (next: boolean | null) => Promise<void>] => {
-//   const [value, setValue] = useSetting(key);
-
-//   return [
-//     toBoolean(value, defVal),
-//     (next) =>
-//       setValue(
-//         isNil(next) ? null
-//         : next ? '1'
-//         : '0'
-//       ),
-//   ];
-// };
-
-// const useNumberSetting = (
-//   key: string,
-//   defVal: number
-// ): [number, (next: number | null) => Promise<void>] => {
-//   const [value, setValue] = useSetting(key);
-
-//   return [toNumber(value, defVal), (next) => setValue(isNil(next) ? null : String(next))];
-// };
-
-const codePin$ = kConfig$;
+import { useKProp } from '@/controllers/Kiosk';
 
 export const ConfigPlaylistPage = () => {
   const [codePin, setCodePin] = useKProp('codePin');

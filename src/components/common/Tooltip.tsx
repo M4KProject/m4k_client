@@ -20,7 +20,6 @@ const c = Css('Tooltip', {
     fg: 'fg',
     bg: 'bg',
     rounded: 3,
-    fontFamily: 'Roboto',
     elevation: 2,
   },
   Arrow: {

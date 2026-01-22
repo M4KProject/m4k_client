@@ -12,16 +12,17 @@ import {
   logger,
   flux,
   serverDate,
-  isUuid,
   SECOND,
   Dictionary,
   isDictionary,
   notImplemented,
 } from 'fluxio';
-import { api2, MDeviceResult } from '@/api2';
+import { api2, MDevice } from '@/api2';
 import { fluxProp } from 'fluxio';
 import { useMemo } from 'preact/hooks';
-import { useFluxState } from '@/hooks/useFlux';
+import { useFlux, useFluxState } from '@/hooks/useFlux';
+import { DeviceModel } from '@/api/models';
+import copyPlaylist from './copyPlaylist';
 
 export interface DeviceLogin {
   email?: string;
@@ -74,8 +75,15 @@ export const kPlaylist$ = fluxStored<{ items?: (BridgeFileInfo)[] }>('kPlaylist'
 app.kPage$ = kPage$;
 app.kConfig$ = kConfig$;
 
+export const useKDevice = () => useFlux(api2.devices.kDevice$);
+
 export const setKProp = <K extends keyof DeviceConfig>(prop: K, value: DeviceConfig[K]) => (
-  kConfig$.set(config => ({ ...config, [prop]: value })));
+  kConfig$.set(config => ({ ...config, [prop]: value }))
+);
+
+export const getKProp = <K extends keyof DeviceConfig>(prop: K): DeviceConfig[K] => (
+  kConfig$.get()[prop]
+);
 
 export const useKProp$ = <K extends keyof DeviceConfig>(prop: K) => (
   useMemo(() => fluxProp(kConfig$, prop), [prop]));
@@ -89,21 +97,8 @@ export const kLogin = async () => {
   if (!isStringValid(login.email)) login.email = uuid() + '@d.m4k.fr';
   if (!isStringValid(login.password)) login.password = randString(20);
 
-  await api2.authDevice(login.email, login.password);
-
-  const auth = api2.getAuth();
-  const deviceId = auth?.deviceId;
-  if (!isUuid(deviceId)) throw toError('no auth deviceId');
-
-  api2.devices.id$.set(deviceId);
-
   const info = await bridge.deviceInfo();
-
-  await api2.devices.update(deviceId, {
-    started: serverDate(),
-    online: serverDate(),
-    info,
-  }, { fields: ['id'] });
+  await api2.devices.login(login.email, login.password, info);
 }
 
 const capture = async (input: BridgeResizeOptions) => {
@@ -142,79 +137,70 @@ const actionDico = {
 
 export type KAction = keyof typeof actionDico;
 
-const execAction = async (deviceId: string, action: KAction, input: any) => {
+const execAction = async (action: KAction, input: any) => {
   _input = isDictionary(input) ? input : { value: input };
 
   const fun = actionDico[action] || notImplementedAction;
 
-    const result = await fun();
-    log.d('execAction', action, input, result);
+  const value = await fun();
+  log.d('execAction', action, input, value);
 
-    return {
-      success: true,
-      result,
-    };
-}
+  return value;
+} 
 
-const onAction = async (deviceId: string, action: KAction) => {
-  const result: MDeviceResult = { action, started: serverDate() };
-  const device = await api2.devices.update(deviceId, { action: '', result }, { fields: ['input'] });
-  if (!device) throw toError('onAction no device');
+const onLoop = async (changes: Partial<MDevice> = {}) => {
+  const device = await api2.devices.loop(changes);
+  if (!device) throw toError('onLoop no device');
 
-  const input = result.input = device.input;
+  api2.setGroupId(device.groupId);
+
+  const { action, input } = device;
+  if (!action) return;
+
+  const result: DeviceModel['result'] = { action, input, started: serverDate() };
 
   try {
-    const value = await execAction(deviceId, action, input);
+    result.value = await execAction(action, input);
     result.success = true;
-    result.value = value;
   }
   catch (error) {
     log.w('execAction', action, input, error);
     const { name, message } = toError(error);
-    result.success = true;
     result.error = { name, message };
+    result.success = false;
   }
 
   result.ended = serverDate();
 
   log.i('execAction', action, input, result);
 
-  await api2.devices.update(deviceId, { action: '', input: null, result }, { fields: ['id'] });
-}
-
-export const getDeviceId = api2.devices.id$.getter();
-
-const onLoop = async () => {
-  const deviceId = getDeviceId();
-
-  const device = await api2.devices.update(deviceId, { online: serverDate() }, { fields: ['id', 'key', 'action'] });
-  if (!device) throw toError('no device');
-
-  const action = device.action;
-  if (action) await onAction(deviceId, action);
+  await onLoop({ result });
 }
 
 let _isKInit = false;
+
 export const kInit = async () => {
   if (_isKInit) return;
   _isKInit = true;
 
-  await kLogin();
+  log.i('kInit');
 
   bridge.subscribe(async (e) => {
     if (e.type !== 'storage' || e.action !== 'mounted') return;
-    // await copyPlaylist(this, `${e.path}/${this.copyDir$.get()}`);
+    await copyPlaylist();
   });
 
+  await kLogin().catch(toVoid);
+
   while (true) {
+    await sleep(10 * SECOND);
+
     try {
       await onLoop();
     }
     catch (error) {
-      log.e('kInterval', error);
-      await kLogin();
+      log.e('kInit loop', error);
+      await kLogin().then(() => onLoop()).catch(toVoid);
     }
-
-    await sleep(5 * SECOND);
   }
 }

@@ -22,7 +22,7 @@ import { useFlux } from '@/hooks/useFlux';
 import { Page } from '../pages/base/Page';
 import { MenuButton } from '../pages/base/Menu';
 import { KioskView } from './KioskView';
-import { kConfig$, kInit, KioskPage, kPage$ } from '@/controllers/Kiosk';
+import { getKProp, kInit, KioskPage, kPage$ } from '@/controllers/Kiosk';
 import { api2 } from '@/api2';
 
 const c = Css('DeviceApp', {
@@ -118,7 +118,7 @@ const KioskContent = () => {
   const device = useFlux(api2.devices.item$);
 
   useEffect(() => {
-    if (!device?.groupId && !kConfig$.get().offlineMode) {
+    if (!device?.groupId && !getKProp('offlineMode')) {
       kPage$.set('pairing');
     }
   }, [device]);

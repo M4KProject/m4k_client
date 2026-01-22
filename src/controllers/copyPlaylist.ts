@@ -1,7 +1,7 @@
 import { newProgressDialog } from '@/components/kiosk/ProgressView';
 import { bridge, BridgeFileInfo } from '@/bridge';
 import { logger, sleep, jsonStringify, toError } from 'fluxio';
-import { kConfig$, kPlaylist$ } from './Kiosk';
+import { getKProp, kPlaylist$ } from './Kiosk';
 
 const log = logger('copyPlaylist');
 
@@ -10,7 +10,7 @@ const PLAYLIST_DIR = 'playlist';
 const copyPlaylist = async () => {
   if (!bridge) return;
 
-  const copyDirName = kConfig$.get().copyDir || 'playlist';
+  const copyDirName = getKProp('copyDir') || 'playlist';
   const copyDir = `@storage/${copyDirName}`;
   const copyDirInfo = await bridge.fileInfo(copyDir);
   if (copyDirInfo.type !== 'dir') return;

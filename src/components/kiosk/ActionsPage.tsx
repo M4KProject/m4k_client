@@ -6,7 +6,7 @@ import { Apps } from '@/components/admin/Apps';
 import { usePromise } from '@/hooks/usePromise';
 import { Button } from '@/components/common/Button';
 import { bridge } from '@/bridge';
-import { getDeviceId, kConfig$ } from '@/controllers/Kiosk';
+import { setKProp } from '@/controllers/Kiosk';
 import { api2 } from '@/api2';
 
 const c = Css('Actions', {
@@ -222,14 +222,12 @@ export const ActionsPage = () => {
 
       <div {...c('Buttons')}>
         <h3>Autre :</h3>
-        <Button
-          onClick={() => kConfig$.set(config => ({ ...config, url: 'https://boardscreen.fr/' }))}
-        >
+        <Button onClick={() => setKProp('url', 'https://boardscreen.fr/')}>
           Boardscreen
         </Button>
         <Button
           onClick={async () => {
-            await api2.devices.remove(getDeviceId()).catch(toVoid);
+            await api2.devices.loop({ remove: true }).catch(toVoid);
             localStorage.clear();
             location.href = '/';
           }}
