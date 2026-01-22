@@ -8,9 +8,7 @@ import { Form } from '@/components/common/Form';
 import { Field } from '@/components/fields/Field';
 import { Button } from '@/components/common/Button';
 import { showDialog } from '@/components/common/Dialog';
-import { kCodePin$, kPage$, setKProp } from '@/controllers/Kiosk';
-import { useFlux } from '@/hooks/useFlux';
-import { api2 } from '@/api2';
+import { kCodePin$, kPage$, setKProp, useKDevice, useKProp } from '@/controllers/Kiosk';
 import { bridge } from '@/bridge';
 
 const c = Css('CodePinView', {
@@ -30,7 +28,11 @@ const c = Css('CodePinView', {
 });
 
 export const CodePinView = ({ open$ }: { open$: Flux<boolean> }) => {
-  const device = useFlux(api2.devices.item$);
+  const device = useKDevice();
+  const offlineMode = useKProp('offlineMode');
+  const key = device?.key;
+  const groupId = device?.groupId;
+
   const [codePin, setCodePin] = useState('');
   const [updated, setUpdated] = useState(0);
   const timerMs = useInterval(1000, [updated]);
@@ -67,7 +69,9 @@ export const CodePinView = ({ open$ }: { open$: Flux<boolean> }) => {
           }}
         />
       </div>
-      <div {...c('Code')}>{ device?.key}</div>
+      <div {...c('Code')}>CODE: {key}</div>
+      {groupId && (<div {...c('Code')}>GROUP: {groupId}</div>)}
+      <div {...c('Code')}>MODE: {offlineMode?'offline':'online'}</div>
       <Branding />
     </Form>
     // <>

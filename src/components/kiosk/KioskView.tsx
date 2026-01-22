@@ -8,7 +8,7 @@ import { KioskVideo } from '@/components/kiosk/KioskVideo';
 import { usePromise } from '@/hooks/usePromise';
 import { useFlux } from '@/hooks/useFlux';
 import { Button } from '@/components/common/Button';
-import { kPlaylist$, useKProp } from '@/controllers/Kiosk';
+import { kPlaylist$, useKDevice, useKProp } from '@/controllers/Kiosk';
 import { api2 } from '@/api2';
 
 const log = logger('KioskView');
@@ -137,7 +137,7 @@ const KioskItem = ({
 };
 
 export const KioskView = () => {
-  const device = useFlux(api2.devices.item$);
+  const device = useKDevice();
 
   const [open, setOpen] = useState(false);
   const [count, setCount] = useState(0);

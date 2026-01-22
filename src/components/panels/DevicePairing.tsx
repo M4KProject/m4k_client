@@ -17,16 +17,12 @@ export const DevicePairing = () => {
   const win = useWindowController();
   const [key, setKey] = useState('');
   const [error, setError] = useState('');
-  const groupId = useGroupId();
 
   const handlePairing = async () => {
     try {
       if ((key+'').trim().length === 0) throw toError('code vide');
       console.log('Tentative de pairage avec le code:', key);
-      await api2.client.post(`/devices/pair`, {
-        key,
-        groupId,
-      });
+      await api2.devices.pair(key);
       win.close();
     } catch (e) {
       const error = toError(e);

@@ -54,6 +54,10 @@ export class ApiRest<T extends MBase> {
         this.load();
     }
 
+    async call<T>(name: string, json?: any, options?: MOptions<T, T>) {
+        return this.client.post<T>(`${this.name}/${name}`, json, options);
+    }
+
     async list(filter?: MFilter<T>, options?: MOptions<T[], T>): Promise<T[]> {
         try {
             const items = await this.client.get<T[], T>(`${this.name}`, options);

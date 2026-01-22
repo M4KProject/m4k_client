@@ -9,7 +9,7 @@ export class ApiDevices extends ApiRest<MDevice> {
   async login(email: string, password: string, info: MDeviceInfo) {
     this.client.auth$.set(null);
 
-    const auth = await this.client.post<MAuthDevice>('devices/login', { email, password, info });
+    const auth = await this.call<MAuthDevice>('login', { email, password, info });
 
     const id = auth.deviceId;
     if (!isUuid(id)) throw toError('no auth device id');
@@ -21,8 +21,15 @@ export class ApiDevices extends ApiRest<MDevice> {
   }
 
   async loop(changes: Partial<MDevice>|{ remove: true }) {
-    const device = await this.client.post<MDevice>('devices/loop', changes);
+    const device = await this.call<MDevice>('loop', changes);
     this.kDevice$.set(device);
+    return device;
+  }
+
+  async pair(key: string) {
+    const groupId = this.client.groupId;
+    const device = await this.call<MDevice>('pair', { key, groupId });
+    this._set(device);
     return device;
   }
 }
