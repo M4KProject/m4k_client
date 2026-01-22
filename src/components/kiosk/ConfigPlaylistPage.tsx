@@ -23,7 +23,7 @@ export const ConfigPlaylistPage = () => {
   // const [startUrl, setStartUrl] = useSetting('startUrl');
 
   return (
-    <Panel icon={SettingsIcon} header="Configuration" col>
+    <Panel icon={SettingsIcon} header="Configuration">
       <Form title="Configuration Kiosk">
         <Field
           type="password"

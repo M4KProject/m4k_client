@@ -33,7 +33,7 @@ const CreateMemberForm = ({ onClose }: { onClose: () => void }) => {
     }
     setError('');
     try {
-      if (isNew) await api2.register(email, password, false);
+      if (isNew) await api2.authRegister(email, password, false);
       await api2.members.create({ email, desc: '', groupId, role: 20 });
       onClose();
     } catch (e) {

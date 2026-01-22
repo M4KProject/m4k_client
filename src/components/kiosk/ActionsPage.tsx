@@ -121,9 +121,7 @@ const clearCacheAndReload = async () => {
     getStorage().clear();
     prog(0.8, 'info', 'Cache supprimé, rechargement de la page...');
 
-    setTimeout(() => {
-      glb.location.reload();
-    }, 1000);
+    setTimeout(() => bridge.reload(), 1000);
   } catch (e) {
     const error = toError(e);
     prog(1, 'error', `Erreur: ${error}`);

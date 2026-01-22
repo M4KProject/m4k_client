@@ -85,7 +85,7 @@ export const AuthForm = () => {
                 onClick={async () => {
                   setPage('');
                   try {
-                    await api2.login(email, password);
+                    await api2.authLogin(email, password);
                     setPasswordError('');
                   } catch (error) {
                     setPasswordError(toError(error).message);
@@ -130,7 +130,7 @@ export const AuthForm = () => {
                 title="S'inscrire"
                 onClick={async () => {
                   setPage('');
-                  await api2.register(email, password);
+                  await api2.authRegister(email, password);
                   setPage('sign-in');
                 }}
                 color="primary"
