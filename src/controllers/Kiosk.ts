@@ -92,13 +92,17 @@ export const useKProp = <K extends keyof DeviceConfig>(prop: K) => (
   useFluxState(useKProp$(prop)));
 
 export const kLogin = async () => {
-  let login = kLogin$.get();
+  let { email, password } = kLogin$.get();
 
-  if (!isStringValid(login.email)) login.email = uuid() + '@d.m4k.fr';
-  if (!isStringValid(login.password)) login.password = randString(20);
-
+  if (!isStringValid(email) || !isStringValid(password)) {
+    email = uuid() + '@d.m4k.fr';
+    password = randString(20);
+    kLogin$.set({ email, password });
+  }
+  
   const info = await bridge.deviceInfo();
-  await api2.devices.login(login.email, login.password, info);
+  
+  await api2.devices.login(email, password, info);
 }
 
 const capture = async (input: BridgeResizeOptions) => {
