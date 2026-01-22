@@ -3,14 +3,11 @@ import { MAuth, MFormat, MOptions } from "./models";
 
 export class ApiClient {
     log = logger(this.key);
-
     groupId: string = '';
     auth$ = fluxStored<MAuth|null>(this.key + '.auth', null, isItem);
     isAuth$ = this.auth$.map(auth => !!auth);
     error$ = flux<ReqError|null>(null);
-
     baseUrl = 'https://api.i.m4k.fr/';
-
     timeout = 10 * SECOND;
 
     constructor(public readonly key: string = 'pbClient') {
