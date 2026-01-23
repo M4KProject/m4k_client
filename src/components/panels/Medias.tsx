@@ -1,11 +1,11 @@
 import { Css } from 'fluxio';
-import { useGroupMedias } from '@/hooks/useApi';
 import { MediaModel } from '@/api/models';
 import { useFlux } from '@/hooks/useFlux';
 import { useMediaController } from '@/hooks/useMediaController';
 import { useEffect } from 'preact/hooks';
 import { MediaItem } from '@/components/panels/MediaItem';
 import { Breadcrumb } from '@/components/panels/Breadcrumb';
+import { useMedias } from '@/hooks/useApi2';
 
 const c = Css('Medias', {
   '': {
@@ -41,7 +41,7 @@ const c = Css('Medias', {
 
 export const Medias = ({ type }: { type?: MediaModel['type'] }) => {
   const controller = useMediaController();
-  const medias = useGroupMedias(type);
+  const medias = useMedias();
   const parent = useFlux(controller.parent$);
   const parentId = parent?.id;
 
@@ -49,12 +49,14 @@ export const Medias = ({ type }: { type?: MediaModel['type'] }) => {
 
   console.debug('Medias', medias, parentId);
 
+  const filteredMedias = type ? medias.filter(m => m.type === type) : medias;
+
   return (
     <div {...c('')}>
       <Breadcrumb />
       <div {...c('Items')}>
         {medias
-          .filter((m) => m && (m.parent || '') === (parentId || ''))
+          .filter((m) => m && (m.parentId || '') === (parentId || ''))
           .map((media) => (
             <MediaItem key={media.id} media={media} />
           ))}

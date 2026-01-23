@@ -108,7 +108,7 @@ const cols: GridCols<MediaModel, MediasGridContext> = {
             }}
           />
         )}
-        {type === 'playlist' && (
+        {/* {type === 'playlist' && (
           <>
             <Button
               icon={EditIcon}
@@ -169,7 +169,7 @@ const cols: GridCols<MediaModel, MediasGridContext> = {
             tooltip="Télécharger"
             onClick={() => api.startMediaDownload(id)}
           />
-        )}
+        )} */}
         <Button
           icon={Trash2Icon}
           color="error"
@@ -233,7 +233,7 @@ export const MediasGridPanel = ({ type }: { type?: MediaModel['type'] }) => {
   return (
     <>
       <Grid ctx={ctx} cols={cols} items={items} />
-      <JobGrid filter={(job) => job.status !== 'finished'} panel={true} />
+      {/* <JobGrid filter={(job) => job.status !== 'finished'} panel={true} /> */}
     </>
   );
 };

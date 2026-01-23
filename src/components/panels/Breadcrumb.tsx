@@ -13,6 +13,8 @@ import { DivProps } from '@/components/common/types';
 import { Css } from 'fluxio';
 import { Field } from '../fields/Field';
 import { Fragment } from 'preact/jsx-runtime';
+import { api2 } from '@/api2';
+import { useMedia } from '@/hooks/useApi2';
 
 const c = Css('Breadcrumb', {
   '': {
@@ -61,16 +63,16 @@ const Sep = (props: DivProps) => (
 const Flex = (props: DivProps) => <div {...props} {...c('Flex', props)} />;
 
 export const Breadcrumb = ({ children, ...props }: ActionsProps) => {
-  const controller = useMediaController();
-  const select = useFlux(controller.select$);
-  const breadcrumb = useFlux(controller.breadcrumb$);
+  const select = useMedia();
+  const breadcrumb = useFlux(api2.medias.breadcrumb$);
+  const groupId = useFlux(api2.groups.id$);
 
   return (
     <div {...props} {...c('', props)}>
       <Button
         {...c('NavButton')}
         icon={HomeIcon}
-        onClick={() => controller.select$.set(undefined)}
+        onClick={() => api2.medias.id$.set('')}
         tooltip="Retour à la racine"
       />
       {breadcrumb
@@ -78,7 +80,7 @@ export const Breadcrumb = ({ children, ...props }: ActionsProps) => {
         .map((node) => (
           <Fragment key={node.id}>
             <Sep />
-            <Button {...c('NavButton')} title={node.title} onClick={controller.click(node)} />
+            <Button {...c('NavButton')} title={node.title} onClick={() => api2.medias.id$.set(node.id)} />
           </Fragment>
         ))}
       {select && (
@@ -87,10 +89,10 @@ export const Breadcrumb = ({ children, ...props }: ActionsProps) => {
           <Field
             key={select.id}
             value={select.title}
-            onValue={(title) => controller.update(select, { title })}
+            onValue={(title) => api2.medias.update(select, { title })}
             props={{ size: Math.max(1, (select.title?.length || 0) + 2) }}
           />
-          <Button color="error" icon={TrashIcon} title="Supprimer" onClick={controller.delete} />
+          <Button color="error" icon={TrashIcon} title="Supprimer" onClick={() => api2.medias.remove(select)} />
         </>
       )}
 
@@ -102,20 +104,20 @@ export const Breadcrumb = ({ children, ...props }: ActionsProps) => {
             icon={UploadIcon}
             title="Upload"
             tooltip="Téléverser des medias"
-            onFiles={controller.upload}
+            onFiles={() => api2.medias.upload()}
           />
           <Button
             color="primary"
             icon={FolderPlusIcon}
             title="Ajouter Dossier"
             tooltip="Créer un nouveau dossier"
-            onClick={controller.addFolder}
+            onClick={() => api2.medias.create({ title: 'Mon Dossier', type: 'folder', groupId })}
           />
           <Button
             color="primary"
             icon={LayoutIcon}
             title="Ajouter Contenu"
-            onClick={controller.addContent}
+            onClick={() => api2.medias.create({ title: 'Mon Contenu', type: 'content', groupId })}
           />
         </>
       )}
@@ -125,7 +127,7 @@ export const Breadcrumb = ({ children, ...props }: ActionsProps) => {
             color="primary"
             icon={EditIcon}
             title="Modifier la Page"
-            onClick={controller.edit}
+            onClick={() => api2.medias.edit()}
           />
         </>
       )}

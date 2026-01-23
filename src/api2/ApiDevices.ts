@@ -1,10 +1,11 @@
-import { fluxStored, isItem, isString, isUuid, toError } from "fluxio";
+import { by, fluxStored, isItem, isString, isUuid, toError } from "fluxio";
 import { ApiRest } from "./ApiRest";
 import { MAuthDevice, MDevice, MDeviceInfo } from "./models";
 
 export class ApiDevices extends ApiRest<MDevice> {
   kId$ = fluxStored<string>('kId$', '', isString);
   kDevice$ = fluxStored<MDevice|null>('kDevice$', null, isItem);
+  byUserId$ = this.items$.map(items => by(items, d => d.userId));
 
   async login(email: string, password: string, info: MDeviceInfo) {
     this.client.auth$.set(null);

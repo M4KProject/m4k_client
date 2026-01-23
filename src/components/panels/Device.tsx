@@ -147,14 +147,14 @@ export const Device = ({ device }: { device: MDevice }) => {
           icon={InfoIcon}
           tooltip={() => <pre>{humanize({ id: device.id, key: device.key, ...info })}</pre>}
         />
-        <Button title={media?.name} color="primary" onClick={handleMedia} />
+        <Button title={media?.key} color="primary" onClick={handleMedia} />
         <Button
           color="primary"
           icon={EditIcon}
           onClick={() => {
             if (device.mediaId) {
               router.screenSize$.set([device.width || 1920, device.height || 1080]);
-              router.go({ page: 'edit', mediaId: device.mediaId });
+              router.go({ page: 'edit', media: device.mediaId });
             }
           }}
         />

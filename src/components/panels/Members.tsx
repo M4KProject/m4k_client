@@ -1,11 +1,10 @@
-import { Css } from 'fluxio';
+import { by, Css } from 'fluxio';
 import { toNumber, toString } from 'fluxio';
 import { Trash2Icon } from 'lucide-react';
 import { Grid, GridCols } from '@/components/common/Grid';
 import { Field } from '@/components/fields/Field';
 import { Button } from '@/components/common/Button';
 import { api2, MMember } from '@/api2';
-import { useEffect } from 'preact/hooks';
 import { useFlux } from '@/hooks/useFlux';
 
 const c = Css('Members', {
@@ -58,11 +57,11 @@ const cols: GridCols<MMember> = {
 };
 
 export const Members = () => {
-  const allMembers = useFlux(api2.members.items$);
+  const members = useFlux(api2.members.items$);
 
-  if (!allMembers) return;
+  if (!members) return;
 
-  const members = allMembers.filter(m => !m.deviceId);
+  const filteredMembers = members.filter(m => !m.deviceId);
 
-  return <Grid {...c('')} cols={cols} items={members} ctx={{}} />;
+  return <Grid {...c('')} cols={cols} items={filteredMembers} ctx={{}} />;
 };

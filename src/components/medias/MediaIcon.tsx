@@ -1,4 +1,3 @@
-import { MediaType } from '@/api/models';
 import { Button } from '@/components/common/Button';
 import { Css } from 'fluxio';
 import {
@@ -8,12 +7,12 @@ import {
   VideoIcon,
   FileTextIcon,
   LayoutIcon,
-  ListIcon,
   HelpCircleIcon,
   ChevronDownIcon,
   ChevronRightIcon,
 } from 'lucide-react';
 import { DivProps } from '../common/types';
+import { MMediaType } from '@/api2';
 
 const c = Css('MediaIcon', {
   '': {
@@ -25,18 +24,20 @@ const c = Css('MediaIcon', {
   },
 });
 
-const infoByType: Record<MediaType, [string, typeof FolderOpenIcon]> = {
+const infoByType: Record<MMediaType, [string, typeof FolderOpenIcon]> = {
   content: ['Contenu', LayoutIcon],
   folder: ['Dossier', FolderIcon],
   image: ['Image', FileImageIcon],
   pdf: ['PDF', FileTextIcon],
   video: ['Video', VideoIcon],
+  playlist: ['Playlist', LayoutIcon],
+  page: ['Page', LayoutIcon],
   unknown: ['Inconnu', HelpCircleIcon],
   '': ['Inconnu', HelpCircleIcon],
 };
 
 export interface MediaIconProps extends DivProps {
-  type?: MediaType;
+  type?: MMediaType;
   isOpen?: boolean;
   hasChildren?: boolean;
 }

@@ -1,11 +1,10 @@
 import { Css, isEmpty, truncate } from 'fluxio';
-import { useApi } from '@/hooks/useApi';
-import { MediaModel } from '@/api/models';
 import { useMediaController } from '@/hooks/useMediaController';
 import { useOver } from '@/hooks/useOver';
 import { Anim } from '../common/Anim';
 import { MediaIcon } from '../medias/MediaIcon';
 import { useMemo } from 'preact/hooks';
+import { api2, MMedia } from '@/api2';
 
 const W = 180;
 const H = 130;
@@ -63,22 +62,19 @@ const c = Css('MediaItem', {
   },
 });
 
-export const MediaItem = ({ media }: { media: MediaModel }) => {
+export const MediaItem = ({ media }: { media: MMedia }) => {
   const [over, overProps] = useOver();
   const id = media.id;
   const controller = useMediaController();
   const selected = useMemo(() => controller.select$.map((s) => s?.id === id), [id]);
-  const api = useApi();
 
   console.debug('MediaItem', id, media, selected);
 
   if (!media) return null;
 
-  const variants = api.getVariants(media);
-  const images = variants.filter((v) => v.type === 'image');
-  const videos = variants.filter((v) => v.type === 'video');
-
-  const previewUrl = api.getMediaUrl(images[0], 360);
+  const previewUrl = api2.medias.getImageUrl(media, 'thumb');
+  // const images = variants.filter((v) => v.type === 'image');
+  // const previewUrl = api.getMediaUrl(images[0], 360);
 
   return (
     <div
@@ -87,7 +83,8 @@ export const MediaItem = ({ media }: { media: MediaModel }) => {
       onClick={controller.click(media)}
     >
       <div {...c('Preview')}>
-        {previewUrl ?
+        <img {...c('Media')} key="i" src={previewUrl} />
+        {/* {previewUrl ?
           <img {...c('Media')} key="i" src={previewUrl} />
         : <MediaIcon {...c('Media')} type={media.type} />}
         {!isEmpty(videos) && (
@@ -115,7 +112,7 @@ export const MediaItem = ({ media }: { media: MediaModel }) => {
               </video>
             )}
           />
-        )}
+        )} */}
       </div>
       <div {...c('Title')}>{truncate(media.title, 20)}</div>
     </div>
