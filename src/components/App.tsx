@@ -31,12 +31,14 @@ const c = Css('App', {
   },
 });
 
-const CompByPage: Partial<Record<RoutePage, Comp>> = {
+const CompByPage: Record<RoutePage, Comp> = {
+  '': null,
   dashboard: DashboardPage,
   members: MembersPage,
   medias: MediasPage,
   devices: DevicesPage,
   edit: EditPage,
+  view: MediasPage,
 };
 
 const AppRouter = () => {

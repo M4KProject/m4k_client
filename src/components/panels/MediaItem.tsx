@@ -1,10 +1,12 @@
-import { Css, isEmpty, truncate } from 'fluxio';
+import { Css, Dictionary, truncate } from 'fluxio';
 import { useMediaController } from '@/hooks/useMediaController';
 import { useOver } from '@/hooks/useOver';
-import { Anim } from '../common/Anim';
-import { MediaIcon } from '../medias/MediaIcon';
 import { useMemo } from 'preact/hooks';
-import { api2, MMedia } from '@/api2';
+import { api2, MMedia, MMediaType } from '@/api2';
+import { useFluxMemo } from '@/hooks/useFlux';
+import { JSXInternal } from 'node_modules/preact/src/jsx';
+import { comp, Comp } from '@/utils/comp';
+import { FileTextIcon, FolderIcon, HelpCircleIcon, LayoutIcon, VideoIcon } from 'lucide-react';
 
 const W = 180;
 const H = 130;
@@ -62,28 +64,43 @@ const c = Css('MediaItem', {
   },
 });
 
+const comps: Record<MMediaType, Comp<{ media: MMedia }>> = {
+  "": HelpCircleIcon,
+  content: LayoutIcon,
+  folder: FolderIcon,
+  image: ({ media }) => {
+    const previewUrl = api2.medias.getImageUrl(media, 'thumb');
+    return <img {...c('Media')} key="i" src={previewUrl} />;
+  },
+  pdf: FileTextIcon,
+  video: VideoIcon,
+  unknown: HelpCircleIcon,
+  playlist: LayoutIcon,
+  page: LayoutIcon,
+};
+
 export const MediaItem = ({ media }: { media: MMedia }) => {
   const [over, overProps] = useOver();
   const id = media.id;
-  const controller = useMediaController();
-  const selected = useMemo(() => controller.select$.map((s) => s?.id === id), [id]);
+  const selected = useFluxMemo(() => api2.medias.id$.map(id => media?.id === id), [id]);
 
   console.debug('MediaItem', id, media, selected);
 
   if (!media) return null;
 
-  const previewUrl = api2.medias.getImageUrl(media, 'thumb');
   // const images = variants.filter((v) => v.type === 'image');
   // const previewUrl = api.getMediaUrl(images[0], 360);
+
+  const type = media.type;
 
   return (
     <div
       {...c('', selected && '-selected', over && '-over')}
       {...overProps}
-      onClick={controller.click(media)}
+      onClick={() => api2.medias.id$.set(media.id)}
     >
       <div {...c('Preview')}>
-        <img {...c('Media')} key="i" src={previewUrl} />
+        {comp(comps[type] || comps.unknown, { media })}
         {/* {previewUrl ?
           <img {...c('Media')} key="i" src={previewUrl} />
         : <MediaIcon {...c('Media')} type={media.type} />}
